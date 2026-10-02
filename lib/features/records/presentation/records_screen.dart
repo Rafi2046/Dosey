@@ -1,0 +1,90 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/constants/constants.dart';
+import '../../../core/database/enums.dart';
+import '../../../core/utils/enum_labels.dart';
+import '../../../core/widgets/async_value_view.dart';
+import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/filter_pills.dart';
+import '../../../core/widgets/screen_header.dart';
+import '../domain/record_summary.dart';
+import '../providers/records_providers.dart';
+import 'record_detail_screen.dart';
+import 'record_form_screen.dart';
+import 'widgets/record_card.dart';
+
+class RecordsScreen extends ConsumerWidget {
+  const RecordsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filter = ref.watch(recordTypeFilterProvider);
+    final records = ref.watch(recordSummariesProvider);
+
+    return SafeArea(
+      bottom: false,
+      child: ListView(
+        padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
+        children: [
+          const ScreenHeader(title: AppStrings.recordsTitle),
+          FilterPills<RecordType>(
+            options: RecordType.values,
+            selected: filter,
+            labelOf: (t) => t.label,
+            onSelected: ref.read(recordTypeFilterProvider.notifier).select,
+          ),
+          AppSpacing.gapLg,
+          AsyncValueView(
+            value: records,
+            data: (list) => list.isEmpty
+                ? EmptyState(
+                    title: AppStrings.noRecords,
+                    image: AppImages.medOther,
+                    actionLabel: AppStrings.addRecord,
+                    onAction: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const RecordFormScreen(),
+                      ),
+                    ),
+                  )
+                : Column(
+                    children: [
+                      // Rows of two with natural heights (titles may wrap).
+                      for (var i = 0; i < list.length; i += 2) ...[
+                        IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              for (final j in [i, i + 1]) ...[
+                                if (j > i) AppSpacing.gapMd,
+                                Expanded(
+                                  child: j < list.length
+                                      ? _tile(context, list, j)
+                                      : const SizedBox.shrink(),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                        AppSpacing.gapMd,
+                      ],
+                    ],
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _tile(BuildContext context, List<RecordSummary> list, int i) =>
+      RecordCard(
+        summary: list[i],
+        color: AppColors.cardCycle[i % AppColors.cardCycle.length],
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => RecordDetailScreen(recordId: list[i].record.id),
+          ),
+        ),
+      );
+}

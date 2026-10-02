@@ -14,12 +14,18 @@ abstract final class ReminderSchedule {
     int? weekdaysMask,
     DateTime? endAt,
   }) {
+    // Alarms are minute-precise; truncating also keeps occurrence times equal
+    // to what the DB round-trips (it stores seconds), so log lookups match.
+    final start = _atDayOffset(startAt, 0);
     final next = switch (rule) {
-      RepeatRule.once => startAt.isAfter(after) ? startAt : null,
-      RepeatRule.daily => _nextEveryNDays(startAt, after, 1),
-      RepeatRule.everyNDays =>
-        _nextEveryNDays(startAt, after, repeatInterval ?? 1),
-      RepeatRule.weekly => _nextWeekly(startAt, after, weekdaysMask ?? 0),
+      RepeatRule.once => start.isAfter(after) ? start : null,
+      RepeatRule.daily => _nextEveryNDays(start, after, 1),
+      RepeatRule.everyNDays => _nextEveryNDays(
+        start,
+        after,
+        repeatInterval ?? 1,
+      ),
+      RepeatRule.weekly => _nextWeekly(start, after, weekdaysMask ?? 0),
     };
     if (next == null || (endAt != null && next.isAfter(endAt))) return null;
     return next;
@@ -27,13 +33,13 @@ abstract final class ReminderSchedule {
 
   /// Convenience wrapper for a stored [Reminder].
   static DateTime? nextFor(Reminder r, DateTime after) => nextOccurrence(
-        rule: r.repeatRule,
-        startAt: r.startAt,
-        after: after,
-        repeatInterval: r.repeatInterval,
-        weekdaysMask: r.weekdaysMask,
-        endAt: r.endAt,
-      );
+    rule: r.repeatRule,
+    startAt: r.startAt,
+    after: after,
+    repeatInterval: r.repeatInterval,
+    weekdaysMask: r.weekdaysMask,
+    endAt: r.endAt,
+  );
 
   /// All occurrences of [r] on the calendar day of [day], in order.
   static List<DateTime> occurrencesOn(Reminder r, DateTime day) {
@@ -51,13 +57,16 @@ abstract final class ReminderSchedule {
   }
 
   /// Average doses per day, used for projected medicine cost.
-  static double dosesPerDay(RepeatRule rule, {int? repeatInterval, int? weekdaysMask}) =>
-      switch (rule) {
-        RepeatRule.once => 0,
-        RepeatRule.daily => 1,
-        RepeatRule.everyNDays => 1 / (repeatInterval ?? 1),
-        RepeatRule.weekly => _bitCount(weekdaysMask ?? 0) / _daysPerWeek,
-      };
+  static double dosesPerDay(
+    RepeatRule rule, {
+    int? repeatInterval,
+    int? weekdaysMask,
+  }) => switch (rule) {
+    RepeatRule.once => 0,
+    RepeatRule.daily => 1,
+    RepeatRule.everyNDays => 1 / (repeatInterval ?? 1),
+    RepeatRule.weekly => _bitCount(weekdaysMask ?? 0) / _daysPerWeek,
+  };
 
   /// Bit 0 = Monday … bit 6 = Sunday (matches [DateTime.weekday] - 1).
   static bool weekdayEnabled(int mask, int weekday) =>
@@ -84,7 +93,11 @@ abstract final class ReminderSchedule {
     // Looking 8 days ahead covers "today but earlier time" → same weekday next week.
     for (var i = 0; i <= _daysPerWeek; i++) {
       final candidate = DateTime(
-        base.year, base.month, base.day + i, start.hour, start.minute, //
+        base.year,
+        base.month,
+        base.day + i,
+        start.hour,
+        start.minute, //
       );
       if (candidate.isBefore(start) || !candidate.isAfter(after)) continue;
       if (weekdayEnabled(mask, candidate.weekday)) return candidate;
@@ -93,8 +106,12 @@ abstract final class ReminderSchedule {
   }
 
   static DateTime _atDayOffset(DateTime start, int days) => DateTime(
-        start.year, start.month, start.day + days, start.hour, start.minute, //
-      );
+    start.year,
+    start.month,
+    start.day + days,
+    start.hour,
+    start.minute, //
+  );
 
   static int _bitCount(int v) {
     var count = 0;

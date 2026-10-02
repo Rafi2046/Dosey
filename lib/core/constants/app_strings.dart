@@ -35,7 +35,7 @@ abstract final class AppStrings {
   static const String invalidAmount = 'Enter a valid amount';
 
   // ── Dashboard ─────────────────────────────────────────────────────────────
-  static const String greeting = 'Stay on track';
+  static const String greeting = 'Hello';
   static const String nextDose = 'Next reminder';
   static const String todaySchedule = "Today's schedule";
   static const String nothingScheduled = 'Nothing scheduled. Enjoy your day!';
@@ -164,23 +164,67 @@ abstract final class AppStrings {
   static const String categoryVaccine = 'Vaccine';
   static const String categoryOther = 'Other';
 
-  // ── Permissions ───────────────────────────────────────────────────────────
-  static const String permissionsTitle = 'Allow reliable alarms';
-  static const String permissionsBody =
-      'Dosey needs these permissions so your reminders ring on time, '
-      'even in silent or Do Not Disturb mode.';
-  static const String permissionNotifications = 'Notifications';
-  static const String permissionExactAlarms = 'Exact alarms';
-  static const String permissionDnd = 'Bypass Do Not Disturb';
-  static const String permissionFullScreen = 'Full-screen alarms';
-  static const String grant = 'Grant';
-  static const String granted = 'Granted';
+  // ── Permission onboarding ─────────────────────────────────────────────────
+  static const String onboardingTitle = 'Never miss\na dose';
+  static const String onboardingBody =
+      'Dosey rings like an alarm clock — even on silent or Do Not Disturb. '
+      'Allow these so your reminders arrive exactly on time.';
+  static const String onboardingContinue = "Let's get started";
+  static const String onboardingEssentialHint =
+      'Notifications and exact alarms are required.';
+  static const String recommended = 'Recommended';
+  static const String required = 'Required';
+  static const String allow = 'Allow';
+  static const String allowed = 'Allowed';
+
+  static const String permNotificationsTitle = 'Notifications';
+  static const String permNotificationsBody =
+      'Show medicine, appointment and test reminders.';
+  static const String permExactAlarmsTitle = 'Exact alarms';
+  static const String permExactAlarmsBody =
+      'Ring at the exact minute — not "sometime around" it.';
+  static const String permFullScreenTitle = 'Full-screen alarm';
+  static const String permFullScreenBody =
+      'Wake the screen and show the alarm over the lock screen.';
+  static const String permDndTitle = 'Ring in Do Not Disturb';
+  static const String permDndBody =
+      'Let critical reminders break through silent and DND modes.';
+
+  // ── Alarm (ringing) screen ────────────────────────────────────────────────
+  static const String alarmMarkTaken = 'Medicine Taken';
+  static const String alarmDone = 'Done';
+  static const String alarmSnooze = 'Snooze';
+  static const String alarmSkip = 'Skip this time';
+  static const String alarmScheduledFor = 'Scheduled for';
+  static const String minutesShort = 'min';
+
+  // ── Notification content ──────────────────────────────────────────────────
+  static const String notifTaken = 'Taken ✓';
+  static const String notifSnooze = 'Snooze';
+  static const String notifSkip = 'Skip';
+  static const String notifDoseSeparator = ' · ';
+  static const String notifAtLocation = 'At ';
+  static const String notifWithDoctor = 'With ';
+
+  // ── Debug helpers (debug builds only) ─────────────────────────────────────
+  static const String debugTestAlarm = 'Test alarm in 1 minute';
+  static const String debugTestAlarmScheduled =
+      'Test alarm scheduled. Lock the phone and wait.';
+  static const String debugTestAlarmTitle = 'Test medicine';
+  static const String debugTestAlarmBody = 'Take 1 tablet after breakfast';
 
   // ── Notification channels ─────────────────────────────────────────────────
-  static const String criticalChannelName = 'Critical alarms';
-  static const String criticalChannelDescription =
-      'Medicine and appointment alarms that ring even in Do Not Disturb';
-  static const String standardChannelName = 'Reminders';
-  static const String standardChannelDescription = 'General reminders';
   static const String channelGroupName = 'Dosey reminders';
+  static const String channelMedicineName = 'Medicine alarms';
+  static const String channelMedicineDesc =
+      'Rings for doses, even in Do Not Disturb';
+  static const String channelAppointmentName = 'Appointment alarms';
+  static const String channelAppointmentDesc = "Doctor's appointment alarms";
+  static const String channelVaccineName = 'Vaccine alarms';
+  static const String channelVaccineDesc = 'Vaccination alarms';
+  static const String channelTestName = 'Medical test alarms';
+  static const String channelTestDesc = 'Lab and medical test alarms';
+  static const String channelGentleName = 'Gentle reminders';
+  static const String channelGentleDesc =
+      'Non-critical reminders that respect Do Not Disturb';
 }

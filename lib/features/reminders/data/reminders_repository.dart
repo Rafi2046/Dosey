@@ -69,12 +69,24 @@ class RemindersRepository {
     _db.reminders,
   )..where((r) => r.id.equals(id))).getSingleOrNull();
 
+  Future<List<Reminder>> getAll() => _db.select(_db.reminders).get();
+
+  Future<ReminderWithDetails?> getDetails(int id) =>
+      watchById(id).first;
+
   /// Every reminder that should currently have an alarm (scheduler resync).
   Future<List<Reminder>> getSchedulable() =>
       (_db.select(_db.reminders)..where(
             (r) => r.isEnabled.equals(true) & r.nextTriggerAt.isNotNull(),
           ))
           .get();
+
+  /// Reminders currently ringing (awaiting Taken/Skip/Snooze), oldest first.
+  Stream<List<ReminderWithDetails>> watchRinging() => _watch(
+    _joined()
+      ..where(_db.reminders.ringingFor.isNotNull())
+      ..orderBy([OrderingTerm.asc(_db.reminders.ringingFor)]),
+  );
 
   Stream<List<ReminderLog>> watchLogsBetween(DateTime start, DateTime end) =>
       (_db.select(
@@ -114,6 +126,12 @@ class RemindersRepository {
     );
     return row.copyWith(nextTriggerAt: Value(next));
   }
+
+  /// Marks which occurrence is ringing (null clears it).
+  Future<void> setRinging(int id, DateTime? occurrence) =>
+      (_db.update(_db.reminders)..where((r) => r.id.equals(id))).write(
+        RemindersCompanion(ringingFor: Value(occurrence)),
+      );
 
   Future<void> delete(int id) =>
       (_db.delete(_db.reminders)..where((r) => r.id.equals(id))).go();

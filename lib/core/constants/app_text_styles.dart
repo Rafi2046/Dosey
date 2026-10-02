@@ -3,81 +3,109 @@ import 'package:flutter/painting.dart';
 import 'app_colors.dart';
 import 'app_spacing.dart';
 
-/// Typography. Use these (or `Theme.of(context).textTheme`, which maps to them)
-/// instead of building `TextStyle`s in widgets.
+/// Typography: Bitter (slab serif) for display/titles, DM Sans for UI text.
+/// Defaults are for dark (sage) surfaces; use `.onLight` variants on cream.
 abstract final class AppTextStyles {
+  static const String _display = 'Bitter';
+  static const String _body = 'DMSans';
+
+  // ── Display (Bitter) ──────────────────────────────────────────────────────
   static const TextStyle display = TextStyle(
+    fontFamily: _display,
     fontSize: AppSpacing.fontDisplay,
-    fontWeight: FontWeight.w700,
-    color: AppColors.textPrimary,
-    height: 1.15,
+    fontWeight: FontWeight.w800,
+    color: AppColors.textOnDark,
+    height: AppSpacing.lineHeightTight,
   );
 
   static const TextStyle headline = TextStyle(
+    fontFamily: _display,
     fontSize: AppSpacing.fontXxl,
-    fontWeight: FontWeight.w700,
-    color: AppColors.textPrimary,
+    fontWeight: FontWeight.w800,
+    color: AppColors.textOnDark,
+    height: AppSpacing.lineHeightTight,
   );
 
   static const TextStyle title = TextStyle(
+    fontFamily: _display,
     fontSize: AppSpacing.fontXl,
-    fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textOnDark,
   );
 
+  static const TextStyle cardTitle = TextStyle(
+    fontFamily: _display,
+    fontSize: AppSpacing.fontLg,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textOnDark,
+  );
+
+  /// Huge clock figure on the alarm screen.
+  static const TextStyle clock = TextStyle(
+    fontFamily: _display,
+    fontSize: AppSpacing.fontClock,
+    fontWeight: FontWeight.w800,
+    color: AppColors.textOnDark,
+    height: AppSpacing.lineHeightTight,
+  );
+
+  // ── Body (DM Sans) ────────────────────────────────────────────────────────
   static const TextStyle subtitle = TextStyle(
+    fontFamily: _body,
     fontSize: AppSpacing.fontLg,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: AppColors.textOnDark,
   );
 
   static const TextStyle body = TextStyle(
+    fontFamily: _body,
     fontSize: AppSpacing.fontMd,
     fontWeight: FontWeight.w400,
-    color: AppColors.textPrimary,
+    color: AppColors.textOnDark,
     height: AppSpacing.lineHeight,
   );
 
-  static const TextStyle bodySecondary = TextStyle(
+  static const TextStyle bodyMuted = TextStyle(
+    fontFamily: _body,
     fontSize: AppSpacing.fontMd,
     fontWeight: FontWeight.w400,
-    color: AppColors.textSecondary,
+    color: AppColors.textOnDarkMuted,
     height: AppSpacing.lineHeight,
   );
 
   static const TextStyle caption = TextStyle(
+    fontFamily: _body,
     fontSize: AppSpacing.fontSm,
-    fontWeight: FontWeight.w400,
-    color: AppColors.textSecondary,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textOnDarkMuted,
   );
 
   static const TextStyle overline = TextStyle(
+    fontFamily: _body,
     fontSize: AppSpacing.fontXs,
     fontWeight: FontWeight.w600,
-    color: AppColors.textMuted,
+    color: AppColors.textOnDarkMuted,
     letterSpacing: AppSpacing.letterSpacingWide,
   );
 
   static const TextStyle button = TextStyle(
-    fontSize: AppSpacing.fontMd,
-    fontWeight: FontWeight.w700,
-    letterSpacing: AppSpacing.letterSpacingWide,
+    fontFamily: _body,
+    fontSize: AppSpacing.fontLg,
+    fontWeight: FontWeight.w600,
   );
 
-  /// Big neon figures (expense totals, next-dose countdown).
-  static const TextStyle neonFigure = TextStyle(
-    fontSize: AppSpacing.fontDisplay,
-    fontWeight: FontWeight.w800,
-    color: AppColors.neonCyan,
-    shadows: [
-      Shadow(color: AppColors.neonGlow, blurRadius: AppSpacing.glowBlur),
-    ],
-  );
-
-  static const TextStyle neonLabel = TextStyle(
+  static const TextStyle chip = TextStyle(
+    fontFamily: _body,
     fontSize: AppSpacing.fontSm,
-    fontWeight: FontWeight.w700,
-    color: AppColors.neonCyan,
-    letterSpacing: AppSpacing.letterSpacingWide,
+    fontWeight: FontWeight.w600,
   );
+
+  // ── Light-surface variants (cream cards / screens) ────────────────────────
+  static final TextStyle displayOnLight = display.copyWith(color: AppColors.ink);
+  static final TextStyle titleOnLight = title.copyWith(color: AppColors.ink);
+  static final TextStyle cardTitleOnLight =
+      cardTitle.copyWith(color: AppColors.ink);
+  static final TextStyle bodyOnLight = body.copyWith(color: AppColors.inkMuted);
+  static final TextStyle captionOnLight =
+      caption.copyWith(color: AppColors.inkMuted);
 }

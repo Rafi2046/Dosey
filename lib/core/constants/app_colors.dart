@@ -1,56 +1,60 @@
 import 'package:flutter/material.dart';
 
-/// Every color used in the app. Widgets must never declare a `Color(...)` inline.
+/// Every color used in the app, sampled from docs/design/ui_design_ideas.png.
+/// Widgets must never declare a `Color(...)` inline.
 abstract final class AppColors {
-  // ── Neon accents ──────────────────────────────────────────────────────────
-  static const Color neonCyan = Color(0xFF00E5FF);
-  static const Color neonCyanSoft = Color(0xFF6EF3FF);
-  static const Color neonCyanDeep = Color(0xFF00A3B8);
-  static const Color neonGlow = Color(0x6600E5FF);
-  static const Color neonGlowFaint = Color(0x2600E5FF);
+  // ── Brand surfaces ────────────────────────────────────────────────────────
+  /// Main sage background.
+  static const Color sage = Color(0xFF687163);
+  static const Color sageDeep = Color(0xFF5B6457);
 
-  // ── Backgrounds ───────────────────────────────────────────────────────────
-  static const Color background = Color(0xFF060A14);
-  static const Color backgroundMid = Color(0xFF0B1426);
-  static const Color backgroundEnd = Color(0xFF071C26);
-  static const Color surface = Color(0xFF0E1628);
-  static const Color surfaceElevated = Color(0xFF141E33);
+  /// Card tones used for stacked reminder cards and medicine-type tiles.
+  static const Color olive = Color(0xFF728268);
+  static const Color mint = Color(0xFF64AA93);
+  static const Color stone = Color(0xFF6E6D65);
+  static const Color moss = Color(0xFF50594E);
+  static const Color cream = Color(0xFFE6E3D3);
+  static const Color creamLight = Color(0xFFF2F0E4);
 
-  static const List<Color> backgroundGradient = [
-    background,
-    backgroundMid,
-    backgroundEnd,
-  ];
+  /// Chip fill on cream surfaces.
+  static const Color sand = Color(0xFFC9C5B0);
 
-  // ── Glass ─────────────────────────────────────────────────────────────────
-  static const Color glassFill = Color(0x14FFFFFF);
-  static const Color glassFillStrong = Color(0x1FFFFFFF);
-  static const Color glassBorder = Color(0x26FFFFFF);
-  static const Color glassHighlight = Color(0x33FFFFFF);
+  /// Rotating palette for stacked cards (olive → mint → stone → cream).
+  static const List<Color> cardCycle = [olive, mint, stone, cream];
 
-  static const List<Color> glassGradient = [glassFillStrong, glassFill];
+  // ── Accent ────────────────────────────────────────────────────────────────
+  static const Color accent = Color(0xFFFD572F);
+  static const Color accentPressed = Color(0xFFE2461F);
+  static const Color accentSoft = Color(0x33FD572F);
 
   // ── Text ──────────────────────────────────────────────────────────────────
-  static const Color textPrimary = Color(0xFFEAF6FF);
-  static const Color textSecondary = Color(0xFF9DB0C8);
-  static const Color textMuted = Color(0xFF5E6E85);
-  static const Color textOnNeon = Color(0xFF00141A);
+  /// On sage / dark cards.
+  static const Color textOnDark = Color(0xFFEEEBDD);
+  static const Color textOnDarkMuted = Color(0xFFC6C9BC);
+
+  /// On cream / light cards.
+  static const Color ink = Color(0xFF1B1D1A);
+  static const Color inkMuted = Color(0xFF4A4B45);
+
+  static const Color textOnAccent = Color(0xFFFFFFFF);
 
   // ── Status ────────────────────────────────────────────────────────────────
-  static const Color success = Color(0xFF2EF2A2);
-  static const Color warning = Color(0xFFFFC857);
-  static const Color error = Color(0xFFFF5C7A);
-  static const Color errorContainer = Color(0x33FF5C7A);
+  static const Color success = mint;
+  static const Color warning = Color(0xFFF2B84B);
+  static const Color error = Color(0xFFE5484D);
 
   // ── Reminder type accents ─────────────────────────────────────────────────
-  static const Color medicine = neonCyan;
-  static const Color appointment = Color(0xFFB388FF);
-  static const Color vaccine = Color(0xFF2EF2A2);
-  static const Color medicalTest = Color(0xFFFFC857);
+  static const Color medicine = mint;
+  static const Color appointment = olive;
+  static const Color vaccine = stone;
+  static const Color medicalTest = accent;
 
   // ── Misc ──────────────────────────────────────────────────────────────────
   static const Color transparent = Color(0x00000000);
-  static const Color scrim = Color(0xB3000000);
-  static const Color divider = Color(0x1AFFFFFF);
-  static const Color shadow = Color(0x66000000);
+  static const Color navBar = Color(0xB3979B92);
+  static const Color outlineOnDark = Color(0x66EEEBDD);
+  static const Color outlineOnLight = Color(0x401B1D1A);
+  static const Color divider = Color(0x1F1B1D1A);
+  static const Color shadow = Color(0x40000000);
+  static const Color scrim = Color(0x99000000);
 }

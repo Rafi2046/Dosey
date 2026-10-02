@@ -48,6 +48,10 @@ class Reminders extends Table {
   /// Cached next fire time used by the scheduler; null once the series ends.
   DateTimeColumn get nextTriggerAt => dateTime().nullable()();
 
+  /// Occurrence currently ringing and awaiting Taken/Skip/Snooze; null when
+  /// nothing is pending. Drives the full-screen alarm screen.
+  DateTimeColumn get ringingFor => dateTime().nullable()();
+
   /// Critical = bypass DND + full-screen intent.
   BoolColumn get isCritical => boolean().withDefault(const Constant(true))();
   BoolColumn get isEnabled => boolean().withDefault(const Constant(true))();

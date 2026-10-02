@@ -2359,6 +2359,17 @@ class $RemindersTable extends Reminders
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _ringingForMeta = const VerificationMeta(
+    'ringingFor',
+  );
+  @override
+  late final GeneratedColumn<DateTime> ringingFor = GeneratedColumn<DateTime>(
+    'ringing_for',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isCriticalMeta = const VerificationMeta(
     'isCritical',
   );
@@ -2440,6 +2451,7 @@ class $RemindersTable extends Reminders
     weekdaysMask,
     endAt,
     nextTriggerAt,
+    ringingFor,
     isCritical,
     isEnabled,
     snoozeMinutes,
@@ -2535,6 +2547,12 @@ class $RemindersTable extends Reminders
           data['next_trigger_at']!,
           _nextTriggerAtMeta,
         ),
+      );
+    }
+    if (data.containsKey('ringing_for')) {
+      context.handle(
+        _ringingForMeta,
+        ringingFor.isAcceptableOrUnknown(data['ringing_for']!, _ringingForMeta),
       );
     }
     if (data.containsKey('is_critical')) {
@@ -2635,6 +2653,10 @@ class $RemindersTable extends Reminders
         DriftSqlType.dateTime,
         data['${effectivePrefix}next_trigger_at'],
       ),
+      ringingFor: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}ringing_for'],
+      ),
       isCritical: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_critical'],
@@ -2698,6 +2720,10 @@ class Reminder extends DataClass implements Insertable<Reminder> {
   /// Cached next fire time used by the scheduler; null once the series ends.
   final DateTime? nextTriggerAt;
 
+  /// Occurrence currently ringing and awaiting Taken/Skip/Snooze; null when
+  /// nothing is pending. Drives the full-screen alarm screen.
+  final DateTime? ringingFor;
+
   /// Critical = bypass DND + full-screen intent.
   final bool isCritical;
   final bool isEnabled;
@@ -2718,6 +2744,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     this.weekdaysMask,
     this.endAt,
     this.nextTriggerAt,
+    this.ringingFor,
     required this.isCritical,
     required this.isEnabled,
     required this.snoozeMinutes,
@@ -2764,6 +2791,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     if (!nullToAbsent || nextTriggerAt != null) {
       map['next_trigger_at'] = Variable<DateTime>(nextTriggerAt);
     }
+    if (!nullToAbsent || ringingFor != null) {
+      map['ringing_for'] = Variable<DateTime>(ringingFor);
+    }
     map['is_critical'] = Variable<bool>(isCritical);
     map['is_enabled'] = Variable<bool>(isEnabled);
     map['snooze_minutes'] = Variable<int>(snoozeMinutes);
@@ -2803,6 +2833,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       nextTriggerAt: nextTriggerAt == null && nullToAbsent
           ? const Value.absent()
           : Value(nextTriggerAt),
+      ringingFor: ringingFor == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ringingFor),
       isCritical: Value(isCritical),
       isEnabled: Value(isEnabled),
       snoozeMinutes: Value(snoozeMinutes),
@@ -2834,6 +2867,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       weekdaysMask: serializer.fromJson<int?>(json['weekdaysMask']),
       endAt: serializer.fromJson<DateTime?>(json['endAt']),
       nextTriggerAt: serializer.fromJson<DateTime?>(json['nextTriggerAt']),
+      ringingFor: serializer.fromJson<DateTime?>(json['ringingFor']),
       isCritical: serializer.fromJson<bool>(json['isCritical']),
       isEnabled: serializer.fromJson<bool>(json['isEnabled']),
       snoozeMinutes: serializer.fromJson<int>(json['snoozeMinutes']),
@@ -2862,6 +2896,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       'weekdaysMask': serializer.toJson<int?>(weekdaysMask),
       'endAt': serializer.toJson<DateTime?>(endAt),
       'nextTriggerAt': serializer.toJson<DateTime?>(nextTriggerAt),
+      'ringingFor': serializer.toJson<DateTime?>(ringingFor),
       'isCritical': serializer.toJson<bool>(isCritical),
       'isEnabled': serializer.toJson<bool>(isEnabled),
       'snoozeMinutes': serializer.toJson<int>(snoozeMinutes),
@@ -2884,6 +2919,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     Value<int?> weekdaysMask = const Value.absent(),
     Value<DateTime?> endAt = const Value.absent(),
     Value<DateTime?> nextTriggerAt = const Value.absent(),
+    Value<DateTime?> ringingFor = const Value.absent(),
     bool? isCritical,
     bool? isEnabled,
     int? snoozeMinutes,
@@ -2907,6 +2943,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     nextTriggerAt: nextTriggerAt.present
         ? nextTriggerAt.value
         : this.nextTriggerAt,
+    ringingFor: ringingFor.present ? ringingFor.value : this.ringingFor,
     isCritical: isCritical ?? this.isCritical,
     isEnabled: isEnabled ?? this.isEnabled,
     snoozeMinutes: snoozeMinutes ?? this.snoozeMinutes,
@@ -2940,6 +2977,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       nextTriggerAt: data.nextTriggerAt.present
           ? data.nextTriggerAt.value
           : this.nextTriggerAt,
+      ringingFor: data.ringingFor.present
+          ? data.ringingFor.value
+          : this.ringingFor,
       isCritical: data.isCritical.present
           ? data.isCritical.value
           : this.isCritical,
@@ -2968,6 +3008,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           ..write('weekdaysMask: $weekdaysMask, ')
           ..write('endAt: $endAt, ')
           ..write('nextTriggerAt: $nextTriggerAt, ')
+          ..write('ringingFor: $ringingFor, ')
           ..write('isCritical: $isCritical, ')
           ..write('isEnabled: $isEnabled, ')
           ..write('snoozeMinutes: $snoozeMinutes, ')
@@ -2992,6 +3033,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     weekdaysMask,
     endAt,
     nextTriggerAt,
+    ringingFor,
     isCritical,
     isEnabled,
     snoozeMinutes,
@@ -3015,6 +3057,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           other.weekdaysMask == this.weekdaysMask &&
           other.endAt == this.endAt &&
           other.nextTriggerAt == this.nextTriggerAt &&
+          other.ringingFor == this.ringingFor &&
           other.isCritical == this.isCritical &&
           other.isEnabled == this.isEnabled &&
           other.snoozeMinutes == this.snoozeMinutes &&
@@ -3036,6 +3079,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
   final Value<int?> weekdaysMask;
   final Value<DateTime?> endAt;
   final Value<DateTime?> nextTriggerAt;
+  final Value<DateTime?> ringingFor;
   final Value<bool> isCritical;
   final Value<bool> isEnabled;
   final Value<int> snoozeMinutes;
@@ -3055,6 +3099,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     this.weekdaysMask = const Value.absent(),
     this.endAt = const Value.absent(),
     this.nextTriggerAt = const Value.absent(),
+    this.ringingFor = const Value.absent(),
     this.isCritical = const Value.absent(),
     this.isEnabled = const Value.absent(),
     this.snoozeMinutes = const Value.absent(),
@@ -3075,6 +3120,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     this.weekdaysMask = const Value.absent(),
     this.endAt = const Value.absent(),
     this.nextTriggerAt = const Value.absent(),
+    this.ringingFor = const Value.absent(),
     this.isCritical = const Value.absent(),
     this.isEnabled = const Value.absent(),
     this.snoozeMinutes = const Value.absent(),
@@ -3097,6 +3143,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     Expression<int>? weekdaysMask,
     Expression<DateTime>? endAt,
     Expression<DateTime>? nextTriggerAt,
+    Expression<DateTime>? ringingFor,
     Expression<bool>? isCritical,
     Expression<bool>? isEnabled,
     Expression<int>? snoozeMinutes,
@@ -3117,6 +3164,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
       if (weekdaysMask != null) 'weekdays_mask': weekdaysMask,
       if (endAt != null) 'end_at': endAt,
       if (nextTriggerAt != null) 'next_trigger_at': nextTriggerAt,
+      if (ringingFor != null) 'ringing_for': ringingFor,
       if (isCritical != null) 'is_critical': isCritical,
       if (isEnabled != null) 'is_enabled': isEnabled,
       if (snoozeMinutes != null) 'snooze_minutes': snoozeMinutes,
@@ -3139,6 +3187,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     Value<int?>? weekdaysMask,
     Value<DateTime?>? endAt,
     Value<DateTime?>? nextTriggerAt,
+    Value<DateTime?>? ringingFor,
     Value<bool>? isCritical,
     Value<bool>? isEnabled,
     Value<int>? snoozeMinutes,
@@ -3159,6 +3208,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
       weekdaysMask: weekdaysMask ?? this.weekdaysMask,
       endAt: endAt ?? this.endAt,
       nextTriggerAt: nextTriggerAt ?? this.nextTriggerAt,
+      ringingFor: ringingFor ?? this.ringingFor,
       isCritical: isCritical ?? this.isCritical,
       isEnabled: isEnabled ?? this.isEnabled,
       snoozeMinutes: snoozeMinutes ?? this.snoozeMinutes,
@@ -3213,6 +3263,9 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     if (nextTriggerAt.present) {
       map['next_trigger_at'] = Variable<DateTime>(nextTriggerAt.value);
     }
+    if (ringingFor.present) {
+      map['ringing_for'] = Variable<DateTime>(ringingFor.value);
+    }
     if (isCritical.present) {
       map['is_critical'] = Variable<bool>(isCritical.value);
     }
@@ -3247,6 +3300,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
           ..write('weekdaysMask: $weekdaysMask, ')
           ..write('endAt: $endAt, ')
           ..write('nextTriggerAt: $nextTriggerAt, ')
+          ..write('ringingFor: $ringingFor, ')
           ..write('isCritical: $isCritical, ')
           ..write('isEnabled: $isEnabled, ')
           ..write('snoozeMinutes: $snoozeMinutes, ')
@@ -7118,6 +7172,7 @@ typedef $$RemindersTableCreateCompanionBuilder =
       Value<int?> weekdaysMask,
       Value<DateTime?> endAt,
       Value<DateTime?> nextTriggerAt,
+      Value<DateTime?> ringingFor,
       Value<bool> isCritical,
       Value<bool> isEnabled,
       Value<int> snoozeMinutes,
@@ -7139,6 +7194,7 @@ typedef $$RemindersTableUpdateCompanionBuilder =
       Value<int?> weekdaysMask,
       Value<DateTime?> endAt,
       Value<DateTime?> nextTriggerAt,
+      Value<DateTime?> ringingFor,
       Value<bool> isCritical,
       Value<bool> isEnabled,
       Value<int> snoozeMinutes,
@@ -7266,6 +7322,11 @@ class $$RemindersTableFilterComposer
 
   ColumnFilters<DateTime> get nextTriggerAt => $composableBuilder(
     column: $table.nextTriggerAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get ringingFor => $composableBuilder(
+    column: $table.ringingFor,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7430,6 +7491,11 @@ class $$RemindersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get ringingFor => $composableBuilder(
+    column: $table.ringingFor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isCritical => $composableBuilder(
     column: $table.isCritical,
     builder: (column) => ColumnOrderings(column),
@@ -7552,6 +7618,11 @@ class $$RemindersTableAnnotationComposer
 
   GeneratedColumn<DateTime> get nextTriggerAt => $composableBuilder(
     column: $table.nextTriggerAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get ringingFor => $composableBuilder(
+    column: $table.ringingFor,
     builder: (column) => column,
   );
 
@@ -7691,6 +7762,7 @@ class $$RemindersTableTableManager
                 Value<int?> weekdaysMask = const Value.absent(),
                 Value<DateTime?> endAt = const Value.absent(),
                 Value<DateTime?> nextTriggerAt = const Value.absent(),
+                Value<DateTime?> ringingFor = const Value.absent(),
                 Value<bool> isCritical = const Value.absent(),
                 Value<bool> isEnabled = const Value.absent(),
                 Value<int> snoozeMinutes = const Value.absent(),
@@ -7710,6 +7782,7 @@ class $$RemindersTableTableManager
                 weekdaysMask: weekdaysMask,
                 endAt: endAt,
                 nextTriggerAt: nextTriggerAt,
+                ringingFor: ringingFor,
                 isCritical: isCritical,
                 isEnabled: isEnabled,
                 snoozeMinutes: snoozeMinutes,
@@ -7731,6 +7804,7 @@ class $$RemindersTableTableManager
                 Value<int?> weekdaysMask = const Value.absent(),
                 Value<DateTime?> endAt = const Value.absent(),
                 Value<DateTime?> nextTriggerAt = const Value.absent(),
+                Value<DateTime?> ringingFor = const Value.absent(),
                 Value<bool> isCritical = const Value.absent(),
                 Value<bool> isEnabled = const Value.absent(),
                 Value<int> snoozeMinutes = const Value.absent(),
@@ -7750,6 +7824,7 @@ class $$RemindersTableTableManager
                 weekdaysMask: weekdaysMask,
                 endAt: endAt,
                 nextTriggerAt: nextTriggerAt,
+                ringingFor: ringingFor,
                 isCritical: isCritical,
                 isEnabled: isEnabled,
                 snoozeMinutes: snoozeMinutes,

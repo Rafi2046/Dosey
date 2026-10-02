@@ -39,6 +39,11 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
                     "wasLaunchedOverLockScreen" -> result.success(launchedOverLockScreen)
+                    "specialPermissionStatus" -> result.success(SpecialPermissions.status(this))
+                    "openPermissionSettings" -> {
+                        SpecialPermissions.openSettings(this, call.arguments as String)
+                        result.success(null)
+                    }
                     "ensureAlarmChannels" -> {
                         @Suppress("UNCHECKED_CAST")
                         AlarmChannels.ensure(this, call.arguments as Map<String, Any?>)

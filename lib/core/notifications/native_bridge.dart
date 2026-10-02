@@ -21,6 +21,19 @@ abstract final class NativeBridge {
   static Future<void> ensureAlarmChannels(Map<String, Object> args) =>
       _invoke<void>(AppConstants.nativeEnsureAlarmChannels, args);
 
+  /// Grant state of settings-page permissions, keyed by AppPermission name
+  /// (exactAlarms, fullScreen, dnd). Null where not applicable (iOS/tests).
+  static Future<Map<String, bool>?> specialPermissionStatus() async {
+    final raw = await _invoke<Map<Object?, Object?>>(
+      AppConstants.nativeSpecialPermissionStatus,
+    );
+    return raw?.map((k, v) => MapEntry(k! as String, v! as bool));
+  }
+
+  /// Opens the Settings page where the user grants [permissionName].
+  static Future<void> openPermissionSettings(String permissionName) =>
+      _invoke<void>(AppConstants.nativeOpenPermissionSettings, permissionName);
+
   /// Stores the Dart callback handle the boot receiver uses to resync alarms.
   static Future<void> registerResyncHandle(int rawHandle) =>
       _invoke<void>(AppConstants.nativeRegisterResync, rawHandle);

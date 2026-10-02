@@ -20,7 +20,6 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
       content: NotificationContent(
         id: r.id,
         channelKey: NotificationChannels.keyFor(r.type, critical: critical),
-        groupKey: AppConstants.channelGroupKey,
         title: r.title,
         body: ReminderText.body(details),
         category: critical

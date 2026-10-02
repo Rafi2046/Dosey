@@ -70,5 +70,7 @@ abstract final class AppConstants {
   static const String nativeSetShowOverLock = 'setShowOverLockScreen';
   static const String nativeRegisterResync = 'registerResyncHandle';
   static const String nativeEnsureAlarmChannels = 'ensureAlarmChannels';
+  static const String nativeSpecialPermissionStatus = 'specialPermissionStatus';
+  static const String nativeOpenPermissionSettings = 'openPermissionSettings';
   static const String nativeWasLaunchedOverLock = 'wasLaunchedOverLockScreen';
 }

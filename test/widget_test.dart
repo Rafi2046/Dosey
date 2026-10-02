@@ -9,6 +9,7 @@ import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/core/notifications/reminder_alarm_engine.dart';
 import 'package:dosey/core/storage/storage_providers.dart';
 import 'package:dosey/features/alarm/presentation/alarm_ring_screen.dart';
+import 'package:dosey/features/onboarding/providers/permissions_provider.dart';
 import 'package:dosey/features/reminders/data/reminders_repository.dart';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
@@ -37,6 +38,7 @@ void main() {
       appDatabaseProvider.overrideWithValue(db),
       documentsDirectoryProvider.overrideWithValue(Directory.systemTemp),
       permissionServiceProvider.overrideWithValue(permissions),
+      alarmChannelRefresherProvider.overrideWithValue(() async {}),
       alarmEngineProvider.overrideWith(
         (ref) => ReminderAlarmEngine(
           reminders: RemindersRepository(db),

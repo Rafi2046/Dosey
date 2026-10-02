@@ -14,24 +14,22 @@ class MedicinesRepository {
           _db.doctors,
           _db.doctors.id.equalsExp(_db.medicines.doctorId),
         ),
-      ])
-        ..orderBy([
-          OrderingTerm.desc(_db.medicines.isActive),
-          OrderingTerm.asc(_db.medicines.name),
-        ]);
+      ])..orderBy([
+        OrderingTerm.desc(_db.medicines.isActive),
+        OrderingTerm.asc(_db.medicines.name),
+      ]);
 
   Stream<List<MedicineWithDoctor>> _watch(
     JoinedSelectStatement<HasResultSet, dynamic> query,
-  ) =>
-      query.watch().map(
-            (rows) => [
-              for (final row in rows)
-                MedicineWithDoctor(
-                  medicine: row.readTable(_db.medicines),
-                  doctor: row.readTableOrNull(_db.doctors),
-                ),
-            ],
-          );
+  ) => query.watch().map(
+    (rows) => [
+      for (final row in rows)
+        MedicineWithDoctor(
+          medicine: row.readTable(_db.medicines),
+          doctor: row.readTableOrNull(_db.doctors),
+        ),
+    ],
+  );
 
   Stream<List<MedicineWithDoctor>> watchAll({bool activeOnly = false}) {
     final query = _joined();
@@ -42,14 +40,14 @@ class MedicinesRepository {
   Stream<List<MedicineWithDoctor>> watchByDoctor(int doctorId) =>
       _watch(_joined()..where(_db.medicines.doctorId.equals(doctorId)));
 
-  Stream<MedicineWithDoctor?> watchById(int id) =>
-      _watch(_joined()..where(_db.medicines.id.equals(id)))
-          .map((list) => list.firstOrNull);
+  Stream<MedicineWithDoctor?> watchById(int id) => _watch(
+    _joined()..where(_db.medicines.id.equals(id)),
+  ).map((list) => list.firstOrNull);
 
   /// Active medicines only, without the doctor join (used for cost projection).
-  Stream<List<Medicine>> watchActiveRaw() =>
-      (_db.select(_db.medicines)..where((m) => m.isActive.equals(true)))
-          .watch();
+  Stream<List<Medicine>> watchActiveRaw() => (_db.select(
+    _db.medicines,
+  )..where((m) => m.isActive.equals(true))).watch();
 
   Future<int> create(MedicinesCompanion medicine) =>
       _db.into(_db.medicines).insert(medicine);
@@ -64,9 +62,9 @@ class MedicinesRepository {
       _db.transaction(() async {
         await update(id, MedicinesCompanion(isActive: Value(active)));
         if (!active) {
-          await (_db.update(_db.reminders)
-                ..where((r) => r.medicineId.equals(id)))
-              .write(
+          await (_db.update(
+            _db.reminders,
+          )..where((r) => r.medicineId.equals(id))).write(
             const RemindersCompanion(
               isEnabled: Value(false),
               nextTriggerAt: Value(null),

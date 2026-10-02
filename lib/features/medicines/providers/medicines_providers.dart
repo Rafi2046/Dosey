@@ -16,19 +16,20 @@ final activeMedicinesProvider = StreamProvider<List<MedicineWithDoctor>>(
   (ref) => ref.watch(medicinesRepositoryProvider).watchAll(activeOnly: true),
 );
 
-final lowStockMedicinesProvider = Provider<AsyncValue<List<MedicineWithDoctor>>>(
-  (ref) => ref
-      .watch(activeMedicinesProvider)
-      .whenData((list) => list.where((m) => m.isLowStock).toList()),
-);
+final lowStockMedicinesProvider =
+    Provider<AsyncValue<List<MedicineWithDoctor>>>(
+      (ref) => ref
+          .watch(activeMedicinesProvider)
+          .whenData((list) => list.where((m) => m.isLowStock).toList()),
+    );
 
-final medicinesByDoctorProvider =
-    StreamProvider.autoDispose.family<List<MedicineWithDoctor>, int>(
-  (ref, doctorId) =>
-      ref.watch(medicinesRepositoryProvider).watchByDoctor(doctorId),
-);
+final medicinesByDoctorProvider = StreamProvider.autoDispose
+    .family<List<MedicineWithDoctor>, int>(
+      (ref, doctorId) =>
+          ref.watch(medicinesRepositoryProvider).watchByDoctor(doctorId),
+    );
 
-final medicineByIdProvider =
-    StreamProvider.autoDispose.family<MedicineWithDoctor?, int>(
-  (ref, id) => ref.watch(medicinesRepositoryProvider).watchById(id),
-);
+final medicineByIdProvider = StreamProvider.autoDispose
+    .family<MedicineWithDoctor?, int>(
+      (ref, id) => ref.watch(medicinesRepositoryProvider).watchById(id),
+    );

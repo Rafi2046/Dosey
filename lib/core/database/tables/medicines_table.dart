@@ -13,24 +13,30 @@ class Medicines extends Table {
 
   /// Free-form strength, e.g. "500 mg" or "5 mg/5 ml".
   TextColumn get strength => text().nullable()();
-  TextColumn get form =>
-      textEnum<MedicineForm>().withDefault(Constant(MedicineForm.tablet.name))();
+  TextColumn get form => textEnum<MedicineForm>().withDefault(
+    Constant(MedicineForm.tablet.name),
+  )();
 
   /// Units consumed per dose (1 tablet, 5 ml, 2 puffs...).
   RealColumn get doseAmount => real().withDefault(const Constant(1))();
   TextColumn get doseUnit => text().withDefault(const Constant('tablet'))();
-  TextColumn get mealRelation => textEnum<MealRelation>()
-      .withDefault(Constant(MealRelation.anytime.name))();
+  TextColumn get mealRelation => textEnum<MealRelation>().withDefault(
+    Constant(MealRelation.anytime.name),
+  )();
 
   /// Prescribing doctor.
-  IntColumn get doctorId => integer()
-      .nullable()
-      .references(Doctors, #id, onDelete: KeyAction.setNull)();
+  IntColumn get doctorId => integer().nullable().references(
+    Doctors,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
 
   /// The prescription document this medicine came from.
-  IntColumn get prescriptionId => integer()
-      .nullable()
-      .references(Records, #id, onDelete: KeyAction.setNull)();
+  IntColumn get prescriptionId => integer().nullable().references(
+    Records,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
 
   /// Price of ONE unit (one tablet / one ml) in minor units. Projected cost is
   /// unitPriceMinor × doseAmount × doses per period (from [Reminders]).
@@ -47,7 +53,7 @@ class Medicines extends Table {
 
   @override
   List<String> get customConstraints => [
-        'CHECK (dose_amount > 0)',
-        'CHECK (unit_price_minor >= 0)',
-      ];
+    'CHECK (dose_amount > 0)',
+    'CHECK (unit_price_minor >= 0)',
+  ];
 }

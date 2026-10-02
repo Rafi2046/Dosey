@@ -18,32 +18,33 @@ class DoctorsRepository {
   /// Non-archived doctors with how many active medicines they prescribed.
   Stream<List<DoctorWithStats>> watchWithStats() {
     final medCount = _db.medicines.id.count();
-    final query = _db.select(_db.doctors).join([
-      leftOuterJoin(
-        _db.medicines,
-        _db.medicines.doctorId.equalsExp(_db.doctors.id) &
-            _db.medicines.isActive.equals(true),
-      ),
-    ])
-      ..addColumns([medCount])
-      ..where(_db.doctors.isArchived.equals(false))
-      ..groupBy([_db.doctors.id])
-      ..orderBy([OrderingTerm.asc(_db.doctors.name)]);
+    final query =
+        _db.select(_db.doctors).join([
+            leftOuterJoin(
+              _db.medicines,
+              _db.medicines.doctorId.equalsExp(_db.doctors.id) &
+                  _db.medicines.isActive.equals(true),
+            ),
+          ])
+          ..addColumns([medCount])
+          ..where(_db.doctors.isArchived.equals(false))
+          ..groupBy([_db.doctors.id])
+          ..orderBy([OrderingTerm.asc(_db.doctors.name)]);
 
     return query.watch().map(
-          (rows) => [
-            for (final row in rows)
-              DoctorWithStats(
-                doctor: row.readTable(_db.doctors),
-                activeMedicineCount: row.read(medCount) ?? 0,
-              ),
-          ],
-        );
+      (rows) => [
+        for (final row in rows)
+          DoctorWithStats(
+            doctor: row.readTable(_db.doctors),
+            activeMedicineCount: row.read(medCount) ?? 0,
+          ),
+      ],
+    );
   }
 
-  Stream<Doctor?> watchById(int id) =>
-      (_db.select(_db.doctors)..where((d) => d.id.equals(id)))
-          .watchSingleOrNull();
+  Stream<Doctor?> watchById(int id) => (_db.select(
+    _db.doctors,
+  )..where((d) => d.id.equals(id))).watchSingleOrNull();
 
   Future<int> create(DoctorsCompanion doctor) =>
       _db.into(_db.doctors).insert(doctor);

@@ -12,7 +12,9 @@ void main() {
   Future<int> addDoctor(String name) =>
       db.into(db.doctors).insert(DoctorsCompanion.insert(name: name));
 
-  Future<int> addMedicine({int? doctorId}) => db.into(db.medicines).insert(
+  Future<int> addMedicine({int? doctorId}) => db
+      .into(db.medicines)
+      .insert(
         MedicinesCompanion.insert(
           name: 'Paracetamol',
           startDate: DateTime(2026, 10, 1),
@@ -22,7 +24,9 @@ void main() {
       );
 
   test('supports many doctors with medicines linked to them', () async {
-    final ids = [for (final n in ['A', 'B', 'C', 'D']) await addDoctor('Dr $n')];
+    final ids = [
+      for (final n in ['A', 'B', 'C', 'D']) await addDoctor('Dr $n'),
+    ];
     await addMedicine(doctorId: ids[1]);
 
     final query = db.select(db.medicines).join([
@@ -37,25 +41,34 @@ void main() {
     final med = await addMedicine(doctorId: doc);
     await (db.delete(db.doctors)..where((d) => d.id.equals(doc))).go();
 
-    final m = await (db.select(db.medicines)..where((t) => t.id.equals(med)))
-        .getSingle();
+    final m = await (db.select(
+      db.medicines,
+    )..where((t) => t.id.equals(med))).getSingle();
     expect(m.doctorId, isNull);
   });
 
   test('deleting a medicine cascades to reminders and logs', () async {
     final med = await addMedicine();
-    final rem = await db.into(db.reminders).insert(RemindersCompanion.insert(
-          type: ReminderType.medicine,
-          title: 'Take Paracetamol',
-          startAt: DateTime(2026, 10, 1, 8),
-          medicineId: Value(med),
-          repeatRule: const Value(RepeatRule.daily),
-        ));
-    await db.into(db.reminderLogs).insert(ReminderLogsCompanion.insert(
-          reminderId: rem,
-          scheduledFor: DateTime(2026, 10, 1, 8),
-          status: ReminderLogStatus.taken,
-        ));
+    final rem = await db
+        .into(db.reminders)
+        .insert(
+          RemindersCompanion.insert(
+            type: ReminderType.medicine,
+            title: 'Take Paracetamol',
+            startAt: DateTime(2026, 10, 1, 8),
+            medicineId: Value(med),
+            repeatRule: const Value(RepeatRule.daily),
+          ),
+        );
+    await db
+        .into(db.reminderLogs)
+        .insert(
+          ReminderLogsCompanion.insert(
+            reminderId: rem,
+            scheduledFor: DateTime(2026, 10, 1, 8),
+            status: ReminderLogStatus.taken,
+          ),
+        );
 
     await (db.delete(db.medicines)..where((t) => t.id.equals(med))).go();
     expect(await db.select(db.reminders).get(), isEmpty);
@@ -63,15 +76,23 @@ void main() {
   });
 
   test('deleting a record cascades to its attachments', () async {
-    final rec = await db.into(db.records).insert(RecordsCompanion.insert(
-          type: RecordType.prescription,
-          title: 'Rx',
-          recordDate: DateTime(2026, 10, 1),
-        ));
-    await db.into(db.recordAttachments).insert(RecordAttachmentsCompanion.insert(
-          recordId: rec,
-          relativePath: 'records/1/page1.jpg',
-        ));
+    final rec = await db
+        .into(db.records)
+        .insert(
+          RecordsCompanion.insert(
+            type: RecordType.prescription,
+            title: 'Rx',
+            recordDate: DateTime(2026, 10, 1),
+          ),
+        );
+    await db
+        .into(db.recordAttachments)
+        .insert(
+          RecordAttachmentsCompanion.insert(
+            recordId: rec,
+            relativePath: 'records/1/page1.jpg',
+          ),
+        );
     await (db.delete(db.records)..where((t) => t.id.equals(rec))).go();
     expect(await db.select(db.recordAttachments).get(), isEmpty);
   });
@@ -79,41 +100,57 @@ void main() {
   test('CHECK constraints reject invalid rows', () async {
     // Medicine reminder without a medicine.
     await expectLater(
-      db.into(db.reminders).insert(RemindersCompanion.insert(
-            type: ReminderType.medicine,
-            title: 'x',
-            startAt: DateTime(2026),
-          )),
+      db
+          .into(db.reminders)
+          .insert(
+            RemindersCompanion.insert(
+              type: ReminderType.medicine,
+              title: 'x',
+              startAt: DateTime(2026),
+            ),
+          ),
       throwsA(isA<SqliteException>()),
     );
     // Weekly reminder without weekdays.
     await expectLater(
-      db.into(db.reminders).insert(RemindersCompanion.insert(
-            type: ReminderType.vaccine,
-            title: 'x',
-            startAt: DateTime(2026),
-            repeatRule: const Value(RepeatRule.weekly),
-          )),
+      db
+          .into(db.reminders)
+          .insert(
+            RemindersCompanion.insert(
+              type: ReminderType.vaccine,
+              title: 'x',
+              startAt: DateTime(2026),
+              repeatRule: const Value(RepeatRule.weekly),
+            ),
+          ),
       throwsA(isA<SqliteException>()),
     );
     // Every-N-days reminder without N.
     await expectLater(
-      db.into(db.reminders).insert(RemindersCompanion.insert(
-            type: ReminderType.medicalTest,
-            title: 'x',
-            startAt: DateTime(2026),
-            repeatRule: const Value(RepeatRule.everyNDays),
-          )),
+      db
+          .into(db.reminders)
+          .insert(
+            RemindersCompanion.insert(
+              type: ReminderType.medicalTest,
+              title: 'x',
+              startAt: DateTime(2026),
+              repeatRule: const Value(RepeatRule.everyNDays),
+            ),
+          ),
       throwsA(isA<SqliteException>()),
     );
     // Negative expense.
     await expectLater(
-      db.into(db.expenses).insert(ExpensesCompanion.insert(
-            category: ExpenseCategory.medicine,
-            title: 'x',
-            amountMinor: -1,
-            spentOn: DateTime(2026),
-          )),
+      db
+          .into(db.expenses)
+          .insert(
+            ExpensesCompanion.insert(
+              category: ExpenseCategory.medicine,
+              title: 'x',
+              amountMinor: -1,
+              spentOn: DateTime(2026),
+            ),
+          ),
       throwsA(isA<SqliteException>()),
     );
     // Dangling foreign key.

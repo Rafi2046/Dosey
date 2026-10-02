@@ -1,7 +1,16 @@
 // Enums persisted via Drift's `textEnum`, which stores `enum.name`.
 // Renaming a value is a schema change and needs a migration; reordering is safe.
 
-enum MedicineForm { tablet, capsule, syrup, injection, drops, inhaler, cream, other }
+enum MedicineForm {
+  tablet,
+  capsule,
+  syrup,
+  injection,
+  drops,
+  inhaler,
+  cream,
+  other,
+}
 
 enum MealRelation { beforeMeal, withMeal, afterMeal, anytime }
 

@@ -67,12 +67,18 @@ abstract final class AppSpacing {
   // ── Common insets ─────────────────────────────────────────────────────────
   static const EdgeInsets screenPadding = EdgeInsets.symmetric(horizontal: lg);
   static const EdgeInsets cardPadding = EdgeInsets.all(lg);
-  static const EdgeInsets inputPadding =
-      EdgeInsets.symmetric(horizontal: lg, vertical: md);
-  static const EdgeInsets buttonPadding =
-      EdgeInsets.symmetric(horizontal: xl, vertical: md);
-  static const EdgeInsets chipPadding =
-      EdgeInsets.symmetric(horizontal: md, vertical: xs);
+  static const EdgeInsets inputPadding = EdgeInsets.symmetric(
+    horizontal: lg,
+    vertical: md,
+  );
+  static const EdgeInsets buttonPadding = EdgeInsets.symmetric(
+    horizontal: xl,
+    vertical: md,
+  );
+  static const EdgeInsets chipPadding = EdgeInsets.symmetric(
+    horizontal: md,
+    vertical: xs,
+  );
 
   // ── Gaps (use inside Row/Column) ──────────────────────────────────────────
   static const SizedBox gapXs = SizedBox(width: xs, height: xs);

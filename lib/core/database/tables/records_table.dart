@@ -12,9 +12,11 @@ class Records extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get type => textEnum<RecordType>()();
   TextColumn get title => text().withLength(min: 1, max: 160)();
-  IntColumn get doctorId => integer()
-      .nullable()
-      .references(Doctors, #id, onDelete: KeyAction.setNull)();
+  IntColumn get doctorId => integer().nullable().references(
+    Doctors,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
 
   /// Date printed on the document (not the upload date).
   DateTimeColumn get recordDate => dateTime()();
@@ -26,8 +28,8 @@ class Records extends Table {
 @TableIndex(name: 'idx_attachments_record', columns: {#recordId})
 class RecordAttachments extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get recordId => integer()
-      .references(Records, #id, onDelete: KeyAction.cascade)();
+  IntColumn get recordId =>
+      integer().references(Records, #id, onDelete: KeyAction.cascade)();
 
   /// Path relative to the app documents directory. Never store absolute paths:
   /// the iOS container path changes between app updates.

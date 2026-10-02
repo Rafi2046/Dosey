@@ -69,7 +69,9 @@ abstract final class AppTextStyles {
     fontSize: AppSpacing.fontDisplay,
     fontWeight: FontWeight.w800,
     color: AppColors.neonCyan,
-    shadows: [Shadow(color: AppColors.neonGlow, blurRadius: AppSpacing.glowBlur)],
+    shadows: [
+      Shadow(color: AppColors.neonGlow, blurRadius: AppSpacing.glowBlur),
+    ],
   );
 
   static const TextStyle neonLabel = TextStyle(

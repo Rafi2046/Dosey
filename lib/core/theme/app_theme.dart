@@ -121,8 +121,9 @@ abstract final class AppTheme {
       backgroundColor: AppColors.surfaceElevated,
       showDragHandle: true,
       shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.radiusXl),
+        ),
       ),
     ),
     snackBarTheme: SnackBarThemeData(
@@ -131,8 +132,9 @@ abstract final class AppTheme {
       contentTextStyle: AppTextStyles.body,
       shape: _roundedBorder(AppSpacing.radiusMd, AppColors.glassBorder),
     ),
-    progressIndicatorTheme:
-        const ProgressIndicatorThemeData(color: AppColors.neonCyan),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      color: AppColors.neonCyan,
+    ),
   );
 
   static const ColorScheme _colorScheme = ColorScheme.dark(
@@ -171,9 +173,8 @@ abstract final class AppTheme {
   static OutlineInputBorder _inputBorder(
     Color color, [
     double width = AppSpacing.borderThin,
-  ]) =>
-      OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        borderSide: BorderSide(color: color, width: width),
-      );
+  ]) => OutlineInputBorder(
+    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+    borderSide: BorderSide(color: color, width: width),
+  );
 }

@@ -33,12 +33,12 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (m) => m.createAll(),
-        beforeOpen: (details) async {
-          // SQLite ships with FK enforcement off; cascades depend on it.
-          await customStatement('PRAGMA foreign_keys = ON');
-        },
-      );
+    onCreate: (m) => m.createAll(),
+    beforeOpen: (details) async {
+      // SQLite ships with FK enforcement off; cascades depend on it.
+      await customStatement('PRAGMA foreign_keys = ON');
+    },
+  );
 
   /// Adds [delta] (negative to consume) to a medicine's stock, clamped at
   /// zero. No-op when stock isn't tracked (null).

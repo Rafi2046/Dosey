@@ -20,17 +20,23 @@ class Expenses extends Table {
   IntColumn get amountMinor => integer()();
   RealColumn get quantity => real().nullable()();
 
-  IntColumn get medicineId => integer()
-      .nullable()
-      .references(Medicines, #id, onDelete: KeyAction.setNull)();
-  IntColumn get doctorId => integer()
-      .nullable()
-      .references(Doctors, #id, onDelete: KeyAction.setNull)();
+  IntColumn get medicineId => integer().nullable().references(
+    Medicines,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
+  IntColumn get doctorId => integer().nullable().references(
+    Doctors,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
 
   /// Receipt / invoice image.
-  IntColumn get receiptRecordId => integer()
-      .nullable()
-      .references(Records, #id, onDelete: KeyAction.setNull)();
+  IntColumn get receiptRecordId => integer().nullable().references(
+    Records,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
 
   DateTimeColumn get spentOn => dateTime()();
   TextColumn get notes => text().nullable()();

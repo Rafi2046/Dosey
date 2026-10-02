@@ -13,6 +13,7 @@ class ChoicePills<T> extends StatelessWidget {
     required this.onChanged,
     this.iconOf,
     this.multiSelect = false,
+    this.onDark = false,
   });
 
   final List<T> options;
@@ -21,6 +22,10 @@ class ChoicePills<T> extends StatelessWidget {
   final IconData Function(T)? iconOf;
   final ValueChanged<Set<T>> onChanged;
   final bool multiSelect;
+
+  /// Use on sage screens: selected = cream, unselected = moss (on cream
+  /// forms it's the reverse, matching the design's chips).
+  final bool onDark;
 
   void _toggle(T option) {
     if (!multiSelect) return onChanged({option});
@@ -40,6 +45,7 @@ class ChoicePills<T> extends StatelessWidget {
             label: labelOf(option),
             icon: iconOf?.call(option),
             selected: selected.contains(option),
+            onDark: onDark,
             onTap: () => _toggle(option),
           ),
       ],
@@ -52,23 +58,27 @@ class _Pill extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onTap,
+    required this.onDark,
     this.icon,
   });
 
   final String label;
   final IconData? icon;
   final bool selected;
+  final bool onDark;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final fg = selected ? AppColors.textOnDark : AppColors.ink;
+    final (bg, fg) = switch ((selected, onDark)) {
+      (true, false) => (AppColors.moss, AppColors.textOnDark),
+      (false, false) => (AppColors.sand, AppColors.ink),
+      (true, true) => (AppColors.creamLight, AppColors.ink),
+      (false, true) => (AppColors.moss, AppColors.textOnDark),
+    };
     return AnimatedContainer(
       duration: AppSpacing.animFast,
-      decoration: ShapeDecoration(
-        color: selected ? AppColors.moss : AppColors.sand,
-        shape: const StadiumBorder(),
-      ),
+      decoration: ShapeDecoration(color: bg, shape: const StadiumBorder()),
       child: Material(
         type: MaterialType.transparency,
         shape: const StadiumBorder(),

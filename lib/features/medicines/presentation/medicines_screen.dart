@@ -33,6 +33,7 @@ class MedicinesScreen extends ConsumerWidget {
           const ScreenHeader(title: AppStrings.medicinesTitle),
           ChoicePills<bool>(
             options: const [false, true],
+            onDark: true,
             selected: {showStopped},
             labelOf: (stopped) =>
                 stopped ? AppStrings.stopped : AppStrings.active,

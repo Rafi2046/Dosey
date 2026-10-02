@@ -22,6 +22,9 @@ abstract final class AppColors {
   /// Rotating palette for stacked cards (olive → mint → stone → cream).
   static const List<Color> cardCycle = [olive, mint, stone, cream];
 
+  /// Same idea for tiles placed ON a cream surface (no cream tile).
+  static const List<Color> cardCycleOnLight = [olive, mint, stone, moss];
+
   // ── Accent ────────────────────────────────────────────────────────────────
   static const Color accent = Color(0xFFFD572F);
   static const Color accentPressed = Color(0xFFE2461F);

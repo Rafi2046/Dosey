@@ -44,7 +44,12 @@ abstract final class AppSpacing {
   static const double medThumb = 56;
   static const double recordThumbAspect = 0.78;
   static const double recordTileThumbHeight = 150;
+  static const double maxZoom = 4;
+  static const double categoryLabelWidth = 96;
+  static const double addTileAspect = 1.6;
   static const double stackOverlap = 28;
+  static const double pageStripHeight = 120;
+  static const double pageStripThumbWidth = 92;
   static const double barHeight = 10;
   static const double navIcon = 26;
   static const double amountFont = 44;

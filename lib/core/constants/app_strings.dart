@@ -209,6 +209,11 @@ abstract final class AppStrings {
   static const String skipped = 'Skipped';
   static const String snoozed = 'Snoozed';
   static String nextIn(String duration) => 'Next in $duration';
+  static String nextTypeIn(String type, String duration) =>
+      'Next $type in $duration';
+  static const String markAsTaken = 'Mark as taken';
+  static const String skipDose = 'Skip';
+  static const String doneForToday = 'Done';
   static String inHoursMinutes(int h, int m) =>
       h == 0 ? '$m min' : (m == 0 ? '$h h' : '$h h $m min');
   static const String morning = 'Morning';
@@ -276,6 +281,7 @@ abstract final class AppStrings {
   static const String doctorRecords = 'Records';
   static const String doctorAppointments = 'Appointments';
   static const String unarchive = 'Restore';
+  static const String addAppointment = 'Add appointment';
   static const String deleteDoctorBody =
       'Medicines and records stay, but will no longer be linked to this doctor.';
   static String activeMedicines(int n) =>
@@ -355,6 +361,8 @@ abstract final class AppStrings {
   static const String debugTestAlarmScheduled =
       'Test alarm scheduled. Lock the phone and wait.';
   static const String debugTestAlarmTitle = 'Test medicine';
+  static const String debugLoadDemo = 'Load demo data';
+  static const String debugDemoLoaded = 'Demo data loaded';
   static const String debugTestAlarmBody = 'Take 1 tablet after breakfast';
 
   // ── Notification channels ─────────────────────────────────────────────────

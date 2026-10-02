@@ -2,11 +2,11 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/constants/constants.dart';
-import '../core/database/app_database.dart';
-import '../core/widgets/pill_button.dart';
-import '../features/medicines/providers/medicines_providers.dart';
-import '../features/reminders/providers/reminders_providers.dart';
+import '../../core/constants/constants.dart';
+import '../../core/database/app_database.dart';
+import '../../core/widgets/pill_button.dart';
+import '../../features/medicines/providers/medicines_providers.dart';
+import '../../features/reminders/providers/reminders_providers.dart';
 
 /// Debug-only: creates a medicine + one-shot critical reminder at the next-but-
 /// one minute, to exercise the whole alarm pipeline on a real device.

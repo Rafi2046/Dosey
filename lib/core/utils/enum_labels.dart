@@ -113,10 +113,10 @@ extension ExpenseCategoryX on ExpenseCategory {
 
   Color get color => switch (this) {
     ExpenseCategory.medicine => AppColors.mint,
-    ExpenseCategory.consultation => AppColors.olive,
+    ExpenseCategory.consultation => AppColors.sand,
     ExpenseCategory.test => AppColors.accent,
-    ExpenseCategory.vaccine => AppColors.stone,
-    ExpenseCategory.other => AppColors.sand,
+    ExpenseCategory.vaccine => AppColors.warning,
+    ExpenseCategory.other => AppColors.textOnDarkMuted,
   };
 }
 

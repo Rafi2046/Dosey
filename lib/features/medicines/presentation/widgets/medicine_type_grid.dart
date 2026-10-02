@@ -73,6 +73,7 @@ class MedicineTypeGrid extends StatelessWidget {
         if (_isOther) ...[
           AppSpacing.gapXl,
           ChoicePills<MedicineForm>(
+            onDark: true,
             options: _others,
             selected: {value},
             labelOf: (f) => f.label,

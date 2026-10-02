@@ -1,90 +1,33 @@
-import 'dart:io';
-
 import 'package:dosey/app/app.dart';
 import 'package:dosey/core/constants/constants.dart';
 import 'package:dosey/core/database/app_database.dart';
-import 'package:dosey/core/database/database_provider.dart';
-import 'package:dosey/core/notifications/notification_providers.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
-import 'package:dosey/core/notifications/reminder_alarm_engine.dart';
-import 'package:dosey/core/storage/storage_providers.dart';
 import 'package:dosey/features/alarm/presentation/alarm_ring_screen.dart';
-import 'package:dosey/features/onboarding/providers/permissions_provider.dart';
 import 'package:dosey/features/reminders/data/reminders_repository.dart';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/fakes.dart';
+import 'support/harness.dart';
 
 void main() {
   late AppDatabase db;
-  late FakeAlarmScheduler scheduler;
-  late FakeNotificationPresenter notifier;
   late FakePermissionService permissions;
+  final now = DateTime(2026, 10, 3, 9, 30);
 
   setUp(() {
     db = AppDatabase(NativeDatabase.memory());
-    scheduler = FakeAlarmScheduler();
-    notifier = FakeNotificationPresenter();
     permissions = FakePermissionService();
   });
   tearDown(() => db.close());
 
   Widget app() => ProviderScope(
-    overrides: [
-      appDatabaseProvider.overrideWithValue(db),
-      documentsDirectoryProvider.overrideWithValue(Directory.systemTemp),
-      permissionServiceProvider.overrideWithValue(permissions),
-      alarmChannelRefresherProvider.overrideWithValue(() async {}),
-      alarmEngineProvider.overrideWith(
-        (ref) => ReminderAlarmEngine(
-          reminders: RemindersRepository(db),
-          scheduler: scheduler,
-          notifier: notifier,
-        ),
-      ),
-    ],
+    overrides: testOverrides(db: db, now: now, permissions: permissions),
     child: const DoseyApp(),
   );
-
-  void usePhoneSize(WidgetTester tester) {
-    tester.view.physicalSize = const Size(1080, 2400);
-    tester.view.devicePixelRatio = 2.75;
-    addTearDown(tester.view.reset);
-  }
-
-  Future<void> settle(WidgetTester tester) async {
-    for (var i = 0; i < 10; i++) {
-      await tester.pump(const Duration(milliseconds: 100));
-    }
-  }
-
-  /// Unmounts the app so Drift's stream-cleanup timers can fire before the
-  /// test binding checks for pending timers.
-  Future<void> unmount(WidgetTester tester) async {
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.pump(const Duration(seconds: 1));
-  }
-
-  /// Runs a DB operation inside the fake-async zone, pumping until it's done.
-  /// (`runAsync` would deadlock: Drift work queued in the fake zone only
-  /// progresses when the test pumps.)
-  Future<T> dbRun<T>(WidgetTester tester, Future<T> Function() op) async {
-    T? result;
-    var done = false;
-    op().then((value) {
-      result = value;
-      done = true;
-    });
-    for (var i = 0; i < 100 && !done; i++) {
-      await tester.pump(const Duration(milliseconds: 20));
-    }
-    expect(done, isTrue, reason: 'DB operation did not complete');
-    return result as T;
-  }
 
   testWidgets('onboarding gates on essential permissions', (tester) async {
     usePhoneSize(tester);
@@ -94,7 +37,6 @@ void main() {
     expect(find.text(AppStrings.permNotificationsTitle), findsOneWidget);
     expect(find.text(AppStrings.onboardingEssentialHint), findsOneWidget);
 
-    // Grant both essentials via their "Allow" pills.
     for (var i = 0; i < 2; i++) {
       final allow = find.text(AppStrings.allow).first;
       await tester.ensureVisible(allow);
@@ -110,7 +52,7 @@ void main() {
 
     await tester.tap(find.text(AppStrings.onboardingContinue));
     await settle(tester);
-    expect(find.text(AppStrings.tagline), findsOneWidget);
+    expect(find.text(AppStrings.dashboardTitle), findsOneWidget);
     await unmount(tester);
   });
 
@@ -121,13 +63,9 @@ void main() {
     permissions.grantedSet.addAll(AppPermission.values);
     await tester.pumpWidget(app());
     await settle(tester);
-    expect(find.text(AppStrings.tagline), findsOneWidget);
+    expect(find.text(AppStrings.dashboardTitle), findsOneWidget);
 
-    final at = DateTime.now().copyWith(
-      second: 0,
-      millisecond: 0,
-      microsecond: 0,
-    );
+    final at = DateTime(2026, 10, 3, 9);
     await dbRun(tester, () async {
       final med = await db
           .into(db.medicines)
@@ -152,8 +90,6 @@ void main() {
     await settle(tester);
 
     expect(find.byType(AlarmRingScreen), findsOneWidget);
-    expect(find.text(AppStrings.alarmMarkTaken), findsOneWidget);
-
     await tester.tap(find.text(AppStrings.alarmMarkTaken));
     await settle(tester);
 

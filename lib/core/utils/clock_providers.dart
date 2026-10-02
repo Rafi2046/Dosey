@@ -10,3 +10,19 @@ final currentDayProvider = StreamProvider<DateTime>((ref) async* {
     await Future<void>.delayed(tomorrow.difference(now));
   }
 });
+
+/// Current time, re-emitted at the start of every minute (for countdowns).
+final minuteTickerProvider = StreamProvider<DateTime>((ref) async* {
+  while (true) {
+    final now = DateTime.now();
+    yield now;
+    final nextMinute = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      now.hour,
+      now.minute + 1,
+    );
+    await Future<void>.delayed(nextMinute.difference(now));
+  }
+});

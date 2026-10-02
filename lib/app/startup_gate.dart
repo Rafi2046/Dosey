@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/constants/constants.dart';
 import '../features/onboarding/presentation/permission_onboarding_screen.dart';
 import '../features/onboarding/providers/permissions_provider.dart';
-import 'placeholder_home.dart';
+import 'home_shell.dart';
 
 /// Shows permission onboarding on launch whenever an essential permission is
 /// missing (first run, or the user revoked one later), otherwise home.
@@ -33,7 +33,7 @@ class _StartupGateState extends ConsumerState<StartupGate> {
       true => PermissionOnboardingScreen(
         onFinished: () => setState(() => _needsOnboarding = false),
       ),
-      false => const PlaceholderHome(),
+      false => const HomeShell(),
     };
     return AnimatedSwitcher(duration: AppSpacing.animSlow, child: page);
   }

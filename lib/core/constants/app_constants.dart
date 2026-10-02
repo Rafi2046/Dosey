@@ -29,6 +29,10 @@ abstract final class AppConstants {
   static const int imageQuality = 85;
   static const double imageMaxDimension = 2400;
 
+  /// Decode widths for thumbnails (keeps grids light on memory).
+  static const int thumbCacheWidth = 400;
+  static const int stripCacheWidth = 300;
+
   // ── Notification channels ─────────────────────────────────────────────────
   // Changing a channel's sound/importance requires a NEW key: Android freezes
   // channel settings after first creation.

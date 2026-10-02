@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
+import '../../../core/utils/clock_providers.dart';
 import '../../medicines/providers/medicines_providers.dart';
 import '../../reminders/providers/reminders_providers.dart';
 import '../data/expenses_repository.dart';
@@ -63,4 +64,12 @@ final medicineCostProjectionProvider = FutureProvider<MedicineCostProjection>((
     activeMedicines: medicines,
     reminders: [for (final r in reminders) r.reminder],
   );
+});
+
+/// Always the current calendar month (dashboard), independent of the month
+/// selected on the expenses screen.
+final currentMonthExpenseTotalProvider = StreamProvider<int>((ref) {
+  final day = ref.watch(currentDayProvider).value ?? DateTime.now();
+  final (start, end) = _monthRange(DateTime(day.year, day.month));
+  return ref.watch(expensesRepositoryProvider).watchTotal(start, end);
 });

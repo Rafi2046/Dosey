@@ -27,6 +27,10 @@ class SurfaceCard extends StatelessWidget {
   static bool isLight(Color color) =>
       ThemeData.estimateBrightnessForColor(color) == Brightness.light;
 
+  /// Ink on light surfaces, cream on dark ones.
+  static Color foregroundFor(Color color) =>
+      isLight(color) ? AppColors.ink : AppColors.textOnDark;
+
   @override
   Widget build(BuildContext context) {
     final borderRadius = BorderRadius.circular(radius);

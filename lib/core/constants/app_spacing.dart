@@ -36,6 +36,18 @@ abstract final class AppSpacing {
   static const double heroIllustration = 240;
   static const double alarmIllustration = 200;
   static const double logo = 96;
+  static const double avatarSm = 36;
+  static const double avatarMd = 48;
+  static const double avatarLg = 72;
+  static const double emptyIllustration = 140;
+  static const double medTypeImage = 72;
+  static const double medThumb = 56;
+  static const double recordThumbAspect = 0.78;
+  static const double recordTileThumbHeight = 150;
+  static const double stackOverlap = 28;
+  static const double barHeight = 10;
+  static const double navIcon = 26;
+  static const double amountFont = 44;
   static const double navBarHeight = 72;
   static const double fabSize = 64;
 
@@ -46,6 +58,11 @@ abstract final class AppSpacing {
   static const double shadowBlur = 24;
   static const Offset shadowOffset = Offset(0, 10);
   static const double disabledOpacity = 0.45;
+  static const double unselectedTileScale = 0.96;
+  static const double emptyIllustrationOpacity = 0.9;
+  static const double sheetInitialSize = 0.6;
+  static const double sheetMaxSize = 0.9;
+  static const double navBarBlur = 16;
 
   // ── Text ──────────────────────────────────────────────────────────────────
   static const double fontXs = 11;
@@ -85,6 +102,11 @@ abstract final class AppSpacing {
     horizontal: lg,
     vertical: sm,
   );
+  static const EdgeInsets pillPadding = EdgeInsets.symmetric(
+    horizontal: lg,
+    vertical: md,
+  );
+  static const EdgeInsets listBottomPadding = EdgeInsets.only(bottom: 140);
   static const EdgeInsets bottomBarPadding = EdgeInsets.fromLTRB(
     xl,
     md,

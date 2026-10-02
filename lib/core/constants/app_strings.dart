@@ -103,6 +103,15 @@ abstract final class AppStrings {
   static const String formCream = 'Cream';
   static const String formOther = 'Other';
 
+  static const String unitTablet = 'tablet';
+  static const String unitCapsule = 'capsule';
+  static const String unitMl = 'ml';
+  static const String unitInjection = 'unit';
+  static const String unitDrop = 'drop';
+  static const String unitPuff = 'puff';
+  static const String unitApplication = 'application';
+  static const String unitDose = 'dose';
+
   static const String mealBefore = 'Before meal';
   static const String mealWith = 'With meal';
   static const String mealAfter = 'After meal';
@@ -163,6 +172,141 @@ abstract final class AppStrings {
   static const String categoryTest = 'Test';
   static const String categoryVaccine = 'Vaccine';
   static const String categoryOther = 'Other';
+
+  // ── Common (screens) ──────────────────────────────────────────────────────
+  static const String seeAll = 'See all';
+  static const String all = 'All';
+  static const String active = 'Active';
+  static const String notSet = 'Not set';
+  static const String optional = 'Optional';
+  static const String saveChanges = 'Save changes';
+  static const String saved = 'Saved';
+  static const String deleted = 'Deleted';
+  static const String next = 'Next';
+  static const String today = 'Today';
+  static const String tomorrow = 'Tomorrow';
+  static const String ongoing = 'Ongoing';
+  static const String call = 'Call';
+  static const String email = 'Email';
+  static const String details = 'Details';
+  static const String choose = 'Choose';
+  static const String clear = 'Clear';
+  static const String addTime = 'Add time';
+  static const String minutes = 'minutes';
+  static const String daysUnit = 'days';
+  static const String nothingYet = 'Nothing here yet';
+  static String daysCount(int n) => n == 1 ? '1 day' : '$n days';
+  static String pagesCount(int n) => n == 1 ? '1 page' : '$n pages';
+
+  // ── Dashboard ─────────────────────────────────────────────────────────────
+  static const String goodMorning = 'Good morning';
+  static const String goodAfternoon = 'Good afternoon';
+  static const String goodEvening = 'Good evening';
+  static const String dashboardTitle = "Today's Medicine\nReminders";
+  static const String allDoneToday = 'All done for today. Great job!';
+  static const String dueNow = 'Due now';
+  static const String missed = 'Missed';
+  static const String skipped = 'Skipped';
+  static const String snoozed = 'Snoozed';
+  static String nextIn(String duration) => 'Next in $duration';
+  static String inHoursMinutes(int h, int m) =>
+      h == 0 ? '$m min' : (m == 0 ? '$h h' : '$h h $m min');
+  static const String morning = 'Morning';
+  static const String afternoon = 'Afternoon';
+  static const String evening = 'Evening';
+  static const String bedtime = 'Bedtime';
+  static const String upcoming = 'Coming up';
+  static const String medicineCost = 'Medicine cost';
+  static const String perMonth = '/ month';
+  static const String spentThisMonth = 'Spent this month';
+  static const String runningLow = 'Running low';
+  static String unitsLeft(String amount) => '$amount left';
+  static const String quickDoctors = 'Your doctors';
+  static const String quickRecords = 'Records';
+
+  // ── Reminders (screens) ───────────────────────────────────────────────────
+  static const String remindersTitle = 'Your\nReminders';
+  static const String paused = 'Paused';
+  static const String ended = 'Ended';
+  static const String reminderType = 'Reminder type';
+  static const String reminderTitleHint = 'e.g. Morning insulin';
+  static const String reminderMedicine = 'Medicine';
+  static const String reminderDoctor = 'Doctor';
+  static const String reminderWhen = 'When';
+  static const String reminderSnooze = 'Snooze length';
+  static const String selectMedicineError = 'Choose a medicine';
+  static const String selectWeekdaysError = 'Choose at least one day';
+  static const String deleteReminderBody =
+      'The reminder and its history will be removed.';
+  static String everyNDays(int n) => n == 1 ? 'Every day' : 'Every $n days';
+  static String timesPerDay(int n) => n == 1 ? 'Once a day' : '$n times a day';
+
+  // ── Medicines (screens) ───────────────────────────────────────────────────
+  static const String medicinesTitle = 'Your\nMedicines';
+  static const String stopped = 'Stopped';
+  static const String chooseMedicineType = 'Choose Medicine\nType';
+  static const String medicineDetails = 'Medicine details';
+  static const String medicineDescription = 'Description';
+  static const String medicineDescriptionHint = 'How and why to take it';
+  static const String timeDuration = 'Time Duration';
+  static const String medicineTime = 'Medicine Time';
+  static const String daysInWeek = 'Days in a week';
+  static const String doses = 'Doses';
+  static const String costPerMonth = 'Cost per month';
+  static const String inStock = 'In stock';
+  static const String prescription = 'Prescription';
+  static const String reminderTimesHint =
+      'Add the times you take this medicine — each one rings like an alarm.';
+  static const String noReminderTimes = 'No reminder times yet';
+  static const String changeSetting = 'Change Setting';
+  static const String refill = 'Refill';
+  static const String refillTitle = 'Record a refill';
+  static const String refillQuantity = 'Quantity bought';
+  static const String refillTotal = 'Total paid';
+  static const String refillSaved = 'Refill saved and added to expenses';
+  static const String stopMedicine = 'Stop taking';
+  static const String resumeMedicine = 'Resume';
+  static const String deleteMedicineBody =
+      'Its reminders and dose history will be deleted too.';
+  static const String everyDay = 'Every day';
+
+  // ── Doctors (screens) ─────────────────────────────────────────────────────
+  static const String doctorsTitle = 'Your\nDoctors';
+  static const String prescribedMedicines = 'Prescribed medicines';
+  static const String doctorRecords = 'Records';
+  static const String doctorAppointments = 'Appointments';
+  static const String unarchive = 'Restore';
+  static const String deleteDoctorBody =
+      'Medicines and records stay, but will no longer be linked to this doctor.';
+  static String activeMedicines(int n) =>
+      n == 1 ? '1 active medicine' : '$n active medicines';
+
+  // ── Records (screens) ─────────────────────────────────────────────────────
+  static const String recordsTitle = 'Your\nRecords';
+  static const String addPages = 'Add pages';
+  static const String deletePage = 'Delete page';
+  static const String recordTitleHint = 'e.g. Blood test – Oct';
+  static const String deleteRecordBody =
+      'All pages will be deleted from this device.';
+
+  // ── Expenses (screens) ────────────────────────────────────────────────────
+  static const String expensesTitle = 'Your\nExpenses';
+  static const String byCategory = 'By category';
+  static const String medicineCosts = 'Projected medicine costs';
+  static const String projectedHint =
+      'Based on your active medicines, their price and reminder times.';
+  static const String noProjection =
+      'Add a price per unit to a medicine to see projected costs.';
+  static const String expenseTitleHint = 'e.g. Napa 500mg strip';
+  static const String expenseMedicine = 'Medicine';
+  static const String expenseDoctor = 'Doctor';
+  static const String deleteExpenseBody = 'This expense will be removed.';
+  static String perDay(String amount) => '$amount / day';
+  static String dosesPerDayLabel(double n) =>
+      '${n == n.roundToDouble() ? n.toInt() : n.toStringAsFixed(1)} / day';
+
+  // ── Add sheet ─────────────────────────────────────────────────────────────
+  static const String addSheetTitle = 'What would you like to add?';
 
   // ── Permission onboarding ─────────────────────────────────────────────────
   static const String onboardingTitle = 'Never miss\na dose';

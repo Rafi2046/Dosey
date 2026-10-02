@@ -112,4 +112,26 @@ abstract final class AppTextStyles {
   static final TextStyle captionOnLight = caption.copyWith(
     color: AppColors.inkMuted,
   );
+  static final TextStyle labelOnLight = caption.copyWith(
+    color: AppColors.inkMuted,
+    fontWeight: FontWeight.w600,
+  );
+  static final TextStyle inputOnLight = body.copyWith(color: AppColors.ink);
+  static final TextStyle subtitleOnLight = subtitle.copyWith(
+    color: AppColors.ink,
+  );
+  static final TextStyle headlineOnLight = headline.copyWith(
+    color: AppColors.ink,
+  );
+
+  /// Big money figure (expense totals).
+  static const TextStyle amount = TextStyle(
+    fontFamily: _display,
+    fontSize: AppSpacing.amountFont,
+    fontWeight: FontWeight.w800,
+    color: AppColors.textOnDark,
+    height: AppSpacing.lineHeightTight,
+  );
+
+  static final TextStyle errorText = caption.copyWith(color: AppColors.error);
 }

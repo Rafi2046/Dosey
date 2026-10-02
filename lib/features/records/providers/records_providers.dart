@@ -47,3 +47,10 @@ final recordAttachmentsProvider = StreamProvider.autoDispose
       (ref, recordId) =>
           ref.watch(recordsRepositoryProvider).watchAttachments(recordId),
     );
+
+/// Prescriptions, for linking a medicine to the document it came from.
+final prescriptionsProvider = StreamProvider<List<RecordSummary>>(
+  (ref) => ref
+      .watch(recordsRepositoryProvider)
+      .watchSummaries(type: RecordType.prescription),
+);

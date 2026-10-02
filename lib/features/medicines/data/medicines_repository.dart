@@ -76,6 +76,35 @@ class MedicinesRepository {
   Future<void> adjustStock(int id, double delta) =>
       _db.adjustMedicineStock(id, delta);
 
+  /// Records a purchase: adds [quantity] to stock (starting stock tracking if
+  /// it wasn't tracked) and logs the cost as a medicine expense, atomically.
+  Future<void> refill({
+    required Medicine medicine,
+    required double quantity,
+    required int totalMinor,
+    DateTime? on,
+  }) => _db.transaction(() async {
+    await update(
+      medicine.id,
+      MedicinesCompanion(
+        stockQuantity: Value((medicine.stockQuantity ?? 0) + quantity),
+      ),
+    );
+    await _db
+        .into(_db.expenses)
+        .insert(
+          ExpensesCompanion.insert(
+            category: ExpenseCategory.medicine,
+            title: medicine.name,
+            amountMinor: totalMinor,
+            quantity: Value(quantity),
+            medicineId: Value(medicine.id),
+            doctorId: Value(medicine.doctorId),
+            spentOn: on ?? DateTime.now(),
+          ),
+        );
+  });
+
   /// Cascades to the medicine's reminders and their logs.
   Future<void> delete(int id) =>
       (_db.delete(_db.medicines)..where((m) => m.id.equals(id))).go();

@@ -7,6 +7,21 @@ abstract final class AppDateFormat {
   static final DateFormat _time = DateFormat(AppConstants.timePattern);
   static final DateFormat _dateTime = DateFormat(AppConstants.dateTimePattern);
 
+  static final DateFormat _date = DateFormat(AppConstants.datePattern);
+  static final DateFormat _shortDate = DateFormat(
+    AppConstants.shortDatePattern,
+  );
+  static final DateFormat _month = DateFormat(AppConstants.monthPattern);
+
+  /// "5 Oct 2026"
+  static String date(DateTime value) => _date.format(value);
+
+  /// "Mon, 5 Oct"
+  static String shortDate(DateTime value) => _shortDate.format(value);
+
+  /// "October 2026"
+  static String month(DateTime value) => _month.format(value);
+
   static String time(DateTime value) => _lowerMeridiem(_time.format(value));
 
   /// "Mon, 5 Oct · 09:00 am"

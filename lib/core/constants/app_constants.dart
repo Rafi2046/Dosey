@@ -14,6 +14,9 @@ abstract final class AppConstants {
   // ── Date formats ──────────────────────────────────────────────────────────
   static const String timePattern = 'hh:mm a';
   static const String dateTimePattern = 'EEE, d MMM · hh:mm a';
+  static const String datePattern = 'd MMM yyyy';
+  static const String shortDatePattern = 'EEE, d MMM';
+  static const String monthPattern = 'MMMM yyyy';
 
   // ── Expense projections ───────────────────────────────────────────────────
   static const int daysPerMonth = 30;
@@ -50,6 +53,7 @@ abstract final class AppConstants {
 
   // ── Alarm scheduling ──────────────────────────────────────────────────────
   static const int defaultSnoozeMinutes = 10;
+  static const List<int> snoozeOptions = [5, 10, 15, 30];
 
   /// Snooze alarms use `snoozeIdOffset + reminderId` so they never collide
   /// with the reminder's own alarm id.

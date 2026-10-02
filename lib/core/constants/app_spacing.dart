@@ -44,6 +44,9 @@ abstract final class AppSpacing {
   static const double glowBlur = 24;
   static const double glowSpread = 0;
   static const double elevationNone = 0;
+  static const double glowOpacity = 0.35;
+  static const Alignment orbTopLeft = Alignment(-1.2, -0.9);
+  static const Alignment orbBottomRight = Alignment(1.3, 0.6);
 
   // ── Text ──────────────────────────────────────────────────────────────────
   static const double fontXs = 11;

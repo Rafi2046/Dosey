@@ -207,7 +207,7 @@ abstract final class AppStrings {
   static const String notifWithDoctor = 'With ';
 
   // ── Debug helpers (debug builds only) ─────────────────────────────────────
-  static const String debugTestAlarm = 'Test alarm in 1 minute';
+  static const String debugTestAlarm = 'Test alarm (rings in 1–2 min)';
   static const String debugTestAlarmScheduled =
       'Test alarm scheduled. Lock the phone and wait.';
   static const String debugTestAlarmTitle = 'Test medicine';

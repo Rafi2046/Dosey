@@ -101,11 +101,15 @@ abstract final class AppTextStyles {
   );
 
   // ── Light-surface variants (cream cards / screens) ────────────────────────
-  static final TextStyle displayOnLight = display.copyWith(color: AppColors.ink);
+  static final TextStyle displayOnLight = display.copyWith(
+    color: AppColors.ink,
+  );
   static final TextStyle titleOnLight = title.copyWith(color: AppColors.ink);
-  static final TextStyle cardTitleOnLight =
-      cardTitle.copyWith(color: AppColors.ink);
+  static final TextStyle cardTitleOnLight = cardTitle.copyWith(
+    color: AppColors.ink,
+  );
   static final TextStyle bodyOnLight = body.copyWith(color: AppColors.inkMuted);
-  static final TextStyle captionOnLight =
-      caption.copyWith(color: AppColors.inkMuted);
+  static final TextStyle captionOnLight = caption.copyWith(
+    color: AppColors.inkMuted,
+  );
 }

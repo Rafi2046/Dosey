@@ -24,6 +24,11 @@ final upcomingRemindersProvider = StreamProvider<List<ReminderWithDetails>>(
   (ref) => ref.watch(remindersRepositoryProvider).watchUpcoming(),
 );
 
+/// Occurrences ringing right now; drives the full-screen alarm screen.
+final ringingRemindersProvider = StreamProvider<List<ReminderWithDetails>>(
+  (ref) => ref.watch(remindersRepositoryProvider).watchRinging(),
+);
+
 final remindersByMedicineProvider = StreamProvider.autoDispose
     .family<List<ReminderWithDetails>, int>(
       (ref, medicineId) =>

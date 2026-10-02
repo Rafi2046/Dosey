@@ -71,8 +71,10 @@ class RemindersRepository {
 
   Future<List<Reminder>> getAll() => _db.select(_db.reminders).get();
 
-  Future<ReminderWithDetails?> getDetails(int id) =>
-      watchById(id).first;
+  /// Raw rows, for keeping OS alarms in sync with the database.
+  Stream<List<Reminder>> watchAllRaw() => _db.select(_db.reminders).watch();
+
+  Future<ReminderWithDetails?> getDetails(int id) => watchById(id).first;
 
   /// Every reminder that should currently have an alarm (scheduler resync).
   Future<List<Reminder>> getSchedulable() =>

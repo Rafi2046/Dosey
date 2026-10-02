@@ -85,7 +85,12 @@ abstract final class AppSpacing {
     horizontal: lg,
     vertical: sm,
   );
-  static const EdgeInsets bottomBarPadding = EdgeInsets.fromLTRB(xl, md, xl, xl);
+  static const EdgeInsets bottomBarPadding = EdgeInsets.fromLTRB(
+    xl,
+    md,
+    xl,
+    xl,
+  );
 
   // ── Gaps (use inside Row/Column) ──────────────────────────────────────────
   static const SizedBox gapXs = SizedBox(width: xs, height: xs);

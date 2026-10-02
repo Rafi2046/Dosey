@@ -35,10 +35,12 @@ class GlassCard extends StatelessWidget {
         boxShadow: glow == null
             ? null
             : [
+                // Outer-only, so the halo doesn't tint the translucent glass.
                 BoxShadow(
                   color: glow.withValues(alpha: AppSpacing.glowOpacity),
                   blurRadius: AppSpacing.glowBlur,
                   spreadRadius: AppSpacing.glowSpread,
+                  blurStyle: BlurStyle.outer,
                 ),
               ],
       ),

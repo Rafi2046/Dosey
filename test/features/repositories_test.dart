@@ -149,7 +149,7 @@ void main() {
           status: ReminderLogStatus.taken,
         );
 
-    final schedule = await container.read(todayScheduleProvider.future);
+    final schedule = await _listenAndRead(container, todayScheduleProvider);
     expect(schedule.map((o) => o.at.hour), [8, 20]);
     expect(schedule.map((o) => o.status), [ReminderLogStatus.taken, null]);
   });
@@ -160,7 +160,7 @@ void main() {
     await addDailyReminder(med, hour: 8);
     await addDailyReminder(med, hour: 20);
 
-    final p = await container.read(medicineCostProjectionProvider.future);
+    final p = await _listenAndRead(container, medicineCostProjectionProvider);
     expect(p.dailyMinor, 2000);
     expect(p.monthlyMinor, 60000);
   });
@@ -211,4 +211,14 @@ void main() {
     expect(cover.existsSync(), isFalse);
     expect(await repo.watchSummaries().first, isEmpty);
   });
+}
+
+/// Riverpod 3 pauses providers that have no listeners, so a bare
+/// `read(p.future)` never resolves. Subscribe like a widget would.
+Future<T> _listenAndRead<T>(
+  ProviderContainer container,
+  FutureProvider<T> provider,
+) {
+  container.listen(provider, (_, _) {});
+  return container.read(provider.future);
 }

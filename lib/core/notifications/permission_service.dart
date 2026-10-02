@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/foundation.dart';
 
 import '../constants/app_constants.dart';
 
@@ -44,6 +45,7 @@ class PermissionService {
       channelKey: _channel,
       permissions: allNative,
     )).toSet();
+    debugPrint('[Permissions] allowed: ${allowed.map((p) => p.name)}');
     return {
       for (final p in AppPermission.values)
         if (p.native.every(allowed.contains)) p,

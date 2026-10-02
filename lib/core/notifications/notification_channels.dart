@@ -26,31 +26,37 @@ abstract final class NotificationChannels {
     ),
   ];
 
-  static List<NotificationChannel> get all => [
-    _alarm(
+  /// (key, name, description, color) of each critical alarm channel.
+  static const List<(String, String, String, Color)> _alarmSpecs = [
+    (
       AppConstants.channelMedicine,
       AppStrings.channelMedicineName,
       AppStrings.channelMedicineDesc,
       AppColors.medicine,
     ),
-    _alarm(
+    (
       AppConstants.channelAppointment,
       AppStrings.channelAppointmentName,
       AppStrings.channelAppointmentDesc,
       AppColors.appointment,
     ),
-    _alarm(
+    (
       AppConstants.channelVaccine,
       AppStrings.channelVaccineName,
       AppStrings.channelVaccineDesc,
       AppColors.vaccine,
     ),
-    _alarm(
+    (
       AppConstants.channelMedicalTest,
       AppStrings.channelTestName,
       AppStrings.channelTestDesc,
       AppColors.medicalTest,
     ),
+  ];
+
+  static List<NotificationChannel> get all => [
+    for (final (key, name, description, color) in _alarmSpecs)
+      _alarm(key, name, description, color),
     NotificationChannel(
       channelGroupKey: AppConstants.channelGroupKey,
       channelKey: AppConstants.channelGentle,
@@ -63,6 +69,24 @@ abstract final class NotificationChannels {
       channelShowBadge: true,
     ),
   ];
+
+  /// Arguments for the native pre-creation of alarm channels with
+  /// USAGE_ALARM audio (see AlarmChannels.kt).
+  static Map<String, Object> get nativeAlarmChannelArgs => {
+    'groupKey': AppConstants.channelGroupKey,
+    'groupName': AppStrings.channelGroupName,
+    'keep': [for (final c in all) c.channelKey!],
+    'channels': [
+      for (final (key, name, description, color) in _alarmSpecs)
+        {
+          'id': key,
+          'name': name,
+          'description': description,
+          'color': color.toARGB32(),
+          'vibration': AppConstants.alarmVibrationPattern,
+        },
+    ],
+  };
 
   /// Max importance + alarm ringtone + `criticalAlerts`, which lets the
   /// channel bypass DND once the user grants Do Not Disturb access.

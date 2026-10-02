@@ -30,11 +30,11 @@ abstract final class AppConstants {
   // Changing a channel's sound/importance requires a NEW key: Android freezes
   // channel settings after first creation.
   static const String channelGroupKey = 'dosey_reminders_group';
-  static const String channelMedicine = 'dosey_alarm_medicine_v1';
-  static const String channelAppointment = 'dosey_alarm_appointment_v1';
-  static const String channelVaccine = 'dosey_alarm_vaccine_v1';
-  static const String channelMedicalTest = 'dosey_alarm_test_v1';
-  static const String channelGentle = 'dosey_gentle_v1';
+  static const String channelMedicine = 'dosey_alarm_medicine_v2';
+  static const String channelAppointment = 'dosey_alarm_appointment_v2';
+  static const String channelVaccine = 'dosey_alarm_vaccine_v2';
+  static const String channelMedicalTest = 'dosey_alarm_test_v2';
+  static const String channelGentle = 'dosey_gentle_v2';
 
   /// Android drawable used as the status-bar icon.
   static const String notificationIcon = 'resource://drawable/ic_stat_dosey';
@@ -69,5 +69,6 @@ abstract final class AppConstants {
   static const String nativeChannel = 'dosey/native';
   static const String nativeSetShowOverLock = 'setShowOverLockScreen';
   static const String nativeRegisterResync = 'registerResyncHandle';
+  static const String nativeEnsureAlarmChannels = 'ensureAlarmChannels';
   static const String nativeWasLaunchedOverLock = 'wasLaunchedOverLockScreen';
 }

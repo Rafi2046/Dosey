@@ -48,14 +48,44 @@ void main() {
     child: const DoseyApp(),
   );
 
+  void usePhoneSize(WidgetTester tester) {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 2.75;
+    addTearDown(tester.view.reset);
+  }
+
   Future<void> settle(WidgetTester tester) async {
     for (var i = 0; i < 10; i++) {
-      await tester.runAsync(() => Future<void>.delayed(Duration.zero));
       await tester.pump(const Duration(milliseconds: 100));
     }
   }
 
+  /// Unmounts the app so Drift's stream-cleanup timers can fire before the
+  /// test binding checks for pending timers.
+  Future<void> unmount(WidgetTester tester) async {
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(seconds: 1));
+  }
+
+  /// Runs a DB operation inside the fake-async zone, pumping until it's done.
+  /// (`runAsync` would deadlock: Drift work queued in the fake zone only
+  /// progresses when the test pumps.)
+  Future<T> dbRun<T>(WidgetTester tester, Future<T> Function() op) async {
+    T? result;
+    var done = false;
+    op().then((value) {
+      result = value;
+      done = true;
+    });
+    for (var i = 0; i < 100 && !done; i++) {
+      await tester.pump(const Duration(milliseconds: 20));
+    }
+    expect(done, isTrue, reason: 'DB operation did not complete');
+    return result as T;
+  }
+
   testWidgets('onboarding gates on essential permissions', (tester) async {
+    usePhoneSize(tester);
     await tester.pumpWidget(app());
     await settle(tester);
 
@@ -63,10 +93,12 @@ void main() {
     expect(find.text(AppStrings.onboardingEssentialHint), findsOneWidget);
 
     // Grant both essentials via their "Allow" pills.
-    await tester.tap(find.text(AppStrings.allow).first);
-    await settle(tester);
-    await tester.tap(find.text(AppStrings.allow).first);
-    await settle(tester);
+    for (var i = 0; i < 2; i++) {
+      final allow = find.text(AppStrings.allow).first;
+      await tester.ensureVisible(allow);
+      await tester.tap(allow);
+      await settle(tester);
+    }
 
     expect(permissions.requested, [
       AppPermission.notifications,
@@ -77,11 +109,13 @@ void main() {
     await tester.tap(find.text(AppStrings.onboardingContinue));
     await settle(tester);
     expect(find.text(AppStrings.tagline), findsOneWidget);
+    await unmount(tester);
   });
 
   testWidgets('ringing reminder opens the alarm screen; Taken closes it', (
     tester,
   ) async {
+    usePhoneSize(tester);
     permissions.grantedSet.addAll(AppPermission.values);
     await tester.pumpWidget(app());
     await settle(tester);
@@ -92,7 +126,7 @@ void main() {
       millisecond: 0,
       microsecond: 0,
     );
-    await tester.runAsync(() async {
+    await dbRun(tester, () async {
       final med = await db
           .into(db.medicines)
           .insert(
@@ -122,9 +156,11 @@ void main() {
     await settle(tester);
 
     expect(find.byType(AlarmRingScreen), findsNothing);
-    final log = await tester.runAsync(
+    final log = await dbRun(
+      tester,
       () => db.select(db.reminderLogs).getSingle(),
     );
-    expect(log!.status, ReminderLogStatus.taken);
+    expect(log.status, ReminderLogStatus.taken);
+    await unmount(tester);
   });
 }

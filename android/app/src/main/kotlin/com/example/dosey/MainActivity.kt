@@ -39,6 +39,11 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
                     "wasLaunchedOverLockScreen" -> result.success(launchedOverLockScreen)
+                    "ensureAlarmChannels" -> {
+                        @Suppress("UNCHECKED_CAST")
+                        AlarmChannels.ensure(this, call.arguments as Map<String, Any?>)
+                        result.success(null)
+                    }
                     "registerResyncHandle" -> {
                         BootReceiver.saveResyncHandle(this, (call.arguments as Number).toLong())
                         result.success(null)

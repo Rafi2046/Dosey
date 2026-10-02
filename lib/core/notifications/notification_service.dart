@@ -25,8 +25,17 @@ abstract final class NotificationService {
     _initialized = true;
   }
 
+  /// Creates alarm channels natively, and upgrades them to bypass DND once
+  /// the user has granted Do Not Disturb access.
+  static Future<void> refreshAlarmChannels() =>
+      NativeBridge.ensureAlarmChannels(
+        NotificationChannels.nativeAlarmChannelArgs,
+      );
+
   /// UI-isolate only: action listeners, alarm plugin and boot hook.
   static Future<void> startForeground() async {
+    // Must precede awesome's init: channel audio is fixed at creation.
+    await refreshAlarmChannels();
     await initialize();
     await AwesomeNotifications().setListeners(
       onActionReceivedMethod: onNotificationAction,

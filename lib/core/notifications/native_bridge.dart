@@ -17,6 +17,10 @@ abstract final class NativeBridge {
   static Future<bool> wasLaunchedOverLockScreen() async =>
       await _invoke<bool>(AppConstants.nativeWasLaunchedOverLock) ?? false;
 
+  /// Pre-creates alarm channels with alarm-stream audio (rings on silent).
+  static Future<void> ensureAlarmChannels(Map<String, Object> args) =>
+      _invoke<void>(AppConstants.nativeEnsureAlarmChannels, args);
+
   /// Stores the Dart callback handle the boot receiver uses to resync alarms.
   static Future<void> registerResyncHandle(int rawHandle) =>
       _invoke<void>(AppConstants.nativeRegisterResync, rawHandle);

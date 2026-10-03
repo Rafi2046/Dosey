@@ -40,10 +40,10 @@ class FilterPills<T> extends StatelessWidget {
             showCheckmark: false,
             onSelected: (_) => onSelected(value),
             labelStyle: AppTextStyles.chip.copyWith(
-              color: isSelected ? AppColors.ink : AppColors.textOnDark,
+              color: isSelected ? AppColors.onHighlight : AppColors.textOnDark,
             ),
             backgroundColor: AppColors.moss,
-            selectedColor: AppColors.creamLight,
+            selectedColor: AppColors.highlight,
           );
         },
       ),

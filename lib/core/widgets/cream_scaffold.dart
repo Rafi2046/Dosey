@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../constants/constants.dart';
 import 'circle_icon_button.dart';
@@ -22,7 +23,12 @@ class CreamScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    // Cream screens are light in light mode: dark status-bar icons there.
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: AppColors.isDark
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
+      child: Scaffold(
       backgroundColor: AppColors.cream,
       body: SafeArea(
         child: Column(

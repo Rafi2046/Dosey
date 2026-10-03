@@ -4,6 +4,7 @@ import '../../../core/utils/enum_labels.dart';
 import 'reminder_with_details.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../core/utils/numbers.dart';
+import '../../../core/utils/dose_unit.dart';
 
 /// Human-readable lines for a reminder, shared by notifications and UI.
 abstract final class ReminderText {
@@ -14,7 +15,12 @@ abstract final class ReminderText {
     final medicine = d.medicine;
     if (medicine != null) {
       parts
-        ..add(dose(d.reminder.doseAmount ?? 1, medicine.doseUnit))
+        ..add(
+          dose(
+            d.reminder.doseAmount ?? 1,
+            DoseUnit.display(medicine.doseUnit, l),
+          ),
+        )
         ..add(medicine.mealRelation.label(l));
     }
     final location = d.reminder.location;

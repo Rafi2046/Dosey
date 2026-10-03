@@ -13,6 +13,11 @@ class ScreenHeader extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.trailing,
+    this.onLight = false,
+    this.padding = const EdgeInsets.only(
+      top: AppSpacing.lg,
+      bottom: AppSpacing.xl,
+    ),
   });
 
   final String title;
@@ -21,6 +26,10 @@ class ScreenHeader extends StatelessWidget {
   final String? subtitle;
   final Widget? trailing;
 
+  /// Ink text for cream surfaces (bottom sheets).
+  final bool onLight;
+  final EdgeInsets padding;
+
   @override
   Widget build(BuildContext context) {
     final lines = title.split('\n');
@@ -28,8 +37,9 @@ class ScreenHeader extends StatelessWidget {
         ? lines.take(lines.length - 1).join(' ')
         : null;
 
+    final muted = onLight ? AppColors.inkMuted : AppColors.textOnDarkMuted;
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.lg, bottom: AppSpacing.xl),
+      padding: padding,
       child: Row(
         children: [
           Expanded(
@@ -58,6 +68,7 @@ class ScreenHeader extends StatelessWidget {
                           eyebrow.toUpperCase(),
                           style: AppTextStyles.overline.copyWith(
                             fontSize: AppSpacing.fontSm,
+                            color: muted,
                           ),
                         ),
                       ],
@@ -69,14 +80,16 @@ class ScreenHeader extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     lines.last,
-                    style: AppTextStyles.headline,
+                    style: onLight
+                        ? AppTextStyles.headlineOnLight
+                        : AppTextStyles.headline,
                     maxLines: 1,
                   ),
                 ),
                 if (subtitle != null)
                   Text(
                     subtitle!,
-                    style: AppTextStyles.caption,
+                    style: AppTextStyles.caption.copyWith(color: muted),
                     overflow: TextOverflow.ellipsis,
                   ),
               ],

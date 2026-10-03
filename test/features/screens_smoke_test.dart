@@ -364,6 +364,32 @@ void main() {
     await unmount(tester);
   });
 
+  testWidgets('a unit saved in Bengali shows in the current language', (
+    tester,
+  ) async {
+    await tester.runAsync(
+      () => db
+          .into(db.medicines)
+          .insert(
+            MedicinesCompanion.insert(
+              name: 'Zulfidin',
+              startDate: now,
+              doseUnit: const Value('ট্যাবলেট'),
+            ),
+          ),
+    );
+    await pumpApp(tester);
+    await openTab(tester, HomeTab.medicines);
+    final card = await scrollTo(tester, 'Zulfidin');
+    final subtitle = find.descendant(
+      of: find.ancestor(of: card, matching: find.byType(InkWell)).first,
+      matching: find.textContaining('tablet'),
+    );
+    expect(subtitle, findsOneWidget);
+    expect(find.textContaining('ট্যাবলেট'), findsNothing);
+    await unmount(tester);
+  });
+
   testWidgets('every form opens from the + sheet', (tester) async {
     await pumpApp(tester);
 

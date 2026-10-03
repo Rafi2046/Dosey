@@ -11,6 +11,7 @@ import '../../../../core/widgets/status_chip.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../providers/medicines_providers.dart';
 import '../../../../core/localization/l10n.dart';
+import '../../../../core/utils/dose_unit.dart';
 
 /// Records a purchase: adds stock and logs the cost as an expense.
 Future<void> showRefillSheet(BuildContext context, Medicine medicine) =>
@@ -94,7 +95,7 @@ class _RefillSheetState extends ConsumerState<_RefillSheet> {
             AppTextField.decimal(
               label: context.l10n.refillQuantity,
               controller: _quantity,
-              hint: widget.medicine.doseUnit,
+              hint: DoseUnit.display(widget.medicine.doseUnit, context.l10n),
               validator: (v) => (double.tryParse(v ?? '') ?? 0) > 0
                   ? null
                   : context.l10n.invalidNumber,

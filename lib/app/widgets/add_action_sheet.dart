@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/constants.dart';
+import '../../core/widgets/screen_header.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../features/doctors/presentation/doctor_form_screen.dart';
 import '../../features/expenses/presentation/expense_form_screen.dart';
@@ -57,8 +58,12 @@ class _AddActionSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(context.l10n.addSheetTitle, style: AppTextStyles.titleOnLight),
-            AppSpacing.gapLg,
+            ScreenHeader(
+              title: context.l10n.addSheetHeader,
+              subtitle: context.l10n.addSheetTitle,
+              onLight: true,
+              padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+            ),
             GridView.count(
               crossAxisCount: 2,
               shrinkWrap: true,

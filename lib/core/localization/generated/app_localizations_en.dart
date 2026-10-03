@@ -1636,4 +1636,13 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get addSheetHeader => 'Quick\nAdd';
+
+  @override
+  String get moreSheetHeader => 'Menu\nMore';
+
+  @override
+  String get moreSheetSubtitle => 'Doctors, records, expenses and settings';
 }

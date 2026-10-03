@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/constants.dart';
 import '../../core/localization/l10n.dart';
+import '../../core/widgets/screen_header.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../home_tab.dart';
@@ -34,8 +35,12 @@ Future<void> showMoreSheet(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(l10n.navMore, style: AppTextStyles.titleOnLight),
-            AppSpacing.gapMd,
+            ScreenHeader(
+              title: l10n.moreSheetHeader,
+              subtitle: l10n.moreSheetSubtitle,
+              onLight: true,
+              padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+            ),
             for (final (tab, hint, color) in items)
               _MoreTile(
                 icon: tab.icon,

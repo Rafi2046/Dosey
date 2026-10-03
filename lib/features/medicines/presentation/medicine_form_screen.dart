@@ -30,6 +30,7 @@ import 'widgets/dose_section.dart';
 import 'widgets/reminder_times_editor.dart';
 import 'widgets/scan_prescription_card.dart';
 import 'widgets/stock_price_section.dart';
+import '../../../core/utils/dose_unit.dart';
 
 /// Step 2 of "Add Medicine", or editing an existing medicine. Reminder times
 /// are entered here on create; afterwards they're managed on the detail page.
@@ -59,7 +60,10 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
   late final _strength = TextEditingController(text: _m?.strength);
   late final _notes = TextEditingController(text: _m?.notes);
   late final _doseUnit = TextEditingController(
-    text: _m?.doseUnit ?? _form.defaultUnit(context.l10n),
+    text: switch (_m) {
+      final m? => DoseUnit.display(m.doseUnit, context.l10n),
+      null => _form.defaultUnit(context.l10n),
+    },
   );
   late final _unitPrice = TextEditingController(
     text: (_m?.unitPriceMinor ?? 0) > 0
@@ -180,7 +184,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
     ),
     notes: Value(_notes.text.trim().isEmpty ? null : _notes.text.trim()),
     form: Value(_form),
-    doseUnit: Value(_doseUnit.text.trim()),
+    doseUnit: Value(DoseUnit.toStored(_doseUnit.text)),
     mealRelation: Value(_meal),
     doctorId: Value(_doctorId),
     prescriptionId: Value(_prescriptionId),

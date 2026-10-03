@@ -22,6 +22,7 @@ import '../providers/reminders_providers.dart';
 import 'widgets/repeat_section.dart';
 import 'widgets/reminder_type_selector.dart';
 import '../../../core/localization/l10n.dart';
+import '../../../core/utils/dose_unit.dart';
 
 /// Create or edit any reminder (medicine, appointment, vaccine, test).
 class ReminderFormScreen extends ConsumerStatefulWidget {
@@ -100,11 +101,13 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   }
 
   /// Unit of the chosen medicine ("tablet", "ml"), for the amount stepper.
-  String? get _selectedUnit => (ref.watch(medicinesProvider).value ?? const [])
-      .where((m) => m.medicine.id == _medicineId)
-      .firstOrNull
-      ?.medicine
-      .doseUnit;
+  String? get _selectedUnit =>
+      switch ((ref.watch(medicinesProvider).value ?? const [])
+          .where((m) => m.medicine.id == _medicineId)
+          .firstOrNull) {
+        final m? => DoseUnit.display(m.medicine.doseUnit, context.l10n),
+        null => null,
+      };
 
   void _onMedicineChanged(int? id) {
     setState(() => _medicineId = id);

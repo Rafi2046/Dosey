@@ -2767,6 +2767,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{No records yet} =1{1 record} other{{count} records}}'**
   String headerRecordsCount(int count);
+
+  /// No description provided for @addSheetHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick\nAdd'**
+  String get addSheetHeader;
+
+  /// No description provided for @moreSheetHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu\nMore'**
+  String get moreSheetHeader;
+
+  /// No description provided for @moreSheetSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctors, records, expenses and settings'**
+  String get moreSheetSubtitle;
 }
 
 class _AppLocalizationsDelegate

@@ -7,6 +7,7 @@ import '../../data/medicine_schedule_service.dart';
 import '../../domain/dose_time.dart';
 import '../../domain/scanned_medicine.dart';
 import '../../../../core/localization/l10n.dart';
+import '../../../../core/utils/dose_unit.dart';
 
 /// One editable medicine on the bulk-add review screen. Owns its text
 /// controllers; call [dispose] when it's removed or the screen closes.
@@ -80,7 +81,7 @@ class MedicineDraft {
         name: Value(name.text.trim()),
         strength: Value(strengthText.isEmpty ? null : strengthText),
         form: Value(form),
-        doseUnit: Value(unit.text.trim()),
+        doseUnit: Value(DoseUnit.toStored(unit.text)),
         mealRelation: Value(meal),
         doctorId: Value(doctorId),
         startDate: Value(startDate),

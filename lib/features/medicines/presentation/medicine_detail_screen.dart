@@ -24,6 +24,7 @@ import 'widgets/refill_sheet.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../core/utils/numbers.dart';
 import '../../../core/widgets/skeleton.dart';
+import '../../../core/utils/dose_unit.dart';
 
 enum _MenuAction { toggleActive, delete }
 
@@ -174,7 +175,7 @@ class _DetailBody extends ConsumerWidget {
         InfoBlock(
           label: context.l10n.doses,
           value:
-              '${ReminderText.doseSummary(reminders, m.doseUnit)}'
+              '${ReminderText.doseSummary(reminders, DoseUnit.display(m.doseUnit, context.l10n))}'
               '${context.l10n.notifDoseSeparator}${m.mealRelation.label(context.l10n)}',
         ),
         if (doctor != null)
@@ -197,7 +198,7 @@ class _DetailBody extends ConsumerWidget {
           InfoBlock(
             label: stock.isLow ? context.l10n.lowStock : context.l10n.inStock,
             value: [
-              '${AppNumber.format(m.stockQuantity!)} ${m.doseUnit}',
+              '${AppNumber.format(m.stockQuantity!)} ${DoseUnit.display(m.doseUnit, context.l10n)}',
               if (stock.daysLeft case final d?) context.l10n.daysLeft(d),
             ].join(context.l10n.notifDoseSeparator),
           ),

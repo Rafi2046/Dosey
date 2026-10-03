@@ -723,5 +723,8 @@
         "format": "decimalPattern"
       }
     }
-  }
+  },
+  "addSheetHeader": "Quick\nAdd",
+  "moreSheetHeader": "Menu\nMore",
+  "moreSheetSubtitle": "Doctors, records, expenses and settings"
 }

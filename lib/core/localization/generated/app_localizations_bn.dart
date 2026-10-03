@@ -1618,4 +1618,13 @@ class AppLocalizationsBn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get addSheetHeader => 'দ্রুত\nযোগ করুন';
+
+  @override
+  String get moreSheetHeader => 'মেনু\nআরও';
+
+  @override
+  String get moreSheetSubtitle => 'ডাক্তার, রেকর্ড, খরচ ও সেটিংস';
 }

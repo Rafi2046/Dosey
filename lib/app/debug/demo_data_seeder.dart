@@ -10,6 +10,7 @@ import '../../core/utils/enum_labels.dart';
 import '../../features/records/data/records_repository.dart';
 import '../../features/reminders/data/reminders_repository.dart';
 import '../../core/localization/l10n.dart';
+import '../../core/utils/dose_unit.dart';
 
 /// DEBUG ONLY: fills an empty install with realistic data so every screen
 /// can be reviewed. Never referenced from release code paths.
@@ -52,7 +53,9 @@ abstract final class DemoDataSeeder {
             name: name,
             strength: Value(strength),
             form: Value(form),
-            doseUnit: Value(form.defaultUnit(AppLocale.l10n)),
+            doseUnit: Value(
+              DoseUnit.toStored(form.defaultUnit(AppLocale.l10n)),
+            ),
             startDate: today.subtract(const Duration(days: 20)),
             endDate: Value(today.add(const Duration(days: 15))),
             unitPriceMinor: Value(price),

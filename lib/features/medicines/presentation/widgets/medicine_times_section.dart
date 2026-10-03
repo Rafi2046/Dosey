@@ -13,6 +13,7 @@ import '../../domain/dose_time.dart';
 import '../../providers/medicines_providers.dart';
 import 'dose_time_sheet.dart';
 import '../../../../core/localization/l10n.dart';
+import '../../../../core/utils/dose_unit.dart';
 
 /// "Medicine Time" and "Days in a week" chips, driven by the medicine's
 /// reminders. Each time shows its own amount; tap one to edit it, or "Add
@@ -26,7 +27,7 @@ class MedicineTimesSection extends ConsumerWidget {
     final result = await showDoseTimeSheet(
       context,
       initial: DoseTime(TimeOfDay.now()),
-      unit: medicine.doseUnit,
+      unit: DoseUnit.display(medicine.doseUnit, context.l10n),
     );
     if (result is! DoseSaved) return;
     await ref
@@ -63,7 +64,7 @@ class MedicineTimesSection extends ConsumerWidget {
                   label:
                       '${AppDateFormat.time(d.reminder.startAt)}'
                       '${context.l10n.notifDoseSeparator}'
-                      '${ReminderText.dose(d.reminder.doseAmount ?? 1, medicine.doseUnit)}',
+                      '${ReminderText.dose(d.reminder.doseAmount ?? 1, DoseUnit.display(medicine.doseUnit, context.l10n))}',
                   icon: d.reminder.isEnabled ? null : Icons.pause_rounded,
                   background: AppColors.sand,
                   foreground: AppColors.ink,

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/constants/constants.dart';
-import '../features/onboarding/presentation/permission_onboarding_screen.dart';
+import '../features/onboarding/presentation/onboarding_screen.dart';
 import '../features/onboarding/providers/permissions_provider.dart';
+import '../features/settings/providers/settings_providers.dart';
 import 'home_shell.dart';
 
-/// Shows permission onboarding on launch whenever an essential permission is
-/// missing (first run, or the user revoked one later), otherwise home.
+/// Shows onboarding on launch whenever an essential permission is missing:
+/// the full flow on first run, or straight to the permissions page if the
+/// user has onboarded before and later revoked one. Otherwise home.
 class StartupGate extends ConsumerStatefulWidget {
   const StartupGate({super.key});
 
@@ -20,9 +22,15 @@ class _StartupGateState extends ConsumerState<StartupGate> {
   /// mid-onboarding doesn't yank the screen away.
   bool? _needsOnboarding;
 
+  Future<void> _finish() async {
+    setState(() => _needsOnboarding = false);
+    await ref.read(settingsRepositoryProvider).set(onboardingDoneKey, '1');
+  }
+
   @override
   Widget build(BuildContext context) {
     final permissions = ref.watch(permissionsProvider);
+    final onboarded = ref.watch(onboardingDoneProvider).value;
     final needs = _needsOnboarding ??= permissions.whenOrNull(
       data: (granted) => !granted.hasEssentials,
       error: (_, _) => false,
@@ -30,8 +38,10 @@ class _StartupGateState extends ConsumerState<StartupGate> {
 
     final Widget page = switch (needs) {
       null => const _Splash(),
-      true => PermissionOnboardingScreen(
-        onFinished: () => setState(() => _needsOnboarding = false),
+      true when onboarded == null => const _Splash(),
+      true => OnboardingScreen(
+        initialPage: onboarded! ? OnboardingScreen.permissionsPage : 0,
+        onFinished: _finish,
       ),
       false => const HomeShell(),
     };

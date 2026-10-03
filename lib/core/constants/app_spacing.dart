@@ -30,6 +30,10 @@ abstract final class AppSpacing {
   static const double ctaIconRingWidth = 64;
   static const double chipHeight = 40;
   static const double heroIllustration = 240;
+  static const double onboardingHero = 260;
+  static const double featureIcon = 52;
+  static const double pageDot = 8;
+  static const double pageDotActive = 24;
   static const double alarmIllustration = 200;
   static const double logo = 96;
   static const double avatarMd = 48;

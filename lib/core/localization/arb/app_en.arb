@@ -426,5 +426,35 @@
         "format": "decimalPattern"
       }
     }
+  },
+  "onboardingWelcomeBody": "Your medicine reminder that rings like a real alarm clock, so you never miss a dose.",
+  "onboardingChooseLanguage": "Choose your language",
+  "onboardingFeaturesTitle": "Everything to stay\non track",
+  "featureAlarmTitle": "Alarms that really ring",
+  "featureAlarmBody": "Every dose rings like an alarm clock, even on silent.",
+  "featureScanTitle": "Scan your prescription",
+  "featureScanBody": "Snap a photo and Dosey fills in the medicines, doses and times.",
+  "featureStockTitle": "Stock and cost tracking",
+  "featureStockBody": "Get refill alerts and see what your medicines cost each month.",
+  "featurePrivateTitle": "Private by design",
+  "featurePrivateBody": "Everything stays on your phone. No account, no cloud.",
+  "onboardingPermissionsTitle": "Let Dosey ring\non time",
+  "allowAll": "Allow all",
+  "allowAllHint": "Dosey asks for each one in turn. If Settings opens, switch it on and come back.",
+  "allSet": "All set",
+  "onboardingFinish": "Finish",
+  "onboardingStep": "Step {current} of {total}",
+  "@onboardingStep": {
+    "description": "Screen reader label for the page dots",
+    "placeholders": {
+      "current": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "total": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
   }
 }

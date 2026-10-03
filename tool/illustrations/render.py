@@ -96,66 +96,132 @@ def save(img, name, size):
 
 
 # ── Alarm clock hero ──────────────────────────────────────────────────────────
+ORANGE_DARK = (176, 52, 22)
+STEEL_LIGHT = (240, 242, 244)
+STEEL_DARK = (140, 146, 152)
+
+
+def _bell(width, angle):
+    """Glossy dome bell, opening facing down, rotated by `angle` degrees."""
+    w = int(width)
+    dome_h = int(w * 0.62)
+    rim_h = int(w * 0.24)
+    pad = int(w * 0.25)
+    layer = Image.new('RGBA', (w + 2 * pad, dome_h + rim_h + 2 * pad), (0, 0, 0, 0))
+    x0, y0 = pad, pad
+    # Dome = top half of an ellipse, lit from the top-left.
+    grad = radial((w, 2 * dome_h), (w * 0.3, dome_h * 0.45), w * 0.95, ORANGE_LIGHT, ORANGE)
+    mask = Image.new('L', (w, 2 * dome_h), 0)
+    ImageDraw.Draw(mask).ellipse([0, 0, w - 1, 2 * dome_h - 1], fill=255)
+    ImageDraw.Draw(mask).rectangle([0, dome_h, w, 2 * dome_h], fill=0)
+    layer.paste(grad, (x0, y0), mask)
+    d = ImageDraw.Draw(layer)
+    # Open rim: dark inside with a lighter lip.
+    rim_box = [x0, y0 + dome_h - rim_h // 2, x0 + w, y0 + dome_h + rim_h // 2]
+    d.ellipse(rim_box, fill=ORANGE)
+    inset = int(w * 0.07)
+    d.ellipse([rim_box[0] + inset, rim_box[1] + inset // 2, rim_box[2] - inset, rim_box[3] - inset // 3],
+              fill=ORANGE_DARK)
+    # Knob on top.
+    k = int(w * 0.09)
+    d.ellipse([x0 + w // 2 - k, y0 - k, x0 + w // 2 + k, y0 + k], fill=STEEL)
+    layer = layer.rotate(angle, resample=Image.BICUBIC, expand=True)
+    return layer
+
+
 def alarm_clock(size=720):
     img = canvas(size)
     S = size * SS
-    cx, cy, R = S // 2, int(S * 0.47), int(S * 0.30)
+    cx, cy, R = S // 2, int(S * 0.52), int(S * 0.29)
+    fr = R * 0.80  # face radius
 
-    soft_shadow(img, (cx - R, cy + R * 0.95, cx + R, cy + R * 1.25), opacity=110, blur=26)
+    soft_shadow(img, (cx - R * 1.05, cy + R * 0.98, cx + R * 1.05, cy + R * 1.22), opacity=120, blur=22)
 
     d = ImageDraw.Draw(img)
-    # Legs
+    # Feet: short white legs splayed outwards.
     for sx in (-1, 1):
-        x_top, y_top = cx + sx * R * 0.55, cy + R * 0.75
-        x_bot, y_bot = cx + sx * R * 0.85, cy + R * 1.18
-        d.line([x_top, y_top, x_bot, y_bot], fill=MOSS, width=int(R * 0.14))
-        d.ellipse([x_bot - R * 0.07, y_bot - R * 0.07, x_bot + R * 0.07, y_bot + R * 0.07], fill=MOSS)
+        x_top, y_top = cx + sx * R * 0.52, cy + R * 0.78
+        x_bot, y_bot = cx + sx * R * 0.74, cy + R * 1.02
+        d.line([x_top, y_top, x_bot, y_bot], fill=CREAM, width=int(R * 0.15))
+        fr_ = R * 0.08
+        d.ellipse([x_bot - fr_, y_bot - fr_, x_bot + fr_, y_bot + fr_], fill=CREAM)
+        d.line([x_top + sx * R * 0.02, y_top, x_bot + sx * R * 0.02, y_bot],
+               fill=(215, 212, 200), width=int(R * 0.04))
 
-    # Bells (behind body)
-    for sx, ang in ((-1, 35), (1, -35)):
-        bx, by = cx + sx * R * 0.72, cy - R * 0.88
-        br = R * 0.42
-        shaded_ellipse(img, (bx - br, by - br * 0.85, bx + br, by + br * 0.95), ORANGE, ORANGE_LIGHT)
-        d.ellipse([bx - br * 0.18, by - br * 1.05, bx + br * 0.18, by - br * 0.7], fill=ORANGE)
-    # Hammer bar
-    d.rounded_rectangle([cx - R * 0.09, cy - R * 1.25, cx + R * 0.09, cy - R * 0.9], radius=R * 0.05, fill=CREAM)
-    d.rounded_rectangle([cx - R * 0.35, cy - R * 1.3, cx + R * 0.35, cy - R * 1.18], radius=R * 0.06, fill=CREAM)
+    # Silver arch handle joining the bells (behind them).
+    arch = [cx - R * 0.66, cy - R * 1.42, cx + R * 0.66, cy - R * 0.70]
+    d.arc(arch, 200, 340, fill=STEEL_DARK, width=int(R * 0.085))
+    d.arc([v + (R * 0.012 if i % 2 == 0 else R * 0.012) for i, v in enumerate(arch)], 205, 335,
+          fill=STEEL_LIGHT, width=int(R * 0.03))
+    # Hammer striker between the bells.
+    d.rounded_rectangle([cx - R * 0.05, cy - R * 1.16, cx + R * 0.05, cy - R * 0.92], radius=R * 0.03, fill=STEEL)
+    d.rounded_rectangle([cx - R * 0.13, cy - R * 1.22, cx + R * 0.13, cy - R * 1.10], radius=R * 0.05, fill=STEEL_LIGHT)
 
-    # Body + face
-    shaded_ellipse(img, (cx - R, cy - R, cx + R, cy + R), MOSS, MOSS_LIGHT)
-    fr = R * 0.82
-    face = radial((int(2 * fr), int(2 * fr)), (fr * 0.7, fr * 0.6), fr * 1.4, (225, 255, 238), MINT_FACE)
+    # Bells tilted outward, sitting on the shoulders of the body.
+    for sx, ang in ((-1, -28), (1, 28)):
+        bell = _bell(R * 0.84, ang)
+        bx, by = cx + sx * R * 0.66, cy - R * 0.84
+        img.alpha_composite(bell, (int(bx - bell.width / 2), int(by - bell.height / 2)))
+
+    # Body ring: deep green, lit from the top-left, with a glossy rim.
+    shaded_ellipse(img, (cx - R, cy - R, cx + R, cy + R), MOSS, MOSS_LIGHT, highlight=0.28)
+    ring = Image.new('RGBA', img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(ring).arc([cx - R * 0.96, cy - R * 0.96, cx + R * 0.96, cy + R * 0.96], 190, 280,
+                             fill=(255, 255, 255, 90), width=int(R * 0.05))
+    img.alpha_composite(ring.filter(ImageFilter.GaussianBlur(3 * SS)))
+
+    # Face.
+    face = radial((int(2 * fr), int(2 * fr)), (fr * 0.65, fr * 0.55), fr * 1.4, (232, 255, 242), MINT_FACE)
     mask = Image.new('L', face.size, 0)
     ImageDraw.Draw(mask).ellipse([0, 0, face.width - 1, face.height - 1], fill=255)
     img.paste(face, (int(cx - fr), int(cy - fr)), mask)
-    # Inner rim shadow
     rim = Image.new('RGBA', img.size, (0, 0, 0, 0))
-    ImageDraw.Draw(rim).ellipse([cx - fr, cy - fr, cx + fr, cy + fr], outline=(30, 70, 50, 90), width=int(R * 0.06))
+    ImageDraw.Draw(rim).ellipse([cx - fr, cy - fr, cx + fr, cy + fr], outline=(25, 60, 42, 110), width=int(R * 0.05))
     img.alpha_composite(rim.filter(ImageFilter.GaussianBlur(4 * SS)))
 
-    # Numbers
-    font = ImageFont.truetype('assets/fonts/Bitter-800.ttf', int(R * 0.2))
     d = ImageDraw.Draw(img)
+    # Minute ticks (longer at the hours).
+    for i in range(60):
+        a = math.radians(i * 6 - 90)
+        major = i % 5 == 0
+        r0 = fr * (0.86 if major else 0.90)
+        r1 = fr * 0.95
+        d.line([cx + math.cos(a) * r0, cy + math.sin(a) * r0, cx + math.cos(a) * r1, cy + math.sin(a) * r1],
+               fill=(40, 70, 55) if major else (95, 130, 110), width=int(R * (0.022 if major else 0.01)))
+
+    # Numbers.
+    font = ImageFont.truetype('assets/fonts/DMSans-700.ttf', int(R * 0.21))
     for n in range(1, 13):
         a = math.radians(n * 30 - 90)
-        tx, ty = cx + math.cos(a) * fr * 0.78, cy + math.sin(a) * fr * 0.78
+        tx, ty = cx + math.cos(a) * fr * 0.70, cy + math.sin(a) * fr * 0.70
         d.text((tx, ty), str(n), font=font, fill=ORANGE, anchor='mm')
 
-    # Hands (10:10): angle = position * 30° - 90° (0° = 3 o'clock)
-    for deg, length, width in ((10 * 30 - 90, 0.42, 0.075), (2 * 30 - 90, 0.62, 0.05)):
+    # Maker's mark.
+    mark = ImageFont.truetype('assets/fonts/DMSans-600.ttf', int(R * 0.075))
+    d.text((cx, cy + fr * 0.36), 'DOSEY', font=mark, fill=(55, 95, 72), anchor='mm')
+
+    # Hands at 10:10, with a soft drop shadow.
+    hands = Image.new('RGBA', img.size, (0, 0, 0, 0))
+    hd = ImageDraw.Draw(hands)
+    for deg, length, width in ((10 * 30 - 90 + 5, 0.46, 0.08), (2 * 30 - 90, 0.66, 0.05)):
         a = math.radians(deg)
-        d.line([cx, cy, cx + math.cos(a) * fr * length, cy + math.sin(a) * fr * length],
-               fill=ORANGE, width=int(R * width))
-    d.ellipse([cx - R * 0.07, cy - R * 0.07, cx + R * 0.07, cy + R * 0.07], fill=ORANGE)
+        hd.line([cx, cy, cx + math.cos(a) * fr * length, cy + math.sin(a) * fr * length],
+                fill=ORANGE, width=int(R * width))
+    shadow = Image.new('RGBA', img.size, (0, 0, 0, 0))
+    shadow.paste((20, 50, 35, 70), (0, 0), hands.split()[3])
+    img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(3 * SS)), (int(R * 0.02), int(R * 0.03)))
+    img.alpha_composite(hands)
+    d = ImageDraw.Draw(img)
+    d.ellipse([cx - R * 0.075, cy - R * 0.075, cx + R * 0.075, cy + R * 0.075], fill=ORANGE)
     d.ellipse([cx - R * 0.03, cy - R * 0.03, cx + R * 0.03, cy + R * 0.03], fill=CREAM)
 
-    # Glass gloss
-    gloss(img, (cx - fr * 0.55, cy - fr * 0.62, cx - fr * 0.15, cy - fr * 0.42), opacity=45)
+    # Glass glint.
+    gloss(img, (cx - fr * 0.80, cy - fr * 0.55, cx - fr * 0.50, cy - fr * 0.25), opacity=40)
 
-    # Pills around
-    capsule(img, int(S * 0.13), int(S * 0.80), int(R * 0.6), int(R * 0.22), 25, WHITE, CREAM, WHITE, WHITE)
-    capsule(img, int(S * 0.88), int(S * 0.70), int(R * 0.6), int(R * 0.22), 40, WHITE, CREAM, WHITE, WHITE)
-    for px, py, pr, base, light in ((0.22, 0.88, 0.09, PEACH, (250, 210, 190)), (0.30, 0.92, 0.07, MINT, (180, 230, 210))):
+    # Pills scattered at the base.
+    capsule(img, int(S * 0.12), int(S * 0.84), int(R * 0.62), int(R * 0.22), 22, WHITE, CREAM, WHITE, WHITE)
+    capsule(img, int(S * 0.89), int(S * 0.80), int(R * 0.62), int(R * 0.22), 38, WHITE, CREAM, WHITE, WHITE)
+    for px, py, pr, base, light in ((0.21, 0.93, 0.09, PEACH, (250, 210, 190)), (0.29, 0.955, 0.075, MINT, (180, 230, 210))):
         shaded_ellipse(img, (S * px - R * pr, S * py - R * pr * 0.8, S * px + R * pr, S * py + R * pr * 0.8), base, light)
 
     save(img, 'alarm_clock.png', size)

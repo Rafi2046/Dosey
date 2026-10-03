@@ -28,3 +28,13 @@ class LanguageController extends Notifier<String?> {
     await ref.read(settingsRepositoryProvider).set(AppLocale.settingKey, code);
   }
 }
+
+/// Whether the user has been through onboarding once. Decides where it
+/// starts if a permission is later revoked (straight at permissions).
+final onboardingDoneProvider = FutureProvider<bool>(
+  (ref) async =>
+      await ref.watch(settingsRepositoryProvider).get(onboardingDoneKey) !=
+      null,
+);
+
+const String onboardingDoneKey = 'onboarding_done';

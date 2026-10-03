@@ -32,30 +32,113 @@ void main() {
     child: const DoseyApp(),
   );
 
-  testWidgets('onboarding gates on essential permissions', (tester) async {
+  /// The user comes back to the app (e.g. from a system Settings page).
+  Future<void> returnToApp(WidgetTester tester) async {
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await settle(tester);
+  }
+
+  Future<String?> setting(WidgetTester tester, String key) => dbRun(
+    tester,
+    () async => (await (db.select(
+      db.appSettings,
+    )..where((s) => s.key.equals(key))).getSingleOrNull())?.value,
+  );
+
+  testWidgets('onboarding: welcome → features → permissions → home', (
+    tester,
+  ) async {
     usePhoneSize(tester);
+    // Like Android: only notifications is an in-app prompt.
+    permissions = FakePermissionService({}, {
+      AppPermission.exactAlarms,
+      AppPermission.fullScreen,
+      AppPermission.dnd,
+    });
     await tester.pumpWidget(app());
     await settle(tester);
 
-    expect(find.text(en.permNotificationsTitle), findsOneWidget);
+    expect(find.text(en.onboardingChooseLanguage), findsOneWidget);
+    await tester.tap(find.text(en.onboardingContinue));
+    await settle(tester);
+    expect(find.text(en.featureScanTitle), findsOneWidget);
+    await tester.tap(find.text(en.next));
+    await settle(tester);
+
+    // Finish stays locked until the essentials are granted.
     expect(find.text(en.onboardingEssentialHint), findsOneWidget);
+    await tester.tap(find.text(en.onboardingFinish));
+    await settle(tester);
+    expect(find.text(en.allowAll), findsOneWidget);
 
-    for (var i = 0; i < 2; i++) {
-      final allow = find.text(en.allow).first;
-      await tester.ensureVisible(allow);
-      await tester.tap(allow);
-      await settle(tester);
-    }
-
+    // Allow all: notification prompt, then the exact-alarm Settings page.
+    await tester.tap(find.text(en.allowAll));
+    await settle(tester);
     expect(permissions.requested, [
       AppPermission.notifications,
       AppPermission.exactAlarms,
     ]);
-    expect(find.text(en.onboardingEssentialHint), findsNothing);
+    // User switches it on and comes back → the next page opens by itself.
+    permissions.grant(AppPermission.exactAlarms);
+    await returnToApp(tester);
+    expect(permissions.requested.last, AppPermission.fullScreen);
+    // Comes back without switching it on → it still moves on.
+    await returnToApp(tester);
+    expect(permissions.requested.last, AppPermission.dnd);
+    permissions.grant(AppPermission.dnd);
+    await returnToApp(tester);
+    expect(permissions.requested, hasLength(4));
 
-    await tester.tap(find.text(en.onboardingContinue));
+    expect(find.text(en.onboardingEssentialHint), findsNothing);
+    await tester.tap(find.text(en.onboardingFinish));
     await settle(tester);
     expect(find.text(en.dashboardTitle), findsOneWidget);
+    expect(await setting(tester, 'onboarding_done'), '1');
+    await unmount(tester);
+  });
+
+  testWidgets('choosing বাংলা on the welcome page switches onboarding', (
+    tester,
+  ) async {
+    addTearDown(() => AppLocale.apply(AppLocale.english));
+    final bn = lookupAppLocalizations(AppLocale.bangla);
+    usePhoneSize(tester);
+    await tester.pumpWidget(app());
+    await settle(tester);
+
+    await tester.tap(find.text('বাংলা'));
+    await settle(tester);
+    expect(find.text(bn.onboardingChooseLanguage), findsOneWidget);
+    expect(await setting(tester, AppLocale.settingKey), 'bn');
+
+    await tester.tap(find.text(bn.onboardingContinue));
+    await settle(tester);
+    expect(find.text(bn.featureScanTitle), findsOneWidget);
+    await unmount(tester);
+  });
+
+  testWidgets('a revoked permission reopens onboarding at permissions', (
+    tester,
+  ) async {
+    usePhoneSize(tester);
+    await dbRun(
+      tester,
+      () => db
+          .into(db.appSettings)
+          .insert(
+            AppSettingsCompanion.insert(key: 'onboarding_done', value: '1'),
+          ),
+    );
+    permissions = FakePermissionService({AppPermission.notifications});
+    await tester.pumpWidget(app());
+    await settle(tester);
+
+    expect(find.text(en.onboardingChooseLanguage), findsNothing);
+    expect(find.text(en.allowAll), findsOneWidget);
+    await tester.tap(find.text(en.allowAll));
+    await settle(tester);
+    expect(permissions.requested.first, AppPermission.exactAlarms);
     await unmount(tester);
   });
 

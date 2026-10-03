@@ -296,5 +296,22 @@
   "bulkSaved": "{count, plural, other{{count}টি ওষুধ যোগ হয়েছে}}",
   "bulkAsWritten": "প্রেসক্রিপশনে লেখা: {pattern}",
   "bulkFixMedicine": "সেভ করার আগে {number} নম্বর ওষুধের নাম ও একক দিন।",
-  "everyNDays": "{count, plural, =1{প্রতিদিন} other{প্রতি {count} দিন পরপর}}"
+  "everyNDays": "{count, plural, =1{প্রতিদিন} other{প্রতি {count} দিন পরপর}}",
+  "onboardingWelcomeBody": "আপনার ওষুধের রিমাইন্ডার, যা সত্যিকারের অ্যালার্ম ঘড়ির মতো বাজে — যেন কোনো ডোজ মিস না হয়।",
+  "onboardingChooseLanguage": "আপনার ভাষা বেছে নিন",
+  "onboardingFeaturesTitle": "নিয়ম মেনে চলার\nসব কিছু এক জায়গায়",
+  "featureAlarmTitle": "সত্যিকারের অ্যালার্ম",
+  "featureAlarmBody": "প্রতিটি ডোজে অ্যালার্ম ঘড়ির মতো বাজে, সাইলেন্টেও।",
+  "featureScanTitle": "প্রেসক্রিপশন স্ক্যান করুন",
+  "featureScanBody": "ছবি তুলুন — ওষুধ, ডোজ ও সময় Dosey নিজেই পূরণ করবে।",
+  "featureStockTitle": "স্টক ও খরচের হিসাব",
+  "featureStockBody": "রিফিল অ্যালার্ট পান এবং প্রতি মাসের ওষুধ খরচ দেখুন।",
+  "featurePrivateTitle": "আপনার তথ্য আপনার কাছে",
+  "featurePrivateBody": "সব তথ্য আপনার ফোনেই থাকে। কোনো অ্যাকাউন্ট বা ক্লাউড লাগে না।",
+  "onboardingPermissionsTitle": "সময়মতো বাজার\nঅনুমতি দিন",
+  "allowAll": "সব অনুমতি দিন",
+  "allowAllHint": "Dosey একে একে প্রতিটি অনুমতি চাইবে। সেটিংস খুললে সেটি চালু করে ফিরে আসুন।",
+  "allSet": "সব ঠিক আছে",
+  "onboardingFinish": "শেষ করুন",
+  "onboardingStep": "ধাপ {current}/{total}"
 }

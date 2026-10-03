@@ -1879,6 +1879,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{Every day} other{Every {count} days}}'**
   String everyNDays(int count);
+
+  /// No description provided for @onboardingWelcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your medicine reminder that rings like a real alarm clock, so you never miss a dose.'**
+  String get onboardingWelcomeBody;
+
+  /// No description provided for @onboardingChooseLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your language'**
+  String get onboardingChooseLanguage;
+
+  /// No description provided for @onboardingFeaturesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything to stay\non track'**
+  String get onboardingFeaturesTitle;
+
+  /// No description provided for @featureAlarmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarms that really ring'**
+  String get featureAlarmTitle;
+
+  /// No description provided for @featureAlarmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every dose rings like an alarm clock, even on silent.'**
+  String get featureAlarmBody;
+
+  /// No description provided for @featureScanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan your prescription'**
+  String get featureScanTitle;
+
+  /// No description provided for @featureScanBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Snap a photo and Dosey fills in the medicines, doses and times.'**
+  String get featureScanBody;
+
+  /// No description provided for @featureStockTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock and cost tracking'**
+  String get featureStockTitle;
+
+  /// No description provided for @featureStockBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Get refill alerts and see what your medicines cost each month.'**
+  String get featureStockBody;
+
+  /// No description provided for @featurePrivateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Private by design'**
+  String get featurePrivateTitle;
+
+  /// No description provided for @featurePrivateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything stays on your phone. No account, no cloud.'**
+  String get featurePrivateBody;
+
+  /// No description provided for @onboardingPermissionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let Dosey ring\non time'**
+  String get onboardingPermissionsTitle;
+
+  /// No description provided for @allowAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow all'**
+  String get allowAll;
+
+  /// No description provided for @allowAllHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey asks for each one in turn. If Settings opens, switch it on and come back.'**
+  String get allowAllHint;
+
+  /// No description provided for @allSet.
+  ///
+  /// In en, this message translates to:
+  /// **'All set'**
+  String get allSet;
+
+  /// No description provided for @onboardingFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get onboardingFinish;
+
+  /// Screen reader label for the page dots
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String onboardingStep(int current, int total);
 }
 
 class _AppLocalizationsDelegate

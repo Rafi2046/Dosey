@@ -1026,4 +1026,70 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get onboardingWelcomeBody =>
+      'Your medicine reminder that rings like a real alarm clock, so you never miss a dose.';
+
+  @override
+  String get onboardingChooseLanguage => 'Choose your language';
+
+  @override
+  String get onboardingFeaturesTitle => 'Everything to stay\non track';
+
+  @override
+  String get featureAlarmTitle => 'Alarms that really ring';
+
+  @override
+  String get featureAlarmBody =>
+      'Every dose rings like an alarm clock, even on silent.';
+
+  @override
+  String get featureScanTitle => 'Scan your prescription';
+
+  @override
+  String get featureScanBody =>
+      'Snap a photo and Dosey fills in the medicines, doses and times.';
+
+  @override
+  String get featureStockTitle => 'Stock and cost tracking';
+
+  @override
+  String get featureStockBody =>
+      'Get refill alerts and see what your medicines cost each month.';
+
+  @override
+  String get featurePrivateTitle => 'Private by design';
+
+  @override
+  String get featurePrivateBody =>
+      'Everything stays on your phone. No account, no cloud.';
+
+  @override
+  String get onboardingPermissionsTitle => 'Let Dosey ring\non time';
+
+  @override
+  String get allowAll => 'Allow all';
+
+  @override
+  String get allowAllHint =>
+      'Dosey asks for each one in turn. If Settings opens, switch it on and come back.';
+
+  @override
+  String get allSet => 'All set';
+
+  @override
+  String get onboardingFinish => 'Finish';
+
+  @override
+  String onboardingStep(int current, int total) {
+    final intl.NumberFormat currentNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String currentString = currentNumberFormat.format(current);
+    final intl.NumberFormat totalNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String totalString = totalNumberFormat.format(total);
+
+    return 'Step $currentString of $totalString';
+  }
 }

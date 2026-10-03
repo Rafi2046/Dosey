@@ -38,11 +38,18 @@ class FakeNotificationPresenter implements NotificationPresenter {
 }
 
 class FakePermissionService implements PermissionService {
-  FakePermissionService([Set<AppPermission>? initial])
-    : grantedSet = {...?initial};
+  /// [viaSettings]: requesting these only "opens Settings"; they stay denied
+  /// until the test calls [grant] (the user switching them on).
+  FakePermissionService([
+    Set<AppPermission>? initial,
+    this.viaSettings = const {},
+  ]) : grantedSet = {...?initial};
 
   final Set<AppPermission> grantedSet;
+  final Set<AppPermission> viaSettings;
   final List<AppPermission> requested = [];
+
+  void grant(AppPermission permission) => grantedSet.add(permission);
 
   @override
   Future<Set<AppPermission>> granted() async => {...grantedSet};
@@ -50,7 +57,7 @@ class FakePermissionService implements PermissionService {
   @override
   Future<void> request(AppPermission permission) async {
     requested.add(permission);
-    grantedSet.add(permission);
+    if (!viaSettings.contains(permission)) grantedSet.add(permission);
   }
 }
 

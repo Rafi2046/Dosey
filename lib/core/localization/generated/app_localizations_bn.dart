@@ -1018,4 +1018,70 @@ class AppLocalizationsBn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get onboardingWelcomeBody =>
+      'আপনার ওষুধের রিমাইন্ডার, যা সত্যিকারের অ্যালার্ম ঘড়ির মতো বাজে — যেন কোনো ডোজ মিস না হয়।';
+
+  @override
+  String get onboardingChooseLanguage => 'আপনার ভাষা বেছে নিন';
+
+  @override
+  String get onboardingFeaturesTitle => 'নিয়ম মেনে চলার\nসব কিছু এক জায়গায়';
+
+  @override
+  String get featureAlarmTitle => 'সত্যিকারের অ্যালার্ম';
+
+  @override
+  String get featureAlarmBody =>
+      'প্রতিটি ডোজে অ্যালার্ম ঘড়ির মতো বাজে, সাইলেন্টেও।';
+
+  @override
+  String get featureScanTitle => 'প্রেসক্রিপশন স্ক্যান করুন';
+
+  @override
+  String get featureScanBody =>
+      'ছবি তুলুন — ওষুধ, ডোজ ও সময় Dosey নিজেই পূরণ করবে।';
+
+  @override
+  String get featureStockTitle => 'স্টক ও খরচের হিসাব';
+
+  @override
+  String get featureStockBody =>
+      'রিফিল অ্যালার্ট পান এবং প্রতি মাসের ওষুধ খরচ দেখুন।';
+
+  @override
+  String get featurePrivateTitle => 'আপনার তথ্য আপনার কাছে';
+
+  @override
+  String get featurePrivateBody =>
+      'সব তথ্য আপনার ফোনেই থাকে। কোনো অ্যাকাউন্ট বা ক্লাউড লাগে না।';
+
+  @override
+  String get onboardingPermissionsTitle => 'সময়মতো বাজার\nঅনুমতি দিন';
+
+  @override
+  String get allowAll => 'সব অনুমতি দিন';
+
+  @override
+  String get allowAllHint =>
+      'Dosey একে একে প্রতিটি অনুমতি চাইবে। সেটিংস খুললে সেটি চালু করে ফিরে আসুন।';
+
+  @override
+  String get allSet => 'সব ঠিক আছে';
+
+  @override
+  String get onboardingFinish => 'শেষ করুন';
+
+  @override
+  String onboardingStep(int current, int total) {
+    final intl.NumberFormat currentNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String currentString = currentNumberFormat.format(current);
+    final intl.NumberFormat totalNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String totalString = totalNumberFormat.format(total);
+
+    return 'ধাপ $currentString/$totalString';
+  }
 }

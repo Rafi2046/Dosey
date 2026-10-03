@@ -52,9 +52,14 @@ class PermissionTile extends StatelessWidget {
                       color: iconColor,
                     ),
                     AppSpacing.gapXs,
-                    Text(
-                      permission.badge(context.l10n),
-                      style: AppTextStyles.overline.copyWith(color: iconColor),
+                    Flexible(
+                      child: Text(
+                        permission.badge(context.l10n),
+                        style: AppTextStyles.overline.copyWith(
+                          color: iconColor,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),

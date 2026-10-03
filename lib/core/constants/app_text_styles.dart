@@ -91,6 +91,14 @@ abstract final class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
+  /// Bottom-navigation labels.
+  static const TextStyle navLabel = TextStyle(
+    fontFamily: _body,
+    fontSize: AppSpacing.fontXs,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textOnDarkMuted,
+  );
+
   // ── Light-surface variants (cream cards / screens) ────────────────────────
   static final TextStyle displayOnLight = display.copyWith(
     color: AppColors.ink,

@@ -21,6 +21,9 @@ abstract final class AppConstants {
   static const int daysPerMonth = 30;
   static const int daysPerWeek = 7;
 
+  /// Months in the spending trend on the expenses card.
+  static const int expenseTrendMonths = 6;
+
   // ── Prescription scan: clock times for dose slots (1+0+1, BD, night…) ─────
   static const int doseMorningHour = 8;
   static const int doseNoonHour = 14;

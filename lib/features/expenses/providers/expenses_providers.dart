@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/constants/app_constants.dart';
+
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/utils/clock_providers.dart';
@@ -72,4 +74,26 @@ final currentMonthExpenseTotalProvider = StreamProvider<int>((ref) {
   final day = ref.watch(currentDayProvider).value ?? DateTime.now();
   final (start, end) = _monthRange(DateTime(day.year, day.month));
   return ref.watch(expensesRepositoryProvider).watchTotal(start, end);
+});
+
+/// Spending per month for the trend chart: the selected month and the ones
+/// before it, oldest first.
+final expenseTrendProvider = StreamProvider<List<(DateTime, int)>>((ref) {
+  final month = ref.watch(expenseMonthProvider);
+  final months = [
+    for (var i = AppConstants.expenseTrendMonths - 1; i >= 0; i--)
+      DateTime(month.year, month.month - i),
+  ];
+  final (_, end) = _monthRange(month);
+  return ref
+      .watch(expensesRepositoryProvider)
+      .watchBetween(months.first, end)
+      .map((expenses) {
+        final totals = {for (final m in months) m: 0};
+        for (final e in expenses) {
+          final m = DateTime(e.spentOn.year, e.spentOn.month);
+          totals[m] = (totals[m] ?? 0) + e.amountMinor;
+        }
+        return [for (final m in months) (m, totals[m]!)];
+      });
 });

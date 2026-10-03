@@ -7,6 +7,9 @@ abstract final class AppColors {
   /// Main sage background.
   static const Color sage = Color(0xFF687163);
 
+  /// [sage] at zero opacity, for fades into the background.
+  static const Color sageTransparent = Color(0x00687163);
+
   /// Card tones used for stacked reminder cards and medicine-type tiles.
   static const Color olive = Color(0xFF728268);
   static const Color mint = Color(0xFF64AA93);
@@ -50,7 +53,6 @@ abstract final class AppColors {
 
   // ── Misc ──────────────────────────────────────────────────────────────────
   static const Color transparent = Color(0x00000000);
-  static const Color navBar = Color(0xB3979B92);
   static const Color outlineOnDark = Color(0x66EEEBDD);
   static const Color divider = Color(0x1F1B1D1A);
   static const Color shadow = Color(0x40000000);

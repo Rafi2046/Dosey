@@ -7,11 +7,13 @@ import '../features/expenses/presentation/expenses_screen.dart';
 import '../features/medicines/presentation/medicines_screen.dart';
 import '../features/records/presentation/records_screen.dart';
 import '../features/reminders/presentation/reminders_screen.dart';
+import '../core/constants/constants.dart';
 import 'home_tab.dart';
 import 'widgets/add_action_sheet.dart';
-import 'widgets/floating_nav_bar.dart';
+import 'widgets/app_nav_bar.dart';
+import 'widgets/more_sheet.dart';
 
-/// Main app frame: tab content (state kept alive) under a floating nav bar.
+/// Main app frame: tab content (state kept alive) under the nav bar.
 class HomeShell extends ConsumerWidget {
   const HomeShell({super.key});
 
@@ -43,14 +45,40 @@ class HomeShell extends ConsumerWidget {
                 const ExpensesScreen(),
               ],
             ),
+            // Content scrolling under the nav bar fades out instead of
+            // peeking around it.
+            const Align(
+              alignment: Alignment.bottomCenter,
+              child: IgnorePointer(
+                child: SizedBox(
+                  height: AppSpacing.navFadeHeight,
+                  width: double.infinity,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [AppColors.sageTransparent, AppColors.sage],
+                        stops: [0, 0.55],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Align(
               alignment: Alignment.bottomCenter,
               child: SafeArea(
                 top: false,
-                child: FloatingNavBar(
+                child: AppNavBar(
                   current: tab,
                   onSelected: tabs.select,
                   onAdd: () => showAddActionSheet(context),
+                  onMore: () => showMoreSheet(
+                    context,
+                    current: tab,
+                    onSelected: tabs.select,
+                  ),
                 ),
               ),
             ),

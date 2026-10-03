@@ -456,5 +456,32 @@
         "format": "decimalPattern"
       }
     }
+  },
+  "navMore": "More",
+  "moreDoctorsHint": "Your doctors and appointments",
+  "moreRecordsHint": "Prescriptions, reports and invoices",
+  "moreExpensesHint": "Spending and medicine costs",
+  "moreSettingsHint": "Language and preferences",
+  "vsLastMonth": "vs last month",
+  "sameAsLastMonth": "Same as last month",
+  "expensesEmptyBody": "Track pharmacy bills, doctor fees and tests in one place.",
+  "spentIn": "Spent in {month}",
+  "@spentIn": {
+    "description": "Header of the expenses card, e.g. Spent in October",
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "lastMonthsTrend": "Spending over the last {count} months",
+  "@lastMonthsTrend": {
+    "description": "Screen reader label for the spending bar chart",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
   }
 }

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dosey/app/app.dart';
 import 'package:dosey/app/home_tab.dart';
-import 'package:dosey/app/widgets/floating_nav_bar.dart';
+import 'package:dosey/app/widgets/app_nav_bar.dart';
 import 'package:dosey/core/database/app_database.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/core/storage/file_storage_service.dart';
@@ -201,14 +201,20 @@ void main() {
     await settle(tester);
   }
 
+  /// Home, Reminders and Medicines are in the bar; the rest under More.
   Future<void> openTab(WidgetTester tester, HomeTab tab) async {
+    final inBar = AppNavBar.primary.contains(tab);
     await tester.tap(
       find.descendant(
-        of: find.byType(FloatingNavBar),
-        matching: find.byTooltip(tab.label(en)),
+        of: find.byType(AppNavBar),
+        matching: find.byTooltip(inBar ? tab.label(en) : en.navMore),
       ),
     );
     await settle(tester);
+    if (!inBar) {
+      await tester.tap(find.text(tab.label(en)).last);
+      await settle(tester);
+    }
   }
 
   /// ListViews build lazily: drag the visible page until [text] is built

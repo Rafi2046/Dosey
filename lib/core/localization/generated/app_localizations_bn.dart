@@ -1084,4 +1084,43 @@ class AppLocalizationsBn extends AppLocalizations {
 
     return 'ধাপ $currentString/$totalString';
   }
+
+  @override
+  String get navMore => 'আরও';
+
+  @override
+  String get moreDoctorsHint => 'আপনার ডাক্তার ও অ্যাপয়েন্টমেন্ট';
+
+  @override
+  String get moreRecordsHint => 'প্রেসক্রিপশন, রিপোর্ট ও রসিদ';
+
+  @override
+  String get moreExpensesHint => 'খরচ ও ওষুধের দাম';
+
+  @override
+  String get moreSettingsHint => 'ভাষা ও পছন্দ';
+
+  @override
+  String get vsLastMonth => 'গত মাসের তুলনায়';
+
+  @override
+  String get sameAsLastMonth => 'গত মাসের মতোই';
+
+  @override
+  String get expensesEmptyBody =>
+      'ফার্মেসির বিল, ডাক্তারের ফি ও টেস্টের খরচ এক জায়গায় রাখুন।';
+
+  @override
+  String spentIn(String month) {
+    return '$month-এ খরচ';
+  }
+
+  @override
+  String lastMonthsTrend(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    return 'গত $countString মাসের খরচ';
+  }
 }

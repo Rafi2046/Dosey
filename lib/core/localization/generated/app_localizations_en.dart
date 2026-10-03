@@ -1092,4 +1092,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
     return 'Step $currentString of $totalString';
   }
+
+  @override
+  String get navMore => 'More';
+
+  @override
+  String get moreDoctorsHint => 'Your doctors and appointments';
+
+  @override
+  String get moreRecordsHint => 'Prescriptions, reports and invoices';
+
+  @override
+  String get moreExpensesHint => 'Spending and medicine costs';
+
+  @override
+  String get moreSettingsHint => 'Language and preferences';
+
+  @override
+  String get vsLastMonth => 'vs last month';
+
+  @override
+  String get sameAsLastMonth => 'Same as last month';
+
+  @override
+  String get expensesEmptyBody =>
+      'Track pharmacy bills, doctor fees and tests in one place.';
+
+  @override
+  String spentIn(String month) {
+    return 'Spent in $month';
+  }
+
+  @override
+  String lastMonthsTrend(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    return 'Spending over the last $countString months';
+  }
 }

@@ -9,7 +9,7 @@ import '../../../core/widgets/section_header.dart';
 import '../providers/expenses_providers.dart';
 import 'expense_form_screen.dart';
 import 'widgets/category_breakdown.dart';
-import 'widgets/expense_summary_widget.dart';
+import 'widgets/expense_hero_card.dart';
 import 'widgets/expense_tile.dart';
 import 'widgets/medicine_cost_breakdown.dart';
 import 'widgets/month_switcher.dart';
@@ -29,7 +29,7 @@ class ExpensesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final month = ref.watch(expenseMonthProvider);
     final monthNotifier = ref.read(expenseMonthProvider.notifier);
-    final total = ref.watch(monthExpenseTotalProvider).value ?? 0;
+    final trend = ref.watch(expenseTrendProvider).value ?? const [];
     final projection = ref.watch(medicineCostProjectionProvider);
     final categories = ref.watch(monthCategoryTotalsProvider).value ?? const {};
     final expenses = ref.watch(monthExpensesProvider);
@@ -46,8 +46,9 @@ class ExpensesScreen extends ConsumerWidget {
             onNext: monthNotifier.next,
           ),
           AppSpacing.gapLg,
-          ExpenseSummaryWidget(
-            spentMinor: total,
+          ExpenseHeroCard(
+            month: month,
+            trend: trend,
             projectedMonthlyMinor: projection.value?.monthlyMinor ?? 0,
             projectedDailyMinor: projection.value?.dailyMinor ?? 0,
           ),
@@ -62,7 +63,9 @@ class ExpensesScreen extends ConsumerWidget {
           ),
           SectionHeader(
             title: context.l10n.expenses,
-            actionLabel: context.l10n.add,
+            actionLabel: (expenses.value?.isEmpty ?? true)
+                ? null
+                : context.l10n.add,
             onAction: () => _openForm(context),
           ),
           AsyncValueView(
@@ -70,7 +73,10 @@ class ExpensesScreen extends ConsumerWidget {
             data: (list) => list.isEmpty
                 ? EmptyState(
                     title: context.l10n.noExpenses,
-                    image: AppImages.medTablet,
+                    message: context.l10n.expensesEmptyBody,
+                    image: AppImages.medOther,
+                    actionLabel: context.l10n.addExpense,
+                    onAction: () => _openForm(context),
                   )
                 : Column(
                     children: [

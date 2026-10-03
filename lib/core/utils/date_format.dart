@@ -18,6 +18,12 @@ abstract final class AppDateFormat {
   /// "Mon, 5 Oct"
   static String shortDate(DateTime value) => _shortDate.format(value);
 
+  /// "Oct" (in the current language), for chart labels.
+  static String monthShort(DateTime value) => DateFormat.MMM().format(value);
+
+  /// "October" without the year.
+  static String monthName(DateTime value) => DateFormat.MMMM().format(value);
+
   /// "October 2026"
   static String month(DateTime value) => _month.format(value);
 

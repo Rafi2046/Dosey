@@ -1981,6 +1981,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Step {current} of {total}'**
   String onboardingStep(int current, int total);
+
+  /// No description provided for @navMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get navMore;
+
+  /// No description provided for @moreDoctorsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your doctors and appointments'**
+  String get moreDoctorsHint;
+
+  /// No description provided for @moreRecordsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Prescriptions, reports and invoices'**
+  String get moreRecordsHint;
+
+  /// No description provided for @moreExpensesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Spending and medicine costs'**
+  String get moreExpensesHint;
+
+  /// No description provided for @moreSettingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Language and preferences'**
+  String get moreSettingsHint;
+
+  /// No description provided for @vsLastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'vs last month'**
+  String get vsLastMonth;
+
+  /// No description provided for @sameAsLastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Same as last month'**
+  String get sameAsLastMonth;
+
+  /// No description provided for @expensesEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Track pharmacy bills, doctor fees and tests in one place.'**
+  String get expensesEmptyBody;
+
+  /// Header of the expenses card, e.g. Spent in October
+  ///
+  /// In en, this message translates to:
+  /// **'Spent in {month}'**
+  String spentIn(String month);
+
+  /// Screen reader label for the spending bar chart
+  ///
+  /// In en, this message translates to:
+  /// **'Spending over the last {count} months'**
+  String lastMonthsTrend(int count);
 }
 
 class _AppLocalizationsDelegate

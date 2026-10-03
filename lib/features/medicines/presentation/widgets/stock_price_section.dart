@@ -85,35 +85,38 @@ class StockPriceSection extends StatelessWidget {
               prefixText: AppConstants.currencySymbol,
               validator: _optionalAmount,
             ),
+            // Directly in a row (not inside another labelled group), so
+            // the spacing doesn't double up.
             if (showPacks)
-              LabeledField(
-                label: l10n.packSize,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _CountField(
-                        label: l10n.unitsPerStrip(unit),
-                        controller: unitsPerStrip,
-                        validator: _optionalCount,
-                      ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: _CountField(
+                      label: l10n.unitsPerStrip(unit),
+                      controller: unitsPerStrip,
+                      validator: _optionalCount,
                     ),
-                    AppSpacing.gapMd,
-                    Expanded(
-                      child: _CountField(
-                        label: l10n.stripsPerBox,
-                        controller: stripsPerBox,
-                        validator: _optionalCount,
-                      ),
+                  ),
+                  AppSpacing.gapMd,
+                  Expanded(
+                    child: _CountField(
+                      label: l10n.stripsPerBox,
+                      controller: stripsPerBox,
+                      validator: _optionalCount,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             AppTextField.decimal(
               label: l10n.medicineStock,
               controller: stock,
               hint: l10n.optional,
               validator: _optionalNumber,
+              // The +1 box / strip buttons belong right under it.
+              bottomGap: showPacks && perStrip != null
+                  ? AppSpacing.sm
+                  : AppSpacing.fieldGap,
             ),
             if (showPacks && perStrip != null) ...[
               Wrap(

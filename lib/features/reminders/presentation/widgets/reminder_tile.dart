@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/utils/date_format.dart';
 import '../../../../core/utils/enum_labels.dart';
+import '../../../../core/widgets/app_switch.dart';
 import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../domain/reminder_text.dart';
@@ -79,7 +80,7 @@ class ReminderTile extends StatelessWidget {
               ],
             ),
           ),
-          Switch(value: r.isEnabled, onChanged: onToggle),
+          AppSwitch(value: r.isEnabled, onChanged: onToggle),
         ],
       ),
     );

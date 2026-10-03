@@ -588,7 +588,6 @@
   "medicinePickerEmpty": "You haven't added any medicines yet",
   "medicinePickerEmptyHint": "Add the medicine first. Its intake times become reminders automatically, so you may not need a separate one.",
   "addNewMedicine": "Add new medicine",
-  "packSize": "Pack size",
   "stripsPerBox": "Strips per box",
   "addOneBox": "+1 box",
   "addOneStrip": "+1 strip",

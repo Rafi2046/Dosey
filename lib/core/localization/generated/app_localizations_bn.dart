@@ -1388,9 +1388,6 @@ class AppLocalizationsBn extends AppLocalizations {
   String get addNewMedicine => 'নতুন ওষুধ যোগ করুন';
 
   @override
-  String get packSize => 'প্যাকের মাপ';
-
-  @override
   String get stripsPerBox => 'প্রতি বক্সে পাতা';
 
   @override

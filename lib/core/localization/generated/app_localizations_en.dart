@@ -1399,9 +1399,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addNewMedicine => 'Add new medicine';
 
   @override
-  String get packSize => 'Pack size';
-
-  @override
   String get stripsPerBox => 'Strips per box';
 
   @override

@@ -34,6 +34,9 @@ abstract final class AppSpacing {
   static const double featureIcon = 52;
   static const double settingsIcon = 36;
 
+  /// Space below each labelled form field.
+  static const double fieldGap = lg;
+
   // ── Loading skeletons ─────────────────────────────────────────────────────
   static const double skeletonCard = 104;
   static const double skeletonLine = 14;
@@ -92,6 +95,7 @@ abstract final class AppSpacing {
   static const double glassOpacity = 0.12;
   static const double badgeOpacity = 0.18;
   static const double unselectedTileScale = 0.96;
+  static const double switchScale = 0.68;
   static const double emptyIllustrationOpacity = 0.9;
   static const double sheetInitialSize = 0.6;
   static const double sheetMaxSize = 0.9;

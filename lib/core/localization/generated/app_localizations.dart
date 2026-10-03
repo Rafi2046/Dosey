@@ -2492,12 +2492,6 @@ abstract class AppLocalizations {
   /// **'Add new medicine'**
   String get addNewMedicine;
 
-  /// No description provided for @packSize.
-  ///
-  /// In en, this message translates to:
-  /// **'Pack size'**
-  String get packSize;
-
   /// No description provided for @stripsPerBox.
   ///
   /// In en, this message translates to:

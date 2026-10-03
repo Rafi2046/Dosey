@@ -10,6 +10,7 @@ class AppTextField extends StatelessWidget {
   const AppTextField({
     super.key,
     required this.label,
+    this.bottomGap = AppSpacing.fieldGap,
     required this.controller,
     this.hint,
     this.keyboardType,
@@ -24,6 +25,7 @@ class AppTextField extends StatelessWidget {
   const AppTextField.decimal({
     super.key,
     required this.label,
+    this.bottomGap = AppSpacing.fieldGap,
     required this.controller,
     this.hint,
     this.validator,
@@ -34,6 +36,9 @@ class AppTextField extends StatelessWidget {
        inputFormatters = null;
 
   final String label;
+
+  /// See [LabeledField.bottomGap].
+  final double bottomGap;
   final TextEditingController controller;
   final String? hint;
   final TextInputType? keyboardType;
@@ -53,6 +58,7 @@ class AppTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return LabeledField(
       label: label,
+      bottomGap: bottomGap,
       child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,

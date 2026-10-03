@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
+import 'app_switch.dart';
 
 /// Title + hint + switch, for settings-style toggles on cream screens.
 /// Tapping anywhere on the row toggles it.
@@ -42,7 +43,7 @@ class SwitchRow extends StatelessWidget {
                 ),
               ),
               AppSpacing.gapMd,
-              Switch(value: value, onChanged: onChanged),
+              AppSwitch(value: value, onChanged: onChanged),
             ],
           ),
         ),

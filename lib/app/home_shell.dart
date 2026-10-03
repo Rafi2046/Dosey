@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show SystemNavigator;
 import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,6 +12,7 @@ import '../features/medicines/presentation/medicines_screen.dart';
 import '../features/records/presentation/records_screen.dart';
 import '../features/reminders/presentation/reminders_screen.dart';
 import '../core/constants/constants.dart';
+import '../core/widgets/confirm_dialog.dart';
 import 'home_tab.dart';
 import 'widgets/add_action_sheet.dart';
 import 'widgets/app_nav_bar.dart';
@@ -67,11 +69,14 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     final tab = ref.watch(homeTabProvider);
     final tabs = ref.read(homeTabProvider.notifier);
 
-    // Back on any other tab returns to Home before leaving the app.
+    // Back on any other tab returns to Home; on Home it asks before
+    // leaving the app.
     return PopScope(
-      canPop: tab == HomeTab.dashboard,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) tabs.select(HomeTab.dashboard);
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        if (tab != HomeTab.dashboard) return tabs.select(HomeTab.dashboard);
+        if (await confirmExit(context)) await SystemNavigator.pop();
       },
       child: Scaffold(
         body: Stack(

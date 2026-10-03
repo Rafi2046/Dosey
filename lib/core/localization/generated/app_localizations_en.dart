@@ -1683,4 +1683,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsNameHint => 'Only on this phone';
+
+  @override
+  String greetingWithName(String greeting, String name) {
+    return '$greeting, $name';
+  }
+
+  @override
+  String get exitTitle => 'Exit Dosey?';
+
+  @override
+  String get exitBody =>
+      'Your reminders will still ring on time, even with the app closed.';
+
+  @override
+  String get exitStay => 'Stay';
+
+  @override
+  String get exitConfirm => 'Exit';
 }

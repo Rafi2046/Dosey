@@ -739,5 +739,21 @@
   "skip": "Skip",
   "settingsProfile": "Profile",
   "settingsAddName": "Add your name",
-  "settingsNameHint": "Only on this phone"
+  "settingsNameHint": "Only on this phone",
+  "greetingWithName": "{greeting}, {name}",
+  "exitTitle": "Exit Dosey?",
+  "exitBody": "Your reminders will still ring on time, even with the app closed.",
+  "exitStay": "Stay",
+  "exitConfirm": "Exit",
+  "@greetingWithName": {
+    "description": "Home greeting with the user's name, e.g. \"Good evening, Rafi\"",
+    "placeholders": {
+      "greeting": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -31,6 +31,7 @@ import 'package:dosey/features/reminders/data/reminders_repository.dart';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
@@ -440,6 +441,65 @@ void main() {
       )..where((s) => s.key.equals('user_name'))).getSingleOrNull(),
     );
     expect(saved?.value, 'Rafi');
+    await unmount(tester);
+  });
+
+  testWidgets('Home greets the user by name', (tester) async {
+    await tester.runAsync(
+      () => db
+          .into(db.appSettings)
+          .insert(AppSettingsCompanion.insert(key: 'user_name', value: 'Rafi')),
+    );
+    await pumpApp(tester);
+    // 10:15 in the test clock.
+    expect(
+      find.text(en.greetingWithName(en.goodMorning, 'Rafi')),
+      findsOneWidget,
+    );
+    await unmount(tester);
+  });
+
+  testWidgets('back on Home asks before exiting; elsewhere goes Home', (
+    tester,
+  ) async {
+    final calls = <String>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        calls.add(call.method);
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+    await pumpApp(tester);
+
+    // Another tab: back returns to Home, no dialog.
+    await openTab(tester, HomeTab.medicines);
+    await tester.binding.handlePopRoute();
+    await settle(tester);
+    expect(find.text(en.dashboardTitle), findsOneWidget);
+    expect(find.text(en.exitTitle), findsNothing);
+
+    // Home: asks; "Stay" keeps the app open.
+    await tester.binding.handlePopRoute();
+    await settle(tester);
+    expect(find.text(en.exitTitle), findsOneWidget);
+    await tester.tap(find.text(en.exitStay));
+    await settle(tester);
+    expect(find.text(en.exitTitle), findsNothing);
+    expect(calls, isNot(contains('SystemNavigator.pop')));
+
+    // "Exit" closes it.
+    await tester.binding.handlePopRoute();
+    await settle(tester);
+    await tester.tap(find.text(en.exitConfirm));
+    await settle(tester);
+    expect(calls, contains('SystemNavigator.pop'));
     await unmount(tester);
   });
 

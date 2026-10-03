@@ -460,5 +460,10 @@
   "skip": "বাদ দিন",
   "settingsProfile": "প্রোফাইল",
   "settingsAddName": "আপনার নাম যোগ করুন",
-  "settingsNameHint": "শুধু এই ফোনে থাকে"
+  "settingsNameHint": "শুধু এই ফোনে থাকে",
+  "greetingWithName": "{greeting}, {name}",
+  "exitTitle": "Dosey বন্ধ করবেন?",
+  "exitBody": "অ্যাপ বন্ধ থাকলেও রিমাইন্ডার ঠিক সময়ে বাজবে।",
+  "exitStay": "থাকুন",
+  "exitConfirm": "বের হন"
 }

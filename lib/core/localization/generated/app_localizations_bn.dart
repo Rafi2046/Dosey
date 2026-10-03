@@ -1666,4 +1666,21 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get settingsNameHint => 'শুধু এই ফোনে থাকে';
+
+  @override
+  String greetingWithName(String greeting, String name) {
+    return '$greeting, $name';
+  }
+
+  @override
+  String get exitTitle => 'Dosey বন্ধ করবেন?';
+
+  @override
+  String get exitBody => 'অ্যাপ বন্ধ থাকলেও রিমাইন্ডার ঠিক সময়ে বাজবে।';
+
+  @override
+  String get exitStay => 'থাকুন';
+
+  @override
+  String get exitConfirm => 'বের হন';
 }

@@ -2863,6 +2863,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Only on this phone'**
   String get settingsNameHint;
+
+  /// Home greeting with the user's name, e.g. "Good evening, Rafi"
+  ///
+  /// In en, this message translates to:
+  /// **'{greeting}, {name}'**
+  String greetingWithName(String greeting, String name);
+
+  /// No description provided for @exitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit Dosey?'**
+  String get exitTitle;
+
+  /// No description provided for @exitBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your reminders will still ring on time, even with the app closed.'**
+  String get exitBody;
+
+  /// No description provided for @exitStay.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay'**
+  String get exitStay;
+
+  /// No description provided for @exitConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get exitConfirm;
 }
 
 class _AppLocalizationsDelegate

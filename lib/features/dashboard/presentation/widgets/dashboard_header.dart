@@ -11,9 +11,13 @@ class DashboardHeader extends StatelessWidget {
     super.key,
     required this.now,
     required this.onBellTap,
+    this.name,
   });
 
   final DateTime now;
+
+  /// The user's name, added to the greeting when set.
+  final String? name;
   final VoidCallback onBellTap;
 
   String _greeting(AppLocalizations l) => switch (now.hour) {
@@ -37,7 +41,18 @@ class DashboardHeader extends StatelessWidget {
           ),
           AppSpacing.gapMd,
           Expanded(
-            child: Text(_greeting(context.l10n), style: AppTextStyles.subtitle),
+            child: Text(
+              switch (name) {
+                final n? => context.l10n.greetingWithName(
+                  _greeting(context.l10n),
+                  n,
+                ),
+                null => _greeting(context.l10n),
+              },
+              style: AppTextStyles.subtitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
           IconButton(
             tooltip: context.l10n.settingsTitle,

@@ -7,6 +7,7 @@ import '../../../core/widgets/section_header.dart';
 import '../../../core/widgets/tab_scroll_view.dart';
 import '../../medicines/providers/medicines_providers.dart';
 import '../../reminders/providers/reminders_providers.dart';
+import '../../settings/providers/settings_providers.dart';
 import '../../expenses/presentation/widgets/expense_summary_widget.dart';
 import '../../expenses/providers/expenses_providers.dart';
 import '../../reminders/presentation/reminder_form_screen.dart';
@@ -45,7 +46,11 @@ class DashboardScreen extends ConsumerWidget {
         ref.invalidate(medicineCostProjectionProvider);
       },
       children: [
-        DashboardHeader(now: now, onBellTap: onOpenReminders),
+        DashboardHeader(
+          now: now,
+          name: ref.watch(userNameProvider).value,
+          onBellTap: onOpenReminders,
+        ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
           child: Text(

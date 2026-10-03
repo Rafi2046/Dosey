@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dosey/app/app.dart';
 import 'package:dosey/app/home_tab.dart';
 import 'package:dosey/app/widgets/app_nav_bar.dart';
+import 'package:dosey/core/constants/constants.dart';
 import 'package:dosey/core/database/app_database.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/core/storage/file_storage_service.dart';
@@ -592,4 +593,53 @@ void main() {
       await unmount(tester);
     },
   );
+
+  testWidgets('dark mode switches the whole app in place and is saved', (
+    tester,
+  ) async {
+    addTearDown(() => AppColors.apply(AppPalette.light));
+    await pumpApp(tester);
+    await tester.tap(find.byTooltip(en.settingsTitle));
+    await settle(tester);
+
+    await tapText(tester, en.themeDark);
+    expect(AppColors.isDark, isTrue);
+    // Still on Settings (no restart), now on the dark background.
+    expect(find.text(en.settingsTitle), findsOneWidget);
+    final scaffold = tester.widget<Scaffold>(find.byType(Scaffold).last);
+    expect(scaffold.backgroundColor, AppPalette.dark.cream);
+    final saved = await dbRun(
+      tester,
+      () => (db.select(
+        db.appSettings,
+      )..where((s) => s.key.equals('theme'))).getSingle(),
+    );
+    expect(saved.value, 'dark');
+
+    await tapText(tester, en.themeSystem);
+    expect(AppColors.isDark, isFalse);
+    await unmount(tester);
+  });
+
+  testWidgets('settings opens the legal pages and permissions', (tester) async {
+    await pumpApp(tester);
+    await tester.tap(find.byTooltip(en.settingsTitle));
+    await settle(tester);
+    expect(find.text(en.permissionsAllAllowed), findsOneWidget);
+
+    for (final (title, firstHeading) in [
+      (en.privacyPolicy, en.privacyShortTitle),
+      (en.termsOfUse, en.termsUseTitle),
+      (en.medicalDisclaimer, en.disclaimerAdviceTitle),
+    ]) {
+      await tapText(tester, title);
+      expect(find.text(firstHeading), findsOneWidget);
+      await back(tester);
+    }
+
+    await tapText(tester, en.settingsPermissions);
+    expect(find.text(en.allSet), findsOneWidget);
+    await back(tester);
+    await unmount(tester);
+  });
 }

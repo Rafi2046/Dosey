@@ -17,6 +17,17 @@ abstract final class AppConstants {
   static const String shortDatePattern = 'EEE, d MMM';
   static const String monthPattern = 'MMMM yyyy';
 
+  // ── Publishing (replace before release) ───────────────────────────────────
+  /// Shown in Settings › Contact support and in the privacy policy.
+  static const String supportEmail = 'support@example.com';
+
+  /// Settings › Rate Dosey. Must match the final applicationId.
+  static const String playStoreUrl =
+      'https://play.google.com/store/apps/details?id=com.example.dosey';
+
+  /// "Last updated" date on the privacy policy, terms and disclaimer.
+  static final DateTime legalUpdated = DateTime(2026, 10, 3);
+
   // ── Expense projections ───────────────────────────────────────────────────
   static const int daysPerMonth = 30;
   static const int daysPerWeek = 7;

@@ -32,6 +32,11 @@ abstract final class AppSpacing {
   static const double heroIllustration = 240;
   static const double onboardingHero = 260;
   static const double featureIcon = 52;
+  static const double settingsIcon = 36;
+
+  /// Dividers in a settings group start after the row icon.
+  static const double settingsDividerIndent = 64;
+  static const double appIconLarge = 64;
   static const double pageDot = 8;
   static const double pageDotActive = 24;
   static const double alarmIllustration = 200;

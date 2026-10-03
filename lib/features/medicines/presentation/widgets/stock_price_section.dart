@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Price per unit (৳) and optional stock tracking.
 class StockPriceSection extends StatelessWidget {
@@ -20,12 +21,12 @@ class StockPriceSection extends StatelessWidget {
   static String? _optionalAmount(String? v) =>
       (v == null || v.trim().isEmpty || Money.parse(v) != null)
       ? null
-      : ErrorStrings.invalidAmount;
+      : context.l10n.invalidAmount;
 
   static String? _optionalNumber(String? v) =>
       (v == null || v.trim().isEmpty || (double.tryParse(v) ?? -1) >= 0)
       ? null
-      : ErrorStrings.invalidNumber;
+      : context.l10n.invalidNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class StockPriceSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppTextField.decimal(
-          label: MedicineStrings.medicineUnitPrice,
+          label: context.l10n.medicineUnitPrice,
           controller: unitPrice,
           prefixText: AppConstants.currencySymbol,
           validator: _optionalAmount,
@@ -43,18 +44,18 @@ class StockPriceSection extends StatelessWidget {
           children: [
             Expanded(
               child: AppTextField.decimal(
-                label: MedicineStrings.medicineStock,
+                label: context.l10n.medicineStock,
                 controller: stock,
-                hint: AppStrings.optional,
+                hint: context.l10n.optional,
                 validator: _optionalNumber,
               ),
             ),
             AppSpacing.gapMd,
             Expanded(
               child: AppTextField.decimal(
-                label: MedicineStrings.medicineRefillAt,
+                label: context.l10n.medicineRefillAt,
                 controller: refillAt,
-                hint: AppStrings.optional,
+                hint: context.l10n.optional,
                 validator: _optionalNumber,
               ),
             ),

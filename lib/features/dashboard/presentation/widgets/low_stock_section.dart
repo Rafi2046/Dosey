@@ -8,6 +8,7 @@ import '../../../../core/widgets/surface_card.dart';
 import '../../../medicines/presentation/medicine_detail_screen.dart';
 import '../../../medicines/providers/medicines_providers.dart';
 import '../../../reminders/domain/reminder_text.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Medicines at or below their refill threshold. Hidden when none.
 class LowStockSection extends ConsumerWidget {
@@ -21,7 +22,7 @@ class LowStockSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SectionHeader(title: DashboardStrings.runningLow),
+        SectionHeader(title: context.l10n.runningLow),
         for (final item in items) ...[
           SurfaceCard(
             color: AppColors.cream,
@@ -46,7 +47,7 @@ class LowStockSection extends ConsumerWidget {
                   ),
                 ),
                 StatusChip(
-                  label: DashboardStrings.unitsLeft(
+                  label: context.l10n.unitsLeft(
                     ReminderText.formatAmount(item.medicine.stockQuantity!),
                   ),
                   background: AppColors.accent,

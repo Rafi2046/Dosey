@@ -10,6 +10,7 @@ import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../providers/doctors_providers.dart';
+import '../../../core/localization/l10n.dart';
 
 class DoctorFormScreen extends ConsumerStatefulWidget {
   const DoctorFormScreen({super.key, this.existing});
@@ -78,16 +79,16 @@ class _DoctorFormScreenState extends ConsumerState<DoctorFormScreen> {
         ? await repo.create(companion)
         : await repo.update(_d!.id, companion);
     if (!mounted) return;
-    showAppSnack(context, AppStrings.saved);
+    showAppSnack(context, context.l10n.saved);
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return CreamScaffold(
-      title: _d == null ? DoctorStrings.addDoctor : DoctorStrings.editDoctor,
+      title: _d == null ? context.l10n.addDoctor : context.l10n.editDoctor,
       bottomBar: PillButton(
-        label: _d == null ? AppStrings.save : AppStrings.saveChanges,
+        label: _d == null ? context.l10n.save : context.l10n.saveChanges,
         showRingChevron: true,
         loading: _saving,
         onPressed: _save,
@@ -98,48 +99,48 @@ class _DoctorFormScreenState extends ConsumerState<DoctorFormScreen> {
           padding: AppSpacing.screenPadding,
           children: [
             AppTextField(
-              label: DoctorStrings.doctorName,
+              label: context.l10n.doctorName,
               controller: _name,
               textCapitalization: TextCapitalization.words,
               validator: AppTextField.required,
             ),
             AppTextField(
-              label: DoctorStrings.doctorSpecialty,
+              label: context.l10n.doctorSpecialty,
               controller: _specialty,
               textCapitalization: TextCapitalization.words,
             ),
             AppTextField(
-              label: DoctorStrings.doctorPhone,
+              label: context.l10n.doctorPhone,
               controller: _phone,
               keyboardType: TextInputType.phone,
             ),
             AppTextField(
-              label: DoctorStrings.doctorEmail,
+              label: context.l10n.doctorEmail,
               controller: _email,
               keyboardType: TextInputType.emailAddress,
               textCapitalization: TextCapitalization.none,
             ),
             AppTextField(
-              label: DoctorStrings.doctorClinic,
+              label: context.l10n.doctorClinic,
               controller: _clinic,
               textCapitalization: TextCapitalization.words,
             ),
             AppTextField(
-              label: DoctorStrings.doctorAddress,
+              label: context.l10n.doctorAddress,
               controller: _address,
               maxLines: 2,
             ),
             AppTextField.decimal(
-              label: DoctorStrings.doctorFee,
+              label: context.l10n.doctorFee,
               controller: _fee,
               prefixText: AppConstants.currencySymbol,
               validator: (v) =>
                   (v == null || v.trim().isEmpty || Money.parse(v) != null)
                   ? null
-                  : ErrorStrings.invalidAmount,
+                  : context.l10n.invalidAmount,
             ),
             AppTextField(
-              label: DoctorStrings.doctorNotes,
+              label: context.l10n.doctorNotes,
               controller: _notes,
               maxLines: 3,
             ),

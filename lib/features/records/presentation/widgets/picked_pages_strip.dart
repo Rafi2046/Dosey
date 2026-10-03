@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/labeled_field.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Horizontal strip of freshly picked (not yet saved) pages with remove
 /// buttons and an "add" tile.
@@ -25,7 +26,7 @@ class PickedPagesStrip extends StatelessWidget {
   Widget build(BuildContext context) {
     final radius = BorderRadius.circular(AppSpacing.radiusMd);
     return LabeledField(
-      label: RecordStrings.recordPages,
+      label: context.l10n.recordPages,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

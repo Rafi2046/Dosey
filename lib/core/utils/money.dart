@@ -1,15 +1,20 @@
 import 'package:intl/intl.dart';
 
 import '../constants/app_constants.dart';
+import '../localization/app_locale.dart';
 
 /// Formatting/parsing for amounts stored as minor units (poisha).
 abstract final class Money {
-  static final NumberFormat _currency = NumberFormat.currency(
-    locale: AppConstants.currencyLocale,
+  /// Display format in the current language ("৳১,২৫০.৫০" in Bengali).
+  static NumberFormat get _currency => NumberFormat.currency(
+    locale: AppLocale.isBangla
+        ? AppLocale.bangla.languageCode
+        : AppConstants.currencyLocale,
     symbol: AppConstants.currencySymbol,
     decimalDigits: AppConstants.currencyDecimalDigits,
   );
 
+  /// Always Latin digits: it pre-fills number inputs, which [parse] reads.
   static final NumberFormat _plain = NumberFormat.decimalPatternDigits(
     locale: AppConstants.currencyLocale,
     decimalDigits: AppConstants.currencyDecimalDigits,

@@ -6,6 +6,7 @@ import '../../../../core/widgets/status_chip.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../domain/dose_time.dart';
 import 'dose_time_sheet.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// "Medicine Time" chips, each with its own amount (08:00 · 2 tablet ·
 /// 14:00 · 1 tablet), plus "Add time". Tap a chip to change or remove it.
@@ -81,7 +82,7 @@ class ReminderTimesEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LabeledField(
-      label: MedicineStrings.medicineTime,
+      label: context.l10n.medicineTime,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -93,7 +94,7 @@ class ReminderTimesEditor extends StatelessWidget {
                 StatusChip(
                   label:
                       '${d.time.format(context).toLowerCase()}'
-                      '${NotificationStrings.notifDoseSeparator}'
+                      '${context.l10n.notifDoseSeparator}'
                       '${ReminderText.dose(d.amount, unit)}',
                   icon: Icons.edit_rounded,
                   background: AppColors.sand,
@@ -101,7 +102,7 @@ class ReminderTimesEditor extends StatelessWidget {
                   onTap: () => _edit(context, d),
                 ),
               StatusChip(
-                label: AppStrings.addTime,
+                label: context.l10n.addTime,
                 icon: Icons.add_alarm_rounded,
                 onTap: () => _add(context),
               ),
@@ -109,7 +110,7 @@ class ReminderTimesEditor extends StatelessWidget {
           ),
           AppSpacing.gapSm,
           Text(
-            MedicineStrings.reminderTimesHint,
+            context.l10n.reminderTimesHint,
             style: AppTextStyles.captionOnLight,
           ),
         ],

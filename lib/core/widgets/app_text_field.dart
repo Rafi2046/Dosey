@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../constants/constants.dart';
 import 'labeled_field.dart';
+import '../localization/l10n.dart';
 
 /// Labeled text input for cream form screens.
 class AppTextField extends StatelessWidget {
@@ -45,7 +46,7 @@ class AppTextField extends StatelessWidget {
   /// Shared "required" validator.
   static String? required(String? value) =>
       (value == null || value.trim().isEmpty)
-      ? ErrorStrings.fieldRequired
+      ? context.l10n.fieldRequired
       : null;
 
   @override

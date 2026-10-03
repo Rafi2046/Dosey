@@ -7,6 +7,7 @@ import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../domain/reminder_text.dart';
 import '../../domain/reminder_with_details.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Reminder row: type label, title, schedule, next ring time and an on/off
 /// switch. Card color follows the design's rotating palette.
@@ -31,9 +32,9 @@ class ReminderTile extends StatelessWidget {
     final muted = light ? AppColors.inkMuted : AppColors.textOnDarkMuted;
     final next = r.nextTriggerAt;
     final status = !r.isEnabled
-        ? ReminderStrings.paused
+        ? context.l10n.paused
         : next == null
-        ? ReminderStrings.ended
+        ? context.l10n.ended
         : AppDateFormat.dateTime(next);
 
     return SurfaceCard(

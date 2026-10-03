@@ -11,6 +11,7 @@ import 'widgets/dashboard_header.dart';
 import 'widgets/low_stock_section.dart';
 import 'widgets/today_reminder_stack.dart';
 import 'widgets/upcoming_events_section.dart';
+import '../../../core/localization/l10n.dart';
 
 /// Home: today's stacked reminders, cost summary, low stock and upcoming
 /// appointments. Tab switching is delegated to the shell via callbacks.
@@ -36,10 +37,10 @@ class DashboardScreen extends ConsumerWidget {
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
           DashboardHeader(now: now, onBellTap: onOpenReminders),
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
             child: Text(
-              DashboardStrings.dashboardTitle,
+              context.l10n.dashboardTitle,
               style: AppTextStyles.display,
             ),
           ),
@@ -53,8 +54,8 @@ class DashboardScreen extends ConsumerWidget {
           const LowStockSection(),
           UpcomingEventsSection(onSeeAll: onOpenReminders),
           SectionHeader(
-            title: DashboardStrings.medicineCost,
-            actionLabel: AppStrings.seeAll,
+            title: context.l10n.medicineCost,
+            actionLabel: context.l10n.seeAll,
             onAction: onOpenExpenses,
           ),
           ExpenseSummaryWidget(

@@ -5,6 +5,7 @@ import '../../../../core/notifications/permission_service.dart';
 import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import 'permission_meta.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// One permission as a rounded card, styled like the design's reminder cards:
 /// small label row, serif title, description, and a pill on the right.
@@ -67,13 +68,13 @@ class PermissionTile extends StatelessWidget {
           AppSpacing.gapMd,
           granted
               ? StatusChip(
-                  label: OnboardingStrings.allowed,
+                  label: context.l10n.allowed,
                   icon: Icons.check_rounded,
                   background: light ? AppColors.moss : AppColors.creamLight,
                   foreground: light ? AppColors.textOnDark : AppColors.ink,
                 )
               : StatusChip(
-                  label: OnboardingStrings.allow,
+                  label: context.l10n.allow,
                   background: AppColors.accent,
                   foreground: AppColors.textOnAccent,
                   onTap: onRequest,

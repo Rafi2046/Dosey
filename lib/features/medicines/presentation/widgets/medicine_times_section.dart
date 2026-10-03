@@ -12,6 +12,7 @@ import '../../../reminders/providers/reminders_providers.dart';
 import '../../domain/dose_time.dart';
 import '../../providers/medicines_providers.dart';
 import 'dose_time_sheet.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// "Medicine Time" and "Days in a week" chips, driven by the medicine's
 /// reminders. Each time shows its own amount; tap one to edit it, or "Add
@@ -51,7 +52,7 @@ class MedicineTimesSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LabeledField(
-          label: MedicineStrings.medicineTime,
+          label: context.l10n.medicineTime,
           child: Wrap(
             spacing: AppSpacing.sm,
             runSpacing: AppSpacing.sm,
@@ -60,7 +61,7 @@ class MedicineTimesSection extends ConsumerWidget {
                 StatusChip(
                   label:
                       '${AppDateFormat.time(d.reminder.startAt)}'
-                      '${NotificationStrings.notifDoseSeparator}'
+                      '${context.l10n.notifDoseSeparator}'
                       '${ReminderText.dose(d.reminder.doseAmount ?? 1, medicine.doseUnit)}',
                   icon: d.reminder.isEnabled ? null : Icons.pause_rounded,
                   background: AppColors.sand,
@@ -72,7 +73,7 @@ class MedicineTimesSection extends ConsumerWidget {
                   ),
                 ),
               StatusChip(
-                label: AppStrings.addTime,
+                label: context.l10n.addTime,
                 icon: Icons.add_alarm_rounded,
                 onTap: () => _addTime(context, ref),
               ),
@@ -81,7 +82,7 @@ class MedicineTimesSection extends ConsumerWidget {
         ),
         if (weekdayLabels.isNotEmpty)
           LabeledField(
-            label: MedicineStrings.daysInWeek,
+            label: context.l10n.daysInWeek,
             child: Wrap(
               spacing: AppSpacing.sm,
               runSpacing: AppSpacing.sm,

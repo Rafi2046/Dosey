@@ -9,6 +9,7 @@ import '../../../../core/widgets/overlapping_column.dart';
 import '../../../reminders/providers/reminders_providers.dart';
 import 'occurrence_action_sheet.dart';
 import 'reminder_stack_card.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Today's occurrences as the design's overlapping, color-cycled cards.
 /// The first not-yet-handled future occurrence is labelled "Next … in".
@@ -27,8 +28,8 @@ class TodayReminderStack extends ConsumerWidget {
       data: (items) {
         if (items.isEmpty) {
           return EmptyState(
-            title: DashboardStrings.nothingScheduled,
-            actionLabel: ReminderStrings.addReminder,
+            title: context.l10n.nothingScheduled,
+            actionLabel: context.l10n.addReminder,
             onAction: onAddReminder,
           );
         }

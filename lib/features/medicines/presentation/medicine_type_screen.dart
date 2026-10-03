@@ -6,6 +6,7 @@ import '../../../core/widgets/circle_icon_button.dart';
 import '../../../core/widgets/pill_button.dart';
 import 'medicine_form_screen.dart';
 import 'widgets/medicine_type_grid.dart';
+import '../../../core/localization/l10n.dart';
 
 /// Step 1 of "Add Medicine": the design's "Choose Medicine Type" screen.
 class MedicineTypeScreen extends StatefulWidget {
@@ -35,15 +36,15 @@ class _MedicineTypeScreenState extends State<MedicineTypeScreen> {
                     children: [
                       CircleIconButton.back(context),
                       AppSpacing.gapMd,
-                      const Text(
-                        MedicineStrings.addMedicine,
+                      Text(
+                        context.l10n.addMedicine,
                         style: AppTextStyles.subtitle,
                       ),
                     ],
                   ),
                   AppSpacing.gapXl,
-                  const Text(
-                    MedicineStrings.chooseMedicineType,
+                  Text(
+                    context.l10n.chooseMedicineType,
                     style: AppTextStyles.display,
                   ),
                   AppSpacing.gapXl,
@@ -57,7 +58,7 @@ class _MedicineTypeScreenState extends State<MedicineTypeScreen> {
             Padding(
               padding: AppSpacing.bottomBarPadding,
               child: PillButton(
-                label: AppStrings.next,
+                label: context.l10n.next,
                 showRingChevron: true,
                 onPressed: () => Navigator.of(context).pushReplacement(
                   MaterialPageRoute<void>(

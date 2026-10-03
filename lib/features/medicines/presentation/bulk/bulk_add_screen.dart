@@ -14,6 +14,7 @@ import '../../domain/scanned_medicine.dart';
 import '../../providers/medicines_providers.dart';
 import 'medicine_draft.dart';
 import 'medicine_draft_card.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Review every medicine read off a prescription, fix mistakes, remove
 /// extras, add missed ones, then save them all in one transaction.
@@ -57,7 +58,7 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
     if (!valid || firstBad >= 0) {
       return showAppSnack(
         context,
-        MedicineStrings.bulkFixMedicine(firstBad < 0 ? 1 : firstBad + 1),
+        context.l10n.bulkFixMedicine(firstBad < 0 ? 1 : firstBad + 1),
       );
     }
     setState(() => _saving = true);
@@ -71,19 +72,19 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
       // One transaction, so nothing was saved; let the user retry.
       if (!mounted) return;
       setState(() => _saving = false);
-      return showAppSnack(context, ErrorStrings.genericError);
+      return showAppSnack(context, context.l10n.genericError);
     }
     if (!mounted) return;
-    showAppSnack(context, MedicineStrings.bulkSaved(count));
+    showAppSnack(context, context.l10n.bulkSaved(count));
     Navigator.pop(context, true);
   }
 
   @override
   Widget build(BuildContext context) {
     return CreamScaffold(
-      title: MedicineStrings.bulkTitle,
+      title: context.l10n.bulkTitle,
       bottomBar: PillButton(
-        label: MedicineStrings.bulkSaveAll(_drafts.length),
+        label: context.l10n.bulkSaveAll(_drafts.length),
         showRingChevron: true,
         loading: _saving,
         onPressed: _drafts.isEmpty ? null : _save,
@@ -97,16 +98,16 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(MedicineStrings.bulkHint, style: AppTextStyles.bodyOnLight),
+              Text(context.l10n.bulkHint, style: AppTextStyles.bodyOnLight),
               AppSpacing.gapLg,
               // Shared by every medicine on one prescription.
               DoctorPickerField(
-                label: MedicineStrings.medicineDoctor,
+                label: context.l10n.medicineDoctor,
                 doctorId: _doctorId,
                 onChanged: (id) => setState(() => _doctorId = id),
               ),
               PickerField(
-                label: MedicineStrings.medicineStartDate,
+                label: context.l10n.medicineStartDate,
                 value: AppDateFormat.date(_startDate),
                 icon: Icons.event_rounded,
                 onTap: () async {
@@ -127,14 +128,14 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                   child: Text(
-                    MedicineStrings.bulkEmpty,
+                    context.l10n.bulkEmpty,
                     style: AppTextStyles.bodyOnLight,
                   ),
                 ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: StatusChip(
-                  label: MedicineStrings.bulkAddAnother,
+                  label: context.l10n.bulkAddAnother,
                   icon: Icons.add_rounded,
                   onTap: () => setState(() => _drafts.add(MedicineDraft())),
                 ),

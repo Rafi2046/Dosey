@@ -8,6 +8,7 @@ import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/domain/scheduled_occurrence.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// One card in the dashboard's overlapping stack, modelled on the design:
 /// small "Evening Medicine" label, serif title, two-line body, time pill.
@@ -58,7 +59,7 @@ class ReminderStackCard extends StatelessWidget {
     final light = SurfaceCard.isLight(color);
     final muted = light ? AppColors.inkMuted : AppColors.textOnDarkMuted;
     final overline = isNext
-        ? DashboardStrings.nextTypeIn(
+        ? context.l10n.nextTypeIn(
             r.type.label,
             ReminderText.until(occurrence.at, now),
           )

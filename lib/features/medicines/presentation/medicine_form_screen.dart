@@ -26,6 +26,7 @@ import 'widgets/dose_section.dart';
 import 'widgets/reminder_times_editor.dart';
 import 'widgets/scan_prescription_card.dart';
 import 'widgets/stock_price_section.dart';
+import '../../../core/localization/l10n.dart';
 
 /// Step 2 of "Add Medicine", or editing an existing medicine. Reminder times
 /// are entered here on create; afterwards they're managed on the detail page.
@@ -121,14 +122,14 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
     if (!mounted) return;
     setState(() => _scanning = false);
     if (found == null) {
-      return showAppSnack(context, MedicineStrings.scanFailed);
+      return showAppSnack(context, context.l10n.scanFailed);
     }
     if (found.isEmpty) {
-      return showAppSnack(context, MedicineStrings.scanNothingFound);
+      return showAppSnack(context, context.l10n.scanNothingFound);
     }
     if (found.length == 1) {
       _applyScan(found.single);
-      return showAppSnack(context, MedicineStrings.scanFilled);
+      return showAppSnack(context, context.l10n.scanFilled);
     }
     // Several medicines: review and save them all together.
     final scanned = found;
@@ -194,7 +195,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
           );
     }
     if (!mounted) return;
-    showAppSnack(context, AppStrings.saved);
+    showAppSnack(context, context.l10n.saved);
     Navigator.pop(context);
   }
 
@@ -202,10 +203,10 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
   Widget build(BuildContext context) {
     return CreamScaffold(
       title: _isEdit
-          ? MedicineStrings.editMedicine
-          : MedicineStrings.addMedicine,
+          ? context.l10n.editMedicine
+          : context.l10n.addMedicine,
       bottomBar: PillButton(
-        label: _isEdit ? AppStrings.saveChanges : AppStrings.save,
+        label: _isEdit ? context.l10n.saveChanges : context.l10n.save,
         showRingChevron: true,
         loading: _saving,
         onPressed: _save,
@@ -218,7 +219,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
             if (!_isEdit)
               ScanPrescriptionCard(scanning: _scanning, onTap: _scan),
             LabeledField(
-              label: MedicineStrings.medicineForm,
+              label: context.l10n.medicineForm,
               child: ChoicePills<MedicineForm>(
                 options: MedicineForm.values,
                 selected: {_form},
@@ -227,20 +228,20 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
               ),
             ),
             AppTextField(
-              label: MedicineStrings.medicineName,
+              label: context.l10n.medicineName,
               controller: _name,
               textCapitalization: TextCapitalization.words,
               validator: AppTextField.required,
             ),
             AppTextField(
-              label: MedicineStrings.medicineStrength,
+              label: context.l10n.medicineStrength,
               controller: _strength,
-              hint: AppStrings.optional,
+              hint: context.l10n.optional,
             ),
             AppTextField(
-              label: MedicineStrings.medicineDescription,
+              label: context.l10n.medicineDescription,
               controller: _notes,
-              hint: MedicineStrings.medicineDescriptionHint,
+              hint: context.l10n.medicineDescriptionHint,
               maxLines: 3,
             ),
             DoseSection(
@@ -259,7 +260,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
                 ),
               ),
             DoctorPickerField(
-              label: MedicineStrings.medicineDoctor,
+              label: context.l10n.medicineDoctor,
               doctorId: _doctorId,
               onChanged: (id) => setState(() => _doctorId = id),
             ),
@@ -273,7 +274,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
               refillAt: _refillAt,
             ),
             PickerField(
-              label: MedicineStrings.medicineStartDate,
+              label: context.l10n.medicineStartDate,
               value: AppDateFormat.date(_startDate),
               icon: Icons.event_rounded,
               onTap: () async {
@@ -282,9 +283,9 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
               },
             ),
             PickerField(
-              label: MedicineStrings.medicineEndDate,
+              label: context.l10n.medicineEndDate,
               value: _endDate == null ? null : AppDateFormat.date(_endDate!),
-              placeholder: AppStrings.ongoing,
+              placeholder: context.l10n.ongoing,
               icon: Icons.event_busy_rounded,
               onClear: () => setState(() => _endDate = null),
               onTap: () async {

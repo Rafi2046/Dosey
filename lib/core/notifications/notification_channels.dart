@@ -5,6 +5,7 @@ import 'package:flutter/painting.dart' show Color;
 
 import '../constants/constants.dart';
 import '../database/enums.dart';
+import '../localization/l10n.dart';
 
 /// Channel definitions. One critical alarm channel per reminder type (so users
 /// can tune each in system settings) plus a gentle channel that respects DND.
@@ -22,7 +23,7 @@ abstract final class NotificationChannels {
   static final List<NotificationChannelGroup> groups = [
     NotificationChannelGroup(
       channelGroupKey: AppConstants.channelGroupKey,
-      channelGroupName: NotificationStrings.channelGroupName,
+      channelGroupName: context.l10n.channelGroupName,
     ),
   ];
 
@@ -30,26 +31,26 @@ abstract final class NotificationChannels {
   static const List<(String, String, String, Color)> _alarmSpecs = [
     (
       AppConstants.channelMedicine,
-      NotificationStrings.channelMedicineName,
-      NotificationStrings.channelMedicineDesc,
+      context.l10n.channelMedicineName,
+      context.l10n.channelMedicineDesc,
       AppColors.medicine,
     ),
     (
       AppConstants.channelAppointment,
-      NotificationStrings.channelAppointmentName,
-      NotificationStrings.channelAppointmentDesc,
+      context.l10n.channelAppointmentName,
+      context.l10n.channelAppointmentDesc,
       AppColors.appointment,
     ),
     (
       AppConstants.channelVaccine,
-      NotificationStrings.channelVaccineName,
-      NotificationStrings.channelVaccineDesc,
+      context.l10n.channelVaccineName,
+      context.l10n.channelVaccineDesc,
       AppColors.vaccine,
     ),
     (
       AppConstants.channelMedicalTest,
-      NotificationStrings.channelTestName,
-      NotificationStrings.channelTestDesc,
+      context.l10n.channelTestName,
+      context.l10n.channelTestDesc,
       AppColors.medicalTest,
     ),
   ];
@@ -60,8 +61,8 @@ abstract final class NotificationChannels {
     NotificationChannel(
       channelGroupKey: AppConstants.channelGroupKey,
       channelKey: AppConstants.channelGentle,
-      channelName: NotificationStrings.channelGentleName,
-      channelDescription: NotificationStrings.channelGentleDesc,
+      channelName: context.l10n.channelGentleName,
+      channelDescription: context.l10n.channelGentleDesc,
       importance: NotificationImportance.High,
       defaultRingtoneType: DefaultRingtoneType.Notification,
       defaultColor: AppColors.accent,
@@ -74,7 +75,7 @@ abstract final class NotificationChannels {
   /// USAGE_ALARM audio (see AlarmChannels.kt).
   static Map<String, Object> get nativeAlarmChannelArgs => {
     'groupKey': AppConstants.channelGroupKey,
-    'groupName': NotificationStrings.channelGroupName,
+    'groupName': context.l10n.channelGroupName,
     'keep': [for (final c in all) c.channelKey!],
     'channels': [
       for (final (key, name, description, color) in _alarmSpecs)

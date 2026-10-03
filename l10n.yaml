@@ -1,0 +1,7 @@
+# English + Bengali. Edit the .arb files, then run `flutter gen-l10n`
+# (also runs automatically on `flutter pub get` / build).
+arb-dir: lib/core/localization/arb
+template-arb-file: app_en.arb
+output-dir: lib/core/localization/generated
+output-localization-file: app_localizations.dart
+nullable-getter: false

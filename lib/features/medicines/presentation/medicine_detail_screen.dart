@@ -21,6 +21,7 @@ import '../providers/medicines_providers.dart';
 import 'medicine_form_screen.dart';
 import 'widgets/medicine_times_section.dart';
 import 'widgets/refill_sheet.dart';
+import '../../../core/localization/l10n.dart';
 
 enum _MenuAction { toggleActive, delete }
 
@@ -43,7 +44,7 @@ class MedicineDetailScreen extends ConsumerWidget {
       case _MenuAction.delete:
         if (!await confirmDelete(
           context,
-          body: MedicineStrings.deleteMedicineBody,
+          body: context.l10n.deleteMedicineBody,
         )) {
           return;
         }
@@ -58,7 +59,7 @@ class MedicineDetailScreen extends ConsumerWidget {
     final item = value.value;
 
     return CreamScaffold(
-      title: MedicineStrings.medicineDetails,
+      title: context.l10n.medicineDetails,
       actions: [
         if (item != null)
           PopupMenuButton<_MenuAction>(
@@ -69,13 +70,13 @@ class MedicineDetailScreen extends ConsumerWidget {
                 value: _MenuAction.toggleActive,
                 child: Text(
                   item.medicine.isActive
-                      ? MedicineStrings.stopMedicine
-                      : MedicineStrings.resumeMedicine,
+                      ? context.l10n.stopMedicine
+                      : context.l10n.resumeMedicine,
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: _MenuAction.delete,
-                child: Text(AppStrings.delete),
+                child: Text(context.l10n.delete),
               ),
             ],
           ),
@@ -86,14 +87,14 @@ class MedicineDetailScreen extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 PillButton(
-                  label: MedicineStrings.refill,
+                  label: context.l10n.refill,
                   tone: PillButtonTone.moss,
                   trailingIcon: Icons.add_shopping_cart_rounded,
                   onPressed: () => showRefillSheet(context, item.medicine),
                 ),
                 AppSpacing.gapMd,
                 PillButton(
-                  label: MedicineStrings.changeSetting,
+                  label: context.l10n.changeSetting,
                   trailingIcon: Icons.settings_rounded,
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
@@ -137,8 +138,8 @@ class _DetailBody extends ConsumerWidget {
     ];
     final end = m.endDate;
     final duration = end == null
-        ? AppStrings.ongoing
-        : AppStrings.daysCount(end.difference(m.startDate).inDays + 1);
+        ? context.l10n.ongoing
+        : context.l10n.daysCount(end.difference(m.startDate).inDays + 1);
     final monthly = ref
         .watch(medicineCostProjectionProvider)
         .value
@@ -152,17 +153,17 @@ class _DetailBody extends ConsumerWidget {
       padding: AppSpacing.screenPadding,
       children: [
         InfoBlock(
-          label: MedicineStrings.medicineName,
+          label: context.l10n.medicineName,
           value: [m.name, ?m.strength].join(' '),
           large: true,
         ),
         if (m.notes != null)
           InfoBlock(
-            label: MedicineStrings.medicineDescription,
+            label: context.l10n.medicineDescription,
             value: m.notes!,
           ),
         LabeledField(
-          label: MedicineStrings.timeDuration,
+          label: context.l10n.timeDuration,
           child: Align(
             alignment: Alignment.centerLeft,
             child: _chip(duration, icon: Icons.date_range_rounded),
@@ -170,14 +171,14 @@ class _DetailBody extends ConsumerWidget {
         ),
         MedicineTimesSection(medicine: m),
         InfoBlock(
-          label: MedicineStrings.doses,
+          label: context.l10n.doses,
           value:
               '${ReminderText.doseSummary(reminders, m.doseUnit)}'
-              '${NotificationStrings.notifDoseSeparator}${m.mealRelation.label}',
+              '${context.l10n.notifDoseSeparator}${m.mealRelation.label}',
         ),
         if (doctor != null)
           LabeledField(
-            label: MedicineStrings.medicineDoctor,
+            label: context.l10n.medicineDoctor,
             child: Align(
               alignment: Alignment.centerLeft,
               child: _chip(
@@ -194,14 +195,14 @@ class _DetailBody extends ConsumerWidget {
         if (m.stockQuantity != null)
           InfoBlock(
             label: item.isLowStock
-                ? MedicineStrings.lowStock
-                : MedicineStrings.inStock,
+                ? context.l10n.lowStock
+                : context.l10n.inStock,
             value:
                 '${ReminderText.formatAmount(m.stockQuantity!)} ${m.doseUnit}',
           ),
         if ((monthly ?? 0) > 0)
           InfoBlock(
-            label: MedicineStrings.costPerMonth,
+            label: context.l10n.costPerMonth,
             value: Money.format(monthly!),
           ),
       ],

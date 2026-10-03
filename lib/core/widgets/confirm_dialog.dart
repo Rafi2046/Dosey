@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
+import '../localization/l10n.dart';
 
 /// Destructive-action confirmation. Resolves to true only on "Delete".
 Future<bool> confirmDelete(BuildContext context, {required String body}) async {
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text(AppStrings.deleteConfirmTitle),
+      title: Text(context.l10n.deleteConfirmTitle),
       content: Text(body),
       actions: [
         TextButton(
           style: TextButton.styleFrom(foregroundColor: AppColors.inkMuted),
           onPressed: () => Navigator.pop(context, false),
-          child: const Text(AppStrings.cancel),
+          child: Text(context.l10n.cancel),
         ),
         TextButton(
           style: TextButton.styleFrom(foregroundColor: AppColors.error),
           onPressed: () => Navigator.pop(context, true),
-          child: const Text(AppStrings.delete),
+          child: Text(context.l10n.delete),
         ),
       ],
     ),

@@ -1,0 +1,1032 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for English (`en`).
+class AppLocalizationsEn extends AppLocalizations {
+  AppLocalizationsEn([String locale = 'en']) : super(locale);
+
+  @override
+  String get appName => 'Dosey';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navReminders => 'Reminders';
+
+  @override
+  String get navMedicines => 'Medicines';
+
+  @override
+  String get navRecords => 'Records';
+
+  @override
+  String get navDoctors => 'Doctors';
+
+  @override
+  String get navExpenses => 'Expenses';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get archive => 'Archive';
+
+  @override
+  String get none => 'None';
+
+  @override
+  String get deleteConfirmTitle => 'Delete this item?';
+
+  @override
+  String get deleteConfirmBody => 'This cannot be undone.';
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
+  String get saveChanges => 'Save changes';
+
+  @override
+  String get saved => 'Saved';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get ongoing => 'Ongoing';
+
+  @override
+  String get call => 'Call';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get choose => 'Choose';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get addTime => 'Add time';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get daysUnit => 'days';
+
+  @override
+  String get addSheetTitle => 'What would you like to add?';
+
+  @override
+  String get alarmMarkTaken => 'Medicine Taken';
+
+  @override
+  String get alarmDone => 'Done';
+
+  @override
+  String get alarmSnooze => 'Snooze';
+
+  @override
+  String get alarmSkip => 'Skip this time';
+
+  @override
+  String get minutesShort => 'min';
+
+  @override
+  String get nothingScheduled => 'Nothing scheduled. Enjoy your day!';
+
+  @override
+  String get goodMorning => 'Good morning';
+
+  @override
+  String get goodAfternoon => 'Good afternoon';
+
+  @override
+  String get goodEvening => 'Good evening';
+
+  @override
+  String get dashboardTitle => 'Today\'s Medicine\nReminders';
+
+  @override
+  String get missed => 'Missed';
+
+  @override
+  String get skipped => 'Skipped';
+
+  @override
+  String get snoozed => 'Snoozed';
+
+  @override
+  String get skipDose => 'Skip';
+
+  @override
+  String get morning => 'Morning';
+
+  @override
+  String get afternoon => 'Afternoon';
+
+  @override
+  String get evening => 'Evening';
+
+  @override
+  String get bedtime => 'Bedtime';
+
+  @override
+  String get upcoming => 'Coming up';
+
+  @override
+  String get medicineCost => 'Medicine cost';
+
+  @override
+  String get perMonth => '/ month';
+
+  @override
+  String get spentThisMonth => 'Spent this month';
+
+  @override
+  String get runningLow => 'Running low';
+
+  @override
+  String get debugTestAlarm => 'Test alarm (rings in 1–2 min)';
+
+  @override
+  String get debugTestAlarmScheduled =>
+      'Test alarm scheduled. Lock the phone and wait.';
+
+  @override
+  String get debugTestAlarmTitle => 'Test medicine';
+
+  @override
+  String get debugLoadDemo => 'Load demo data';
+
+  @override
+  String get debugDemoLoaded => 'Demo data loaded';
+
+  @override
+  String get debugTestAlarmBody => 'Take 1 tablet after breakfast';
+
+  @override
+  String get addDoctor => 'Add doctor';
+
+  @override
+  String get editDoctor => 'Edit doctor';
+
+  @override
+  String get doctorName => 'Name';
+
+  @override
+  String get doctorSpecialty => 'Specialty';
+
+  @override
+  String get doctorPhone => 'Phone';
+
+  @override
+  String get doctorEmail => 'Email';
+
+  @override
+  String get doctorClinic => 'Clinic / hospital';
+
+  @override
+  String get doctorAddress => 'Address';
+
+  @override
+  String get doctorFee => 'Consultation fee';
+
+  @override
+  String get doctorNotes => 'Notes';
+
+  @override
+  String get noDoctors => 'No doctors added';
+
+  @override
+  String get doctorsTitle => 'Your\nDoctors';
+
+  @override
+  String get prescribedMedicines => 'Prescribed medicines';
+
+  @override
+  String get doctorRecords => 'Records';
+
+  @override
+  String get doctorAppointments => 'Appointments';
+
+  @override
+  String get unarchive => 'Restore';
+
+  @override
+  String get addAppointment => 'Add appointment';
+
+  @override
+  String get deleteDoctorBody =>
+      'Medicines and records stay, but will no longer be linked to this doctor.';
+
+  @override
+  String get genericError => 'Something went wrong. Please try again.';
+
+  @override
+  String get fieldRequired => 'This field is required';
+
+  @override
+  String get invalidNumber => 'Enter a valid number';
+
+  @override
+  String get invalidAmount => 'Enter a valid amount';
+
+  @override
+  String get expenses => 'Expenses';
+
+  @override
+  String get addExpense => 'Add expense';
+
+  @override
+  String get expenseTitle => 'Description';
+
+  @override
+  String get expenseAmount => 'Amount';
+
+  @override
+  String get expenseQuantity => 'Quantity';
+
+  @override
+  String get expenseCategory => 'Category';
+
+  @override
+  String get expenseDate => 'Date';
+
+  @override
+  String get expenseNotes => 'Notes';
+
+  @override
+  String get noExpenses => 'No expenses recorded';
+
+  @override
+  String get projectedMonthly => 'Projected monthly medicine cost';
+
+  @override
+  String get categoryMedicine => 'Medicine';
+
+  @override
+  String get categoryConsultation => 'Consultation';
+
+  @override
+  String get categoryTest => 'Test';
+
+  @override
+  String get categoryVaccine => 'Vaccine';
+
+  @override
+  String get categoryOther => 'Other';
+
+  @override
+  String get expensesTitle => 'Your\nExpenses';
+
+  @override
+  String get byCategory => 'By category';
+
+  @override
+  String get medicineCosts => 'Projected medicine costs';
+
+  @override
+  String get projectedHint =>
+      'Based on your active medicines, their price and reminder times.';
+
+  @override
+  String get noProjection =>
+      'Add a price per unit to a medicine to see projected costs.';
+
+  @override
+  String get expenseTitleHint => 'e.g. Napa 500mg strip';
+
+  @override
+  String get expenseMedicine => 'Medicine';
+
+  @override
+  String get expenseDoctor => 'Doctor';
+
+  @override
+  String get deleteExpenseBody => 'This expense will be removed.';
+
+  @override
+  String get addMedicine => 'Add medicine';
+
+  @override
+  String get editMedicine => 'Edit medicine';
+
+  @override
+  String get medicineName => 'Medicine name';
+
+  @override
+  String get medicineStrength => 'Strength (e.g. 500 mg)';
+
+  @override
+  String get medicineForm => 'Form';
+
+  @override
+  String get medicineDose => 'Dose per intake';
+
+  @override
+  String get medicineDoseUnit => 'Unit';
+
+  @override
+  String get medicineMeal => 'When to take';
+
+  @override
+  String get medicineUnitPrice => 'Price per unit';
+
+  @override
+  String get medicineStock => 'Stock on hand';
+
+  @override
+  String get medicineRefillAt => 'Refill alert at';
+
+  @override
+  String get medicineDoctor => 'Prescribed by';
+
+  @override
+  String get medicineStartDate => 'Start date';
+
+  @override
+  String get medicineEndDate => 'End date';
+
+  @override
+  String get noMedicines => 'No medicines added';
+
+  @override
+  String get lowStock => 'Low stock';
+
+  @override
+  String get formTablet => 'Tablet';
+
+  @override
+  String get formCapsule => 'Capsule';
+
+  @override
+  String get formSyrup => 'Syrup';
+
+  @override
+  String get formInjection => 'Injection';
+
+  @override
+  String get formDrops => 'Drops';
+
+  @override
+  String get formInhaler => 'Inhaler';
+
+  @override
+  String get formCream => 'Cream';
+
+  @override
+  String get formOther => 'Other';
+
+  @override
+  String get unitTablet => 'tablet';
+
+  @override
+  String get unitCapsule => 'capsule';
+
+  @override
+  String get unitMl => 'ml';
+
+  @override
+  String get unitInjection => 'unit';
+
+  @override
+  String get unitDrop => 'drop';
+
+  @override
+  String get unitPuff => 'puff';
+
+  @override
+  String get unitApplication => 'application';
+
+  @override
+  String get unitDose => 'dose';
+
+  @override
+  String get mealBefore => 'Before meal';
+
+  @override
+  String get mealWith => 'With meal';
+
+  @override
+  String get mealAfter => 'After meal';
+
+  @override
+  String get mealAnytime => 'Anytime';
+
+  @override
+  String get medicinesTitle => 'Your\nMedicines';
+
+  @override
+  String get stopped => 'Stopped';
+
+  @override
+  String get chooseMedicineType => 'Choose Medicine\nType';
+
+  @override
+  String get medicineDetails => 'Medicine details';
+
+  @override
+  String get medicineDescription => 'Description';
+
+  @override
+  String get medicineDescriptionHint => 'How and why to take it';
+
+  @override
+  String get timeDuration => 'Time Duration';
+
+  @override
+  String get medicineTime => 'Medicine Time';
+
+  @override
+  String get daysInWeek => 'Days in a week';
+
+  @override
+  String get doses => 'Doses';
+
+  @override
+  String get costPerMonth => 'Cost per month';
+
+  @override
+  String get inStock => 'In stock';
+
+  @override
+  String get prescription => 'Prescription';
+
+  @override
+  String get reminderTimesHint =>
+      'Add the times you take this medicine — each one rings like an alarm.';
+
+  @override
+  String get changeSetting => 'Change Setting';
+
+  @override
+  String get refill => 'Refill';
+
+  @override
+  String get refillTitle => 'Record a refill';
+
+  @override
+  String get refillQuantity => 'Quantity bought';
+
+  @override
+  String get refillTotal => 'Total paid';
+
+  @override
+  String get refillSaved => 'Refill saved and added to expenses';
+
+  @override
+  String get stopMedicine => 'Stop taking';
+
+  @override
+  String get resumeMedicine => 'Resume';
+
+  @override
+  String get deleteMedicineBody =>
+      'Its reminders and dose history will be deleted too.';
+
+  @override
+  String get everyDay => 'Every day';
+
+  @override
+  String get doseTimeTitle => 'Intake time';
+
+  @override
+  String get doseHowMany => 'How many at this time';
+
+  @override
+  String get removeTime => 'Remove this time';
+
+  @override
+  String get scanTitle => 'Scan prescription';
+
+  @override
+  String get scanSubtitle => 'Auto-fill name, dose and times from a photo';
+
+  @override
+  String get scanReading => 'Reading prescription…';
+
+  @override
+  String get scanNothingFound =>
+      'No medicines found. Try a clearer, well-lit photo or fill in manually.';
+
+  @override
+  String get scanFailed => 'Couldn\'t read that image. Please try again.';
+
+  @override
+  String get bulkTitle => 'Review medicines';
+
+  @override
+  String get bulkHint =>
+      'Found on your prescription. Check each medicine, fix anything that looks wrong, remove extras, then save them all at once.';
+
+  @override
+  String get bulkAddAnother => 'Add another medicine';
+
+  @override
+  String get bulkRemove => 'Remove medicine';
+
+  @override
+  String get bulkEmpty => 'No medicines left. Add one or go back.';
+
+  @override
+  String get bulkNoTimes => 'No times set: this medicine will not ring.';
+
+  @override
+  String get scanFilled =>
+      'Filled from prescription. Please check every field before saving.';
+
+  @override
+  String get notifTaken => 'Taken ✓';
+
+  @override
+  String get notifSnooze => 'Snooze';
+
+  @override
+  String get notifSkip => 'Skip';
+
+  @override
+  String get notifDoseSeparator => ' · ';
+
+  @override
+  String get notifAtLocation => 'At ';
+
+  @override
+  String get notifWithDoctor => 'With ';
+
+  @override
+  String get channelGroupName => 'Dosey reminders';
+
+  @override
+  String get channelMedicineName => 'Medicine alarms';
+
+  @override
+  String get channelMedicineDesc => 'Rings for doses, even in Do Not Disturb';
+
+  @override
+  String get channelAppointmentName => 'Appointment alarms';
+
+  @override
+  String get channelAppointmentDesc => 'Doctor\'s appointment alarms';
+
+  @override
+  String get channelVaccineName => 'Vaccine alarms';
+
+  @override
+  String get channelVaccineDesc => 'Vaccination alarms';
+
+  @override
+  String get channelTestName => 'Medical test alarms';
+
+  @override
+  String get channelTestDesc => 'Lab and medical test alarms';
+
+  @override
+  String get channelGentleName => 'Gentle reminders';
+
+  @override
+  String get channelGentleDesc =>
+      'Non-critical reminders that respect Do Not Disturb';
+
+  @override
+  String get onboardingTitle => 'Never miss\na dose';
+
+  @override
+  String get onboardingBody =>
+      'Dosey rings like an alarm clock — even on silent or Do Not Disturb. Allow these so your reminders arrive exactly on time.';
+
+  @override
+  String get onboardingContinue => 'Let\'s get started';
+
+  @override
+  String get onboardingEssentialHint =>
+      'Notifications and exact alarms are required.';
+
+  @override
+  String get recommended => 'Recommended';
+
+  @override
+  String get required => 'Required';
+
+  @override
+  String get allow => 'Allow';
+
+  @override
+  String get allowed => 'Allowed';
+
+  @override
+  String get permNotificationsTitle => 'Notifications';
+
+  @override
+  String get permNotificationsBody =>
+      'Show medicine, appointment and test reminders.';
+
+  @override
+  String get permExactAlarmsTitle => 'Exact alarms';
+
+  @override
+  String get permExactAlarmsBody =>
+      'Ring at the exact minute — not \"sometime around\" it.';
+
+  @override
+  String get permFullScreenTitle => 'Full-screen alarm';
+
+  @override
+  String get permFullScreenBody =>
+      'Wake the screen and show the alarm over the lock screen.';
+
+  @override
+  String get permDndTitle => 'Ring in Do Not Disturb';
+
+  @override
+  String get permDndBody =>
+      'Let critical reminders break through silent and DND modes.';
+
+  @override
+  String get records => 'Records';
+
+  @override
+  String get addRecord => 'Add record';
+
+  @override
+  String get recordTitle => 'Title';
+
+  @override
+  String get recordType => 'Type';
+
+  @override
+  String get recordDate => 'Document date';
+
+  @override
+  String get recordDoctor => 'Doctor';
+
+  @override
+  String get recordNotes => 'Notes';
+
+  @override
+  String get recordPages => 'Pages';
+
+  @override
+  String get takePhoto => 'Take photo';
+
+  @override
+  String get chooseFromGallery => 'Choose from gallery';
+
+  @override
+  String get noRecords => 'No records saved';
+
+  @override
+  String get addAtLeastOnePage => 'Add at least one page';
+
+  @override
+  String get recordPrescription => 'Prescription';
+
+  @override
+  String get recordTestReport => 'Test report';
+
+  @override
+  String get recordVaccineCertificate => 'Vaccine card';
+
+  @override
+  String get recordInvoice => 'Invoice';
+
+  @override
+  String get recordOther => 'Other';
+
+  @override
+  String get recordsTitle => 'Your\nRecords';
+
+  @override
+  String get addPages => 'Add pages';
+
+  @override
+  String get deletePage => 'Delete page';
+
+  @override
+  String get recordTitleHint => 'e.g. Blood test – Oct';
+
+  @override
+  String get deleteRecordBody => 'All pages will be deleted from this device.';
+
+  @override
+  String get addReminder => 'Add reminder';
+
+  @override
+  String get editReminder => 'Edit reminder';
+
+  @override
+  String get reminderTitle => 'Title';
+
+  @override
+  String get reminderNotes => 'Notes';
+
+  @override
+  String get reminderLocation => 'Location';
+
+  @override
+  String get reminderRepeat => 'Repeat';
+
+  @override
+  String get reminderEndDate => 'End date';
+
+  @override
+  String get reminderEveryNDays => 'Every how many days';
+
+  @override
+  String get reminderCritical => 'Ring in Do Not Disturb';
+
+  @override
+  String get reminderCriticalHint =>
+      'Uses a full-screen alarm that bypasses silent and DND modes';
+
+  @override
+  String get noReminders => 'No reminders yet';
+
+  @override
+  String get markTaken => 'Taken';
+
+  @override
+  String get typeMedicine => 'Medicine';
+
+  @override
+  String get typeAppointment => 'Appointment';
+
+  @override
+  String get typeVaccine => 'Vaccine';
+
+  @override
+  String get typeMedicalTest => 'Medical test';
+
+  @override
+  String get repeatOnce => 'Once';
+
+  @override
+  String get repeatDaily => 'Daily';
+
+  @override
+  String get repeatWeekly => 'Weekly';
+
+  @override
+  String get repeatEveryNDays => 'Every N days';
+
+  @override
+  String get remindersTitle => 'Your\nReminders';
+
+  @override
+  String get paused => 'Paused';
+
+  @override
+  String get ended => 'Ended';
+
+  @override
+  String get reminderType => 'Reminder type';
+
+  @override
+  String get reminderTitleHint => 'e.g. Morning insulin';
+
+  @override
+  String get reminderMedicine => 'Medicine';
+
+  @override
+  String get reminderDoctor => 'Doctor';
+
+  @override
+  String get reminderWhen => 'When';
+
+  @override
+  String get reminderSnooze => 'Snooze length';
+
+  @override
+  String get selectMedicineError => 'Choose a medicine';
+
+  @override
+  String get selectWeekdaysError => 'Choose at least one day';
+
+  @override
+  String get deleteReminderBody =>
+      'The reminder and its history will be removed.';
+
+  @override
+  String get weekdayMon => 'Mon';
+
+  @override
+  String get weekdayTue => 'Tue';
+
+  @override
+  String get weekdayWed => 'Wed';
+
+  @override
+  String get weekdayThu => 'Thu';
+
+  @override
+  String get weekdayFri => 'Fri';
+
+  @override
+  String get weekdaySat => 'Sat';
+
+  @override
+  String get weekdaySun => 'Sun';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get settingsLanguage => 'Language';
+
+  @override
+  String get settingsLanguageHint =>
+      'Dates, times and numbers follow the language too.';
+
+  @override
+  String get languageSystem => 'Phone default';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageBangla => 'বাংলা';
+
+  @override
+  String daysCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String pagesCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString pages',
+      one: '1 page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String nextTypeIn(String type, String duration) {
+    return 'Next $type in $duration';
+  }
+
+  @override
+  String durationMinutes(int minutes) {
+    final intl.NumberFormat minutesNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String minutesString = minutesNumberFormat.format(minutes);
+
+    return '$minutesString min';
+  }
+
+  @override
+  String durationHours(int hours) {
+    final intl.NumberFormat hoursNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String hoursString = hoursNumberFormat.format(hours);
+
+    return '$hoursString h';
+  }
+
+  @override
+  String durationHoursMinutes(int hours, int minutes) {
+    final intl.NumberFormat hoursNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String hoursString = hoursNumberFormat.format(hours);
+    final intl.NumberFormat minutesNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String minutesString = minutesNumberFormat.format(minutes);
+
+    return '$hoursString h $minutesString min';
+  }
+
+  @override
+  String unitsLeft(String amount) {
+    return '$amount left';
+  }
+
+  @override
+  String activeMedicines(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString active medicines',
+      one: '1 active medicine',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String perDay(String amount) {
+    return '$amount / day';
+  }
+
+  @override
+  String unitsPerDayLabel(String amount, String unit) {
+    return '$amount $unit / day';
+  }
+
+  @override
+  String bulkSaveAll(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Save $countString medicines',
+      one: 'Save 1 medicine',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkSaved(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Added $countString medicines',
+      one: 'Added 1 medicine',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bulkAsWritten(String pattern) {
+    return 'Prescription says: $pattern';
+  }
+
+  @override
+  String bulkFixMedicine(int number) {
+    final intl.NumberFormat numberNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String numberString = numberNumberFormat.format(number);
+
+    return 'Medicine $numberString needs a name and unit before saving.';
+  }
+
+  @override
+  String everyNDays(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Every $countString days',
+      one: 'Every day',
+    );
+    return '$_temp0';
+  }
+}

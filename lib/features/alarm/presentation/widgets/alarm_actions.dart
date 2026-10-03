@@ -4,6 +4,7 @@ import '../../../../core/constants/constants.dart';
 import '../../../../core/database/enums.dart';
 import '../../../../core/notifications/reminder_alarm_engine.dart';
 import '../../../../core/widgets/pill_button.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// "Medicine Taken ✓" (moss) and "Snooze" (accent) pills, plus Skip for doses.
 class AlarmActions extends StatelessWidget {
@@ -28,8 +29,8 @@ class AlarmActions extends StatelessWidget {
       children: [
         PillButton(
           label: isMedicine
-              ? AlarmStrings.alarmMarkTaken
-              : AlarmStrings.alarmDone,
+              ? context.l10n.alarmMarkTaken
+              : context.l10n.alarmDone,
           tone: PillButtonTone.moss,
           trailingIcon: Icons.check_rounded,
           onPressed: busy ? null : () => onAction(AlarmAction.taken),
@@ -37,14 +38,14 @@ class AlarmActions extends StatelessWidget {
         AppSpacing.gapMd,
         PillButton(
           label:
-              '${AlarmStrings.alarmSnooze} $snoozeMinutes ${AlarmStrings.minutesShort}',
+              '${context.l10n.alarmSnooze} $snoozeMinutes ${context.l10n.minutesShort}',
           trailingIcon: Icons.snooze_rounded,
           onPressed: busy ? null : () => onAction(AlarmAction.snooze),
         ),
         if (isMedicine)
           TextButton(
             onPressed: busy ? null : () => onAction(AlarmAction.skip),
-            child: const Text(AlarmStrings.alarmSkip),
+            child: Text(context.l10n.alarmSkip),
           ),
       ],
     );

@@ -4,14 +4,13 @@ import '../constants/app_constants.dart';
 
 /// Lower-case meridiem ("09:00 am"), as in the design.
 abstract final class AppDateFormat {
-  static final DateFormat _time = DateFormat(AppConstants.timePattern);
-  static final DateFormat _dateTime = DateFormat(AppConstants.dateTimePattern);
-
-  static final DateFormat _date = DateFormat(AppConstants.datePattern);
-  static final DateFormat _shortDate = DateFormat(
-    AppConstants.shortDatePattern,
-  );
-  static final DateFormat _month = DateFormat(AppConstants.monthPattern);
+  // Built per call so they follow the current language (Intl.defaultLocale):
+  // "৫ অক্টো ২০২৬" in Bengali.
+  static DateFormat get _time => DateFormat(AppConstants.timePattern);
+  static DateFormat get _dateTime => DateFormat(AppConstants.dateTimePattern);
+  static DateFormat get _date => DateFormat(AppConstants.datePattern);
+  static DateFormat get _shortDate => DateFormat(AppConstants.shortDatePattern);
+  static DateFormat get _month => DateFormat(AppConstants.monthPattern);
 
   /// "5 Oct 2026"
   static String date(DateTime value) => _date.format(value);

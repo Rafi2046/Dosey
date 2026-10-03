@@ -6,6 +6,7 @@ import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../domain/record_summary.dart';
 import 'record_image.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Grid tile: cover photo on top, title / type / date / pages below.
 class RecordCard extends StatelessWidget {
@@ -71,7 +72,7 @@ class RecordCard extends StatelessWidget {
                 ),
                 AppSpacing.gapXs,
                 Text(AppDateFormat.date(r.recordDate), style: caption),
-                Text(AppStrings.pagesCount(summary.pageCount), style: caption),
+                Text(context.l10n.pagesCount(summary.pageCount), style: caption),
               ],
             ),
           ),

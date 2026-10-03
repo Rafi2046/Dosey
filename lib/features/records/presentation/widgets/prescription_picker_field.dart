@@ -6,6 +6,7 @@ import '../../../../core/utils/date_format.dart';
 import '../../../../core/widgets/picker_field.dart';
 import '../../../../core/widgets/selection_sheet.dart';
 import '../../providers/records_providers.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Links a medicine to the prescription record it came from.
 class PrescriptionPickerField extends ConsumerWidget {
@@ -27,15 +28,15 @@ class PrescriptionPickerField extends ConsumerWidget {
     final selected = records.where((r) => r.id == recordId).firstOrNull;
 
     return PickerField(
-      label: MedicineStrings.prescription,
+      label: context.l10n.prescription,
       value: selected?.title,
-      placeholder: AppStrings.optional,
+      placeholder: context.l10n.optional,
       icon: Icons.description_rounded,
       onClear: () => onChanged(null),
       onTap: () async {
         final result = await showSelectionSheet(
           context: context,
-          title: MedicineStrings.prescription,
+          title: context.l10n.prescription,
           items: records,
           labelOf: (r) => r.title,
           subtitleOf: (r) => AppDateFormat.date(r.recordDate),

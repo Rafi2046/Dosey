@@ -4,6 +4,7 @@ import '../../../../core/constants/constants.dart';
 import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../domain/medicine_cost_projection.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Per-medicine projected cost: doses per day and monthly total.
 class MedicineCostBreakdown extends StatelessWidget {
@@ -20,12 +21,12 @@ class MedicineCostBreakdown extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            ExpenseStrings.projectedHint,
+            context.l10n.projectedHint,
             style: AppTextStyles.captionOnLight,
           ),
           AppSpacing.gapMd,
           if (lines.isEmpty)
-            Text(ExpenseStrings.noProjection, style: AppTextStyles.bodyOnLight)
+            Text(context.l10n.noProjection, style: AppTextStyles.bodyOnLight)
           else
             for (final line in lines)
               Padding(
@@ -41,7 +42,7 @@ class MedicineCostBreakdown extends StatelessWidget {
                             style: AppTextStyles.cardTitleOnLight,
                           ),
                           Text(
-                            ExpenseStrings.unitsPerDayLabel(
+                            context.l10n.unitsPerDayLabel(
                               line.unitsPerDay,
                               line.medicine.doseUnit,
                             ),

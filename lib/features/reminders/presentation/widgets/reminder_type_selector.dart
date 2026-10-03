@@ -5,6 +5,7 @@ import '../../../../core/database/enums.dart';
 import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/widgets/choice_pills.dart';
 import '../../../../core/widgets/labeled_field.dart';
+import '../../../../core/localization/l10n.dart';
 
 class ReminderTypeSelector extends StatelessWidget {
   const ReminderTypeSelector({
@@ -19,7 +20,7 @@ class ReminderTypeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LabeledField(
-      label: ReminderStrings.reminderType,
+      label: context.l10n.reminderType,
       child: ChoicePills<ReminderType>(
         options: ReminderType.values,
         selected: {value},

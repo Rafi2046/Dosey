@@ -11,6 +11,7 @@ import '../../../core/widgets/screen_header.dart';
 import '../providers/reminders_providers.dart';
 import 'reminder_form_screen.dart';
 import 'widgets/reminder_tile.dart';
+import '../../../core/localization/l10n.dart';
 
 class RemindersScreen extends ConsumerWidget {
   const RemindersScreen({super.key});
@@ -33,7 +34,7 @@ class RemindersScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          const ScreenHeader(title: ReminderStrings.remindersTitle),
+          ScreenHeader(title: context.l10n.remindersTitle),
           FilterPills<ReminderType>(
             options: ReminderType.values,
             selected: filter,
@@ -45,8 +46,8 @@ class RemindersScreen extends ConsumerWidget {
             value: reminders,
             data: (list) => list.isEmpty
                 ? EmptyState(
-                    title: ReminderStrings.noReminders,
-                    actionLabel: ReminderStrings.addReminder,
+                    title: context.l10n.noReminders,
+                    actionLabel: context.l10n.addReminder,
                     onAction: () => _openForm(context),
                   )
                 : Column(

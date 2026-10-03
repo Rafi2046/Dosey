@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../constants/constants.dart';
+import '../localization/l10n.dart';
 
 /// Renders an [AsyncValue] with consistent loading and error states. Keeps
 /// showing previous data while refreshing.
@@ -20,10 +21,10 @@ class AsyncValueView<T> extends StatelessWidget {
         padding: EdgeInsets.all(AppSpacing.xxl),
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (_, _) => const Padding(
+      error: (_, _) => Padding(
         padding: EdgeInsets.all(AppSpacing.xl),
         child: Text(
-          ErrorStrings.genericError,
+          context.l10n.genericError,
           style: AppTextStyles.bodyMuted,
           textAlign: TextAlign.center,
         ),

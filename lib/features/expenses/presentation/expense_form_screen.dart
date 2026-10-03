@@ -19,6 +19,7 @@ import '../../doctors/presentation/widgets/doctor_picker_field.dart';
 import '../../medicines/presentation/widgets/medicine_picker_field.dart';
 import '../../reminders/domain/reminder_text.dart';
 import '../providers/expenses_providers.dart';
+import '../../../core/localization/l10n.dart';
 
 class ExpenseFormScreen extends ConsumerStatefulWidget {
   const ExpenseFormScreen({super.key, this.existing});
@@ -76,12 +77,12 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
         ? await repo.create(companion)
         : await repo.update(_e!.id, companion);
     if (!mounted) return;
-    showAppSnack(context, AppStrings.saved);
+    showAppSnack(context, context.l10n.saved);
     Navigator.pop(context);
   }
 
   Future<void> _delete() async {
-    if (!await confirmDelete(context, body: ExpenseStrings.deleteExpenseBody)) {
+    if (!await confirmDelete(context, body: context.l10n.deleteExpenseBody)) {
       return;
     }
     await ref.read(expensesRepositoryProvider).delete(_e!.id);
@@ -91,18 +92,18 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
   @override
   Widget build(BuildContext context) {
     return CreamScaffold(
-      title: _e == null ? ExpenseStrings.addExpense : AppStrings.edit,
+      title: _e == null ? context.l10n.addExpense : context.l10n.edit,
       actions: [
         if (_e != null)
           IconButton(
-            tooltip: AppStrings.delete,
+            tooltip: context.l10n.delete,
             icon: const Icon(Icons.delete_outline_rounded),
             color: AppColors.inkMuted,
             onPressed: _delete,
           ),
       ],
       bottomBar: PillButton(
-        label: _e == null ? AppStrings.save : AppStrings.saveChanges,
+        label: _e == null ? context.l10n.save : context.l10n.saveChanges,
         showRingChevron: true,
         loading: _saving,
         onPressed: _save,
@@ -113,21 +114,21 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
           padding: AppSpacing.screenPadding,
           children: [
             AppTextField.decimal(
-              label: ExpenseStrings.expenseAmount,
+              label: context.l10n.expenseAmount,
               controller: _amount,
               prefixText: AppConstants.currencySymbol,
               validator: (v) => (Money.parse(v ?? '') ?? 0) > 0
                   ? null
-                  : ErrorStrings.invalidAmount,
+                  : context.l10n.invalidAmount,
             ),
             AppTextField(
-              label: ExpenseStrings.expenseTitle,
+              label: context.l10n.expenseTitle,
               controller: _title,
-              hint: ExpenseStrings.expenseTitleHint,
+              hint: context.l10n.expenseTitleHint,
               validator: AppTextField.required,
             ),
             LabeledField(
-              label: ExpenseStrings.expenseCategory,
+              label: context.l10n.expenseCategory,
               child: ChoicePills<ExpenseCategory>(
                 options: ExpenseCategory.values,
                 selected: {_category},
@@ -137,7 +138,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
               ),
             ),
             PickerField(
-              label: ExpenseStrings.expenseDate,
+              label: context.l10n.expenseDate,
               value: AppDateFormat.date(_date),
               icon: Icons.event_rounded,
               onTap: () async {
@@ -147,22 +148,22 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
             ),
             if (_category == ExpenseCategory.medicine)
               MedicinePickerField(
-                label: ExpenseStrings.expenseMedicine,
+                label: context.l10n.expenseMedicine,
                 medicineId: _medicineId,
                 onChanged: (id) => setState(() => _medicineId = id),
               ),
             DoctorPickerField(
-              label: ExpenseStrings.expenseDoctor,
+              label: context.l10n.expenseDoctor,
               doctorId: _doctorId,
               onChanged: (id) => setState(() => _doctorId = id),
             ),
             AppTextField.decimal(
-              label: ExpenseStrings.expenseQuantity,
+              label: context.l10n.expenseQuantity,
               controller: _quantity,
-              hint: AppStrings.optional,
+              hint: context.l10n.optional,
             ),
             AppTextField(
-              label: ExpenseStrings.expenseNotes,
+              label: context.l10n.expenseNotes,
               controller: _notes,
               maxLines: 3,
             ),

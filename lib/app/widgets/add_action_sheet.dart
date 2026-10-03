@@ -10,6 +10,7 @@ import '../../features/records/presentation/record_form_screen.dart';
 import '../../features/reminders/presentation/reminder_form_screen.dart';
 import '../debug/debug_demo_data_button.dart';
 import '../debug/debug_test_alarm_button.dart';
+import '../../core/localization/l10n.dart';
 
 /// "+" menu: create anything from anywhere.
 Future<void> showAddActionSheet(BuildContext context) =>
@@ -25,21 +26,21 @@ class _AddActionSheet extends StatelessWidget {
   static final List<(IconData, String, Widget Function())> _actions = [
     (
       Icons.alarm_add_rounded,
-      ReminderStrings.addReminder,
+      context.l10n.addReminder,
       ReminderFormScreen.new,
     ),
     (
       Icons.medication_rounded,
-      MedicineStrings.addMedicine,
+      context.l10n.addMedicine,
       MedicineTypeScreen.new,
     ),
     (
       Icons.person_add_alt_1_rounded,
-      DoctorStrings.addDoctor,
+      context.l10n.addDoctor,
       DoctorFormScreen.new,
     ),
-    (Icons.add_a_photo_rounded, RecordStrings.addRecord, RecordFormScreen.new),
-    (Icons.payments_rounded, ExpenseStrings.addExpense, ExpenseFormScreen.new),
+    (Icons.add_a_photo_rounded, context.l10n.addRecord, RecordFormScreen.new),
+    (Icons.payments_rounded, context.l10n.addExpense, ExpenseFormScreen.new),
   ];
 
   @override
@@ -51,7 +52,7 @@ class _AddActionSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(AppStrings.addSheetTitle, style: AppTextStyles.titleOnLight),
+            Text(context.l10n.addSheetTitle, style: AppTextStyles.titleOnLight),
             AppSpacing.gapLg,
             GridView.count(
               crossAxisCount: 2,

@@ -13,6 +13,7 @@ import 'widgets/expense_summary_widget.dart';
 import 'widgets/expense_tile.dart';
 import 'widgets/medicine_cost_breakdown.dart';
 import 'widgets/month_switcher.dart';
+import '../../../core/localization/l10n.dart';
 
 class ExpensesScreen extends ConsumerWidget {
   const ExpensesScreen({super.key});
@@ -38,7 +39,7 @@ class ExpensesScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          const ScreenHeader(title: ExpenseStrings.expensesTitle),
+          ScreenHeader(title: context.l10n.expensesTitle),
           MonthSwitcher(
             month: month,
             onPrevious: monthNotifier.previous,
@@ -51,24 +52,24 @@ class ExpensesScreen extends ConsumerWidget {
             projectedDailyMinor: projection.value?.dailyMinor ?? 0,
           ),
           if (categories.isNotEmpty) ...[
-            const SectionHeader(title: ExpenseStrings.byCategory),
+            SectionHeader(title: context.l10n.byCategory),
             CategoryBreakdown(totals: categories),
           ],
-          const SectionHeader(title: ExpenseStrings.medicineCosts),
+          SectionHeader(title: context.l10n.medicineCosts),
           AsyncValueView(
             value: projection,
             data: (p) => MedicineCostBreakdown(projection: p),
           ),
           SectionHeader(
-            title: ExpenseStrings.expenses,
-            actionLabel: AppStrings.add,
+            title: context.l10n.expenses,
+            actionLabel: context.l10n.add,
             onAction: () => _openForm(context),
           ),
           AsyncValueView(
             value: expenses,
             data: (list) => list.isEmpty
-                ? const EmptyState(
-                    title: ExpenseStrings.noExpenses,
+                ? EmptyState(
+                    title: context.l10n.noExpenses,
                     image: AppImages.medTablet,
                   )
                 : Column(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/surface_card.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Headline numbers: spent in the selected month, and the projected monthly
 /// cost of the medicines currently being taken.
@@ -29,9 +30,9 @@ class ExpenseSummaryWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _Label(
+          _Label(
             icon: Icons.account_balance_wallet_rounded,
-            text: DashboardStrings.spentThisMonth,
+            text: context.l10n.spentThisMonth,
           ),
           AppSpacing.gapSm,
           FittedBox(
@@ -40,9 +41,9 @@ class ExpenseSummaryWidget extends StatelessWidget {
             child: Text(Money.format(spentMinor), style: AppTextStyles.amount),
           ),
           const Divider(height: AppSpacing.xxl, color: AppColors.outlineOnDark),
-          const _Label(
+          _Label(
             icon: Icons.medication_rounded,
-            text: ExpenseStrings.projectedMonthly,
+            text: context.l10n.projectedMonthly,
           ),
           AppSpacing.gapSm,
           Row(
@@ -57,7 +58,7 @@ class ExpenseSummaryWidget extends StatelessWidget {
               ),
               AppSpacing.gapSm,
               Text(
-                ExpenseStrings.perDay(Money.format(projectedDailyMinor)),
+                context.l10n.perDay(Money.format(projectedDailyMinor)),
                 style: AppTextStyles.caption,
               ),
             ],

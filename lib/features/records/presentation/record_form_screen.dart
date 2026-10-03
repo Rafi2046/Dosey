@@ -18,6 +18,7 @@ import '../../doctors/presentation/widgets/doctor_picker_field.dart';
 import '../providers/records_providers.dart';
 import 'widgets/image_source_sheet.dart';
 import 'widgets/picked_pages_strip.dart';
+import '../../../core/localization/l10n.dart';
 
 /// New record with photographed pages, or editing an existing record's
 /// details (pages of existing records are managed on the detail screen).
@@ -46,7 +47,7 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
   bool _saving = false;
 
   String? get _pagesError => _submitted && !_isEdit && _pages.isEmpty
-      ? RecordStrings.addAtLeastOnePage
+      ? context.l10n.addAtLeastOnePage
       : null;
 
   @override
@@ -78,16 +79,16 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
         ? await repo.update(_r!.id, companion)
         : await repo.create(companion, _pages);
     if (!mounted) return;
-    showAppSnack(context, AppStrings.saved);
+    showAppSnack(context, context.l10n.saved);
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return CreamScaffold(
-      title: _isEdit ? AppStrings.edit : RecordStrings.addRecord,
+      title: _isEdit ? context.l10n.edit : context.l10n.addRecord,
       bottomBar: PillButton(
-        label: _isEdit ? AppStrings.saveChanges : AppStrings.save,
+        label: _isEdit ? context.l10n.saveChanges : context.l10n.save,
         showRingChevron: true,
         loading: _saving,
         onPressed: _save,
@@ -106,13 +107,13 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
                     setState(() => _pages = [..._pages]..remove(p)),
               ),
             AppTextField(
-              label: RecordStrings.recordTitle,
+              label: context.l10n.recordTitle,
               controller: _title,
-              hint: RecordStrings.recordTitleHint,
+              hint: context.l10n.recordTitleHint,
               validator: AppTextField.required,
             ),
             LabeledField(
-              label: RecordStrings.recordType,
+              label: context.l10n.recordType,
               child: ChoicePills<RecordType>(
                 options: RecordType.values,
                 selected: {_type},
@@ -122,7 +123,7 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
               ),
             ),
             PickerField(
-              label: RecordStrings.recordDate,
+              label: context.l10n.recordDate,
               value: AppDateFormat.date(_date),
               icon: Icons.event_rounded,
               onTap: () async {
@@ -131,12 +132,12 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
               },
             ),
             DoctorPickerField(
-              label: RecordStrings.recordDoctor,
+              label: context.l10n.recordDoctor,
               doctorId: _doctorId,
               onChanged: (id) => setState(() => _doctorId = id),
             ),
             AppTextField(
-              label: RecordStrings.recordNotes,
+              label: context.l10n.recordNotes,
               controller: _notes,
               maxLines: 3,
             ),

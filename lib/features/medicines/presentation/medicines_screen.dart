@@ -11,6 +11,7 @@ import '../providers/medicines_providers.dart';
 import 'medicine_detail_screen.dart';
 import 'medicine_type_screen.dart';
 import 'widgets/medicine_card.dart';
+import '../../../core/localization/l10n.dart';
 
 class MedicinesScreen extends ConsumerWidget {
   const MedicinesScreen({super.key});
@@ -30,13 +31,13 @@ class MedicinesScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          const ScreenHeader(title: MedicineStrings.medicinesTitle),
+          ScreenHeader(title: context.l10n.medicinesTitle),
           ChoicePills<bool>(
             options: const [false, true],
             onDark: true,
             selected: {showStopped},
             labelOf: (stopped) =>
-                stopped ? MedicineStrings.stopped : AppStrings.active,
+                stopped ? context.l10n.stopped : context.l10n.active,
             onChanged: (s) =>
                 ref.read(showStoppedMedicinesProvider.notifier).set(s.single),
           ),
@@ -49,9 +50,9 @@ class MedicinesScreen extends ConsumerWidget {
                   .toList();
               if (list.isEmpty) {
                 return EmptyState(
-                  title: MedicineStrings.noMedicines,
+                  title: context.l10n.noMedicines,
                   image: AppImages.medCapsule,
-                  actionLabel: showStopped ? null : MedicineStrings.addMedicine,
+                  actionLabel: showStopped ? null : context.l10n.addMedicine,
                   onAction: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (_) => const MedicineTypeScreen(),

@@ -5,6 +5,7 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/widgets/initials_avatar.dart';
 import '../../../../core/widgets/status_chip.dart';
 import 'contact_actions.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Avatar, name, specialty and Call / Email pills.
 class DoctorProfileHeader extends StatelessWidget {
@@ -34,13 +35,13 @@ class DoctorProfileHeader extends StatelessWidget {
                   children: [
                     if (doctor.phone != null)
                       StatusChip(
-                        label: AppStrings.call,
+                        label: context.l10n.call,
                         icon: Icons.call_rounded,
                         onTap: () => ContactActions.call(doctor.phone!),
                       ),
                     if (doctor.email != null)
                       StatusChip(
-                        label: AppStrings.email,
+                        label: context.l10n.email,
                         icon: Icons.mail_rounded,
                         background: AppColors.sand,
                         foreground: AppColors.ink,

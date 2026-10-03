@@ -8,6 +8,7 @@ import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/pill_button.dart';
 import '../../providers/medicines_providers.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Records a purchase: adds stock and logs the cost as an expense.
 Future<void> showRefillSheet(BuildContext context, Medicine medicine) =>
@@ -64,7 +65,7 @@ class _RefillSheetState extends ConsumerState<_RefillSheet> {
         );
     if (!mounted) return;
     Navigator.pop(context);
-    showAppSnack(context, MedicineStrings.refillSaved);
+    showAppSnack(context, context.l10n.refillSaved);
   }
 
   @override
@@ -80,29 +81,29 @@ class _RefillSheetState extends ConsumerState<_RefillSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              MedicineStrings.refillTitle,
+              context.l10n.refillTitle,
               style: AppTextStyles.titleOnLight,
             ),
             Text(widget.medicine.name, style: AppTextStyles.bodyOnLight),
             AppSpacing.gapXl,
             AppTextField.decimal(
-              label: MedicineStrings.refillQuantity,
+              label: context.l10n.refillQuantity,
               controller: _quantity,
               hint: widget.medicine.doseUnit,
               validator: (v) => (double.tryParse(v ?? '') ?? 0) > 0
                   ? null
-                  : ErrorStrings.invalidNumber,
+                  : context.l10n.invalidNumber,
             ),
             AppTextField.decimal(
-              label: MedicineStrings.refillTotal,
+              label: context.l10n.refillTotal,
               controller: _total,
               prefixText: AppConstants.currencySymbol,
               validator: (v) => Money.parse(v ?? '') == null
-                  ? ErrorStrings.invalidAmount
+                  ? context.l10n.invalidAmount
                   : null,
             ),
             PillButton(
-              label: AppStrings.save,
+              label: context.l10n.save,
               showRingChevron: true,
               loading: _saving,
               onPressed: _save,

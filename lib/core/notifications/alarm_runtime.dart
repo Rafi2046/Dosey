@@ -4,7 +4,9 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 
 import '../../features/reminders/data/reminders_repository.dart';
+import '../../features/settings/data/settings_repository.dart';
 import '../database/app_database.dart';
+import '../localization/l10n.dart';
 import 'alarm_ports.dart';
 import 'android_alarm_scheduler.dart';
 import 'awesome_notification_presenter.dart';
@@ -52,8 +54,13 @@ abstract final class AlarmRuntime {
       // be registered manually before use.
       WidgetsFlutterBinding.ensureInitialized();
       DartPluginRegistrant.ensureInitialized();
-      await NotificationService.initialize();
       _db = AppDatabase();
+      // Notification text in the user's language (no UI here to ask).
+      final language = await SettingsRepository(_db!).get(AppLocale.settingKey);
+      AppLocale.apply(
+        AppLocale.resolve(language, PlatformDispatcher.instance.locale),
+      );
+      await NotificationService.initialize();
     }
     return _engine = engineFor(_db!);
   }

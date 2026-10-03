@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/notifications/permission_service.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Presentation details for each [AppPermission].
 extension PermissionMeta on AppPermission {
   String get title => switch (this) {
-    AppPermission.notifications => OnboardingStrings.permNotificationsTitle,
-    AppPermission.exactAlarms => OnboardingStrings.permExactAlarmsTitle,
-    AppPermission.fullScreen => OnboardingStrings.permFullScreenTitle,
-    AppPermission.dnd => OnboardingStrings.permDndTitle,
+    AppPermission.notifications => context.l10n.permNotificationsTitle,
+    AppPermission.exactAlarms => context.l10n.permExactAlarmsTitle,
+    AppPermission.fullScreen => context.l10n.permFullScreenTitle,
+    AppPermission.dnd => context.l10n.permDndTitle,
   };
 
   String get description => switch (this) {
-    AppPermission.notifications => OnboardingStrings.permNotificationsBody,
-    AppPermission.exactAlarms => OnboardingStrings.permExactAlarmsBody,
-    AppPermission.fullScreen => OnboardingStrings.permFullScreenBody,
-    AppPermission.dnd => OnboardingStrings.permDndBody,
+    AppPermission.notifications => context.l10n.permNotificationsBody,
+    AppPermission.exactAlarms => context.l10n.permExactAlarmsBody,
+    AppPermission.fullScreen => context.l10n.permFullScreenBody,
+    AppPermission.dnd => context.l10n.permDndBody,
   };
 
   IconData get icon => switch (this) {
@@ -27,5 +28,5 @@ extension PermissionMeta on AppPermission {
   };
 
   String get badge =>
-      isRequired ? OnboardingStrings.required : OnboardingStrings.recommended;
+      isRequired ? context.l10n.required : context.l10n.recommended;
 }

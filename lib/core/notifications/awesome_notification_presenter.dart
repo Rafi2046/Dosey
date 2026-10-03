@@ -7,6 +7,7 @@ import '../database/enums.dart';
 import '../utils/enum_labels.dart';
 import 'alarm_ports.dart';
 import 'notification_channels.dart';
+import '../localization/l10n.dart';
 
 /// [NotificationPresenter] backed by awesome_notifications. Critical
 /// reminders use the alarm category + full-screen intent so they wake the
@@ -61,20 +62,20 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
     NotificationActionButton(
       key: AppConstants.actionTaken,
       label: type == ReminderType.medicine
-          ? NotificationStrings.notifTaken
-          : AlarmStrings.alarmDone,
+          ? context.l10n.notifTaken
+          : context.l10n.alarmDone,
       color: AppColors.mint,
       actionType: ActionType.SilentBackgroundAction,
     ),
     NotificationActionButton(
       key: AppConstants.actionSnooze,
-      label: NotificationStrings.notifSnooze,
+      label: context.l10n.notifSnooze,
       actionType: ActionType.SilentBackgroundAction,
     ),
     if (type == ReminderType.medicine)
       NotificationActionButton(
         key: AppConstants.actionSkip,
-        label: NotificationStrings.notifSkip,
+        label: context.l10n.notifSkip,
         actionType: ActionType.SilentBackgroundAction,
       ),
   ];

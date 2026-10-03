@@ -11,6 +11,7 @@ import '../../../../core/widgets/labeled_field.dart';
 import '../../../../core/widgets/picker_field.dart';
 import '../widgets/reminder_times_editor.dart';
 import 'medicine_draft.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Everything about one medicine on the review screen, in an outlined card:
 /// name, strength, form, unit, times with amounts, meal and last day.
@@ -57,7 +58,7 @@ class MedicineDraftCard extends StatelessWidget {
                       listenable: draft.name,
                       builder: (_, _) => Text(
                         draft.name.text.trim().isEmpty
-                            ? MedicineStrings.addMedicine
+                            ? context.l10n.addMedicine
                             : draft.name.text.trim(),
                         style: AppTextStyles.cardTitleOnLight,
                         overflow: TextOverflow.ellipsis,
@@ -65,14 +66,14 @@ class MedicineDraftCard extends StatelessWidget {
                     ),
                     if (draft.dosePattern case final p?)
                       Text(
-                        MedicineStrings.bulkAsWritten(p),
+                        context.l10n.bulkAsWritten(p),
                         style: AppTextStyles.captionOnLight,
                       ),
                   ],
                 ),
               ),
               IconButton(
-                tooltip: MedicineStrings.bulkRemove,
+                tooltip: context.l10n.bulkRemove,
                 icon: const Icon(Icons.delete_outline_rounded),
                 color: AppColors.error,
                 onPressed: onRemove,
@@ -81,18 +82,18 @@ class MedicineDraftCard extends StatelessWidget {
           ),
           AppSpacing.gapMd,
           AppTextField(
-            label: MedicineStrings.medicineName,
+            label: context.l10n.medicineName,
             controller: draft.name,
             textCapitalization: TextCapitalization.words,
             validator: AppTextField.required,
           ),
           AppTextField(
-            label: MedicineStrings.medicineStrength,
+            label: context.l10n.medicineStrength,
             controller: draft.strength,
-            hint: AppStrings.optional,
+            hint: context.l10n.optional,
           ),
           LabeledField(
-            label: MedicineStrings.medicineForm,
+            label: context.l10n.medicineForm,
             child: ChoicePills<MedicineForm>(
               options: MedicineForm.values,
               selected: {draft.form},
@@ -104,7 +105,7 @@ class MedicineDraftCard extends StatelessWidget {
             ),
           ),
           AppTextField(
-            label: MedicineStrings.medicineDoseUnit,
+            label: context.l10n.medicineDoseUnit,
             controller: draft.unit,
             validator: AppTextField.required,
             textCapitalization: TextCapitalization.none,
@@ -124,14 +125,14 @@ class MedicineDraftCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: AppSpacing.md),
               child: Text(
-                MedicineStrings.bulkNoTimes,
+                context.l10n.bulkNoTimes,
                 style: AppTextStyles.captionOnLight.copyWith(
                   color: AppColors.error,
                 ),
               ),
             ),
           LabeledField(
-            label: MedicineStrings.medicineMeal,
+            label: context.l10n.medicineMeal,
             child: ChoicePills<MealRelation>(
               options: MealRelation.values,
               selected: {draft.meal},
@@ -143,12 +144,12 @@ class MedicineDraftCard extends StatelessWidget {
             ),
           ),
           PickerField(
-            label: MedicineStrings.medicineEndDate,
+            label: context.l10n.medicineEndDate,
             value: switch (draft.endDate) {
               final d? => AppDateFormat.date(d),
               null => null,
             },
-            placeholder: AppStrings.ongoing,
+            placeholder: context.l10n.ongoing,
             icon: Icons.event_busy_rounded,
             onClear: () {
               draft.endDate = null;

@@ -6,6 +6,7 @@ import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/choice_pills.dart';
 import '../../../../core/widgets/labeled_field.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Dose unit, then "when to take" pills. How many units per intake is set
 /// per time in [ReminderTimesEditor].
@@ -27,13 +28,13 @@ class DoseSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppTextField(
-          label: MedicineStrings.medicineDoseUnit,
+          label: context.l10n.medicineDoseUnit,
           controller: unit,
           validator: AppTextField.required,
           textCapitalization: TextCapitalization.none,
         ),
         LabeledField(
-          label: MedicineStrings.medicineMeal,
+          label: context.l10n.medicineMeal,
           child: ChoicePills<MealRelation>(
             options: MealRelation.values,
             selected: {meal},

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Lets the user photograph a document or pick pages from the gallery.
 /// Returns the picked file paths (empty if cancelled).
@@ -46,7 +47,7 @@ Future<ImageSource?> _chooseSource(BuildContext context) =>
                 leading: const Icon(Icons.photo_camera_rounded),
                 iconColor: AppColors.ink,
                 title: Text(
-                  RecordStrings.takePhoto,
+                  context.l10n.takePhoto,
                   style: AppTextStyles.inputOnLight,
                 ),
                 onTap: () => Navigator.pop(context, ImageSource.camera),
@@ -55,7 +56,7 @@ Future<ImageSource?> _chooseSource(BuildContext context) =>
                 leading: const Icon(Icons.photo_library_rounded),
                 iconColor: AppColors.ink,
                 title: Text(
-                  RecordStrings.chooseFromGallery,
+                  context.l10n.chooseFromGallery,
                   style: AppTextStyles.inputOnLight,
                 ),
                 onTap: () => Navigator.pop(context, ImageSource.gallery),

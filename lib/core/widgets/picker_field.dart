@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 import 'labeled_field.dart';
+import '../localization/l10n.dart';
 
 /// Read-only field that opens a picker (date, time, doctor...). Shows
 /// [placeholder] when [value] is null and an optional clear button.
@@ -11,7 +12,7 @@ class PickerField extends StatelessWidget {
     required this.label,
     required this.value,
     required this.onTap,
-    this.placeholder = AppStrings.choose,
+    this.placeholder = context.l10n.choose,
     this.icon = Icons.expand_more_rounded,
     this.onClear,
     this.errorText,
@@ -55,7 +56,7 @@ class PickerField extends StatelessWidget {
                     if (hasValue && onClear != null)
                       IconButton(
                         visualDensity: VisualDensity.compact,
-                        tooltip: AppStrings.clear,
+                        tooltip: context.l10n.clear,
                         icon: const Icon(
                           Icons.close_rounded,
                           color: AppColors.inkMuted,

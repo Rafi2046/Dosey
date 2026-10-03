@@ -7,6 +7,7 @@ import '../../../core/widgets/pill_button.dart';
 import '../providers/permissions_provider.dart';
 import 'widgets/onboarding_hero.dart';
 import 'widgets/permission_tile.dart';
+import '../../../core/localization/l10n.dart';
 
 /// Walks the user through every permission the alarms depend on. Permission
 /// state is re-checked whenever the app resumes (users grant most of these
@@ -99,16 +100,16 @@ class _BottomBar extends StatelessWidget {
             duration: AppSpacing.animMedium,
             child: canContinue
                 ? const SizedBox.shrink()
-                : const Padding(
+                : Padding(
                     padding: EdgeInsets.only(bottom: AppSpacing.md),
                     child: Text(
-                      OnboardingStrings.onboardingEssentialHint,
+                      context.l10n.onboardingEssentialHint,
                       style: AppTextStyles.caption,
                     ),
                   ),
           ),
           PillButton(
-            label: OnboardingStrings.onboardingContinue,
+            label: context.l10n.onboardingContinue,
             showRingChevron: true,
             onPressed: canContinue ? onContinue : null,
           ),

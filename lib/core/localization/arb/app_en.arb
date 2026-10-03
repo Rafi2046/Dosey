@@ -1,0 +1,431 @@
+{
+  "@@locale": "en",
+  "appName": "Dosey",
+  "navHome": "Home",
+  "navReminders": "Reminders",
+  "navMedicines": "Medicines",
+  "navRecords": "Records",
+  "navDoctors": "Doctors",
+  "navExpenses": "Expenses",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "add": "Add",
+  "archive": "Archive",
+  "none": "None",
+  "deleteConfirmTitle": "Delete this item?",
+  "deleteConfirmBody": "This cannot be undone.",
+  "seeAll": "See all",
+  "all": "All",
+  "active": "Active",
+  "optional": "Optional",
+  "saveChanges": "Save changes",
+  "saved": "Saved",
+  "next": "Next",
+  "ongoing": "Ongoing",
+  "call": "Call",
+  "email": "Email",
+  "details": "Details",
+  "choose": "Choose",
+  "clear": "Clear",
+  "addTime": "Add time",
+  "done": "Done",
+  "daysUnit": "days",
+  "addSheetTitle": "What would you like to add?",
+  "alarmMarkTaken": "Medicine Taken",
+  "alarmDone": "Done",
+  "alarmSnooze": "Snooze",
+  "alarmSkip": "Skip this time",
+  "minutesShort": "min",
+  "nothingScheduled": "Nothing scheduled. Enjoy your day!",
+  "goodMorning": "Good morning",
+  "goodAfternoon": "Good afternoon",
+  "goodEvening": "Good evening",
+  "dashboardTitle": "Today's Medicine\nReminders",
+  "missed": "Missed",
+  "skipped": "Skipped",
+  "snoozed": "Snoozed",
+  "skipDose": "Skip",
+  "morning": "Morning",
+  "afternoon": "Afternoon",
+  "evening": "Evening",
+  "bedtime": "Bedtime",
+  "upcoming": "Coming up",
+  "medicineCost": "Medicine cost",
+  "perMonth": "/ month",
+  "spentThisMonth": "Spent this month",
+  "runningLow": "Running low",
+  "debugTestAlarm": "Test alarm (rings in 1–2 min)",
+  "debugTestAlarmScheduled": "Test alarm scheduled. Lock the phone and wait.",
+  "debugTestAlarmTitle": "Test medicine",
+  "debugLoadDemo": "Load demo data",
+  "debugDemoLoaded": "Demo data loaded",
+  "debugTestAlarmBody": "Take 1 tablet after breakfast",
+  "addDoctor": "Add doctor",
+  "editDoctor": "Edit doctor",
+  "doctorName": "Name",
+  "doctorSpecialty": "Specialty",
+  "doctorPhone": "Phone",
+  "doctorEmail": "Email",
+  "doctorClinic": "Clinic / hospital",
+  "doctorAddress": "Address",
+  "doctorFee": "Consultation fee",
+  "doctorNotes": "Notes",
+  "noDoctors": "No doctors added",
+  "doctorsTitle": "Your\nDoctors",
+  "prescribedMedicines": "Prescribed medicines",
+  "doctorRecords": "Records",
+  "doctorAppointments": "Appointments",
+  "unarchive": "Restore",
+  "addAppointment": "Add appointment",
+  "deleteDoctorBody": "Medicines and records stay, but will no longer be linked to this doctor.",
+  "genericError": "Something went wrong. Please try again.",
+  "fieldRequired": "This field is required",
+  "invalidNumber": "Enter a valid number",
+  "invalidAmount": "Enter a valid amount",
+  "expenses": "Expenses",
+  "addExpense": "Add expense",
+  "expenseTitle": "Description",
+  "expenseAmount": "Amount",
+  "expenseQuantity": "Quantity",
+  "expenseCategory": "Category",
+  "expenseDate": "Date",
+  "expenseNotes": "Notes",
+  "noExpenses": "No expenses recorded",
+  "projectedMonthly": "Projected monthly medicine cost",
+  "categoryMedicine": "Medicine",
+  "categoryConsultation": "Consultation",
+  "categoryTest": "Test",
+  "categoryVaccine": "Vaccine",
+  "categoryOther": "Other",
+  "expensesTitle": "Your\nExpenses",
+  "byCategory": "By category",
+  "medicineCosts": "Projected medicine costs",
+  "projectedHint": "Based on your active medicines, their price and reminder times.",
+  "noProjection": "Add a price per unit to a medicine to see projected costs.",
+  "expenseTitleHint": "e.g. Napa 500mg strip",
+  "expenseMedicine": "Medicine",
+  "expenseDoctor": "Doctor",
+  "deleteExpenseBody": "This expense will be removed.",
+  "addMedicine": "Add medicine",
+  "editMedicine": "Edit medicine",
+  "medicineName": "Medicine name",
+  "medicineStrength": "Strength (e.g. 500 mg)",
+  "medicineForm": "Form",
+  "medicineDose": "Dose per intake",
+  "medicineDoseUnit": "Unit",
+  "medicineMeal": "When to take",
+  "medicineUnitPrice": "Price per unit",
+  "medicineStock": "Stock on hand",
+  "medicineRefillAt": "Refill alert at",
+  "medicineDoctor": "Prescribed by",
+  "medicineStartDate": "Start date",
+  "medicineEndDate": "End date",
+  "noMedicines": "No medicines added",
+  "lowStock": "Low stock",
+  "formTablet": "Tablet",
+  "formCapsule": "Capsule",
+  "formSyrup": "Syrup",
+  "formInjection": "Injection",
+  "formDrops": "Drops",
+  "formInhaler": "Inhaler",
+  "formCream": "Cream",
+  "formOther": "Other",
+  "unitTablet": "tablet",
+  "unitCapsule": "capsule",
+  "unitMl": "ml",
+  "unitInjection": "unit",
+  "unitDrop": "drop",
+  "unitPuff": "puff",
+  "unitApplication": "application",
+  "unitDose": "dose",
+  "mealBefore": "Before meal",
+  "mealWith": "With meal",
+  "mealAfter": "After meal",
+  "mealAnytime": "Anytime",
+  "medicinesTitle": "Your\nMedicines",
+  "stopped": "Stopped",
+  "chooseMedicineType": "Choose Medicine\nType",
+  "medicineDetails": "Medicine details",
+  "medicineDescription": "Description",
+  "medicineDescriptionHint": "How and why to take it",
+  "timeDuration": "Time Duration",
+  "medicineTime": "Medicine Time",
+  "daysInWeek": "Days in a week",
+  "doses": "Doses",
+  "costPerMonth": "Cost per month",
+  "inStock": "In stock",
+  "prescription": "Prescription",
+  "reminderTimesHint": "Add the times you take this medicine — each one rings like an alarm.",
+  "changeSetting": "Change Setting",
+  "refill": "Refill",
+  "refillTitle": "Record a refill",
+  "refillQuantity": "Quantity bought",
+  "refillTotal": "Total paid",
+  "refillSaved": "Refill saved and added to expenses",
+  "stopMedicine": "Stop taking",
+  "resumeMedicine": "Resume",
+  "deleteMedicineBody": "Its reminders and dose history will be deleted too.",
+  "everyDay": "Every day",
+  "doseTimeTitle": "Intake time",
+  "doseHowMany": "How many at this time",
+  "removeTime": "Remove this time",
+  "scanTitle": "Scan prescription",
+  "scanSubtitle": "Auto-fill name, dose and times from a photo",
+  "scanReading": "Reading prescription…",
+  "scanNothingFound": "No medicines found. Try a clearer, well-lit photo or fill in manually.",
+  "scanFailed": "Couldn't read that image. Please try again.",
+  "bulkTitle": "Review medicines",
+  "bulkHint": "Found on your prescription. Check each medicine, fix anything that looks wrong, remove extras, then save them all at once.",
+  "bulkAddAnother": "Add another medicine",
+  "bulkRemove": "Remove medicine",
+  "bulkEmpty": "No medicines left. Add one or go back.",
+  "bulkNoTimes": "No times set: this medicine will not ring.",
+  "scanFilled": "Filled from prescription. Please check every field before saving.",
+  "notifTaken": "Taken ✓",
+  "notifSnooze": "Snooze",
+  "notifSkip": "Skip",
+  "notifDoseSeparator": " · ",
+  "notifAtLocation": "At ",
+  "notifWithDoctor": "With ",
+  "channelGroupName": "Dosey reminders",
+  "channelMedicineName": "Medicine alarms",
+  "channelMedicineDesc": "Rings for doses, even in Do Not Disturb",
+  "channelAppointmentName": "Appointment alarms",
+  "channelAppointmentDesc": "Doctor's appointment alarms",
+  "channelVaccineName": "Vaccine alarms",
+  "channelVaccineDesc": "Vaccination alarms",
+  "channelTestName": "Medical test alarms",
+  "channelTestDesc": "Lab and medical test alarms",
+  "channelGentleName": "Gentle reminders",
+  "channelGentleDesc": "Non-critical reminders that respect Do Not Disturb",
+  "onboardingTitle": "Never miss\na dose",
+  "onboardingBody": "Dosey rings like an alarm clock — even on silent or Do Not Disturb. Allow these so your reminders arrive exactly on time.",
+  "onboardingContinue": "Let's get started",
+  "onboardingEssentialHint": "Notifications and exact alarms are required.",
+  "recommended": "Recommended",
+  "required": "Required",
+  "allow": "Allow",
+  "allowed": "Allowed",
+  "permNotificationsTitle": "Notifications",
+  "permNotificationsBody": "Show medicine, appointment and test reminders.",
+  "permExactAlarmsTitle": "Exact alarms",
+  "permExactAlarmsBody": "Ring at the exact minute — not \"sometime around\" it.",
+  "permFullScreenTitle": "Full-screen alarm",
+  "permFullScreenBody": "Wake the screen and show the alarm over the lock screen.",
+  "permDndTitle": "Ring in Do Not Disturb",
+  "permDndBody": "Let critical reminders break through silent and DND modes.",
+  "records": "Records",
+  "addRecord": "Add record",
+  "recordTitle": "Title",
+  "recordType": "Type",
+  "recordDate": "Document date",
+  "recordDoctor": "Doctor",
+  "recordNotes": "Notes",
+  "recordPages": "Pages",
+  "takePhoto": "Take photo",
+  "chooseFromGallery": "Choose from gallery",
+  "noRecords": "No records saved",
+  "addAtLeastOnePage": "Add at least one page",
+  "recordPrescription": "Prescription",
+  "recordTestReport": "Test report",
+  "recordVaccineCertificate": "Vaccine card",
+  "recordInvoice": "Invoice",
+  "recordOther": "Other",
+  "recordsTitle": "Your\nRecords",
+  "addPages": "Add pages",
+  "deletePage": "Delete page",
+  "recordTitleHint": "e.g. Blood test – Oct",
+  "deleteRecordBody": "All pages will be deleted from this device.",
+  "addReminder": "Add reminder",
+  "editReminder": "Edit reminder",
+  "reminderTitle": "Title",
+  "reminderNotes": "Notes",
+  "reminderLocation": "Location",
+  "reminderRepeat": "Repeat",
+  "reminderEndDate": "End date",
+  "reminderEveryNDays": "Every how many days",
+  "reminderCritical": "Ring in Do Not Disturb",
+  "reminderCriticalHint": "Uses a full-screen alarm that bypasses silent and DND modes",
+  "noReminders": "No reminders yet",
+  "markTaken": "Taken",
+  "typeMedicine": "Medicine",
+  "typeAppointment": "Appointment",
+  "typeVaccine": "Vaccine",
+  "typeMedicalTest": "Medical test",
+  "repeatOnce": "Once",
+  "repeatDaily": "Daily",
+  "repeatWeekly": "Weekly",
+  "repeatEveryNDays": "Every N days",
+  "remindersTitle": "Your\nReminders",
+  "paused": "Paused",
+  "ended": "Ended",
+  "reminderType": "Reminder type",
+  "reminderTitleHint": "e.g. Morning insulin",
+  "reminderMedicine": "Medicine",
+  "reminderDoctor": "Doctor",
+  "reminderWhen": "When",
+  "reminderSnooze": "Snooze length",
+  "selectMedicineError": "Choose a medicine",
+  "selectWeekdaysError": "Choose at least one day",
+  "deleteReminderBody": "The reminder and its history will be removed.",
+  "weekdayMon": "Mon",
+  "weekdayTue": "Tue",
+  "weekdayWed": "Wed",
+  "weekdayThu": "Thu",
+  "weekdayFri": "Fri",
+  "weekdaySat": "Sat",
+  "weekdaySun": "Sun",
+  "settingsTitle": "Settings",
+  "settingsLanguage": "Language",
+  "settingsLanguageHint": "Dates, times and numbers follow the language too.",
+  "languageSystem": "Phone default",
+  "languageEnglish": "English",
+  "languageBangla": "বাংলা",
+  "daysCount": "{count, plural, =1{1 day} other{{count} days}}",
+  "@daysCount": {
+    "description": "A length of time in days",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "pagesCount": "{count, plural, =1{1 page} other{{count} pages}}",
+  "@pagesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "nextTypeIn": "Next {type} in {duration}",
+  "@nextTypeIn": {
+    "description": "e.g. Next Medicine in 45 min",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "durationMinutes": "{minutes} min",
+  "@durationMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "durationHours": "{hours} h",
+  "@durationHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "durationHoursMinutes": "{hours} h {minutes} min",
+  "@durationHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "minutes": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "unitsLeft": "{amount} left",
+  "@unitsLeft": {
+    "description": "Stock remaining, e.g. 12 tablet left",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "activeMedicines": "{count, plural, =1{1 active medicine} other{{count} active medicines}}",
+  "@activeMedicines": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "perDay": "{amount} / day",
+  "@perDay": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "unitsPerDayLabel": "{amount} {unit} / day",
+  "@unitsPerDayLabel": {
+    "description": "e.g. 5 tablet / day",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "bulkSaveAll": "{count, plural, =1{Save 1 medicine} other{Save {count} medicines}}",
+  "@bulkSaveAll": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "bulkSaved": "{count, plural, =1{Added 1 medicine} other{Added {count} medicines}}",
+  "@bulkSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "bulkAsWritten": "Prescription says: {pattern}",
+  "@bulkAsWritten": {
+    "description": "The dose pattern as written, e.g. 1+0+1",
+    "placeholders": {
+      "pattern": {
+        "type": "String"
+      }
+    }
+  },
+  "bulkFixMedicine": "Medicine {number} needs a name and unit before saving.",
+  "@bulkFixMedicine": {
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "everyNDays": "{count, plural, =1{Every day} other{Every {count} days}}",
+  "@everyNDays": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  }
+}

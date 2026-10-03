@@ -13,6 +13,7 @@ import '../../../records/providers/records_providers.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/presentation/reminder_form_screen.dart';
 import '../../../reminders/providers/reminders_providers.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Medicines, appointments and records linked to one doctor.
 class DoctorLinkedSections extends ConsumerWidget {
@@ -37,15 +38,15 @@ class DoctorLinkedSections extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (medicines.isNotEmpty) ...[
-          const SectionHeader(
-            title: DoctorStrings.prescribedMedicines,
+          SectionHeader(
+            title: context.l10n.prescribedMedicines,
             onLight: true,
           ),
           for (final m in medicines)
             LinkTile(
               icon: Icons.medication_rounded,
               title: m.medicine.name,
-              subtitle: m.medicine.isActive ? null : MedicineStrings.stopped,
+              subtitle: m.medicine.isActive ? null : context.l10n.stopped,
               onTap: () => _push(
                 context,
                 MedicineDetailScreen(medicineId: m.medicine.id),
@@ -53,8 +54,8 @@ class DoctorLinkedSections extends ConsumerWidget {
             ),
         ],
         if (reminders.isNotEmpty) ...[
-          const SectionHeader(
-            title: DoctorStrings.doctorAppointments,
+          SectionHeader(
+            title: context.l10n.doctorAppointments,
             onLight: true,
           ),
           for (final d in reminders)
@@ -67,8 +68,8 @@ class DoctorLinkedSections extends ConsumerWidget {
             ),
         ],
         if (records.isNotEmpty) ...[
-          const SectionHeader(
-            title: DoctorStrings.doctorRecords,
+          SectionHeader(
+            title: context.l10n.doctorRecords,
             onLight: true,
           ),
           for (final r in records)

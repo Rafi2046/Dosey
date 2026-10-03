@@ -9,6 +9,7 @@ import '../../../../core/widgets/choice_pills.dart';
 import '../../../../core/widgets/labeled_field.dart';
 import '../../../../core/widgets/number_stepper.dart';
 import '../../../../core/widgets/picker_field.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Repeat rule + its parameters (weekdays / interval) + optional end date.
 class RepeatSection extends StatelessWidget {
@@ -43,7 +44,7 @@ class RepeatSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LabeledField(
-          label: ReminderStrings.reminderRepeat,
+          label: context.l10n.reminderRepeat,
           child: ChoicePills<RepeatRule>(
             options: RepeatRule.values,
             selected: {rule},
@@ -53,17 +54,17 @@ class RepeatSection extends StatelessWidget {
         ),
         if (rule == RepeatRule.weekly)
           LabeledField(
-            label: MedicineStrings.daysInWeek,
+            label: context.l10n.daysInWeek,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ChoicePills<int>(
                   options: List.generate(
-                    ReminderStrings.weekdaysShort.length,
+                    context.l10n.weekdaysShort.length,
                     (i) => i,
                   ),
                   selected: weekdays,
-                  labelOf: (i) => ReminderStrings.weekdaysShort[i],
+                  labelOf: (i) => context.l10n.weekdaysShort[i],
                   multiSelect: true,
                   onChanged: onWeekdaysChanged,
                 ),
@@ -76,18 +77,18 @@ class RepeatSection extends StatelessWidget {
           ),
         if (rule == RepeatRule.everyNDays)
           LabeledField(
-            label: ReminderStrings.reminderEveryNDays,
+            label: context.l10n.reminderEveryNDays,
             child: NumberStepper(
               value: interval,
-              suffix: AppStrings.daysUnit,
+              suffix: context.l10n.daysUnit,
               onChanged: onIntervalChanged,
             ),
           ),
         if (rule != RepeatRule.once)
           PickerField(
-            label: ReminderStrings.reminderEndDate,
+            label: context.l10n.reminderEndDate,
             value: endAt == null ? null : AppDateFormat.date(endAt!),
-            placeholder: AppStrings.ongoing,
+            placeholder: context.l10n.ongoing,
             icon: Icons.event_rounded,
             onClear: () => onEndChanged(null),
             onTap: () async {

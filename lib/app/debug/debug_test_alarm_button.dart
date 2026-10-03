@@ -7,6 +7,7 @@ import '../../core/database/app_database.dart';
 import '../../core/widgets/pill_button.dart';
 import '../../features/medicines/providers/medicines_providers.dart';
 import '../../features/reminders/providers/reminders_providers.dart';
+import '../../core/localization/l10n.dart';
 
 /// Debug-only: creates a medicine + one-shot critical reminder at the next-but-
 /// one minute, to exercise the whole alarm pipeline on a real device.
@@ -31,7 +32,7 @@ class DebugTestAlarmButton extends ConsumerWidget {
         .read(medicinesRepositoryProvider)
         .create(
           MedicinesCompanion.insert(
-            name: DebugStrings.debugTestAlarmTitle,
+            name: context.l10n.debugTestAlarmTitle,
             startDate: now,
             mealRelation: const Value(MealRelation.afterMeal),
           ),
@@ -41,21 +42,21 @@ class DebugTestAlarmButton extends ConsumerWidget {
         .create(
           RemindersCompanion.insert(
             type: ReminderType.medicine,
-            title: DebugStrings.debugTestAlarmTitle,
-            description: const Value(DebugStrings.debugTestAlarmBody),
+            title: context.l10n.debugTestAlarmTitle,
+            description: Value(context.l10n.debugTestAlarmBody),
             startAt: at,
             medicineId: Value(medicineId),
           ),
         );
     messenger.showSnackBar(
-      const SnackBar(content: Text(DebugStrings.debugTestAlarmScheduled)),
+      SnackBar(content: Text(context.l10n.debugTestAlarmScheduled)),
     );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PillButton(
-      label: DebugStrings.debugTestAlarm,
+      label: context.l10n.debugTestAlarm,
       tone: PillButtonTone.cream,
       trailingIcon: Icons.alarm_add_rounded,
       onPressed: () => _schedule(ref, ScaffoldMessenger.of(context)),

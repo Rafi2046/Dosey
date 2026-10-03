@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 import '../database/enums.dart';
+import '../localization/l10n.dart';
 
 extension ReminderTypeX on ReminderType {
-  String get label => switch (this) {
-    ReminderType.medicine => ReminderStrings.typeMedicine,
-    ReminderType.appointment => ReminderStrings.typeAppointment,
-    ReminderType.vaccine => ReminderStrings.typeVaccine,
-    ReminderType.medicalTest => ReminderStrings.typeMedicalTest,
+  String label(AppLocalizations l) => switch (this) {
+    ReminderType.medicine => l.typeMedicine,
+    ReminderType.appointment => l.typeAppointment,
+    ReminderType.vaccine => l.typeVaccine,
+    ReminderType.medicalTest => l.typeMedicalTest,
   };
 
   IconData get icon => switch (this) {
@@ -27,36 +28,36 @@ extension ReminderTypeX on ReminderType {
 }
 
 extension MealRelationX on MealRelation {
-  String get label => switch (this) {
-    MealRelation.beforeMeal => MedicineStrings.mealBefore,
-    MealRelation.withMeal => MedicineStrings.mealWith,
-    MealRelation.afterMeal => MedicineStrings.mealAfter,
-    MealRelation.anytime => MedicineStrings.mealAnytime,
+  String label(AppLocalizations l) => switch (this) {
+    MealRelation.beforeMeal => l.mealBefore,
+    MealRelation.withMeal => l.mealWith,
+    MealRelation.afterMeal => l.mealAfter,
+    MealRelation.anytime => l.mealAnytime,
   };
 }
 
 extension MedicineFormX on MedicineForm {
-  String get label => switch (this) {
-    MedicineForm.tablet => MedicineStrings.formTablet,
-    MedicineForm.capsule => MedicineStrings.formCapsule,
-    MedicineForm.syrup => MedicineStrings.formSyrup,
-    MedicineForm.injection => MedicineStrings.formInjection,
-    MedicineForm.drops => MedicineStrings.formDrops,
-    MedicineForm.inhaler => MedicineStrings.formInhaler,
-    MedicineForm.cream => MedicineStrings.formCream,
-    MedicineForm.other => MedicineStrings.formOther,
+  String label(AppLocalizations l) => switch (this) {
+    MedicineForm.tablet => l.formTablet,
+    MedicineForm.capsule => l.formCapsule,
+    MedicineForm.syrup => l.formSyrup,
+    MedicineForm.injection => l.formInjection,
+    MedicineForm.drops => l.formDrops,
+    MedicineForm.inhaler => l.formInhaler,
+    MedicineForm.cream => l.formCream,
+    MedicineForm.other => l.formOther,
   };
 
-  /// Sensible default dose unit for the form.
-  String get defaultUnit => switch (this) {
-    MedicineForm.tablet => MedicineStrings.unitTablet,
-    MedicineForm.capsule => MedicineStrings.unitCapsule,
-    MedicineForm.syrup => MedicineStrings.unitMl,
-    MedicineForm.injection => MedicineStrings.unitInjection,
-    MedicineForm.drops => MedicineStrings.unitDrop,
-    MedicineForm.inhaler => MedicineStrings.unitPuff,
-    MedicineForm.cream => MedicineStrings.unitApplication,
-    MedicineForm.other => MedicineStrings.unitDose,
+  /// Sensible default dose unit for the form, in the current language.
+  String defaultUnit(AppLocalizations l) => switch (this) {
+    MedicineForm.tablet => l.unitTablet,
+    MedicineForm.capsule => l.unitCapsule,
+    MedicineForm.syrup => l.unitMl,
+    MedicineForm.injection => l.unitInjection,
+    MedicineForm.drops => l.unitDrop,
+    MedicineForm.inhaler => l.unitPuff,
+    MedicineForm.cream => l.unitApplication,
+    MedicineForm.other => l.unitDose,
   };
 
   String get image => switch (this) {
@@ -68,21 +69,21 @@ extension MedicineFormX on MedicineForm {
 }
 
 extension RepeatRuleX on RepeatRule {
-  String get label => switch (this) {
-    RepeatRule.once => ReminderStrings.repeatOnce,
-    RepeatRule.daily => ReminderStrings.repeatDaily,
-    RepeatRule.weekly => ReminderStrings.repeatWeekly,
-    RepeatRule.everyNDays => ReminderStrings.repeatEveryNDays,
+  String label(AppLocalizations l) => switch (this) {
+    RepeatRule.once => l.repeatOnce,
+    RepeatRule.daily => l.repeatDaily,
+    RepeatRule.weekly => l.repeatWeekly,
+    RepeatRule.everyNDays => l.repeatEveryNDays,
   };
 }
 
 extension RecordTypeX on RecordType {
-  String get label => switch (this) {
-    RecordType.prescription => RecordStrings.recordPrescription,
-    RecordType.testReport => RecordStrings.recordTestReport,
-    RecordType.vaccineCertificate => RecordStrings.recordVaccineCertificate,
-    RecordType.invoice => RecordStrings.recordInvoice,
-    RecordType.other => RecordStrings.recordOther,
+  String label(AppLocalizations l) => switch (this) {
+    RecordType.prescription => l.recordPrescription,
+    RecordType.testReport => l.recordTestReport,
+    RecordType.vaccineCertificate => l.recordVaccineCertificate,
+    RecordType.invoice => l.recordInvoice,
+    RecordType.other => l.recordOther,
   };
 
   IconData get icon => switch (this) {
@@ -95,12 +96,12 @@ extension RecordTypeX on RecordType {
 }
 
 extension ExpenseCategoryX on ExpenseCategory {
-  String get label => switch (this) {
-    ExpenseCategory.medicine => ExpenseStrings.categoryMedicine,
-    ExpenseCategory.consultation => ExpenseStrings.categoryConsultation,
-    ExpenseCategory.test => ExpenseStrings.categoryTest,
-    ExpenseCategory.vaccine => ExpenseStrings.categoryVaccine,
-    ExpenseCategory.other => ExpenseStrings.categoryOther,
+  String label(AppLocalizations l) => switch (this) {
+    ExpenseCategory.medicine => l.categoryMedicine,
+    ExpenseCategory.consultation => l.categoryConsultation,
+    ExpenseCategory.test => l.categoryTest,
+    ExpenseCategory.vaccine => l.categoryVaccine,
+    ExpenseCategory.other => l.categoryOther,
   };
 
   IconData get icon => switch (this) {
@@ -121,10 +122,10 @@ extension ExpenseCategoryX on ExpenseCategory {
 }
 
 extension ReminderLogStatusX on ReminderLogStatus {
-  String get label => switch (this) {
-    ReminderLogStatus.taken => ReminderStrings.markTaken,
-    ReminderLogStatus.skipped => DashboardStrings.skipped,
-    ReminderLogStatus.snoozed => DashboardStrings.snoozed,
-    ReminderLogStatus.missed => DashboardStrings.missed,
+  String label(AppLocalizations l) => switch (this) {
+    ReminderLogStatus.taken => l.markTaken,
+    ReminderLogStatus.skipped => l.skipped,
+    ReminderLogStatus.snoozed => l.snoozed,
+    ReminderLogStatus.missed => l.missed,
   };
 }

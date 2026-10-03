@@ -6,6 +6,7 @@ import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../domain/doctor_with_stats.dart';
 import 'contact_actions.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Doctor summary: initials avatar, name, specialty, clinic, active
 /// medicine count and a one-tap call button.
@@ -29,7 +30,7 @@ class DoctorCard extends StatelessWidget {
     final subtitle = [
       ?d.specialty,
       ?d.clinic,
-    ].join(NotificationStrings.notifDoseSeparator);
+    ].join(context.l10n.notifDoseSeparator);
 
     return SurfaceCard(
       color: color,
@@ -56,7 +57,7 @@ class DoctorCard extends StatelessWidget {
                   ),
                 AppSpacing.gapSm,
                 StatusChip(
-                  label: DoctorStrings.activeMedicines(
+                  label: context.l10n.activeMedicines(
                     item.activeMedicineCount,
                   ),
                   icon: Icons.medication_rounded,
@@ -68,7 +69,7 @@ class DoctorCard extends StatelessWidget {
           ),
           if (d.phone != null)
             IconButton(
-              tooltip: AppStrings.call,
+              tooltip: context.l10n.call,
               icon: Icon(Icons.call_rounded, color: muted),
               onPressed: () => ContactActions.call(d.phone!),
             ),

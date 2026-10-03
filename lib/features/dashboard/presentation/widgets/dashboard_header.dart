@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// "Good morning" with the app mark on the left and a bell on the right,
 /// following the design's "Hello, Lora" header.
@@ -15,9 +16,9 @@ class DashboardHeader extends StatelessWidget {
   final VoidCallback onBellTap;
 
   String get _greeting => switch (now.hour) {
-    < 12 => DashboardStrings.goodMorning,
-    < 17 => DashboardStrings.goodAfternoon,
-    _ => DashboardStrings.goodEvening,
+    < 12 => context.l10n.goodMorning,
+    < 17 => context.l10n.goodAfternoon,
+    _ => context.l10n.goodEvening,
   };
 
   @override
@@ -36,7 +37,7 @@ class DashboardHeader extends StatelessWidget {
           AppSpacing.gapMd,
           Expanded(child: Text(_greeting, style: AppTextStyles.subtitle)),
           IconButton(
-            tooltip: AppStrings.navReminders,
+            tooltip: context.l10n.navReminders,
             onPressed: onBellTap,
             icon: const Icon(
               Icons.notifications_rounded,

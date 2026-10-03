@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Alarm-clock illustration with the serif headline, as on the welcome screen.
 class OnboardingHero extends StatelessWidget {
@@ -16,14 +17,14 @@ class OnboardingHero extends StatelessWidget {
           fit: BoxFit.contain,
         ),
         AppSpacing.gapLg,
-        const Text(
-          OnboardingStrings.onboardingTitle,
+        Text(
+          context.l10n.onboardingTitle,
           style: AppTextStyles.display,
           textAlign: TextAlign.center,
         ),
         AppSpacing.gapMd,
-        const Text(
-          OnboardingStrings.onboardingBody,
+        Text(
+          context.l10n.onboardingBody,
           style: AppTextStyles.bodyMuted,
           textAlign: TextAlign.center,
         ),

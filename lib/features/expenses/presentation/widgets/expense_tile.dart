@@ -6,6 +6,7 @@ import '../../../../core/utils/date_format.dart';
 import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/surface_card.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// One expense row: category icon, title, date and amount.
 class ExpenseTile extends StatelessWidget {
@@ -27,7 +28,7 @@ class ExpenseTile extends StatelessWidget {
       ),
       title: Text(expense.title, style: AppTextStyles.subtitle),
       subtitle: Text(
-        '${c.label}${NotificationStrings.notifDoseSeparator}'
+        '${c.label}${context.l10n.notifDoseSeparator}'
         '${AppDateFormat.shortDate(expense.spentOn)}',
         style: AppTextStyles.caption,
       ),

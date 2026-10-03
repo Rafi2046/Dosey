@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
+import '../localization/l10n.dart';
 
 /// Horizontally scrolling single-select filter with an "All" option (null),
 /// styled for sage screens.
@@ -21,7 +22,7 @@ class FilterPills<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final entries = <(T?, String)>[
-      (null, AppStrings.all),
+      (null, context.l10n.all),
       for (final o in options) (o, labelOf(o)),
     ];
     return SizedBox(

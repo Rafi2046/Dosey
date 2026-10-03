@@ -7,6 +7,7 @@ import '../../../../core/widgets/labeled_field.dart';
 import '../../../../core/widgets/picker_field.dart';
 import '../../../../core/widgets/pill_button.dart';
 import '../../domain/dose_time.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// What the user did in [showDoseTimeSheet]; null when dismissed.
 sealed class DoseSheetResult {
@@ -64,12 +65,12 @@ class _DoseTimeSheetState extends State<_DoseTimeSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              MedicineStrings.doseTimeTitle,
+              context.l10n.doseTimeTitle,
               style: AppTextStyles.titleOnLight,
             ),
             AppSpacing.gapMd,
             PickerField(
-              label: MedicineStrings.medicineTime,
+              label: context.l10n.medicineTime,
               value: _dose.time.format(context).toLowerCase(),
               icon: Icons.schedule_rounded,
               onTap: () async {
@@ -78,7 +79,7 @@ class _DoseTimeSheetState extends State<_DoseTimeSheet> {
               },
             ),
             LabeledField(
-              label: MedicineStrings.doseHowMany,
+              label: context.l10n.doseHowMany,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: AmountStepper(
@@ -90,14 +91,14 @@ class _DoseTimeSheetState extends State<_DoseTimeSheet> {
               ),
             ),
             PillButton(
-              label: AppStrings.done,
+              label: context.l10n.done,
               onPressed: () => Navigator.pop(context, DoseSaved(_dose)),
             ),
             if (widget.canRemove) ...[
               AppSpacing.gapSm,
               TextButton.icon(
                 icon: const Icon(Icons.delete_outline_rounded),
-                label: const Text(MedicineStrings.removeTime),
+                label: Text(context.l10n.removeTime),
                 style: TextButton.styleFrom(foregroundColor: AppColors.error),
                 onPressed: () => Navigator.pop(context, const DoseRemoved()),
               ),

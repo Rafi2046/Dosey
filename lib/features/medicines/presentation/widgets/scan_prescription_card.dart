@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/surface_card.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Mint call-to-action at the top of "Add medicine": photograph a
 /// prescription to auto-fill the form. Shows a spinner while reading.
@@ -45,13 +46,13 @@ class ScanPrescriptionCard extends StatelessWidget {
                 children: [
                   Text(
                     scanning
-                        ? MedicineStrings.scanReading
-                        : MedicineStrings.scanTitle,
+                        ? context.l10n.scanReading
+                        : context.l10n.scanTitle,
                     style: AppTextStyles.cardTitle,
                   ),
                   AppSpacing.gapXs,
-                  const Text(
-                    MedicineStrings.scanSubtitle,
+                  Text(
+                    context.l10n.scanSubtitle,
                     style: AppTextStyles.caption,
                   ),
                 ],

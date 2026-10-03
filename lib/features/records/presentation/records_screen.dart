@@ -13,6 +13,7 @@ import '../providers/records_providers.dart';
 import 'record_detail_screen.dart';
 import 'record_form_screen.dart';
 import 'widgets/record_card.dart';
+import '../../../core/localization/l10n.dart';
 
 class RecordsScreen extends ConsumerWidget {
   const RecordsScreen({super.key});
@@ -27,7 +28,7 @@ class RecordsScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          const ScreenHeader(title: RecordStrings.recordsTitle),
+          ScreenHeader(title: context.l10n.recordsTitle),
           FilterPills<RecordType>(
             options: RecordType.values,
             selected: filter,
@@ -39,9 +40,9 @@ class RecordsScreen extends ConsumerWidget {
             value: records,
             data: (list) => list.isEmpty
                 ? EmptyState(
-                    title: RecordStrings.noRecords,
+                    title: context.l10n.noRecords,
                     image: AppImages.medOther,
-                    actionLabel: RecordStrings.addRecord,
+                    actionLabel: context.l10n.addRecord,
                     onAction: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (_) => const RecordFormScreen(),

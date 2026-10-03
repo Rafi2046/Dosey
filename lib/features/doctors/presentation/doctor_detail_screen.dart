@@ -14,6 +14,7 @@ import '../providers/doctors_providers.dart';
 import 'doctor_form_screen.dart';
 import 'widgets/doctor_linked_sections.dart';
 import 'widgets/doctor_profile_header.dart';
+import '../../../core/localization/l10n.dart';
 
 enum _MenuAction { archive, delete }
 
@@ -35,7 +36,7 @@ class DoctorDetailScreen extends ConsumerWidget {
       case _MenuAction.delete:
         if (!await confirmDelete(
           context,
-          body: DoctorStrings.deleteDoctorBody,
+          body: context.l10n.deleteDoctorBody,
         )) {
           return;
         }
@@ -54,7 +55,7 @@ class DoctorDetailScreen extends ConsumerWidget {
     final doctor = value.value;
 
     return CreamScaffold(
-      title: AppStrings.details,
+      title: context.l10n.details,
       actions: [
         if (doctor != null)
           PopupMenuButton<_MenuAction>(
@@ -65,13 +66,13 @@ class DoctorDetailScreen extends ConsumerWidget {
                 value: _MenuAction.archive,
                 child: Text(
                   doctor.isArchived
-                      ? DoctorStrings.unarchive
-                      : AppStrings.archive,
+                      ? context.l10n.unarchive
+                      : context.l10n.archive,
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: _MenuAction.delete,
-                child: Text(AppStrings.delete),
+                child: Text(context.l10n.delete),
               ),
             ],
           ),
@@ -82,7 +83,7 @@ class DoctorDetailScreen extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 PillButton(
-                  label: DoctorStrings.addAppointment,
+                  label: context.l10n.addAppointment,
                   tone: PillButtonTone.moss,
                   trailingIcon: Icons.event_available_rounded,
                   onPressed: () => _push(
@@ -95,7 +96,7 @@ class DoctorDetailScreen extends ConsumerWidget {
                 ),
                 AppSpacing.gapMd,
                 PillButton(
-                  label: MedicineStrings.changeSetting,
+                  label: context.l10n.changeSetting,
                   trailingIcon: Icons.settings_rounded,
                   onPressed: () =>
                       _push(context, DoctorFormScreen(existing: doctor)),
@@ -112,27 +113,27 @@ class DoctorDetailScreen extends ConsumerWidget {
                   DoctorProfileHeader(doctor: doctor),
                   if (doctor.clinic != null)
                     InfoBlock(
-                      label: DoctorStrings.doctorClinic,
+                      label: context.l10n.doctorClinic,
                       value: doctor.clinic!,
                     ),
                   if (doctor.address != null)
                     InfoBlock(
-                      label: DoctorStrings.doctorAddress,
+                      label: context.l10n.doctorAddress,
                       value: doctor.address!,
                     ),
                   if (doctor.phone != null)
                     InfoBlock(
-                      label: DoctorStrings.doctorPhone,
+                      label: context.l10n.doctorPhone,
                       value: doctor.phone!,
                     ),
                   if (doctor.consultationFeeMinor != null)
                     InfoBlock(
-                      label: DoctorStrings.doctorFee,
+                      label: context.l10n.doctorFee,
                       value: Money.format(doctor.consultationFeeMinor!),
                     ),
                   if (doctor.notes != null)
                     InfoBlock(
-                      label: DoctorStrings.doctorNotes,
+                      label: context.l10n.doctorNotes,
                       value: doctor.notes!,
                     ),
                   DoctorLinkedSections(doctorId: doctor.id),

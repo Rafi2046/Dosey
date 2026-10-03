@@ -10,6 +10,7 @@ import '../../../../core/widgets/surface_card.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/providers/reminders_providers.dart';
 import '../../domain/medicine_with_doctor.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Medicine summary: illustration, name/strength, dose, doctor, stock and
 /// projected monthly cost.
@@ -40,7 +41,7 @@ class MedicineCard extends ConsumerWidget {
     final caption = AppTextStyles.caption.copyWith(color: muted);
     final dose =
         '${ReminderText.doseSummary(reminders, m.doseUnit)}'
-        '${NotificationStrings.notifDoseSeparator}${m.mealRelation.label}';
+        '${context.l10n.notifDoseSeparator}${m.mealRelation.label}';
 
     return SurfaceCard(
       color: color,
@@ -71,13 +72,13 @@ class MedicineCard extends ConsumerWidget {
                   runSpacing: AppSpacing.sm,
                   children: [
                     if (!m.isActive)
-                      const StatusChip(
-                        label: MedicineStrings.stopped,
+                      StatusChip(
+                        label: context.l10n.stopped,
                         icon: Icons.pause_rounded,
                       ),
                     if (item.isLowStock)
                       StatusChip(
-                        label: MedicineStrings.lowStock,
+                        label: context.l10n.lowStock,
                         icon: Icons.warning_amber_rounded,
                         background: AppColors.accent,
                         foreground: AppColors.textOnAccent,
@@ -85,7 +86,7 @@ class MedicineCard extends ConsumerWidget {
                     else if (m.stockQuantity != null)
                       _chip(
                         light,
-                        DashboardStrings.unitsLeft(
+                        context.l10n.unitsLeft(
                           ReminderText.formatAmount(m.stockQuantity!),
                         ),
                         Icons.inventory_2_rounded,
@@ -93,7 +94,7 @@ class MedicineCard extends ConsumerWidget {
                     if ((monthlyCostMinor ?? 0) > 0)
                       _chip(
                         light,
-                        '${Money.format(monthlyCostMinor!)} ${DashboardStrings.perMonth}',
+                        '${Money.format(monthlyCostMinor!)} ${context.l10n.perMonth}',
                         Icons.payments_rounded,
                       ),
                   ],

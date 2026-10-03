@@ -11,6 +11,7 @@ import '../../../../core/widgets/pill_button.dart';
 import '../../../../core/widgets/status_chip.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/domain/scheduled_occurrence.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Quick "Medicine Taken" / "Skip" for one of today's occurrences — the same
 /// engine path as the alarm screen, so stock and history stay consistent.
@@ -79,15 +80,15 @@ class _OccurrenceSheet extends ConsumerWidget {
             AppSpacing.gapXl,
             PillButton(
               label: isMedicine
-                  ? AlarmStrings.alarmMarkTaken
-                  : AlarmStrings.alarmDone,
+                  ? context.l10n.alarmMarkTaken
+                  : context.l10n.alarmDone,
               tone: PillButtonTone.moss,
               trailingIcon: Icons.check_rounded,
               onPressed: () => _act(context, ref, AlarmAction.taken),
             ),
             AppSpacing.gapMd,
             PillButton(
-              label: DashboardStrings.skipDose,
+              label: context.l10n.skipDose,
               tone: PillButtonTone.cream,
               trailingIcon: Icons.redo_rounded,
               onPressed: () => _act(context, ref, AlarmAction.skip),

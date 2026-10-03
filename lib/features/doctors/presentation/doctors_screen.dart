@@ -9,6 +9,7 @@ import '../providers/doctors_providers.dart';
 import 'doctor_detail_screen.dart';
 import 'doctor_form_screen.dart';
 import 'widgets/doctor_card.dart';
+import '../../../core/localization/l10n.dart';
 
 class DoctorsScreen extends ConsumerWidget {
   const DoctorsScreen({super.key});
@@ -22,14 +23,14 @@ class DoctorsScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          const ScreenHeader(title: DoctorStrings.doctorsTitle),
+          ScreenHeader(title: context.l10n.doctorsTitle),
           AsyncValueView(
             value: doctors,
             data: (list) => list.isEmpty
                 ? EmptyState(
-                    title: DoctorStrings.noDoctors,
+                    title: context.l10n.noDoctors,
                     image: AppImages.medOther,
-                    actionLabel: DoctorStrings.addDoctor,
+                    actionLabel: context.l10n.addDoctor,
                     onAction: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (_) => const DoctorFormScreen(),

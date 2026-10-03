@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/constants.dart';
 import '../home_tab.dart';
+import '../../core/localization/l10n.dart';
 
 /// The design's floating frosted pill of icons with a round orange "+"
 /// button beside it.
@@ -61,7 +62,7 @@ class FloatingNavBar extends StatelessWidget {
             child: FloatingActionButton(
               heroTag: null,
               elevation: AppSpacing.elevationNone,
-              tooltip: AppStrings.add,
+              tooltip: context.l10n.add,
               onPressed: onAdd,
               child: const Icon(Icons.add_rounded, size: AppSpacing.iconLg),
             ),

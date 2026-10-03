@@ -3,6 +3,7 @@ import '../../../core/database/app_database.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/utils/enum_labels.dart';
 import 'reminder_with_details.dart';
+import '../../../core/localization/l10n.dart';
 
 /// Human-readable lines for a reminder, shared by notifications and UI.
 abstract final class ReminderText {
@@ -18,15 +19,15 @@ abstract final class ReminderText {
     }
     final location = d.reminder.location;
     if (location != null && location.isNotEmpty) {
-      parts.add('${NotificationStrings.notifAtLocation}$location');
+      parts.add('${context.l10n.notifAtLocation}$location');
     }
     final doctor = d.doctor;
     if (doctor != null && medicine == null) {
-      parts.add('${NotificationStrings.notifWithDoctor}${doctor.name}');
+      parts.add('${context.l10n.notifWithDoctor}${doctor.name}');
     }
     final description = d.reminder.description;
     if (parts.isEmpty) return description ?? d.reminder.type.label;
-    final summary = parts.join(NotificationStrings.notifDoseSeparator);
+    final summary = parts.join(context.l10n.notifDoseSeparator);
     return description == null || description.isEmpty
         ? summary
         : '$summary\n$description';
@@ -58,12 +59,12 @@ abstract final class ReminderText {
   /// "Mon, 5 Oct · 08:00 am" for one-off reminders.
   static String schedule(Reminder r) {
     final time = AppDateFormat.time(r.startAt);
-    final sep = NotificationStrings.notifDoseSeparator;
+    final sep = context.l10n.notifDoseSeparator;
     return switch (r.repeatRule) {
       RepeatRule.once => AppDateFormat.dateTime(r.startAt),
-      RepeatRule.daily => '${ReminderStrings.repeatDaily}$sep$time',
+      RepeatRule.daily => '${context.l10n.repeatDaily}$sep$time',
       RepeatRule.everyNDays =>
-        '${ReminderStrings.everyNDays(r.repeatInterval ?? 1)}$sep$time',
+        '${context.l10n.everyNDays(r.repeatInterval ?? 1)}$sep$time',
       RepeatRule.weekly => '${weekdays(r.weekdaysMask ?? 0)}$sep$time',
     };
   }
@@ -72,18 +73,18 @@ abstract final class ReminderText {
   /// "Every 3 days", or the date for one-off reminders.
   static String frequency(Reminder r) => switch (r.repeatRule) {
     RepeatRule.once => AppDateFormat.shortDate(r.startAt),
-    RepeatRule.daily => MedicineStrings.everyDay,
-    RepeatRule.everyNDays => ReminderStrings.everyNDays(r.repeatInterval ?? 1),
+    RepeatRule.daily => context.l10n.everyDay,
+    RepeatRule.everyNDays => context.l10n.everyNDays(r.repeatInterval ?? 1),
     RepeatRule.weekly => weekdays(r.weekdaysMask ?? 0),
   };
 
   /// "Mon, Wed, Fri" — or "Every day" when all seven are set.
   static String weekdays(int mask) {
     const all = 127;
-    if (mask == all) return MedicineStrings.everyDay;
+    if (mask == all) return context.l10n.everyDay;
     return [
-      for (var i = 0; i < ReminderStrings.weekdaysShort.length; i++)
-        if (mask & (1 << i) != 0) ReminderStrings.weekdaysShort[i],
+      for (var i = 0; i < context.l10n.weekdaysShort.length; i++)
+        if (mask & (1 << i) != 0) context.l10n.weekdaysShort[i],
     ].join(', ');
   }
 
@@ -91,10 +92,10 @@ abstract final class ReminderText {
   static String slotLabel(Reminder r, DateTime at) {
     final hour = at.hour;
     final slot = switch (hour) {
-      >= 5 && < 12 => DashboardStrings.morning,
-      >= 12 && < 17 => DashboardStrings.afternoon,
-      >= 17 && < 21 => DashboardStrings.evening,
-      _ => DashboardStrings.bedtime,
+      >= 5 && < 12 => context.l10n.morning,
+      >= 12 && < 17 => context.l10n.afternoon,
+      >= 17 && < 21 => context.l10n.evening,
+      _ => context.l10n.bedtime,
     };
     return '$slot ${r.type.label}';
   }
@@ -102,6 +103,6 @@ abstract final class ReminderText {
   /// "45 min", "2 h 10 min" until [target] (clamped at zero).
   static String until(DateTime target, DateTime now) {
     final minutes = target.difference(now).inMinutes.clamp(0, 1 << 30);
-    return DashboardStrings.inHoursMinutes(minutes ~/ 60, minutes % 60);
+    return context.l10n.inHoursMinutes(minutes ~/ 60, minutes % 60);
   }
 }

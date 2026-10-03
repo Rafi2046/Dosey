@@ -15,6 +15,7 @@ import '../providers/records_providers.dart';
 import 'record_form_screen.dart';
 import 'widgets/image_source_sheet.dart';
 import 'widgets/record_page_viewer.dart';
+import '../../../core/localization/l10n.dart';
 
 enum _MenuAction { edit, deletePage, delete }
 
@@ -45,7 +46,7 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
         );
       case _MenuAction.deletePage:
         if (pages.isEmpty) return;
-        if (!await confirmDelete(context, body: AppStrings.deleteConfirmBody)) {
+        if (!await confirmDelete(context, body: context.l10n.deleteConfirmBody)) {
           return;
         }
         await repo.deletePage(pages[_page.clamp(0, pages.length - 1)]);
@@ -53,7 +54,7 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
       case _MenuAction.delete:
         if (!await confirmDelete(
           context,
-          body: RecordStrings.deleteRecordBody,
+          body: context.l10n.deleteRecordBody,
         )) {
           return;
         }
@@ -76,31 +77,31 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
     final record = value.value;
 
     return CreamScaffold(
-      title: record?.title ?? RecordStrings.records,
+      title: record?.title ?? context.l10n.records,
       actions: [
         if (record != null)
           PopupMenuButton<_MenuAction>(
             iconColor: AppColors.ink,
             onSelected: (a) => _onMenu(a, record, pages),
             itemBuilder: (_) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: _MenuAction.edit,
-                child: Text(AppStrings.edit),
+                child: Text(context.l10n.edit),
               ),
               if (pages.length > 1)
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: _MenuAction.deletePage,
-                  child: Text(RecordStrings.deletePage),
+                  child: Text(context.l10n.deletePage),
                 ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: _MenuAction.delete,
-                child: Text(AppStrings.delete),
+                child: Text(context.l10n.delete),
               ),
             ],
           ),
       ],
       bottomBar: PillButton(
-        label: RecordStrings.addPages,
+        label: context.l10n.addPages,
         tone: PillButtonTone.moss,
         trailingIcon: Icons.add_a_photo_rounded,
         onPressed: _addPages,
@@ -118,18 +119,18 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
                   ),
                   AppSpacing.gapXl,
                   InfoBlock(
-                    label: RecordStrings.recordType,
+                    label: context.l10n.recordType,
                     value: record.type.label,
                   ),
                   InfoBlock(
-                    label: RecordStrings.recordDate,
+                    label: context.l10n.recordDate,
                     value: AppDateFormat.date(record.recordDate),
                   ),
                   if (record.doctorId != null)
                     _DoctorBlock(doctorId: record.doctorId!),
                   if (record.notes != null)
                     InfoBlock(
-                      label: RecordStrings.recordNotes,
+                      label: context.l10n.recordNotes,
                       value: record.notes!,
                     ),
                 ],
@@ -148,6 +149,6 @@ class _DoctorBlock extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final doctor = ref.watch(doctorByIdProvider(doctorId)).value;
     if (doctor == null) return const SizedBox.shrink();
-    return InfoBlock(label: RecordStrings.recordDoctor, value: doctor.name);
+    return InfoBlock(label: context.l10n.recordDoctor, value: doctor.name);
   }
 }

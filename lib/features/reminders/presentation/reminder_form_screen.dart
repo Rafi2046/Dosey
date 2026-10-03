@@ -21,6 +21,7 @@ import '../../medicines/providers/medicines_providers.dart';
 import '../providers/reminders_providers.dart';
 import 'widgets/repeat_section.dart';
 import 'widgets/reminder_type_selector.dart';
+import '../../../core/localization/l10n.dart';
 
 /// Create or edit any reminder (medicine, appointment, vaccine, test).
 class ReminderFormScreen extends ConsumerStatefulWidget {
@@ -74,7 +75,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   }
 
   static Set<int> _maskToSet(int? mask) => {
-    for (var i = 0; i < ReminderStrings.weekdaysShort.length; i++)
+    for (var i = 0; i < context.l10n.weekdaysShort.length; i++)
       if ((mask ?? 0) & (1 << i) != 0) i,
   };
 
@@ -82,12 +83,12 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
 
   String? get _medicineError =>
       _submitted && _type == ReminderType.medicine && _medicineId == null
-      ? ReminderStrings.selectMedicineError
+      ? context.l10n.selectMedicineError
       : null;
 
   String? get _weekdayError =>
       _submitted && _repeat == RepeatRule.weekly && _weekdays.isEmpty
-      ? ReminderStrings.selectWeekdaysError
+      ? context.l10n.selectWeekdaysError
       : null;
 
   @override
@@ -149,14 +150,14 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
       await repo.create(companion);
     }
     if (!mounted) return;
-    showAppSnack(context, AppStrings.saved);
+    showAppSnack(context, context.l10n.saved);
     Navigator.pop(context);
   }
 
   Future<void> _delete() async {
     if (!await confirmDelete(
       context,
-      body: ReminderStrings.deleteReminderBody,
+      body: context.l10n.deleteReminderBody,
     )) {
       return;
     }
@@ -172,19 +173,19 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
     final isMedicine = _type == ReminderType.medicine;
     return CreamScaffold(
       title: _isEdit
-          ? ReminderStrings.editReminder
-          : ReminderStrings.addReminder,
+          ? context.l10n.editReminder
+          : context.l10n.addReminder,
       actions: [
         if (_isEdit)
           IconButton(
-            tooltip: AppStrings.delete,
+            tooltip: context.l10n.delete,
             icon: const Icon(Icons.delete_outline_rounded),
             color: AppColors.inkMuted,
             onPressed: _delete,
           ),
       ],
       bottomBar: PillButton(
-        label: _isEdit ? AppStrings.saveChanges : AppStrings.save,
+        label: _isEdit ? context.l10n.saveChanges : context.l10n.save,
         showRingChevron: true,
         loading: _saving,
         onPressed: _save,
@@ -200,7 +201,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
             ),
             if (isMedicine)
               MedicinePickerField(
-                label: ReminderStrings.reminderMedicine,
+                label: context.l10n.reminderMedicine,
                 medicineId: _medicineId,
                 allowNone: false,
                 errorText: _medicineError,
@@ -208,7 +209,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
               ),
             if (isMedicine)
               LabeledField(
-                label: MedicineStrings.doseHowMany,
+                label: context.l10n.doseHowMany,
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: AmountStepper(
@@ -219,13 +220,13 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
                 ),
               ),
             AppTextField(
-              label: ReminderStrings.reminderTitle,
+              label: context.l10n.reminderTitle,
               controller: _title,
-              hint: ReminderStrings.reminderTitleHint,
+              hint: context.l10n.reminderTitleHint,
               validator: AppTextField.required,
             ),
             PickerField(
-              label: ReminderStrings.reminderWhen,
+              label: context.l10n.reminderWhen,
               value: AppDateFormat.dateTime(_startAt),
               icon: Icons.schedule_rounded,
               onTap: () async {
@@ -248,32 +249,32 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
               onEndChanged: (d) => setState(() => _endAt = d),
             ),
             DoctorPickerField(
-              label: ReminderStrings.reminderDoctor,
+              label: context.l10n.reminderDoctor,
               doctorId: _doctorId,
               onChanged: (id) => setState(() => _doctorId = id),
             ),
             if (!isMedicine)
               AppTextField(
-                label: ReminderStrings.reminderLocation,
+                label: context.l10n.reminderLocation,
                 controller: _location,
               ),
             AppTextField(
-              label: ReminderStrings.reminderNotes,
+              label: context.l10n.reminderNotes,
               controller: _notes,
               maxLines: 3,
             ),
             SwitchRow(
-              title: ReminderStrings.reminderCritical,
-              subtitle: ReminderStrings.reminderCriticalHint,
+              title: context.l10n.reminderCritical,
+              subtitle: context.l10n.reminderCriticalHint,
               value: _critical,
               onChanged: (v) => setState(() => _critical = v),
             ),
             LabeledField(
-              label: ReminderStrings.reminderSnooze,
+              label: context.l10n.reminderSnooze,
               child: ChoicePills<int>(
                 options: AppConstants.snoozeOptions,
                 selected: {_snooze},
-                labelOf: (m) => '$m ${AlarmStrings.minutesShort}',
+                labelOf: (m) => '$m ${context.l10n.minutesShort}',
                 onChanged: (s) => setState(() => _snooze = s.single),
               ),
             ),

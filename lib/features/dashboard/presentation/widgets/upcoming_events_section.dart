@@ -9,6 +9,7 @@ import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../../reminders/presentation/reminder_form_screen.dart';
 import '../../../reminders/providers/reminders_providers.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Next few appointments, vaccines and tests. Hidden when none.
 class UpcomingEventsSection extends ConsumerWidget {
@@ -27,8 +28,8 @@ class UpcomingEventsSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SectionHeader(
-          title: DashboardStrings.upcoming,
-          actionLabel: AppStrings.seeAll,
+          title: context.l10n.upcoming,
+          actionLabel: context.l10n.seeAll,
           onAction: onSeeAll,
         ),
         for (final d in events.take(_maxItems)) ...[

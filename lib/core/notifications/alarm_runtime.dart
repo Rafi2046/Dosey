@@ -66,6 +66,7 @@ abstract final class AlarmRuntime {
       WidgetsFlutterBinding.ensureInitialized();
       DartPluginRegistrant.ensureInitialized();
       _db = AppDatabase();
+      await AppLocale.ensureInitialized();
       await applySavedLanguage();
       await NotificationService.initialize();
     }

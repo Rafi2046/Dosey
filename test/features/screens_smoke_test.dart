@@ -543,4 +543,47 @@ void main() {
     expect(find.text(en.addMedicine), findsNothing);
     await unmount(tester);
   });
+
+  testWidgets(
+    'switching to Bengali in Settings re-labels the app and is saved',
+    (tester) async {
+      addTearDown(() => AppLocale.apply(AppLocale.english));
+      final bn = lookupAppLocalizations(AppLocale.bangla);
+      Future<String?> saved() => dbRun(
+        tester,
+        () async =>
+            (await (db.select(db.appSettings)
+                      ..where((s) => s.key.equals(AppLocale.settingKey)))
+                    .getSingleOrNull())
+                ?.value,
+      );
+
+      await pumpApp(tester);
+      expect(find.text(en.dashboardTitle), findsOneWidget);
+
+      await tester.tap(find.byTooltip(en.settingsTitle));
+      await settle(tester);
+      await tester.tap(find.text(en.languageBangla));
+      await settle(tester);
+      // The settings screen itself switches immediately…
+      expect(find.text(bn.settingsTitle), findsOneWidget);
+      expect(await saved(), 'bn');
+
+      // …and so does everything behind it. (pageBack looks for an
+      // English "Back" tooltip, so pop directly.)
+      Navigator.of(tester.element(find.text(bn.settingsTitle))).pop();
+      await settle(tester);
+      expect(find.text(bn.dashboardTitle), findsOneWidget);
+      expect(find.byTooltip(HomeTab.reminders.label(bn)), findsWidgets);
+
+      // "Phone default" forgets the choice; the test device is English.
+      await tester.tap(find.byTooltip(bn.settingsTitle));
+      await settle(tester);
+      await tester.tap(find.text(bn.languageSystem));
+      await settle(tester);
+      expect(find.text(en.settingsTitle), findsOneWidget);
+      expect(await saved(), isNull);
+      await unmount(tester);
+    },
+  );
 }

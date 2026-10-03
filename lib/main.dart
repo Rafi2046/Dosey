@@ -24,6 +24,7 @@ Future<void> main() async {
   AlarmRuntime.adopt(db);
   // Language before the first frame (and before notification channels get
   // their names).
+  await AppLocale.ensureInitialized();
   final language = await SettingsRepository(db).get(AppLocale.settingKey);
   AppLocale.apply(
     AppLocale.resolve(language, PlatformDispatcher.instance.locale),

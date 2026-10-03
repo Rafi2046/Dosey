@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 import 'generated/app_localizations.dart';
@@ -30,6 +31,10 @@ abstract final class AppLocale {
     final code = saved ?? platform.languageCode;
     return code == bangla.languageCode ? bangla : english;
   }
+
+  /// Loads intl's date data for every language. The UI gets it from the
+  /// Material localizations; background isolates need this before formatting.
+  static Future<void> ensureInitialized() => initializeDateFormatting();
 
   /// Makes [locale] current for [l10n] and for intl's date/number formats
   /// (Bengali digits in "bn").

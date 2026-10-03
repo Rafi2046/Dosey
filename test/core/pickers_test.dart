@@ -1,3 +1,5 @@
+import 'package:dosey/core/localization/bangla_material_localizations.dart';
+import 'package:dosey/core/localization/l10n.dart';
 import 'package:dosey/core/theme/app_theme.dart';
 import 'package:dosey/core/utils/pickers.dart';
 import 'package:flutter/material.dart';
@@ -46,4 +48,60 @@ void main() {
       },
     );
   }
+
+  testWidgets('time picker shows AM/PM even when the phone uses 24-hour', (
+    tester,
+  ) async {
+    tester.platformDispatcher.alwaysUse24HourFormatTestValue = true;
+    addTearDown(tester.platformDispatcher.clearAlwaysUse24HourTestValue);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.current,
+        home: Builder(
+          builder: (context) => TextButton(
+            onPressed: () => AppPickers.time(
+              context,
+              initial: const TimeOfDay(hour: 21, minute: 0),
+            ),
+            child: const Text('open'),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+    // 21:00 shows as 9 with PM selected, not "21".
+    expect(find.text('AM'), findsOneWidget);
+    expect(find.text('PM'), findsOneWidget);
+    expect(find.text('21'), findsNothing);
+  });
+
+  testWidgets('Bengali time picker uses AM/PM too', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.current,
+        locale: AppLocale.bangla,
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: const [
+          BanglaTwelveHourMaterialLocalizations.delegate,
+          ...AppLocalizations.localizationsDelegates,
+        ],
+        home: Builder(
+          builder: (context) => TextButton(
+            onPressed: () => AppPickers.time(
+              context,
+              initial: const TimeOfDay(hour: 21, minute: 0),
+            ),
+            child: const Text('open'),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+    // Stock Bengali would show a 24-hour dial with "২১".
+    expect(find.text('AM'), findsOneWidget);
+    expect(find.text('PM'), findsOneWidget);
+    expect(find.text('২১'), findsNothing);
+  });
 }

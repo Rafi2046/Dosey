@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/utils/date_format.dart';
 import '../../../../core/utils/pickers.dart';
 import '../../../../core/widgets/amount_stepper.dart';
 import '../../../../core/widgets/labeled_field.dart';
@@ -68,7 +69,7 @@ class _DoseTimeSheetState extends State<_DoseTimeSheet> {
             AppSpacing.gapMd,
             PickerField(
               label: context.l10n.medicineTime,
-              value: _dose.time.format(context).toLowerCase(),
+              value: AppDateFormat.timeOfDay(_dose.time),
               icon: Icons.schedule_rounded,
               onTap: () async {
                 final t = await AppPickers.time(context, initial: _dose.time);

@@ -30,7 +30,8 @@ abstract final class AppPickers {
   ///
   /// So inside the picker only: text is never scaled below normal, and the
   /// keyboard is reported short enough to leave the dialog its room (the
-  /// hour/minute fields sit at its top, above the keyboard).
+  /// hour/minute fields sit at its top, above the keyboard). The picker also
+  /// always shows AM/PM.
   static Widget _roomForTimeInput(BuildContext context, Widget? child) {
     final media = MediaQuery.of(context);
     final maxInset = (media.size.height - AppSpacing.timePickerMinRoom).clamp(
@@ -39,6 +40,9 @@ abstract final class AppPickers {
     );
     return MediaQuery(
       data: media.copyWith(
+        // AM/PM dial, so morning vs night is obvious (and matches the rest
+        // of the app), even when the phone is set to 24-hour time.
+        alwaysUse24HourFormat: false,
         textScaler: media.textScaler.clamp(minScaleFactor: 1),
         viewInsets: media.viewInsets.bottom <= maxInset
             ? media.viewInsets

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/utils/date_format.dart';
 import '../../../../core/widgets/choice_pills.dart';
 import '../../../../core/widgets/labeled_field.dart';
 import '../../../../core/widgets/status_chip.dart';
@@ -134,7 +135,7 @@ class ReminderTimesEditor extends StatelessWidget {
               for (final d in doses)
                 StatusChip(
                   label:
-                      '${d.time.format(context).toLowerCase()}'
+                      '${AppDateFormat.timeOfDay(d.time)}'
                       '${context.l10n.notifDoseSeparator}'
                       '${ReminderText.dose(d.amount, unit)}',
                   icon: Icons.edit_rounded,

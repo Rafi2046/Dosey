@@ -419,9 +419,9 @@ void main() {
     );
 
     // Below the fold: scrollTo fails the test if a chip is missing.
-    await scrollTo(tester, '8:00 am · 2 tablet');
+    await scrollTo(tester, '08:00 am · 2 tablet');
     // Change one time's amount: 9 pm goes from 1 to 1½ tablets.
-    await tapText(tester, '9:00 pm · 1 tablet');
+    await tapText(tester, '09:00 pm · 1 tablet');
     await tester.tap(
       find.descendant(
         of: find.byType(AmountStepper),
@@ -431,7 +431,7 @@ void main() {
     await settle(tester);
     expect(find.text('1½ tablet'), findsOneWidget);
     await tapText(tester, en.done);
-    await scrollTo(tester, '9:00 pm · 1.5 tablet');
+    await scrollTo(tester, '09:00 pm · 1.5 tablet');
     // The "review the fields" snackbar covers Save until it times out.
     expect(find.text(en.scanFilled), findsOneWidget);
     await tester.pump(const Duration(seconds: 5));
@@ -722,7 +722,7 @@ void main() {
 
     // Morning, then make it 2 tablets…
     await tapText(tester, en.slotMorning);
-    await tapText(tester, '8:00 am · 1 tablet');
+    await tapText(tester, '08:00 am · 1 tablet');
     // Half steps: 1 → 1½ → 2.
     for (var i = 0; i < 2; i++) {
       await tester.tap(
@@ -737,8 +737,8 @@ void main() {
     // …and Lunch / Dinner pick up the same amount.
     await tapText(tester, en.slotLunch);
     await tapText(tester, en.slotDinner);
-    await scrollTo(tester, '2:00 pm · 2 tablet');
-    await scrollTo(tester, '9:00 pm · 2 tablet');
+    await scrollTo(tester, '02:00 pm · 2 tablet');
+    await scrollTo(tester, '09:00 pm · 2 tablet');
 
     // A quiet notification instead of a full alarm.
     await tapText(tester, en.ringAsAlarm);

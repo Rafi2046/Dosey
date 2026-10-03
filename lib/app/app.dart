@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/constants/constants.dart';
+import '../core/localization/bangla_material_localizations.dart';
 import '../core/localization/l10n.dart';
 import '../core/notifications/notification_providers.dart';
 import '../core/theme/app_theme.dart';
@@ -53,7 +54,11 @@ class _DoseyAppState extends ConsumerState<DoseyApp> {
       // English (the first supported locale).
       locale: language == null ? null : Locale(language),
       supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: const [
+        // Before the stock delegates so Bengali gets AM/PM time.
+        BanglaTwelveHourMaterialLocalizations.delegate,
+        ...AppLocalizations.localizationsDelegates,
+      ],
       builder: (context, child) {
         // Keep context-free code (validators, number/date formats) in step
         // with the language actually on screen.

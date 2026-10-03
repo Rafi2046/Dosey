@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:intl/intl.dart';
 
 import '../constants/app_constants.dart';
@@ -28,6 +29,11 @@ abstract final class AppDateFormat {
   static String month(DateTime value) => _month.format(value);
 
   static String time(DateTime value) => _lowerMeridiem(_time.format(value));
+
+  /// A bare time of day the same way: "08:00 am", always with am/pm (so
+  /// morning vs night is clear, whatever the phone's 24-hour setting).
+  static String timeOfDay(TimeOfDay value) =>
+      time(DateTime(2000, 1, 1, value.hour, value.minute));
 
   /// "Mon, 5 Oct · 09:00 am"
   static String dateTime(DateTime value) =>

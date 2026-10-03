@@ -214,6 +214,8 @@ void main() {
 
   /// Home, Reminders and Medicines are in the bar; the rest under More.
   Future<void> openTab(WidgetTester tester, HomeTab tab) async {
+    // The nav bar hides while scrolling; wait for it to come back.
+    await settle(tester);
     final inBar = AppNavBar.primary.contains(tab);
     await tester.tap(
       find.descendant(
@@ -326,6 +328,39 @@ void main() {
     await tapText(tester, 'Endocrinology prescription');
     expect(find.text(en.addPages), findsOneWidget);
     await back(tester);
+    await unmount(tester);
+  });
+
+  testWidgets('the nav bar hides while scrolling down and comes back', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    Offset navOffset() => tester
+        .widget<AnimatedSlide>(
+          find.ancestor(
+            of: find.byType(AppNavBar),
+            matching: find.byType(AnimatedSlide),
+          ),
+        )
+        .offset;
+    final page = find
+        .byWidgetPredicate(
+          (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+        )
+        .first;
+
+    // Finger still down after dragging up the page: hidden.
+    final gesture = await tester.startGesture(tester.getCenter(page));
+    await gesture.moveBy(const Offset(0, -200));
+    await tester.pump();
+    await gesture.moveBy(const Offset(0, -200));
+    await tester.pump();
+    expect(navOffset(), isNot(Offset.zero));
+
+    // Let go: back shortly after scrolling stops.
+    await gesture.up();
+    await settle(tester, frames: 20);
+    expect(navOffset(), Offset.zero);
     await unmount(tester);
   });
 

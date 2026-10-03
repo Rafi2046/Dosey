@@ -38,10 +38,29 @@ class ScreenHeader extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (eyebrow != null)
-                  Text(
-                    eyebrow.toUpperCase(),
-                    style: AppTextStyles.overline.copyWith(
-                      fontSize: AppSpacing.fontSm,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                    child: Row(
+                      children: [
+                        // Accent tick marking the section, like a tab label.
+                        Container(
+                          width: AppSpacing.headerTickWidth,
+                          height: AppSpacing.headerTickHeight,
+                          decoration: BoxDecoration(
+                            color: AppColors.accent,
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusPill,
+                            ),
+                          ),
+                        ),
+                        AppSpacing.gapSm,
+                        Text(
+                          eyebrow.toUpperCase(),
+                          style: AppTextStyles.overline.copyWith(
+                            fontSize: AppSpacing.fontSm,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 // One line, shrinking for long words or big fonts.
@@ -55,25 +74,10 @@ class ScreenHeader extends StatelessWidget {
                   ),
                 ),
                 if (subtitle != null)
-                  Row(
-                    children: [
-                      Container(
-                        width: AppSpacing.headerDot,
-                        height: AppSpacing.headerDot,
-                        decoration: const BoxDecoration(
-                          color: AppColors.accent,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      AppSpacing.gapSm,
-                      Flexible(
-                        child: Text(
-                          subtitle!,
-                          style: AppTextStyles.caption,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    subtitle!,
+                    style: AppTextStyles.caption,
+                    overflow: TextOverflow.ellipsis,
                   ),
               ],
             ),

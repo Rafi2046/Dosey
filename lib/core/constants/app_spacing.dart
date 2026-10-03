@@ -33,7 +33,8 @@ abstract final class AppSpacing {
   static const double onboardingHero = 260;
   static const double featureIcon = 52;
   static const double settingsIcon = 36;
-  static const double headerDot = 6;
+  static const double headerTickWidth = 3;
+  static const double headerTickHeight = 14;
 
   /// Space below each labelled form field.
   static const double fieldGap = lg;
@@ -125,6 +126,9 @@ abstract final class AppSpacing {
   static const Duration animMedium = Duration(milliseconds: 280);
   static const Duration shimmerPeriod = Duration(milliseconds: 1300);
   static const Duration animSlow = Duration(milliseconds: 450);
+
+  /// Bottom nav returns this long after scrolling stops.
+  static const Duration navShowDelay = Duration(milliseconds: 300);
   static const Duration alarmShake = Duration(milliseconds: 900);
   static const double alarmShakeTurns = 0.012;
 

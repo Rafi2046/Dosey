@@ -277,7 +277,6 @@
   "weekdaySun": "Sun",
   "settingsTitle": "Settings",
   "settingsLanguage": "Language",
-  "settingsLanguageHint": "Dates, times and numbers follow the language too.",
   "languageSystem": "Phone default",
   "languageEnglish": "English",
   "languageBangla": "বাংলা",
@@ -488,7 +487,6 @@
   "themeSystem": "System",
   "themeLight": "Light",
   "themeDark": "Dark",
-  "settingsAppearanceHint": "System follows your phone's light or dark mode.",
   "settingsReminders": "Reminders & alarms",
   "settingsPermissions": "Alarm permissions",
   "permissionsAllAllowed": "All allowed",
@@ -734,5 +732,12 @@
   "unitDropPlural": "drops",
   "unitPuffPlural": "puffs",
   "unitApplicationPlural": "applications",
-  "unitDosePlural": "doses"
+  "unitDosePlural": "doses",
+  "onboardingNameTitle": "What should we call you?",
+  "onboardingNameBody": "Optional — you can skip this. Your name stays on this phone.",
+  "yourName": "Your name",
+  "skip": "Skip",
+  "settingsProfile": "Profile",
+  "settingsAddName": "Add your name",
+  "settingsNameHint": "Only on this phone"
 }

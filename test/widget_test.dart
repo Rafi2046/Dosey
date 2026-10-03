@@ -46,7 +46,7 @@ void main() {
     )..where((s) => s.key.equals(key))).getSingleOrNull())?.value,
   );
 
-  testWidgets('onboarding: welcome → features → permissions → home', (
+  testWidgets('onboarding: welcome → name → features → permissions → home', (
     tester,
   ) async {
     usePhoneSize(tester);
@@ -62,6 +62,17 @@ void main() {
     expect(find.text(en.onboardingChooseLanguage), findsOneWidget);
     await tester.tap(find.text(en.onboardingContinue));
     await settle(tester);
+
+    // Name: the button reads "Skip" until something is typed.
+    expect(find.text(en.onboardingNameTitle), findsOneWidget);
+    expect(find.text(en.skip), findsOneWidget);
+    await tester.enterText(find.byType(TextField), '  Rafi ');
+    await settle(tester);
+    expect(find.text(en.skip), findsNothing);
+    await tester.tap(find.text(en.onboardingContinue));
+    await settle(tester);
+    expect(await setting(tester, 'user_name'), 'Rafi');
+
     expect(find.text(en.featureScanTitle), findsOneWidget);
     await tester.tap(find.text(en.next));
     await settle(tester);
@@ -114,7 +125,21 @@ void main() {
 
     await tester.tap(find.text(bn.onboardingContinue));
     await settle(tester);
-    expect(find.text(bn.featureScanTitle), findsOneWidget);
+    expect(find.text(bn.onboardingNameTitle), findsOneWidget);
+    await unmount(tester);
+  });
+
+  testWidgets('the name can be skipped', (tester) async {
+    usePhoneSize(tester);
+    await tester.pumpWidget(app());
+    await settle(tester);
+    await tester.tap(find.text(en.onboardingContinue));
+    await settle(tester);
+
+    await tester.tap(find.text(en.skip));
+    await settle(tester);
+    expect(find.text(en.featureScanTitle), findsOneWidget);
+    expect(await setting(tester, 'user_name'), isNull);
     await unmount(tester);
   });
 

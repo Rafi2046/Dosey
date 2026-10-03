@@ -26,6 +26,7 @@ abstract final class AppSpacing {
   // ── Component sizes ───────────────────────────────────────────────────────
   static const double buttonHeight = 58;
   static const double circleButton = 44;
+  static const double backArrowWidth = 36;
   static const double ctaIconRing = 40;
   static const double ctaIconRingWidth = 64;
   static const double chipHeight = 40;

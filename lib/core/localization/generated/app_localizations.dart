@@ -1760,12 +1760,6 @@ abstract class AppLocalizations {
   /// **'Language'**
   String get settingsLanguage;
 
-  /// No description provided for @settingsLanguageHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Dates, times and numbers follow the language too.'**
-  String get settingsLanguageHint;
-
   /// No description provided for @languageSystem.
   ///
   /// In en, this message translates to:
@@ -2065,12 +2059,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dark'**
   String get themeDark;
-
-  /// No description provided for @settingsAppearanceHint.
-  ///
-  /// In en, this message translates to:
-  /// **'System follows your phone\'s light or dark mode.'**
-  String get settingsAppearanceHint;
 
   /// No description provided for @settingsReminders.
   ///
@@ -2833,6 +2821,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'doses'**
   String get unitDosePlural;
+
+  /// No description provided for @onboardingNameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What should we call you?'**
+  String get onboardingNameTitle;
+
+  /// No description provided for @onboardingNameBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional — you can skip this. Your name stays on this phone.'**
+  String get onboardingNameBody;
+
+  /// No description provided for @yourName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get yourName;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @settingsProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get settingsProfile;
+
+  /// No description provided for @settingsAddName.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your name'**
+  String get settingsAddName;
+
+  /// No description provided for @settingsNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Only on this phone'**
+  String get settingsNameHint;
 }
 
 class _AppLocalizationsDelegate

@@ -3,15 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/localization/l10n.dart';
-import '../../../core/widgets/circle_icon_button.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../providers/permissions_provider.dart';
+import '../../settings/providers/settings_providers.dart';
 import 'pages/features_page.dart';
+import 'pages/name_page.dart';
 import 'pages/permissions_page.dart';
 import 'pages/welcome_page.dart';
 import 'widgets/page_dots.dart';
+import '../../../core/widgets/back_arrow_button.dart';
 
-/// First-run flow: welcome + language → what Dosey does → permissions.
+/// First-run flow: welcome + language → name (optional) → what Dosey does
+/// → permissions.
 /// "Finish" unlocks once the essential permissions are granted.
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({
@@ -20,8 +23,9 @@ class OnboardingScreen extends ConsumerStatefulWidget {
     this.initialPage = 0,
   });
 
-  static const int permissionsPage = 2;
-  static const int pageCount = 3;
+  static const int namePage = 1;
+  static const int permissionsPage = 3;
+  static const int pageCount = 4;
 
   /// [permissionsPage] when only permissions are missing (already onboarded
   /// once, then revoked one).
@@ -37,11 +41,32 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     initialPage: widget.initialPage,
   );
   late int _page = widget.initialPage;
+  final _name = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Coming back to onboarding: show the name already saved.
+    ref.read(userNameProvider.future).then((saved) {
+      if (mounted && saved != null && _name.text.isEmpty) _name.text = saved;
+    });
+    _name.addListener(() => setState(() {}));
+  }
 
   @override
   void dispose() {
     _pages.dispose();
+    _name.dispose();
     super.dispose();
+  }
+
+  void _onPageChanged(int page) {
+    // Leaving the name page (button, swipe or back): keep what was typed.
+    if (_page == OnboardingScreen.namePage) {
+      FocusScope.of(context).unfocus();
+      ref.read(userNameProvider.notifier).set(_name.text);
+    }
+    setState(() => _page = page);
   }
 
   void _goTo(int page) => _pages.animateToPage(
@@ -78,12 +103,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     child: AnimatedOpacity(
                       opacity: _page > 0 ? 1 : 0,
                       duration: AppSpacing.animFast,
-                      child: CircleIconButton(
-                        icon: Icons.chevron_left_rounded,
-                        tooltip: MaterialLocalizations.of(
-                          context,
-                        ).backButtonTooltip,
-                        onPressed: _page > 0 ? () => _goTo(_page - 1) : null,
+                      child: IgnorePointer(
+                        ignoring: _page == 0,
+                        child: BackArrowButton(
+                          onPressed: () => _goTo(_page - 1),
+                        ),
                       ),
                     ),
                   ),
@@ -92,11 +116,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               Expanded(
                 child: PageView(
                   controller: _pages,
-                  onPageChanged: (p) => setState(() => _page = p),
-                  children: const [
-                    WelcomePage(),
-                    FeaturesPage(),
-                    PermissionsPage(),
+                  onPageChanged: _onPageChanged,
+                  children: [
+                    const WelcomePage(),
+                    NamePage(
+                      controller: _name,
+                      onDone: () => _goTo(OnboardingScreen.namePage + 1),
+                    ),
+                    const FeaturesPage(),
+                    const PermissionsPage(),
                   ],
                 ),
               ),
@@ -125,6 +153,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     PillButton(
                       label: switch (_page) {
                         0 => l10n.onboardingContinue,
+                        // Nothing typed: the same button skips the name.
+                        OnboardingScreen.namePage =>
+                          _name.text.trim().isEmpty
+                              ? l10n.skip
+                              : l10n.onboardingContinue,
                         OnboardingScreen.permissionsPage =>
                           l10n.onboardingFinish,
                         _ => l10n.next,

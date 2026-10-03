@@ -277,7 +277,6 @@
   "weekdaySun": "রবি",
   "settingsTitle": "সেটিংস",
   "settingsLanguage": "ভাষা",
-  "settingsLanguageHint": "তারিখ, সময় ও সংখ্যাও এই ভাষায় দেখাবে।",
   "languageSystem": "ফোনের ভাষা",
   "languageEnglish": "English",
   "languageBangla": "বাংলা",
@@ -328,7 +327,6 @@
   "themeSystem": "ফোনের মতো",
   "themeLight": "লাইট",
   "themeDark": "ডার্ক",
-  "settingsAppearanceHint": "“ফোনের মতো” বেছে নিলে ফোনের লাইট বা ডার্ক মোড অনুসরণ করবে।",
   "settingsReminders": "রিমাইন্ডার ও অ্যালার্ম",
   "settingsPermissions": "অ্যালার্মের অনুমতি",
   "permissionsAllAllowed": "সব অনুমতি আছে",
@@ -455,5 +453,12 @@
   "unitDropPlural": "ফোঁটা",
   "unitPuffPlural": "পাফ",
   "unitApplicationPlural": "বার লাগানো",
-  "unitDosePlural": "ডোজ"
+  "unitDosePlural": "ডোজ",
+  "onboardingNameTitle": "আপনাকে কী নামে ডাকব?",
+  "onboardingNameBody": "ঐচ্ছিক — চাইলে বাদ দিতে পারেন। নামটি শুধু এই ফোনেই থাকবে।",
+  "yourName": "আপনার নাম",
+  "skip": "বাদ দিন",
+  "settingsProfile": "প্রোফাইল",
+  "settingsAddName": "আপনার নাম যোগ করুন",
+  "settingsNameHint": "শুধু এই ফোনে থাকে"
 }

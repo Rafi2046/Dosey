@@ -19,6 +19,8 @@ class AppTextField extends StatelessWidget {
     this.prefixText,
     this.textCapitalization = TextCapitalization.sentences,
     this.inputFormatters,
+    this.autofocus = false,
+    this.onSubmitted,
   });
 
   /// Numeric input allowing one decimal point.
@@ -33,7 +35,9 @@ class AppTextField extends StatelessWidget {
   }) : keyboardType = const TextInputType.numberWithOptions(decimal: true),
        maxLines = 1,
        textCapitalization = TextCapitalization.none,
-       inputFormatters = null;
+       inputFormatters = null,
+       autofocus = false,
+       onSubmitted = null;
 
   final String label;
 
@@ -47,6 +51,10 @@ class AppTextField extends StatelessWidget {
   final String? prefixText;
   final TextCapitalization textCapitalization;
   final List<TextInputFormatter>? inputFormatters;
+  final bool autofocus;
+
+  /// Keyboard "done"; also makes the action key say done.
+  final ValueChanged<String>? onSubmitted;
 
   /// Shared "required" validator (message in the current language).
   static String? required(String? value) =>
@@ -67,6 +75,9 @@ class AppTextField extends StatelessWidget {
         minLines: 1,
         textCapitalization: textCapitalization,
         inputFormatters: inputFormatters,
+        autofocus: autofocus,
+        onFieldSubmitted: onSubmitted,
+        textInputAction: onSubmitted == null ? null : TextInputAction.done,
         style: AppTextStyles.inputOnLight,
         cursorColor: AppColors.ink,
         decoration: InputDecoration(

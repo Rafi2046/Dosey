@@ -420,6 +420,29 @@ void main() {
     await unmount(tester);
   });
 
+  testWidgets('the name is shown and edited in Settings', (tester) async {
+    await pumpApp(tester);
+    await tester.tap(find.byTooltip(en.settingsTitle));
+    await settle(tester);
+
+    await tester.tap(find.text(en.settingsAddName));
+    await settle(tester);
+    await tester.enterText(find.byType(TextFormField), 'Rafi');
+    await tester.tap(find.text(en.save));
+    await settle(tester);
+
+    expect(find.text('Rafi'), findsOneWidget);
+    expect(find.text(en.settingsAddName), findsNothing);
+    final saved = await dbRun(
+      tester,
+      () => (db.select(
+        db.appSettings,
+      )..where((s) => s.key.equals('user_name'))).getSingleOrNull(),
+    );
+    expect(saved?.value, 'Rafi');
+    await unmount(tester);
+  });
+
   testWidgets('an empty list centres its empty state in the space left', (
     tester,
   ) async {

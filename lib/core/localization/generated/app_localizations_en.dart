@@ -858,10 +858,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsLanguage => 'Language';
 
   @override
-  String get settingsLanguageHint =>
-      'Dates, times and numbers follow the language too.';
-
-  @override
   String get languageSystem => 'Phone default';
 
   @override
@@ -1143,10 +1139,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get themeDark => 'Dark';
-
-  @override
-  String get settingsAppearanceHint =>
-      'System follows your phone\'s light or dark mode.';
 
   @override
   String get settingsReminders => 'Reminders & alarms';
@@ -1669,4 +1661,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unitDosePlural => 'doses';
+
+  @override
+  String get onboardingNameTitle => 'What should we call you?';
+
+  @override
+  String get onboardingNameBody =>
+      'Optional — you can skip this. Your name stays on this phone.';
+
+  @override
+  String get yourName => 'Your name';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get settingsProfile => 'Profile';
+
+  @override
+  String get settingsAddName => 'Add your name';
+
+  @override
+  String get settingsNameHint => 'Only on this phone';
 }

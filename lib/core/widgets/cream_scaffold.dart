@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../constants/constants.dart';
-import 'circle_icon_button.dart';
+import 'back_arrow_button.dart';
 
 /// Light (cream) page used for details and forms, like the design's
 /// "Medicine" screen: outlined back button + small title, content below and
@@ -40,8 +40,8 @@ class CreamScaffold extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    CircleIconButton.back(context, color: AppColors.ink),
-                    AppSpacing.gapMd,
+                    BackArrowButton(color: AppColors.ink),
+                    AppSpacing.gapSm,
                     Expanded(
                       child: Text(
                         title,

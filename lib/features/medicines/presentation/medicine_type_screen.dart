@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/database/enums.dart';
-import '../../../core/widgets/circle_icon_button.dart';
 import '../../../core/widgets/pill_button.dart';
 import 'medicine_form_screen.dart';
 import 'widgets/medicine_type_grid.dart';
 import '../../../core/localization/l10n.dart';
+import '../../../core/widgets/back_arrow_button.dart';
 
 /// Step 1 of "Add Medicine": the design's "Choose Medicine Type" screen.
 class MedicineTypeScreen extends StatefulWidget {
@@ -49,8 +49,8 @@ class _MedicineTypeScreenState extends State<MedicineTypeScreen> {
                   AppSpacing.gapMd,
                   Row(
                     children: [
-                      CircleIconButton.back(context),
-                      AppSpacing.gapMd,
+                      const BackArrowButton(),
+                      AppSpacing.gapSm,
                       Text(
                         context.l10n.addMedicine,
                         style: AppTextStyles.subtitle,

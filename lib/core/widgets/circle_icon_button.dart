@@ -12,15 +12,6 @@ class CircleIconButton extends StatelessWidget {
     this.tooltip,
   });
 
-  /// Back button that pops the current route.
-  factory CircleIconButton.back(BuildContext context, {Color? color}) =>
-      CircleIconButton(
-        icon: Icons.chevron_left_rounded,
-        color: color ?? AppColors.textOnDark,
-        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-        onPressed: () => Navigator.of(context).maybePop(),
-      );
-
   final IconData icon;
   final VoidCallback? onPressed;
 

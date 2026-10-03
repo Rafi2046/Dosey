@@ -6,7 +6,7 @@ import '../../../core/constants/constants.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../core/notifications/permission_service.dart';
 import '../../../app/home_tab.dart';
-import '../../../core/widgets/choice_pills.dart';
+import '../../../core/widgets/segmented_choice.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/status_chip.dart';
@@ -15,6 +15,7 @@ import '../domain/legal_document.dart';
 import '../providers/settings_providers.dart';
 import 'legal_screen.dart';
 import 'permissions_screen.dart';
+import 'widgets/name_sheet.dart';
 import 'widgets/settings_section.dart';
 import 'widgets/settings_tile.dart';
 
@@ -64,6 +65,7 @@ class SettingsScreen extends ConsumerWidget {
       return;
     }
     await ref.read(dataResetServiceProvider).deleteAll();
+    await ref.read(userNameProvider.notifier).set(null);
     ref.read(homeTabProvider.notifier).select(HomeTab.dashboard);
     if (!context.mounted) return;
     final messenger = ScaffoldMessenger.of(context);
@@ -80,6 +82,7 @@ class SettingsScreen extends ConsumerWidget {
     final missing = AppPermission.onThisPlatform
         .where((p) => !granted.contains(p))
         .length;
+    final name = ref.watch(userNameProvider).value;
     final info = ref.watch(packageInfoProvider).value;
     final version = info == null
         ? null
@@ -91,33 +94,47 @@ class SettingsScreen extends ConsumerWidget {
         padding: AppSpacing.screenPadding.copyWith(bottom: AppSpacing.xxl),
         children: [
           SettingsSection(
+            title: l10n.settingsProfile,
+            children: [
+              SettingsTile(
+                icon: Icons.person_rounded,
+                color: AppColors.tileOlive,
+                title: name ?? l10n.settingsAddName,
+                subtitle: name == null ? l10n.settingsNameHint : l10n.yourName,
+                onTap: () async {
+                  final entered = await showNameSheet(context, current: name);
+                  if (entered != null) {
+                    await ref.read(userNameProvider.notifier).set(entered);
+                  }
+                },
+              ),
+            ],
+          ),
+          SettingsSection(
             title: l10n.settingsPreferences,
             children: [
               SettingsTile(
                 icon: Icons.translate_rounded,
                 color: AppColors.tileMint,
                 title: l10n.settingsLanguage,
-                subtitle: l10n.settingsLanguageHint,
-                below: ChoicePills<String?>(
+                below: SegmentedChoice<String?>(
                   options: _languages,
-                  selected: {language},
+                  selected: language,
                   labelOf: (code) => switch (code) {
                     'en' => l10n.languageEnglish,
                     'bn' => l10n.languageBangla,
                     _ => l10n.languageSystem,
                   },
-                  onChanged: (s) =>
-                      ref.read(languageProvider.notifier).choose(s.single),
+                  onChanged: ref.read(languageProvider.notifier).choose,
                 ),
               ),
               SettingsTile(
                 icon: Icons.contrast_rounded,
                 color: AppColors.tileStone,
                 title: l10n.settingsAppearance,
-                subtitle: l10n.settingsAppearanceHint,
-                below: ChoicePills<ThemeMode>(
+                below: SegmentedChoice<ThemeMode>(
                   options: ThemeMode.values,
-                  selected: {theme},
+                  selected: theme,
                   iconOf: (m) => switch (m) {
                     ThemeMode.system => Icons.brightness_auto_rounded,
                     ThemeMode.light => Icons.light_mode_rounded,
@@ -128,8 +145,7 @@ class SettingsScreen extends ConsumerWidget {
                     ThemeMode.light => l10n.themeLight,
                     ThemeMode.dark => l10n.themeDark,
                   },
-                  onChanged: (s) =>
-                      ref.read(themeModeProvider.notifier).choose(s.single),
+                  onChanged: ref.read(themeModeProvider.notifier).choose,
                 ),
               ),
             ],

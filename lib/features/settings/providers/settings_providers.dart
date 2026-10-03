@@ -76,6 +76,29 @@ class ThemeModeController extends Notifier<ThemeMode> {
   }
 }
 
+/// AppSettings key for the user's name (optional, from onboarding or
+/// Settings).
+const String userNameKey = 'user_name';
+
+/// The user's name, or null if they skipped it.
+final userNameProvider = AsyncNotifierProvider<UserNameController, String?>(
+  UserNameController.new,
+);
+
+class UserNameController extends AsyncNotifier<String?> {
+  @override
+  Future<String?> build() =>
+      ref.read(settingsRepositoryProvider).get(userNameKey);
+
+  /// Saves [name]; blank removes it.
+  Future<void> set(String? name) async {
+    final trimmed = name?.trim() ?? '';
+    final value = trimmed.isEmpty ? null : trimmed;
+    state = AsyncData(value);
+    await ref.read(settingsRepositoryProvider).set(userNameKey, value);
+  }
+}
+
 /// App name/version for Settings (null in tests, where there's no platform).
 final packageInfoProvider = FutureProvider<PackageInfo?>((ref) async {
   try {

@@ -17,13 +17,14 @@ class SettingsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+      padding: const EdgeInsets.only(bottom: AppSpacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
+            // Lines up with the icons inside the card.
             padding: const EdgeInsets.only(
-              left: AppSpacing.xs,
+              left: AppSpacing.lg,
               bottom: AppSpacing.sm,
             ),
             child: Text(

@@ -856,9 +856,6 @@ class AppLocalizationsBn extends AppLocalizations {
   String get settingsLanguage => 'ভাষা';
 
   @override
-  String get settingsLanguageHint => 'তারিখ, সময় ও সংখ্যাও এই ভাষায় দেখাবে।';
-
-  @override
   String get languageSystem => 'ফোনের ভাষা';
 
   @override
@@ -1135,10 +1132,6 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get themeDark => 'ডার্ক';
-
-  @override
-  String get settingsAppearanceHint =>
-      '“ফোনের মতো” বেছে নিলে ফোনের লাইট বা ডার্ক মোড অনুসরণ করবে।';
 
   @override
   String get settingsReminders => 'রিমাইন্ডার ও অ্যালার্ম';
@@ -1651,4 +1644,26 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get unitDosePlural => 'ডোজ';
+
+  @override
+  String get onboardingNameTitle => 'আপনাকে কী নামে ডাকব?';
+
+  @override
+  String get onboardingNameBody =>
+      'ঐচ্ছিক — চাইলে বাদ দিতে পারেন। নামটি শুধু এই ফোনেই থাকবে।';
+
+  @override
+  String get yourName => 'আপনার নাম';
+
+  @override
+  String get skip => 'বাদ দিন';
+
+  @override
+  String get settingsProfile => 'প্রোফাইল';
+
+  @override
+  String get settingsAddName => 'আপনার নাম যোগ করুন';
+
+  @override
+  String get settingsNameHint => 'শুধু এই ফোনে থাকে';
 }

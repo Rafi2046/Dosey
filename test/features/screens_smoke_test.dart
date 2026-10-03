@@ -405,15 +405,20 @@ void main() {
 
     expect(find.widgetWithText(TextFormField, 'Napa Extra'), findsOneWidget);
     expect(find.widgetWithText(TextFormField, '500mg'), findsOneWidget);
-    expect(find.text('8:00 am'), findsOneWidget);
-    expect(find.text('9:00 pm'), findsOneWidget);
-
     // Everything stays editable before saving.
     await tester.enterText(
       find.widgetWithText(TextFormField, 'Napa Extra'),
       'Napa',
     );
+
+    // Below the fold: scrollTo fails the test if a chip is missing.
+    await scrollTo(tester, '8:00 am');
+    await scrollTo(tester, '9:00 pm');
     await tapText(tester, '8:00 am'); // removes that time
+    // The "review the fields" snackbar covers Save until it times out.
+    expect(find.text(MedicineStrings.scanFilled), findsOneWidget);
+    await tester.pump(const Duration(seconds: 5));
+    await settle(tester);
     await tapText(tester, AppStrings.save);
 
     final med = await dbRun(
@@ -424,7 +429,11 @@ void main() {
     );
     expect(med.strength, '500mg');
     expect(med.mealRelation, MealRelation.afterMeal);
-    expect(med.endDate, DateTime(2026, 10, 9));
+    // "x 7 days" → the 7th day, counting the start day.
+    expect(
+      med.endDate,
+      DateUtils.dateOnly(med.startDate).add(const Duration(days: 6)),
+    );
     final reminders = await dbRun(
       tester,
       () => (db.select(

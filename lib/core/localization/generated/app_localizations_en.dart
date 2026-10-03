@@ -1131,4 +1131,210 @@ class AppLocalizationsEn extends AppLocalizations {
 
     return 'Spending over the last $countString months';
   }
+
+  @override
+  String get settingsPreferences => 'Preferences';
+
+  @override
+  String get settingsAppearance => 'Appearance';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get settingsAppearanceHint =>
+      'System follows your phone\'s light or dark mode.';
+
+  @override
+  String get settingsReminders => 'Reminders & alarms';
+
+  @override
+  String get settingsPermissions => 'Alarm permissions';
+
+  @override
+  String get permissionsAllAllowed => 'All allowed';
+
+  @override
+  String get settingsSupport => 'Help & support';
+
+  @override
+  String get contactSupport => 'Contact support';
+
+  @override
+  String get contactSupportHint =>
+      'Questions, bugs or ideas: we read every email';
+
+  @override
+  String get rateApp => 'Rate Dosey';
+
+  @override
+  String get rateAppHint => 'It helps other people find the app';
+
+  @override
+  String get settingsAbout => 'About & legal';
+
+  @override
+  String get privacyPolicy => 'Privacy policy';
+
+  @override
+  String get privacyPolicyHint => 'Your data stays on your phone';
+
+  @override
+  String get termsOfUse => 'Terms of use';
+
+  @override
+  String get medicalDisclaimer => 'Medical disclaimer';
+
+  @override
+  String get medicalDisclaimerHint =>
+      'Dosey is not a substitute for your doctor';
+
+  @override
+  String get licenses => 'Open-source licences';
+
+  @override
+  String get appTagline => 'Medicine reminders that ring like an alarm';
+
+  @override
+  String get couldNotOpen => 'Couldn\'t open that. Please try again.';
+
+  @override
+  String get supportEmailSubject => 'Dosey support';
+
+  @override
+  String get privacyShortTitle => 'In short';
+
+  @override
+  String get privacyShortBody =>
+      'Dosey has no account, no ads and no analytics. Everything you enter stays on your phone.';
+
+  @override
+  String get privacyStoredTitle => 'What Dosey stores';
+
+  @override
+  String get privacyStoredBody =>
+      'Medicines, reminders, dose history, doctors, expenses and the photos you add to records. They are saved in the app\'s private storage on this device only.';
+
+  @override
+  String get privacyScanTitle => 'Prescription scanning';
+
+  @override
+  String get privacyScanBody =>
+      'Text recognition runs on your phone using Google ML Kit, and the photo is not uploaded. ML Kit may send limited diagnostic information to Google, as described in Google\'s ML Kit terms.';
+
+  @override
+  String get privacyPermissionsTitle => 'Permissions';
+
+  @override
+  String get privacyPermissionsBody =>
+      'Notifications and alarm permissions are used only to ring your reminders. The camera and photo library are used only when you add a picture.';
+
+  @override
+  String get privacySharingTitle => 'Sharing';
+
+  @override
+  String get privacySharingBody =>
+      'Dosey does not sell or share your data. Nothing leaves your phone unless you choose to send it, for example by emailing support.';
+
+  @override
+  String get privacyDeleteTitle => 'Deleting your data';
+
+  @override
+  String get privacyDeleteBody =>
+      'Delete any item inside the app, or remove everything by clearing the app\'s storage or uninstalling Dosey.';
+
+  @override
+  String get privacyChildrenTitle => 'Children';
+
+  @override
+  String get privacyChildrenBody =>
+      'Dosey is meant for adults and caregivers, and is not directed at children under 13.';
+
+  @override
+  String get termsUseTitle => 'Using Dosey';
+
+  @override
+  String get termsUseBody =>
+      'Dosey helps you remember medicines and keep health records. You are responsible for the information you enter and for checking that reminders match your prescription.';
+
+  @override
+  String get termsRemindersTitle => 'Reminders';
+
+  @override
+  String get termsRemindersBody =>
+      'Dosey works hard to ring on time, but phone settings, battery savers or system updates can delay or block alarms. Don\'t rely on Dosey alone for critical medicines.';
+
+  @override
+  String get termsWarrantyTitle => 'No warranty';
+
+  @override
+  String get termsWarrantyBody =>
+      'Dosey is provided as is, without warranties. To the extent the law allows, we are not liable for missed doses or other losses from using the app.';
+
+  @override
+  String get termsChangesTitle => 'Changes';
+
+  @override
+  String get termsChangesBody =>
+      'These terms may be updated; the date above shows the latest version.';
+
+  @override
+  String get disclaimerAdviceTitle => 'Not medical advice';
+
+  @override
+  String get disclaimerAdviceBody =>
+      'Dosey is a reminder and record-keeping tool, not a medical device. It does not diagnose, treat or give medical advice.';
+
+  @override
+  String get disclaimerDoctorTitle => 'Follow your doctor';
+
+  @override
+  String get disclaimerDoctorBody =>
+      'Always follow your doctor\'s or pharmacist\'s instructions. Check every scanned prescription carefully, because text recognition can misread names and doses.';
+
+  @override
+  String get disclaimerEmergencyTitle => 'Emergencies';
+
+  @override
+  String get disclaimerEmergencyBody =>
+      'In an emergency, contact your doctor or local emergency services immediately.';
+
+  @override
+  String permissionsMissing(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString need attention',
+      one: '1 needs attention',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String appVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String lastUpdated(String date) {
+    return 'Last updated $date';
+  }
+
+  @override
+  String get privacyContactTitle => 'Contact';
+
+  @override
+  String privacyContactBody(String email) {
+    return 'Questions about privacy? Email $email.';
+  }
 }

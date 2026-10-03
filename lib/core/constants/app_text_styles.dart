@@ -100,28 +100,20 @@ abstract final class AppTextStyles {
   );
 
   // ── Light-surface variants (cream cards / screens) ────────────────────────
-  static TextStyle get displayOnLight => display.copyWith(
-    color: AppColors.ink,
-  );
+  static TextStyle get displayOnLight => display.copyWith(color: AppColors.ink);
   static TextStyle get titleOnLight => title.copyWith(color: AppColors.ink);
-  static TextStyle get cardTitleOnLight => cardTitle.copyWith(
-    color: AppColors.ink,
-  );
+  static TextStyle get cardTitleOnLight =>
+      cardTitle.copyWith(color: AppColors.ink);
   static TextStyle get bodyOnLight => body.copyWith(color: AppColors.inkMuted);
-  static TextStyle get captionOnLight => caption.copyWith(
-    color: AppColors.inkMuted,
-  );
-  static TextStyle get labelOnLight => caption.copyWith(
-    color: AppColors.inkMuted,
-    fontWeight: FontWeight.w600,
-  );
+  static TextStyle get captionOnLight =>
+      caption.copyWith(color: AppColors.inkMuted);
+  static TextStyle get labelOnLight =>
+      caption.copyWith(color: AppColors.inkMuted, fontWeight: FontWeight.w600);
   static TextStyle get inputOnLight => body.copyWith(color: AppColors.ink);
-  static TextStyle get subtitleOnLight => subtitle.copyWith(
-    color: AppColors.ink,
-  );
-  static TextStyle get headlineOnLight => headline.copyWith(
-    color: AppColors.ink,
-  );
+  static TextStyle get subtitleOnLight =>
+      subtitle.copyWith(color: AppColors.ink);
+  static TextStyle get headlineOnLight =>
+      headline.copyWith(color: AppColors.ink);
 
   /// Big money figure (expense totals).
   static TextStyle get amount => TextStyle(

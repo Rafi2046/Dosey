@@ -25,7 +25,9 @@ Future<void> main() async {
   // Language before the first frame (and before notification channels get
   // their names).
   await AppLocale.ensureInitialized();
-  final language = await SettingsRepository(db).get(AppLocale.settingKey);
+  final settings = SettingsRepository(db);
+  final language = await settings.get(AppLocale.settingKey);
+  final theme = ThemeModeController.parse(await settings.get(themeKey));
   AppLocale.apply(
     AppLocale.resolve(language, PlatformDispatcher.instance.locale),
   );
@@ -40,6 +42,7 @@ Future<void> main() async {
         documentsDirectoryProvider.overrideWithValue(documentsDirectory),
         appDatabaseProvider.overrideWithValue(db),
         languageProvider.overrideWith(() => LanguageController(language)),
+        themeModeProvider.overrideWith(() => ThemeModeController(theme)),
       ],
       child: const DoseyApp(),
     ),

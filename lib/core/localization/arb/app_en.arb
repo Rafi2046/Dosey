@@ -483,5 +483,91 @@
         "format": "decimalPattern"
       }
     }
+  },
+  "settingsPreferences": "Preferences",
+  "settingsAppearance": "Appearance",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "settingsAppearanceHint": "System follows your phone's light or dark mode.",
+  "settingsReminders": "Reminders & alarms",
+  "settingsPermissions": "Alarm permissions",
+  "permissionsAllAllowed": "All allowed",
+  "settingsSupport": "Help & support",
+  "contactSupport": "Contact support",
+  "contactSupportHint": "Questions, bugs or ideas: we read every email",
+  "rateApp": "Rate Dosey",
+  "rateAppHint": "It helps other people find the app",
+  "settingsAbout": "About & legal",
+  "privacyPolicy": "Privacy policy",
+  "privacyPolicyHint": "Your data stays on your phone",
+  "termsOfUse": "Terms of use",
+  "medicalDisclaimer": "Medical disclaimer",
+  "medicalDisclaimerHint": "Dosey is not a substitute for your doctor",
+  "licenses": "Open-source licences",
+  "appTagline": "Medicine reminders that ring like an alarm",
+  "couldNotOpen": "Couldn't open that. Please try again.",
+  "supportEmailSubject": "Dosey support",
+  "privacyShortTitle": "In short",
+  "privacyShortBody": "Dosey has no account, no ads and no analytics. Everything you enter stays on your phone.",
+  "privacyStoredTitle": "What Dosey stores",
+  "privacyStoredBody": "Medicines, reminders, dose history, doctors, expenses and the photos you add to records. They are saved in the app's private storage on this device only.",
+  "privacyScanTitle": "Prescription scanning",
+  "privacyScanBody": "Text recognition runs on your phone using Google ML Kit, and the photo is not uploaded. ML Kit may send limited diagnostic information to Google, as described in Google's ML Kit terms.",
+  "privacyPermissionsTitle": "Permissions",
+  "privacyPermissionsBody": "Notifications and alarm permissions are used only to ring your reminders. The camera and photo library are used only when you add a picture.",
+  "privacySharingTitle": "Sharing",
+  "privacySharingBody": "Dosey does not sell or share your data. Nothing leaves your phone unless you choose to send it, for example by emailing support.",
+  "privacyDeleteTitle": "Deleting your data",
+  "privacyDeleteBody": "Delete any item inside the app, or remove everything by clearing the app's storage or uninstalling Dosey.",
+  "privacyChildrenTitle": "Children",
+  "privacyChildrenBody": "Dosey is meant for adults and caregivers, and is not directed at children under 13.",
+  "termsUseTitle": "Using Dosey",
+  "termsUseBody": "Dosey helps you remember medicines and keep health records. You are responsible for the information you enter and for checking that reminders match your prescription.",
+  "termsRemindersTitle": "Reminders",
+  "termsRemindersBody": "Dosey works hard to ring on time, but phone settings, battery savers or system updates can delay or block alarms. Don't rely on Dosey alone for critical medicines.",
+  "termsWarrantyTitle": "No warranty",
+  "termsWarrantyBody": "Dosey is provided as is, without warranties. To the extent the law allows, we are not liable for missed doses or other losses from using the app.",
+  "termsChangesTitle": "Changes",
+  "termsChangesBody": "These terms may be updated; the date above shows the latest version.",
+  "disclaimerAdviceTitle": "Not medical advice",
+  "disclaimerAdviceBody": "Dosey is a reminder and record-keeping tool, not a medical device. It does not diagnose, treat or give medical advice.",
+  "disclaimerDoctorTitle": "Follow your doctor",
+  "disclaimerDoctorBody": "Always follow your doctor's or pharmacist's instructions. Check every scanned prescription carefully, because text recognition can misread names and doses.",
+  "disclaimerEmergencyTitle": "Emergencies",
+  "disclaimerEmergencyBody": "In an emergency, contact your doctor or local emergency services immediately.",
+  "permissionsMissing": "{count, plural, =1{1 needs attention} other{{count} need attention}}",
+  "@permissionsMissing": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appVersion": "Version {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "lastUpdated": "Last updated {date}",
+  "@lastUpdated": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "privacyContactTitle": "Contact",
+  "privacyContactBody": "Questions about privacy? Email {email}.",
+  "@privacyContactBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -62,10 +62,7 @@ class ScanPrescriptionCard extends StatelessWidget {
                 child: CircularProgressIndicator(color: AppColors.textOnDark),
               )
             else
-              Icon(
-                Icons.photo_camera_rounded,
-                color: AppColors.textOnDark,
-              ),
+              Icon(Icons.photo_camera_rounded, color: AppColors.textOnDark),
           ],
         ),
       ),

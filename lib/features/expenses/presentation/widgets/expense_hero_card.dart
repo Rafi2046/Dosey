@@ -93,10 +93,7 @@ class ExpenseHeroCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.medication_rounded,
-                    color: AppColors.textOnDark,
-                  ),
+                  Icon(Icons.medication_rounded, color: AppColors.textOnDark),
                   AppSpacing.gapMd,
                   Expanded(
                     child: Column(

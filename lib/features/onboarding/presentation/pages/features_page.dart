@@ -25,7 +25,7 @@ class FeaturesPage extends StatelessWidget {
       ),
       (Icons.lock_rounded, l10n.featurePrivateTitle, l10n.featurePrivateBody),
     ];
-    const colors = [
+    final colors = [
       AppColors.accent,
       AppColors.mint,
       AppColors.olive,

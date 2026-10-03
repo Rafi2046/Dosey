@@ -15,6 +15,7 @@ class SurfaceCard extends StatelessWidget {
   });
 
   final Widget child;
+
   /// Defaults to [AppColors.olive].
   final Color? color;
   final EdgeInsetsGeometry padding;

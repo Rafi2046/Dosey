@@ -1123,4 +1123,208 @@ class AppLocalizationsBn extends AppLocalizations {
 
     return 'গত $countString মাসের খরচ';
   }
+
+  @override
+  String get settingsPreferences => 'পছন্দসমূহ';
+
+  @override
+  String get settingsAppearance => 'থিম';
+
+  @override
+  String get themeSystem => 'ফোনের মতো';
+
+  @override
+  String get themeLight => 'লাইট';
+
+  @override
+  String get themeDark => 'ডার্ক';
+
+  @override
+  String get settingsAppearanceHint =>
+      '“ফোনের মতো” বেছে নিলে ফোনের লাইট বা ডার্ক মোড অনুসরণ করবে।';
+
+  @override
+  String get settingsReminders => 'রিমাইন্ডার ও অ্যালার্ম';
+
+  @override
+  String get settingsPermissions => 'অ্যালার্মের অনুমতি';
+
+  @override
+  String get permissionsAllAllowed => 'সব অনুমতি আছে';
+
+  @override
+  String get settingsSupport => 'সাহায্য ও সাপোর্ট';
+
+  @override
+  String get contactSupport => 'সাপোর্টে যোগাযোগ';
+
+  @override
+  String get contactSupportHint =>
+      'প্রশ্ন, সমস্যা বা পরামর্শ — প্রতিটি ইমেইল আমরা পড়ি';
+
+  @override
+  String get rateApp => 'Dosey-কে রেটিং দিন';
+
+  @override
+  String get rateAppHint => 'এতে অন্যরাও অ্যাপটি খুঁজে পাবে';
+
+  @override
+  String get settingsAbout => 'অ্যাপ ও আইনি তথ্য';
+
+  @override
+  String get privacyPolicy => 'প্রাইভেসি পলিসি';
+
+  @override
+  String get privacyPolicyHint => 'আপনার তথ্য আপনার ফোনেই থাকে';
+
+  @override
+  String get termsOfUse => 'ব্যবহারের শর্তাবলি';
+
+  @override
+  String get medicalDisclaimer => 'চিকিৎসা-সংক্রান্ত সতর্কতা';
+
+  @override
+  String get medicalDisclaimerHint => 'Dosey ডাক্তারের বিকল্প নয়';
+
+  @override
+  String get licenses => 'ওপেন-সোর্স লাইসেন্স';
+
+  @override
+  String get appTagline => 'অ্যালার্মের মতো বাজে এমন ওষুধের রিমাইন্ডার';
+
+  @override
+  String get couldNotOpen => 'এটি খোলা যায়নি। আবার চেষ্টা করুন।';
+
+  @override
+  String get supportEmailSubject => 'Dosey সাপোর্ট';
+
+  @override
+  String get privacyShortTitle => 'সংক্ষেপে';
+
+  @override
+  String get privacyShortBody =>
+      'Dosey-তে কোনো অ্যাকাউন্ট, বিজ্ঞাপন বা অ্যানালিটিক্স নেই। আপনি যা লেখেন সব আপনার ফোনেই থাকে।';
+
+  @override
+  String get privacyStoredTitle => 'Dosey কী সংরক্ষণ করে';
+
+  @override
+  String get privacyStoredBody =>
+      'ওষুধ, রিমাইন্ডার, ডোজের ইতিহাস, ডাক্তার, খরচ এবং রেকর্ডে যোগ করা ছবি। এগুলো শুধু এই ডিভাইসে অ্যাপের নিজস্ব সুরক্ষিত জায়গায় সংরক্ষিত থাকে।';
+
+  @override
+  String get privacyScanTitle => 'প্রেসক্রিপশন স্ক্যান';
+
+  @override
+  String get privacyScanBody =>
+      'লেখা চেনার কাজটি Google ML Kit দিয়ে আপনার ফোনেই হয়, ছবি কোথাও আপলোড হয় না। Google-এর ML Kit শর্তাবলি অনুযায়ী ML Kit সীমিত ডায়াগনস্টিক তথ্য Google-কে পাঠাতে পারে।';
+
+  @override
+  String get privacyPermissionsTitle => 'অনুমতি';
+
+  @override
+  String get privacyPermissionsBody =>
+      'নোটিফিকেশন ও অ্যালার্মের অনুমতি শুধু রিমাইন্ডার বাজানোর জন্য। ক্যামেরা ও ছবির গ্যালারি শুধু তখনই ব্যবহার হয় যখন আপনি ছবি যোগ করেন।';
+
+  @override
+  String get privacySharingTitle => 'তথ্য শেয়ার';
+
+  @override
+  String get privacySharingBody =>
+      'Dosey আপনার তথ্য বিক্রি বা শেয়ার করে না। আপনি নিজে না পাঠালে (যেমন সাপোর্টে ইমেইল) কোনো তথ্য ফোনের বাইরে যায় না।';
+
+  @override
+  String get privacyDeleteTitle => 'তথ্য মুছে ফেলা';
+
+  @override
+  String get privacyDeleteBody =>
+      'অ্যাপের ভেতরে যেকোনো তথ্য মুছতে পারেন, অথবা অ্যাপের স্টোরেজ ক্লিয়ার করে বা Dosey আনইনস্টল করে সব মুছে ফেলতে পারেন।';
+
+  @override
+  String get privacyChildrenTitle => 'শিশু';
+
+  @override
+  String get privacyChildrenBody =>
+      'Dosey প্রাপ্তবয়স্ক ও পরিচর্যাকারীদের জন্য; ১৩ বছরের কম বয়সী শিশুদের জন্য নয়।';
+
+  @override
+  String get termsUseTitle => 'Dosey ব্যবহার';
+
+  @override
+  String get termsUseBody =>
+      'Dosey আপনাকে ওষুধের কথা মনে করিয়ে দেয় এবং স্বাস্থ্য-রেকর্ড রাখতে সাহায্য করে। আপনি যে তথ্য দেন এবং রিমাইন্ডার প্রেসক্রিপশনের সাথে মেলে কি না, তা যাচাইয়ের দায়িত্ব আপনার।';
+
+  @override
+  String get termsRemindersTitle => 'রিমাইন্ডার';
+
+  @override
+  String get termsRemindersBody =>
+      'Dosey সময়মতো বাজতে সর্বোচ্চ চেষ্টা করে, তবে ফোনের সেটিংস, ব্যাটারি সেভার বা সিস্টেম আপডেটের কারণে অ্যালার্ম দেরিতে বাজতে বা বন্ধ থাকতে পারে। জরুরি ওষুধের জন্য শুধু Dosey-র ওপর নির্ভর করবেন না।';
+
+  @override
+  String get termsWarrantyTitle => 'কোনো ওয়ারেন্টি নেই';
+
+  @override
+  String get termsWarrantyBody =>
+      'Dosey যেমন আছে তেমনভাবেই দেওয়া হয়, কোনো ওয়ারেন্টি ছাড়া। আইন যতটুকু অনুমতি দেয়, অ্যাপ ব্যবহারে ডোজ মিস বা অন্য কোনো ক্ষতির দায় আমাদের নয়।';
+
+  @override
+  String get termsChangesTitle => 'পরিবর্তন';
+
+  @override
+  String get termsChangesBody =>
+      'এই শর্তাবলি হালনাগাদ হতে পারে; ওপরের তারিখটি সর্বশেষ সংস্করণ নির্দেশ করে।';
+
+  @override
+  String get disclaimerAdviceTitle => 'চিকিৎসা-পরামর্শ নয়';
+
+  @override
+  String get disclaimerAdviceBody =>
+      'Dosey একটি রিমাইন্ডার ও রেকর্ড রাখার টুল, কোনো মেডিকেল ডিভাইস নয়। এটি রোগ নির্ণয়, চিকিৎসা বা চিকিৎসা-পরামর্শ দেয় না।';
+
+  @override
+  String get disclaimerDoctorTitle => 'ডাক্তারের নির্দেশ মানুন';
+
+  @override
+  String get disclaimerDoctorBody =>
+      'সবসময় ডাক্তার বা ফার্মাসিস্টের নির্দেশ মেনে চলুন। স্ক্যান করা প্রতিটি প্রেসক্রিপশন ভালোভাবে যাচাই করুন, কারণ লেখা চেনার সময় নাম বা ডোজ ভুল পড়া হতে পারে।';
+
+  @override
+  String get disclaimerEmergencyTitle => 'জরুরি অবস্থা';
+
+  @override
+  String get disclaimerEmergencyBody =>
+      'জরুরি অবস্থায় সঙ্গে সঙ্গে আপনার ডাক্তার বা স্থানীয় জরুরি সেবায় যোগাযোগ করুন।';
+
+  @override
+  String permissionsMissing(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countStringটিতে মনোযোগ দরকার',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String appVersion(String version) {
+    return 'ভার্সন $version';
+  }
+
+  @override
+  String lastUpdated(String date) {
+    return 'সর্বশেষ হালনাগাদ: $date';
+  }
+
+  @override
+  String get privacyContactTitle => 'যোগাযোগ';
+
+  @override
+  String privacyContactBody(String email) {
+    return 'প্রাইভেসি নিয়ে প্রশ্ন থাকলে ইমেইল করুন: $email';
+  }
 }

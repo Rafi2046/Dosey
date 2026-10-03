@@ -8,7 +8,7 @@ class CircleIconButton extends StatelessWidget {
     super.key,
     required this.icon,
     required this.onPressed,
-    this.color = AppColors.textOnDark,
+    this.color,
     this.tooltip,
   });
 
@@ -23,11 +23,14 @@ class CircleIconButton extends StatelessWidget {
 
   final IconData icon;
   final VoidCallback? onPressed;
-  final Color color;
+
+  /// Defaults to [AppColors.textOnDark].
+  final Color? color;
   final String? tooltip;
 
   @override
   Widget build(BuildContext context) {
+    final color = this.color ?? AppColors.textOnDark;
     return Tooltip(
       message: tooltip ?? '',
       child: Material(

@@ -34,7 +34,7 @@ class MedicineTypeGrid extends StatelessWidget {
   ];
 
   // Tile colors follow the reference: olive, mint, cream, moss.
-  static const List<Color> _colors = [
+  static List<Color> get _colors => [
     AppColors.olive,
     AppColors.mint,
     AppColors.cream,

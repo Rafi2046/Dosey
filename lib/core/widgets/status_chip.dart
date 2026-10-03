@@ -7,20 +7,24 @@ class StatusChip extends StatelessWidget {
   const StatusChip({
     super.key,
     required this.label,
-    this.background = AppColors.moss,
-    this.foreground = AppColors.textOnDark,
+    this.background,
+    this.foreground,
     this.icon,
     this.onTap,
   });
 
   final String label;
-  final Color background;
-  final Color foreground;
+
+  /// Defaults to [AppColors.moss] / [AppColors.textOnDark].
+  final Color? background;
+  final Color? foreground;
   final IconData? icon;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final background = this.background ?? AppColors.moss;
+    final foreground = this.foreground ?? AppColors.textOnDark;
     return Material(
       color: background,
       shape: const StadiumBorder(),

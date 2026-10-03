@@ -2041,6 +2041,348 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Spending over the last {count} months'**
   String lastMonthsTrend(int count);
+
+  /// No description provided for @settingsPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get settingsPreferences;
+
+  /// No description provided for @settingsAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get settingsAppearance;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @settingsAppearanceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'System follows your phone\'s light or dark mode.'**
+  String get settingsAppearanceHint;
+
+  /// No description provided for @settingsReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders & alarms'**
+  String get settingsReminders;
+
+  /// No description provided for @settingsPermissions.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm permissions'**
+  String get settingsPermissions;
+
+  /// No description provided for @permissionsAllAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'All allowed'**
+  String get permissionsAllAllowed;
+
+  /// No description provided for @settingsSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & support'**
+  String get settingsSupport;
+
+  /// No description provided for @contactSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact support'**
+  String get contactSupport;
+
+  /// No description provided for @contactSupportHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions, bugs or ideas: we read every email'**
+  String get contactSupportHint;
+
+  /// No description provided for @rateApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Dosey'**
+  String get rateApp;
+
+  /// No description provided for @rateAppHint.
+  ///
+  /// In en, this message translates to:
+  /// **'It helps other people find the app'**
+  String get rateAppHint;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About & legal'**
+  String get settingsAbout;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @privacyPolicyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data stays on your phone'**
+  String get privacyPolicyHint;
+
+  /// No description provided for @termsOfUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of use'**
+  String get termsOfUse;
+
+  /// No description provided for @medicalDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical disclaimer'**
+  String get medicalDisclaimer;
+
+  /// No description provided for @medicalDisclaimerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey is not a substitute for your doctor'**
+  String get medicalDisclaimerHint;
+
+  /// No description provided for @licenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Open-source licences'**
+  String get licenses;
+
+  /// No description provided for @appTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine reminders that ring like an alarm'**
+  String get appTagline;
+
+  /// No description provided for @couldNotOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open that. Please try again.'**
+  String get couldNotOpen;
+
+  /// No description provided for @supportEmailSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey support'**
+  String get supportEmailSubject;
+
+  /// No description provided for @privacyShortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'In short'**
+  String get privacyShortTitle;
+
+  /// No description provided for @privacyShortBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey has no account, no ads and no analytics. Everything you enter stays on your phone.'**
+  String get privacyShortBody;
+
+  /// No description provided for @privacyStoredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What Dosey stores'**
+  String get privacyStoredTitle;
+
+  /// No description provided for @privacyStoredBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicines, reminders, dose history, doctors, expenses and the photos you add to records. They are saved in the app\'s private storage on this device only.'**
+  String get privacyStoredBody;
+
+  /// No description provided for @privacyScanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Prescription scanning'**
+  String get privacyScanTitle;
+
+  /// No description provided for @privacyScanBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Text recognition runs on your phone using Google ML Kit, and the photo is not uploaded. ML Kit may send limited diagnostic information to Google, as described in Google\'s ML Kit terms.'**
+  String get privacyScanBody;
+
+  /// No description provided for @privacyPermissionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions'**
+  String get privacyPermissionsTitle;
+
+  /// No description provided for @privacyPermissionsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications and alarm permissions are used only to ring your reminders. The camera and photo library are used only when you add a picture.'**
+  String get privacyPermissionsBody;
+
+  /// No description provided for @privacySharingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing'**
+  String get privacySharingTitle;
+
+  /// No description provided for @privacySharingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey does not sell or share your data. Nothing leaves your phone unless you choose to send it, for example by emailing support.'**
+  String get privacySharingBody;
+
+  /// No description provided for @privacyDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting your data'**
+  String get privacyDeleteTitle;
+
+  /// No description provided for @privacyDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete any item inside the app, or remove everything by clearing the app\'s storage or uninstalling Dosey.'**
+  String get privacyDeleteBody;
+
+  /// No description provided for @privacyChildrenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Children'**
+  String get privacyChildrenTitle;
+
+  /// No description provided for @privacyChildrenBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey is meant for adults and caregivers, and is not directed at children under 13.'**
+  String get privacyChildrenBody;
+
+  /// No description provided for @termsUseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Using Dosey'**
+  String get termsUseTitle;
+
+  /// No description provided for @termsUseBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey helps you remember medicines and keep health records. You are responsible for the information you enter and for checking that reminders match your prescription.'**
+  String get termsUseBody;
+
+  /// No description provided for @termsRemindersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get termsRemindersTitle;
+
+  /// No description provided for @termsRemindersBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey works hard to ring on time, but phone settings, battery savers or system updates can delay or block alarms. Don\'t rely on Dosey alone for critical medicines.'**
+  String get termsRemindersBody;
+
+  /// No description provided for @termsWarrantyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No warranty'**
+  String get termsWarrantyTitle;
+
+  /// No description provided for @termsWarrantyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey is provided as is, without warranties. To the extent the law allows, we are not liable for missed doses or other losses from using the app.'**
+  String get termsWarrantyBody;
+
+  /// No description provided for @termsChangesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes'**
+  String get termsChangesTitle;
+
+  /// No description provided for @termsChangesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'These terms may be updated; the date above shows the latest version.'**
+  String get termsChangesBody;
+
+  /// No description provided for @disclaimerAdviceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not medical advice'**
+  String get disclaimerAdviceTitle;
+
+  /// No description provided for @disclaimerAdviceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey is a reminder and record-keeping tool, not a medical device. It does not diagnose, treat or give medical advice.'**
+  String get disclaimerAdviceBody;
+
+  /// No description provided for @disclaimerDoctorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow your doctor'**
+  String get disclaimerDoctorTitle;
+
+  /// No description provided for @disclaimerDoctorBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Always follow your doctor\'s or pharmacist\'s instructions. Check every scanned prescription carefully, because text recognition can misread names and doses.'**
+  String get disclaimerDoctorBody;
+
+  /// No description provided for @disclaimerEmergencyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergencies'**
+  String get disclaimerEmergencyTitle;
+
+  /// No description provided for @disclaimerEmergencyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'In an emergency, contact your doctor or local emergency services immediately.'**
+  String get disclaimerEmergencyBody;
+
+  /// No description provided for @permissionsMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 needs attention} other{{count} need attention}}'**
+  String permissionsMissing(int count);
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String appVersion(String version);
+
+  /// No description provided for @lastUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated {date}'**
+  String lastUpdated(String date);
+
+  /// No description provided for @privacyContactTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get privacyContactTitle;
+
+  /// No description provided for @privacyContactBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions about privacy? Email {email}.'**
+  String privacyContactBody(String email);
 }
 
 class _AppLocalizationsDelegate

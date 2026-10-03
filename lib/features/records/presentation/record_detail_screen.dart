@@ -16,6 +16,7 @@ import 'record_form_screen.dart';
 import 'widgets/image_source_sheet.dart';
 import 'widgets/record_page_viewer.dart';
 import '../../../core/localization/l10n.dart';
+import '../../../core/widgets/skeleton.dart';
 
 enum _MenuAction { edit, deletePage, delete }
 
@@ -110,6 +111,7 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
         onPressed: _addPages,
       ),
       body: AsyncValueView(
+        skeleton: const Skeleton.detail(),
         value: value,
         data: (record) => record == null
             ? const SizedBox.shrink()

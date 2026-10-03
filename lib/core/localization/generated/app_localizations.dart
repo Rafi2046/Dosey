@@ -2437,6 +2437,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue'**
   String get continueLabel;
+
+  /// No description provided for @slotMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get slotMorning;
+
+  /// No description provided for @slotLunch.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch'**
+  String get slotLunch;
+
+  /// No description provided for @slotDinner.
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner'**
+  String get slotDinner;
+
+  /// No description provided for @slotBedtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Bedtime'**
+  String get slotBedtime;
+
+  /// No description provided for @quickTimesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to add or remove. Tap a time below to change it or its amount.'**
+  String get quickTimesHint;
+
+  /// No description provided for @ringAsAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Ring as an alarm'**
+  String get ringAsAlarm;
+
+  /// No description provided for @ringAsAlarmHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Full-screen alarm that rings even on silent. Turn off for a quiet notification.'**
+  String get ringAsAlarmHint;
 }
 
 class _AppLocalizationsDelegate

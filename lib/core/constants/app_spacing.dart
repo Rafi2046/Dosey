@@ -34,6 +34,14 @@ abstract final class AppSpacing {
   static const double featureIcon = 52;
   static const double settingsIcon = 36;
 
+  // ── Loading skeletons ─────────────────────────────────────────────────────
+  static const double skeletonCard = 104;
+  static const double skeletonLine = 14;
+  static const double skeletonHeader = 160;
+  static const int skeletonCount = 3;
+  static const double skeletonFaint = 0.08;
+  static const double skeletonShine = 0.22;
+
   /// Dividers in a settings group start after the row icon.
   static const double settingsDividerIndent = 64;
   static const double appIconLarge = 64;
@@ -102,6 +110,7 @@ abstract final class AppSpacing {
   // ── Motion ────────────────────────────────────────────────────────────────
   static const Duration animFast = Duration(milliseconds: 150);
   static const Duration animMedium = Duration(milliseconds: 280);
+  static const Duration shimmerPeriod = Duration(milliseconds: 1300);
   static const Duration animSlow = Duration(milliseconds: 450);
   static const Duration alarmShake = Duration(milliseconds: 900);
   static const double alarmShakeTurns = 0.012;

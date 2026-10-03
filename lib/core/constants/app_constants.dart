@@ -40,6 +40,8 @@ abstract final class AppConstants {
   static const int doseNoonHour = 14;
   static const int doseEveningHour = 18;
   static const int doseNightHour = 21;
+  static const int doseBedtimeHour = 22;
+  static const int doseBedtimeMinute = 30;
 
   /// First dose of "every N hours" schedules.
   static const int doseIntervalStartHour = 8;

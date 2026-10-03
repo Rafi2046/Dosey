@@ -578,5 +578,12 @@
   "deleteAllConfirmBody": "This can't be undone. Dosey keeps no backup or cloud copy of your data.",
   "deleteEverything": "Delete everything",
   "allDataDeleted": "All your data was deleted",
-  "continueLabel": "Continue"
+  "continueLabel": "Continue",
+  "slotMorning": "Morning",
+  "slotLunch": "Lunch",
+  "slotDinner": "Dinner",
+  "slotBedtime": "Bedtime",
+  "quickTimesHint": "Tap to add or remove. Tap a time below to change it or its amount.",
+  "ringAsAlarm": "Ring as an alarm",
+  "ringAsAlarmHint": "Full-screen alarm that rings even on silent. Turn off for a quiet notification."
 }

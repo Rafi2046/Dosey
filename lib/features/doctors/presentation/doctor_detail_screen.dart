@@ -15,6 +15,7 @@ import 'doctor_form_screen.dart';
 import 'widgets/doctor_linked_sections.dart';
 import 'widgets/doctor_profile_header.dart';
 import '../../../core/localization/l10n.dart';
+import '../../../core/widgets/skeleton.dart';
 
 enum _MenuAction { archive, delete }
 
@@ -104,6 +105,7 @@ class DoctorDetailScreen extends ConsumerWidget {
               ],
             ),
       body: AsyncValueView(
+        skeleton: const Skeleton.detail(),
         value: value,
         data: (doctor) => doctor == null
             ? const SizedBox.shrink()

@@ -18,8 +18,15 @@ class MedicineScheduleService {
     List<DoseTime> doses, {
     required DateTime startDate,
     DateTime? endDate,
+    bool critical = true,
   }) => _db.transaction(
-    () => _create(medicine, doses, startDate: startDate, endDate: endDate),
+    () => _create(
+      medicine,
+      doses,
+      startDate: startDate,
+      endDate: endDate,
+      critical: critical,
+    ),
   );
 
   /// Bulk add (e.g. a scanned prescription): all medicines and their
@@ -42,22 +49,33 @@ class MedicineScheduleService {
     List<DoseTime> doses, {
     required DateTime startDate,
     DateTime? endDate,
+    bool critical = true,
   }) async {
     final id = await _medicines.create(medicine);
     final name = medicine.name.value;
     for (final d in doses) {
-      await addTime(id, name, d, startDate: startDate, endDate: endDate);
+      await addTime(
+        id,
+        name,
+        d,
+        startDate: startDate,
+        endDate: endDate,
+        critical: critical,
+      );
     }
     return id;
   }
 
   /// Adds a daily reminder for an existing medicine.
+  /// [critical]: full-screen alarm that rings on silent (default) rather
+  /// than a gentle notification.
   Future<Reminder> addTime(
     int medicineId,
     String medicineName,
     DoseTime dose, {
     required DateTime startDate,
     DateTime? endDate,
+    bool critical = true,
   }) => _reminders.create(
     RemindersCompanion.insert(
       type: ReminderType.medicine,
@@ -71,6 +89,7 @@ class MedicineScheduleService {
         dose.time.minute,
       ),
       doseAmount: Value(dose.amount),
+      isCritical: Value(critical),
       repeatRule: const Value(RepeatRule.daily),
       endAt: Value(endOfDay(endDate)),
     ),

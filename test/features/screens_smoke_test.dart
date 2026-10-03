@@ -8,6 +8,7 @@ import 'package:dosey/core/database/app_database.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/core/storage/file_storage_service.dart';
 import 'package:dosey/core/widgets/amount_stepper.dart';
+import 'package:dosey/core/widgets/async_value_view.dart';
 import 'package:dosey/features/medicines/domain/dose_time.dart';
 import 'package:dosey/features/medicines/presentation/bulk/medicine_draft_card.dart';
 import 'package:dosey/features/medicines/domain/scanned_medicine.dart';
@@ -20,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../support/fakes.dart';
 import '../support/harness.dart';
@@ -705,5 +707,79 @@ void main() {
     expect(scheduler.alarms, isEmpty);
     expect(photos.existsSync(), isFalse);
     await unmount(tester);
+  });
+
+  testWidgets('quick times: 2 tablets morning, lunch and dinner', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await tester.tap(find.byTooltip(en.add));
+    await settle(tester);
+    await tapText(tester, en.addMedicine);
+    await tapText(tester, en.next);
+    await tester.enterText(find.byType(TextFormField).first, 'Zulfidin');
+
+    // Morning, then make it 2 tablets…
+    await tapText(tester, en.slotMorning);
+    await tapText(tester, '8:00 am · 1 tablet');
+    // Half steps: 1 → 1½ → 2.
+    for (var i = 0; i < 2; i++) {
+      await tester.tap(
+        find.descendant(
+          of: find.byType(AmountStepper),
+          matching: find.byIcon(Icons.add_rounded),
+        ),
+      );
+      await settle(tester);
+    }
+    await tapText(tester, en.done);
+    // …and Lunch / Dinner pick up the same amount.
+    await tapText(tester, en.slotLunch);
+    await tapText(tester, en.slotDinner);
+    await scrollTo(tester, '2:00 pm · 2 tablet');
+    await scrollTo(tester, '9:00 pm · 2 tablet');
+
+    // A quiet notification instead of a full alarm.
+    await tapText(tester, en.ringAsAlarm);
+    await tapText(tester, en.save);
+
+    final med = await dbRun(
+      tester,
+      () => (db.select(
+        db.medicines,
+      )..where((m) => m.name.equals('Zulfidin'))).getSingle(),
+    );
+    final reminders = await dbRun(
+      tester,
+      () => (db.select(
+        db.reminders,
+      )..where((r) => r.medicineId.equals(med.id))).get(),
+    );
+    expect(
+      {for (final r in reminders) r.startAt.hour: r.doseAmount},
+      {8: 2.0, 14: 2.0, 21: 2.0},
+    );
+    expect(reminders.every((r) => !r.isCritical), isTrue);
+    await unmount(tester);
+  });
+
+  testWidgets('loading shows a shimmer skeleton, not a spinner', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: AsyncValueView<int>(
+            value: const AsyncLoading(),
+            data: (n) => Text('$n'),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(find.byType(Shimmer), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 }

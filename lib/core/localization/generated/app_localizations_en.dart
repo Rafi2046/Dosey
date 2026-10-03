@@ -1367,4 +1367,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continueLabel => 'Continue';
+
+  @override
+  String get slotMorning => 'Morning';
+
+  @override
+  String get slotLunch => 'Lunch';
+
+  @override
+  String get slotDinner => 'Dinner';
+
+  @override
+  String get slotBedtime => 'Bedtime';
+
+  @override
+  String get quickTimesHint =>
+      'Tap to add or remove. Tap a time below to change it or its amount.';
+
+  @override
+  String get ringAsAlarm => 'Ring as an alarm';
+
+  @override
+  String get ringAsAlarmHint =>
+      'Full-screen alarm that rings even on silent. Turn off for a quiet notification.';
 }

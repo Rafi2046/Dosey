@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/choice_pills.dart';
 import '../../../../core/widgets/labeled_field.dart';
 import '../../../../core/widgets/status_chip.dart';
 import '../../../reminders/domain/reminder_text.dart';
@@ -8,8 +9,9 @@ import '../../domain/dose_time.dart';
 import 'dose_time_sheet.dart';
 import '../../../../core/localization/l10n.dart';
 
-/// "Medicine Time" chips, each with its own amount (08:00 · 2 tablet ·
-/// 14:00 · 1 tablet), plus "Add time". Tap a chip to change or remove it.
+/// "Medicine Time": one-tap Morning · Lunch · Dinner · Bedtime buttons, then
+/// a chip per time with its own amount (08:00 · 2 tablet), plus "Add time"
+/// for anything else. Tap a chip to change or remove it.
 class ReminderTimesEditor extends StatelessWidget {
   const ReminderTimesEditor({
     super.key,
@@ -39,10 +41,32 @@ class ReminderTimesEditor extends StatelessWidget {
     return DoseTime(TimeOfDay.now());
   }
 
+  /// Amount for a newly added time: same as the latest one ("2 tablets
+  /// three times a day" only needs setting once).
+  double get _defaultAmount => doses.isEmpty ? 1 : doses.last.amount;
+
+  void _toggleSlots(Set<_Slot> selected) {
+    final before = {
+      for (final s in _Slot.values)
+        if (_has(s)) s,
+    };
+    final added = selected.difference(before);
+    final removed = before.difference(selected);
+    onChanged(
+      DoseTime.sorted([
+        for (final d in doses)
+          if (!removed.any((s) => s.minutes == d.minutes)) d,
+        for (final s in added) DoseTime(s.time, _defaultAmount),
+      ]),
+    );
+  }
+
+  bool _has(_Slot slot) => doses.any((d) => d.minutes == slot.minutes);
+
   Future<void> _add(BuildContext context) async {
     final result = await showDoseTimeSheet(
       context,
-      initial: _suggestion(),
+      initial: _suggestion().copyWith(amount: _defaultAmount),
       unit: unit,
     );
     if (result is! DoseSaved) return;
@@ -86,6 +110,23 @@ class ReminderTimesEditor extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          ChoicePills<_Slot>(
+            options: _Slot.values,
+            selected: {
+              for (final s in _Slot.values)
+                if (_has(s)) s,
+            },
+            multiSelect: true,
+            iconOf: (s) => s.icon,
+            labelOf: (s) => s.label(context.l10n),
+            onChanged: _toggleSlots,
+          ),
+          AppSpacing.gapSm,
+          Text(
+            context.l10n.quickTimesHint,
+            style: AppTextStyles.captionOnLight,
+          ),
+          AppSpacing.gapMd,
           Wrap(
             spacing: AppSpacing.sm,
             runSpacing: AppSpacing.sm,
@@ -117,4 +158,32 @@ class ReminderTimesEditor extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Quick-add intake times.
+enum _Slot {
+  morning(AppConstants.doseMorningHour, 0, Icons.wb_sunny_rounded),
+  lunch(AppConstants.doseNoonHour, 0, Icons.lunch_dining_rounded),
+  dinner(AppConstants.doseNightHour, 0, Icons.dinner_dining_rounded),
+  bedtime(
+    AppConstants.doseBedtimeHour,
+    AppConstants.doseBedtimeMinute,
+    Icons.bedtime_rounded,
+  );
+
+  const _Slot(this.hour, this.minute, this.icon);
+
+  final int hour;
+  final int minute;
+  final IconData icon;
+
+  TimeOfDay get time => TimeOfDay(hour: hour, minute: minute);
+  int get minutes => hour * 60 + minute;
+
+  String label(AppLocalizations l) => switch (this) {
+    morning => l.slotMorning,
+    lunch => l.slotLunch,
+    dinner => l.slotDinner,
+    bedtime => l.slotBedtime,
+  };
 }

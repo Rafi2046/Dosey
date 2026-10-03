@@ -23,6 +23,7 @@ import 'widgets/medicine_times_section.dart';
 import 'widgets/refill_sheet.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../core/utils/numbers.dart';
+import '../../../core/widgets/skeleton.dart';
 
 enum _MenuAction { toggleActive, delete }
 
@@ -107,6 +108,7 @@ class MedicineDetailScreen extends ConsumerWidget {
               ],
             ),
       body: AsyncValueView(
+        skeleton: const Skeleton.detail(),
         value: value,
         data: (item) =>
             item == null ? const SizedBox.shrink() : _DetailBody(item: item),

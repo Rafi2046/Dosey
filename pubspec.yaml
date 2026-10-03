@@ -47,6 +47,7 @@ dependencies:
   url_launcher: ^6.3.3
   google_mlkit_text_recognition: ^0.16.0
   package_info_plus: ^10.2.2
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

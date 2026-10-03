@@ -15,6 +15,7 @@ import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/labeled_field.dart';
 import '../../../core/widgets/picker_field.dart';
 import '../../../core/widgets/pill_button.dart';
+import '../../../core/widgets/switch_row.dart';
 import '../../doctors/presentation/widgets/doctor_picker_field.dart';
 import '../../records/presentation/widgets/prescription_picker_field.dart';
 import '../../reminders/domain/reminder_text.dart';
@@ -78,6 +79,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
   List<DoseTime> _doses = const [];
   bool _saving = false;
   bool _scanning = false;
+  bool _ringAsAlarm = true;
 
   static String? _formatOptional(double? v) =>
       v == null ? null : ReminderText.formatAmount(v);
@@ -195,6 +197,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
             _doses,
             startDate: _startDate,
             endDate: _endDate,
+            critical: _ringAsAlarm,
           );
     }
     if (!mounted) return;
@@ -239,12 +242,6 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
               controller: _strength,
               hint: context.l10n.optional,
             ),
-            AppTextField(
-              label: context.l10n.medicineDescription,
-              controller: _notes,
-              hint: context.l10n.medicineDescriptionHint,
-              maxLines: 3,
-            ),
             DoseSection(
               unit: _doseUnit,
               meal: _meal,
@@ -260,6 +257,19 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
                   onChanged: (d) => setState(() => _doses = d),
                 ),
               ),
+            if (!_isEdit)
+              SwitchRow(
+                title: context.l10n.ringAsAlarm,
+                subtitle: context.l10n.ringAsAlarmHint,
+                value: _ringAsAlarm,
+                onChanged: (v) => setState(() => _ringAsAlarm = v),
+              ),
+            AppTextField(
+              label: context.l10n.medicineDescription,
+              controller: _notes,
+              hint: context.l10n.medicineDescriptionHint,
+              maxLines: 3,
+            ),
             DoctorPickerField(
               label: context.l10n.medicineDoctor,
               doctorId: _doctorId,

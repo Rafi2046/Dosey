@@ -1356,4 +1356,27 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get continueLabel => 'চালিয়ে যান';
+
+  @override
+  String get slotMorning => 'সকাল';
+
+  @override
+  String get slotLunch => 'দুপুর';
+
+  @override
+  String get slotDinner => 'রাত';
+
+  @override
+  String get slotBedtime => 'ঘুমের আগে';
+
+  @override
+  String get quickTimesHint =>
+      'যোগ বা বাদ দিতে চাপুন। সময় বা পরিমাণ বদলাতে নিচের সময়টিতে চাপুন।';
+
+  @override
+  String get ringAsAlarm => 'অ্যালার্মের মতো বাজবে';
+
+  @override
+  String get ringAsAlarmHint =>
+      'সাইলেন্টেও ফুল-স্ক্রিন অ্যালার্ম বাজবে। বন্ধ করলে শুধু সাধারণ নোটিফিকেশন আসবে।';
 }

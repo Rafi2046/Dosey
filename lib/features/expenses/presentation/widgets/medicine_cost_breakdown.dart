@@ -41,7 +41,10 @@ class MedicineCostBreakdown extends StatelessWidget {
                             style: AppTextStyles.cardTitleOnLight,
                           ),
                           Text(
-                            ExpenseStrings.dosesPerDayLabel(line.dosesPerDay),
+                            ExpenseStrings.unitsPerDayLabel(
+                              line.unitsPerDay,
+                              line.medicine.doseUnit,
+                            ),
                             style: AppTextStyles.captionOnLight,
                           ),
                         ],

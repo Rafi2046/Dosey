@@ -62,6 +62,9 @@ abstract final class MedicineStrings {
   static const String deleteMedicineBody =
       'Its reminders and dose history will be deleted too.';
   static const String everyDay = 'Every day';
+  static const String doseTimeTitle = 'Intake time';
+  static const String doseHowMany = 'How many at this time';
+  static const String removeTime = 'Remove this time';
 
   // ── Prescription scan ─────────────────────────────────────────────────────
   static const String scanTitle = 'Scan prescription';

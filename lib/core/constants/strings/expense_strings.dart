@@ -27,6 +27,6 @@ abstract final class ExpenseStrings {
   static const String expenseDoctor = 'Doctor';
   static const String deleteExpenseBody = 'This expense will be removed.';
   static String perDay(String amount) => '$amount / day';
-  static String dosesPerDayLabel(double n) =>
-      '${n == n.roundToDouble() ? n.toInt() : n.toStringAsFixed(1)} / day';
+  static String unitsPerDayLabel(double n, String unit) =>
+      '${n == n.roundToDouble() ? n.toInt() : n.toStringAsFixed(1)} $unit / day';
 }

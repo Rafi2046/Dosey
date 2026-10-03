@@ -7,6 +7,8 @@ import 'package:dosey/core/constants/constants.dart';
 import 'package:dosey/core/database/app_database.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/core/storage/file_storage_service.dart';
+import 'package:dosey/core/widgets/amount_stepper.dart';
+import 'package:dosey/features/medicines/domain/dose_time.dart';
 import 'package:dosey/features/medicines/domain/scanned_medicine.dart';
 import 'package:dosey/features/medicines/providers/medicines_providers.dart';
 import 'package:dosey/features/records/data/records_repository.dart';
@@ -376,8 +378,10 @@ void main() {
         name: 'Napa Extra',
         strength: '500mg',
         form: MedicineForm.tablet,
-        doseAmount: 1,
-        times: [TimeOfDay(hour: 8, minute: 0), TimeOfDay(hour: 21, minute: 0)],
+        doses: [
+          DoseTime(TimeOfDay(hour: 8, minute: 0), 2),
+          DoseTime(TimeOfDay(hour: 21, minute: 0)),
+        ],
         meal: MealRelation.afterMeal,
         durationDays: 7,
         dosePattern: '1+0+1',
@@ -412,9 +416,19 @@ void main() {
     );
 
     // Below the fold: scrollTo fails the test if a chip is missing.
-    await scrollTo(tester, '8:00 am');
-    await scrollTo(tester, '9:00 pm');
-    await tapText(tester, '8:00 am'); // removes that time
+    await scrollTo(tester, '8:00 am · 2 tablet');
+    // Change one time's amount: 9 pm goes from 1 to 1½ tablets.
+    await tapText(tester, '9:00 pm · 1 tablet');
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AmountStepper),
+        matching: find.byIcon(Icons.add_rounded),
+      ),
+    );
+    await settle(tester);
+    expect(find.text('1½ tablet'), findsOneWidget);
+    await tapText(tester, AppStrings.done);
+    await scrollTo(tester, '9:00 pm · 1.5 tablet');
     // The "review the fields" snackbar covers Save until it times out.
     expect(find.text(MedicineStrings.scanFilled), findsOneWidget);
     await tester.pump(const Duration(seconds: 5));
@@ -440,7 +454,10 @@ void main() {
         db.reminders,
       )..where((r) => r.medicineId.equals(med.id))).get(),
     );
-    expect([for (final r in reminders) r.startAt.hour], [21]);
+    expect(
+      {for (final r in reminders) r.startAt.hour: r.doseAmount},
+      {8: 2.0, 21: 1.5},
+    );
     await unmount(tester);
   });
 }

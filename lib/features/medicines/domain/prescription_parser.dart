@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/database/enums.dart';
+import 'dose_time.dart';
 import 'scanned_medicine.dart';
 
 /// Turns OCR'd prescription lines into medicine suggestions with regexes and
@@ -143,13 +144,18 @@ abstract final class PrescriptionParser {
     }
     final lower = text.toLowerCase();
     final schedule = _schedule(lower);
+    // "2 tsf TDS": one amount for every time; "2+1+2" carries its own.
+    final amount = _amount(lower) ?? 1;
 
     return ScannedMedicine(
       name: name,
       strength: strength,
       form: head.form,
-      doseAmount: schedule?.amount ?? _amount(lower),
-      times: schedule?.times ?? const [],
+      doses: [
+        for (final (hour, perSlot)
+            in schedule?.slots ?? const <(int, double?)>[])
+          DoseTime(TimeOfDay(hour: hour, minute: 0), perSlot ?? amount),
+      ],
       meal: _meal(lower),
       durationDays: _duration(lower),
       dosePattern: schedule?.label,
@@ -204,17 +210,13 @@ abstract final class PrescriptionParser {
         for (var g = 1; g <= 4; g++)
           if (numeric.group(g) case final v?) _number(v),
       ];
-      final slots = values.length == 4 ? [_m, _n, _e, _h] : [_m, _n, _h];
-      final hours = [
+      final hours = values.length == 4 ? [_m, _n, _e, _h] : [_m, _n, _h];
+      final slots = [
         for (var i = 0; i < values.length; i++)
-          if (values[i] > 0) slots[i],
+          if (values[i] > 0) (hours[i], values[i]),
       ];
-      if (hours.isEmpty) return null;
-      return _Schedule(
-        _times(hours),
-        values.firstWhere((v) => v > 0),
-        numeric.group(0)!.replaceAll(' ', ''),
-      );
+      if (slots.isEmpty) return null;
+      return _Schedule(slots, numeric.group(0)!.replaceAll(' ', ''));
     }
 
     final interval = _interval.firstMatch(text);
@@ -223,15 +225,11 @@ abstract final class PrescriptionParser {
         interval.group(1) ?? interval.group(2) ?? interval.group(3)!,
       );
       if (every > 0 && every <= Duration.hoursPerDay) {
-        return _Schedule(
-          _times([
-            for (var k = 0; k < Duration.hoursPerDay ~/ every; k++)
-              (AppConstants.doseIntervalStartHour + k * every) %
-                  Duration.hoursPerDay,
-          ]),
-          null,
-          interval.group(0)!,
-        );
+        return _Schedule.at([
+          for (var k = 0; k < Duration.hoursPerDay ~/ every; k++)
+            (AppConstants.doseIntervalStartHour + k * every) %
+                Duration.hoursPerDay,
+        ], interval.group(0)!);
       }
     }
 
@@ -244,22 +242,16 @@ abstract final class PrescriptionParser {
       if (match == null) continue;
       // "once at night": the slot words say when, if the count agrees.
       final useSlots = slotHours.length == hours.length;
-      return _Schedule(
-        _times(useSlots ? slotHours : hours),
-        null,
+      return _Schedule.at(
+        useSlots ? slotHours : hours,
         match.group(0)!.toUpperCase(),
       );
     }
     if (slotHours.isNotEmpty) {
-      return _Schedule(_times(slotHours), null, null);
+      return _Schedule.at(slotHours, null);
     }
     return null;
   }
-
-  static List<TimeOfDay> _times(List<int> hours) =>
-      (hours.toSet().toList()..sort())
-          .map((h) => TimeOfDay(hour: h, minute: 0))
-          .toList();
 
   static double _number(String v) =>
       v == '½' || v == '1/2' ? 0.5 : double.parse(v);
@@ -319,8 +311,13 @@ class _Head {
 }
 
 class _Schedule {
-  const _Schedule(this.times, this.amount, this.label);
-  final List<TimeOfDay> times;
-  final double? amount;
+  const _Schedule(this.slots, this.label);
+
+  /// Same amount (unknown here) at each of [hours], sorted and de-duplicated.
+  _Schedule.at(List<int> hours, this.label)
+    : slots = [for (final h in hours.toSet().toList()..sort()) (h, null)];
+
+  /// (hour, amount) pairs; a null amount means "use the line's amount".
+  final List<(int, double?)> slots;
   final String? label;
 }

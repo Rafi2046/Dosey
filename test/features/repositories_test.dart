@@ -39,7 +39,6 @@ void main() {
     int? doctorId,
     double? stock,
     int unitPrice = 500,
-    double dose = 1,
   }) => container
       .read(medicinesRepositoryProvider)
       .create(
@@ -49,11 +48,14 @@ void main() {
           doctorId: Value(doctorId),
           stockQuantity: Value(stock),
           unitPriceMinor: Value(unitPrice),
-          doseAmount: Value(dose),
         ),
       );
 
-  Future<Reminder> addDailyReminder(int medicineId, {int hour = 8}) => container
+  Future<Reminder> addDailyReminder(
+    int medicineId, {
+    int hour = 8,
+    double dose = 1,
+  }) => container
       .read(remindersRepositoryProvider)
       .create(
         RemindersCompanion.insert(
@@ -62,6 +64,7 @@ void main() {
           startAt: DateTime(2026, 1, 1, hour),
           medicineId: Value(medicineId),
           repeatRule: const Value(RepeatRule.daily),
+          doseAmount: Value(dose),
         ),
         now: DateTime(2026, 10, 3, 12),
       );
@@ -102,8 +105,8 @@ void main() {
   );
 
   test('logging taken deducts stock once; undo restores it', () async {
-    final med = await addMedicine(stock: 10, dose: 2);
-    final r = await addDailyReminder(med);
+    final med = await addMedicine(stock: 10);
+    final r = await addDailyReminder(med, dose: 2);
     final repo = container.read(remindersRepositoryProvider);
     final at = DateTime(2026, 10, 4, 8);
 
@@ -155,14 +158,17 @@ void main() {
   });
 
   test('medicine cost projection', () async {
-    // ৳5 per tablet, 2 tablets per dose, twice daily → ৳20/day, ৳600/month.
-    final med = await addMedicine(unitPrice: 500, dose: 2);
-    await addDailyReminder(med, hour: 8);
-    await addDailyReminder(med, hour: 20);
+    // ৳5 per tablet; 2 at 08:00 + 1 at 14:00 + 2 at 20:00 = 5 tablets/day
+    // → ৳25/day, ৳750/month.
+    final med = await addMedicine(unitPrice: 500);
+    await addDailyReminder(med, hour: 8, dose: 2);
+    await addDailyReminder(med, hour: 14);
+    await addDailyReminder(med, hour: 20, dose: 2);
 
     final p = await _listenAndRead(container, medicineCostProjectionProvider);
-    expect(p.dailyMinor, 2000);
-    expect(p.monthlyMinor, 60000);
+    expect(p.lines.single.unitsPerDay, 5);
+    expect(p.dailyMinor, 2500);
+    expect(p.monthlyMinor, 75000);
   });
 
   test('expense totals by month and category', () async {

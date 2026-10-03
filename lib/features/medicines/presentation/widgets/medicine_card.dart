@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/database/app_database.dart';
 import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../../reminders/domain/reminder_text.dart';
+import '../../../reminders/providers/reminders_providers.dart';
 import '../../domain/medicine_with_doctor.dart';
 
 /// Medicine summary: illustration, name/strength, dose, doctor, stock and
 /// projected monthly cost.
-class MedicineCard extends StatelessWidget {
+class MedicineCard extends ConsumerWidget {
   const MedicineCard({
     super.key,
     required this.item,
@@ -25,13 +28,18 @@ class MedicineCard extends StatelessWidget {
   final int? monthlyCostMinor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final m = item.medicine;
+    final reminders = <Reminder>[
+      for (final d
+          in ref.watch(remindersByMedicineProvider(m.id)).value ?? const [])
+        d.reminder,
+    ];
     final light = SurfaceCard.isLight(color);
     final muted = light ? AppColors.inkMuted : AppColors.textOnDarkMuted;
     final caption = AppTextStyles.caption.copyWith(color: muted);
     final dose =
-        '${ReminderText.formatAmount(m.doseAmount)} ${m.doseUnit}'
+        '${ReminderText.doseSummary(reminders, m.doseUnit)}'
         '${NotificationStrings.notifDoseSeparator}${m.mealRelation.label}';
 
     return SurfaceCard(

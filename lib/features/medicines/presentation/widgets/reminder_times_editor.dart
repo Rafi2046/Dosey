@@ -1,29 +1,81 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/utils/pickers.dart';
 import '../../../../core/widgets/labeled_field.dart';
 import '../../../../core/widgets/status_chip.dart';
+import '../../../reminders/domain/reminder_text.dart';
+import '../../domain/dose_time.dart';
+import 'dose_time_sheet.dart';
 
-/// "Medicine Time" chips (09:00 am · 07:00 pm) with an "Add time" chip.
-/// Tapping a time removes it.
+/// "Medicine Time" chips, each with its own amount (08:00 · 2 tablet ·
+/// 14:00 · 1 tablet), plus "Add time". Tap a chip to change or remove it.
 class ReminderTimesEditor extends StatelessWidget {
   const ReminderTimesEditor({
     super.key,
-    required this.times,
+    required this.doses,
+    required this.unit,
     required this.onChanged,
   });
 
-  final List<TimeOfDay> times;
-  final ValueChanged<List<TimeOfDay>> onChanged;
+  final List<DoseTime> doses;
 
-  static int _minutes(TimeOfDay t) => t.hour * 60 + t.minute;
+  /// The medicine's dose unit, e.g. "tablet".
+  final String unit;
+  final ValueChanged<List<DoseTime>> onChanged;
+
+  /// Default for a new time: the first unused morning/noon/night slot.
+  DoseTime _suggestion() {
+    final used = {for (final d in doses) d.minutes};
+    for (final hour in const [
+      AppConstants.doseMorningHour,
+      AppConstants.doseNoonHour,
+      AppConstants.doseNightHour,
+    ]) {
+      if (!used.contains(hour * 60)) {
+        return DoseTime(TimeOfDay(hour: hour, minute: 0));
+      }
+    }
+    return DoseTime(TimeOfDay.now());
+  }
 
   Future<void> _add(BuildContext context) async {
-    final picked = await AppPickers.time(context);
-    if (picked == null) return;
-    if (times.any((t) => _minutes(t) == _minutes(picked))) return;
-    onChanged([...times, picked]..sort((a, b) => _minutes(a) - _minutes(b)));
+    final result = await showDoseTimeSheet(
+      context,
+      initial: _suggestion(),
+      unit: unit,
+    );
+    if (result is! DoseSaved) return;
+    // Same time twice: the new amount replaces the old one.
+    onChanged(
+      DoseTime.sorted([
+        for (final d in doses)
+          if (d.minutes != result.dose.minutes) d,
+        result.dose,
+      ]),
+    );
+  }
+
+  Future<void> _edit(BuildContext context, DoseTime dose) async {
+    final result = await showDoseTimeSheet(
+      context,
+      initial: dose,
+      unit: unit,
+      canRemove: true,
+    );
+    switch (result) {
+      case DoseSaved(dose: final updated):
+        onChanged(
+          DoseTime.sorted([
+            for (final d in doses)
+              if (d != dose && d.minutes != updated.minutes) d,
+            updated,
+          ]),
+        );
+      case DoseRemoved():
+        onChanged([...doses]..remove(dose));
+      case null:
+        break;
+    }
   }
 
   @override
@@ -37,13 +89,16 @@ class ReminderTimesEditor extends StatelessWidget {
             spacing: AppSpacing.sm,
             runSpacing: AppSpacing.sm,
             children: [
-              for (final t in times)
+              for (final d in doses)
                 StatusChip(
-                  label: t.format(context).toLowerCase(),
-                  icon: Icons.close_rounded,
+                  label:
+                      '${d.time.format(context).toLowerCase()}'
+                      '${NotificationStrings.notifDoseSeparator}'
+                      '${ReminderText.dose(d.amount, unit)}',
+                  icon: Icons.edit_rounded,
                   background: AppColors.sand,
                   foreground: AppColors.ink,
-                  onTap: () => onChanged([...times]..remove(t)),
+                  onTap: () => _edit(context, d),
                 ),
               StatusChip(
                 label: AppStrings.addTime,

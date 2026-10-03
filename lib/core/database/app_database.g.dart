@@ -1219,18 +1219,6 @@ class $MedicinesTable extends Medicines
         requiredDuringInsert: false,
         defaultValue: Constant(MedicineForm.tablet.name),
       ).withConverter<MedicineForm>($MedicinesTable.$converterform);
-  static const VerificationMeta _doseAmountMeta = const VerificationMeta(
-    'doseAmount',
-  );
-  @override
-  late final GeneratedColumn<double> doseAmount = GeneratedColumn<double>(
-    'dose_amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(1),
-  );
   static const VerificationMeta _doseUnitMeta = const VerificationMeta(
     'doseUnit',
   );
@@ -1391,7 +1379,6 @@ class $MedicinesTable extends Medicines
     name,
     strength,
     form,
-    doseAmount,
     doseUnit,
     mealRelation,
     doctorId,
@@ -1433,12 +1420,6 @@ class $MedicinesTable extends Medicines
       context.handle(
         _strengthMeta,
         strength.isAcceptableOrUnknown(data['strength']!, _strengthMeta),
-      );
-    }
-    if (data.containsKey('dose_amount')) {
-      context.handle(
-        _doseAmountMeta,
-        doseAmount.isAcceptableOrUnknown(data['dose_amount']!, _doseAmountMeta),
       );
     }
     if (data.containsKey('dose_unit')) {
@@ -1554,10 +1535,6 @@ class $MedicinesTable extends Medicines
           data['${effectivePrefix}form'],
         )!,
       ),
-      doseAmount: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}dose_amount'],
-      )!,
       doseUnit: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}dose_unit'],
@@ -1636,8 +1613,8 @@ class Medicine extends DataClass implements Insertable<Medicine> {
   final String? strength;
   final MedicineForm form;
 
-  /// Units consumed per dose (1 tablet, 5 ml, 2 puffs...).
-  final double doseAmount;
+  /// Unit of each dose (tablet, ml, puff…). The amount per dose lives on
+  /// each reminder ([Reminders.doseAmount]) so it can differ by time of day.
   final String doseUnit;
   final MealRelation mealRelation;
 
@@ -1648,7 +1625,7 @@ class Medicine extends DataClass implements Insertable<Medicine> {
   final int? prescriptionId;
 
   /// Price of ONE unit (one tablet / one ml) in minor units. Projected cost is
-  /// unitPriceMinor × doseAmount × doses per period (from [Reminders]).
+  /// unitPriceMinor × the units its reminders consume per period.
   final int unitPriceMinor;
   final double? stockQuantity;
   final double? refillThreshold;
@@ -1663,7 +1640,6 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     required this.name,
     this.strength,
     required this.form,
-    required this.doseAmount,
     required this.doseUnit,
     required this.mealRelation,
     this.doctorId,
@@ -1691,7 +1667,6 @@ class Medicine extends DataClass implements Insertable<Medicine> {
         $MedicinesTable.$converterform.toSql(form),
       );
     }
-    map['dose_amount'] = Variable<double>(doseAmount);
     map['dose_unit'] = Variable<String>(doseUnit);
     {
       map['meal_relation'] = Variable<String>(
@@ -1732,7 +1707,6 @@ class Medicine extends DataClass implements Insertable<Medicine> {
           ? const Value.absent()
           : Value(strength),
       form: Value(form),
-      doseAmount: Value(doseAmount),
       doseUnit: Value(doseUnit),
       mealRelation: Value(mealRelation),
       doctorId: doctorId == null && nullToAbsent
@@ -1773,7 +1747,6 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       form: $MedicinesTable.$converterform.fromJson(
         serializer.fromJson<String>(json['form']),
       ),
-      doseAmount: serializer.fromJson<double>(json['doseAmount']),
       doseUnit: serializer.fromJson<String>(json['doseUnit']),
       mealRelation: $MedicinesTable.$convertermealRelation.fromJson(
         serializer.fromJson<String>(json['mealRelation']),
@@ -1801,7 +1774,6 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       'form': serializer.toJson<String>(
         $MedicinesTable.$converterform.toJson(form),
       ),
-      'doseAmount': serializer.toJson<double>(doseAmount),
       'doseUnit': serializer.toJson<String>(doseUnit),
       'mealRelation': serializer.toJson<String>(
         $MedicinesTable.$convertermealRelation.toJson(mealRelation),
@@ -1825,7 +1797,6 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     String? name,
     Value<String?> strength = const Value.absent(),
     MedicineForm? form,
-    double? doseAmount,
     String? doseUnit,
     MealRelation? mealRelation,
     Value<int?> doctorId = const Value.absent(),
@@ -1844,7 +1815,6 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     name: name ?? this.name,
     strength: strength.present ? strength.value : this.strength,
     form: form ?? this.form,
-    doseAmount: doseAmount ?? this.doseAmount,
     doseUnit: doseUnit ?? this.doseUnit,
     mealRelation: mealRelation ?? this.mealRelation,
     doctorId: doctorId.present ? doctorId.value : this.doctorId,
@@ -1871,9 +1841,6 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       name: data.name.present ? data.name.value : this.name,
       strength: data.strength.present ? data.strength.value : this.strength,
       form: data.form.present ? data.form.value : this.form,
-      doseAmount: data.doseAmount.present
-          ? data.doseAmount.value
-          : this.doseAmount,
       doseUnit: data.doseUnit.present ? data.doseUnit.value : this.doseUnit,
       mealRelation: data.mealRelation.present
           ? data.mealRelation.value
@@ -1907,7 +1874,6 @@ class Medicine extends DataClass implements Insertable<Medicine> {
           ..write('name: $name, ')
           ..write('strength: $strength, ')
           ..write('form: $form, ')
-          ..write('doseAmount: $doseAmount, ')
           ..write('doseUnit: $doseUnit, ')
           ..write('mealRelation: $mealRelation, ')
           ..write('doctorId: $doctorId, ')
@@ -1931,7 +1897,6 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     name,
     strength,
     form,
-    doseAmount,
     doseUnit,
     mealRelation,
     doctorId,
@@ -1954,7 +1919,6 @@ class Medicine extends DataClass implements Insertable<Medicine> {
           other.name == this.name &&
           other.strength == this.strength &&
           other.form == this.form &&
-          other.doseAmount == this.doseAmount &&
           other.doseUnit == this.doseUnit &&
           other.mealRelation == this.mealRelation &&
           other.doctorId == this.doctorId &&
@@ -1975,7 +1939,6 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
   final Value<String> name;
   final Value<String?> strength;
   final Value<MedicineForm> form;
-  final Value<double> doseAmount;
   final Value<String> doseUnit;
   final Value<MealRelation> mealRelation;
   final Value<int?> doctorId;
@@ -1994,7 +1957,6 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     this.name = const Value.absent(),
     this.strength = const Value.absent(),
     this.form = const Value.absent(),
-    this.doseAmount = const Value.absent(),
     this.doseUnit = const Value.absent(),
     this.mealRelation = const Value.absent(),
     this.doctorId = const Value.absent(),
@@ -2014,7 +1976,6 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     required String name,
     this.strength = const Value.absent(),
     this.form = const Value.absent(),
-    this.doseAmount = const Value.absent(),
     this.doseUnit = const Value.absent(),
     this.mealRelation = const Value.absent(),
     this.doctorId = const Value.absent(),
@@ -2035,7 +1996,6 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     Expression<String>? name,
     Expression<String>? strength,
     Expression<String>? form,
-    Expression<double>? doseAmount,
     Expression<String>? doseUnit,
     Expression<String>? mealRelation,
     Expression<int>? doctorId,
@@ -2055,7 +2015,6 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
       if (name != null) 'name': name,
       if (strength != null) 'strength': strength,
       if (form != null) 'form': form,
-      if (doseAmount != null) 'dose_amount': doseAmount,
       if (doseUnit != null) 'dose_unit': doseUnit,
       if (mealRelation != null) 'meal_relation': mealRelation,
       if (doctorId != null) 'doctor_id': doctorId,
@@ -2077,7 +2036,6 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     Value<String>? name,
     Value<String?>? strength,
     Value<MedicineForm>? form,
-    Value<double>? doseAmount,
     Value<String>? doseUnit,
     Value<MealRelation>? mealRelation,
     Value<int?>? doctorId,
@@ -2097,7 +2055,6 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
       name: name ?? this.name,
       strength: strength ?? this.strength,
       form: form ?? this.form,
-      doseAmount: doseAmount ?? this.doseAmount,
       doseUnit: doseUnit ?? this.doseUnit,
       mealRelation: mealRelation ?? this.mealRelation,
       doctorId: doctorId ?? this.doctorId,
@@ -2130,9 +2087,6 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
       map['form'] = Variable<String>(
         $MedicinesTable.$converterform.toSql(form.value),
       );
-    }
-    if (doseAmount.present) {
-      map['dose_amount'] = Variable<double>(doseAmount.value);
     }
     if (doseUnit.present) {
       map['dose_unit'] = Variable<String>(doseUnit.value);
@@ -2185,7 +2139,6 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
           ..write('name: $name, ')
           ..write('strength: $strength, ')
           ..write('form: $form, ')
-          ..write('doseAmount: $doseAmount, ')
           ..write('doseUnit: $doseUnit, ')
           ..write('mealRelation: $mealRelation, ')
           ..write('doctorId: $doctorId, ')
@@ -2283,6 +2236,17 @@ class $RemindersTable extends Reminders
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES doctors (id) ON DELETE SET NULL',
     ),
+  );
+  static const VerificationMeta _doseAmountMeta = const VerificationMeta(
+    'doseAmount',
+  );
+  @override
+  late final GeneratedColumn<double> doseAmount = GeneratedColumn<double>(
+    'dose_amount',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _locationMeta = const VerificationMeta(
     'location',
@@ -2444,6 +2408,7 @@ class $RemindersTable extends Reminders
     description,
     medicineId,
     doctorId,
+    doseAmount,
     location,
     startAt,
     repeatRule,
@@ -2500,6 +2465,12 @@ class $RemindersTable extends Reminders
       context.handle(
         _doctorIdMeta,
         doctorId.isAcceptableOrUnknown(data['doctor_id']!, _doctorIdMeta),
+      );
+    }
+    if (data.containsKey('dose_amount')) {
+      context.handle(
+        _doseAmountMeta,
+        doseAmount.isAcceptableOrUnknown(data['dose_amount']!, _doseAmountMeta),
       );
     }
     if (data.containsKey('location')) {
@@ -2623,6 +2594,10 @@ class $RemindersTable extends Reminders
         DriftSqlType.int,
         data['${effectivePrefix}doctor_id'],
       ),
+      doseAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}dose_amount'],
+      ),
       location: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}location'],
@@ -2703,6 +2678,10 @@ class Reminder extends DataClass implements Insertable<Reminder> {
   /// Doctor for appointments; optional context for other types.
   final int? doctorId;
 
+  /// Units to take at this time (2 tablets at 08:00, 1 at 14:00…), in the
+  /// medicine's [Medicines.doseUnit]. Null for non-medicine reminders.
+  final double? doseAmount;
+
   /// Clinic / lab / vaccination centre.
   final String? location;
 
@@ -2737,6 +2716,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     this.description,
     this.medicineId,
     this.doctorId,
+    this.doseAmount,
     this.location,
     required this.startAt,
     required this.repeatRule,
@@ -2769,6 +2749,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     }
     if (!nullToAbsent || doctorId != null) {
       map['doctor_id'] = Variable<int>(doctorId);
+    }
+    if (!nullToAbsent || doseAmount != null) {
+      map['dose_amount'] = Variable<double>(doseAmount);
     }
     if (!nullToAbsent || location != null) {
       map['location'] = Variable<String>(location);
@@ -2816,6 +2799,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       doctorId: doctorId == null && nullToAbsent
           ? const Value.absent()
           : Value(doctorId),
+      doseAmount: doseAmount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(doseAmount),
       location: location == null && nullToAbsent
           ? const Value.absent()
           : Value(location),
@@ -2858,6 +2844,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       description: serializer.fromJson<String?>(json['description']),
       medicineId: serializer.fromJson<int?>(json['medicineId']),
       doctorId: serializer.fromJson<int?>(json['doctorId']),
+      doseAmount: serializer.fromJson<double?>(json['doseAmount']),
       location: serializer.fromJson<String?>(json['location']),
       startAt: serializer.fromJson<DateTime>(json['startAt']),
       repeatRule: $RemindersTable.$converterrepeatRule.fromJson(
@@ -2887,6 +2874,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       'description': serializer.toJson<String?>(description),
       'medicineId': serializer.toJson<int?>(medicineId),
       'doctorId': serializer.toJson<int?>(doctorId),
+      'doseAmount': serializer.toJson<double?>(doseAmount),
       'location': serializer.toJson<String?>(location),
       'startAt': serializer.toJson<DateTime>(startAt),
       'repeatRule': serializer.toJson<String>(
@@ -2912,6 +2900,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     Value<String?> description = const Value.absent(),
     Value<int?> medicineId = const Value.absent(),
     Value<int?> doctorId = const Value.absent(),
+    Value<double?> doseAmount = const Value.absent(),
     Value<String?> location = const Value.absent(),
     DateTime? startAt,
     RepeatRule? repeatRule,
@@ -2932,6 +2921,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     description: description.present ? description.value : this.description,
     medicineId: medicineId.present ? medicineId.value : this.medicineId,
     doctorId: doctorId.present ? doctorId.value : this.doctorId,
+    doseAmount: doseAmount.present ? doseAmount.value : this.doseAmount,
     location: location.present ? location.value : this.location,
     startAt: startAt ?? this.startAt,
     repeatRule: repeatRule ?? this.repeatRule,
@@ -2962,6 +2952,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           ? data.medicineId.value
           : this.medicineId,
       doctorId: data.doctorId.present ? data.doctorId.value : this.doctorId,
+      doseAmount: data.doseAmount.present
+          ? data.doseAmount.value
+          : this.doseAmount,
       location: data.location.present ? data.location.value : this.location,
       startAt: data.startAt.present ? data.startAt.value : this.startAt,
       repeatRule: data.repeatRule.present
@@ -3001,6 +2994,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           ..write('description: $description, ')
           ..write('medicineId: $medicineId, ')
           ..write('doctorId: $doctorId, ')
+          ..write('doseAmount: $doseAmount, ')
           ..write('location: $location, ')
           ..write('startAt: $startAt, ')
           ..write('repeatRule: $repeatRule, ')
@@ -3026,6 +3020,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     description,
     medicineId,
     doctorId,
+    doseAmount,
     location,
     startAt,
     repeatRule,
@@ -3050,6 +3045,7 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           other.description == this.description &&
           other.medicineId == this.medicineId &&
           other.doctorId == this.doctorId &&
+          other.doseAmount == this.doseAmount &&
           other.location == this.location &&
           other.startAt == this.startAt &&
           other.repeatRule == this.repeatRule &&
@@ -3072,6 +3068,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
   final Value<String?> description;
   final Value<int?> medicineId;
   final Value<int?> doctorId;
+  final Value<double?> doseAmount;
   final Value<String?> location;
   final Value<DateTime> startAt;
   final Value<RepeatRule> repeatRule;
@@ -3092,6 +3089,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     this.description = const Value.absent(),
     this.medicineId = const Value.absent(),
     this.doctorId = const Value.absent(),
+    this.doseAmount = const Value.absent(),
     this.location = const Value.absent(),
     this.startAt = const Value.absent(),
     this.repeatRule = const Value.absent(),
@@ -3113,6 +3111,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     this.description = const Value.absent(),
     this.medicineId = const Value.absent(),
     this.doctorId = const Value.absent(),
+    this.doseAmount = const Value.absent(),
     this.location = const Value.absent(),
     required DateTime startAt,
     this.repeatRule = const Value.absent(),
@@ -3136,6 +3135,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     Expression<String>? description,
     Expression<int>? medicineId,
     Expression<int>? doctorId,
+    Expression<double>? doseAmount,
     Expression<String>? location,
     Expression<DateTime>? startAt,
     Expression<String>? repeatRule,
@@ -3157,6 +3157,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
       if (description != null) 'description': description,
       if (medicineId != null) 'medicine_id': medicineId,
       if (doctorId != null) 'doctor_id': doctorId,
+      if (doseAmount != null) 'dose_amount': doseAmount,
       if (location != null) 'location': location,
       if (startAt != null) 'start_at': startAt,
       if (repeatRule != null) 'repeat_rule': repeatRule,
@@ -3180,6 +3181,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     Value<String?>? description,
     Value<int?>? medicineId,
     Value<int?>? doctorId,
+    Value<double?>? doseAmount,
     Value<String?>? location,
     Value<DateTime>? startAt,
     Value<RepeatRule>? repeatRule,
@@ -3201,6 +3203,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
       description: description ?? this.description,
       medicineId: medicineId ?? this.medicineId,
       doctorId: doctorId ?? this.doctorId,
+      doseAmount: doseAmount ?? this.doseAmount,
       location: location ?? this.location,
       startAt: startAt ?? this.startAt,
       repeatRule: repeatRule ?? this.repeatRule,
@@ -3239,6 +3242,9 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     }
     if (doctorId.present) {
       map['doctor_id'] = Variable<int>(doctorId.value);
+    }
+    if (doseAmount.present) {
+      map['dose_amount'] = Variable<double>(doseAmount.value);
     }
     if (location.present) {
       map['location'] = Variable<String>(location.value);
@@ -3293,6 +3299,7 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
           ..write('description: $description, ')
           ..write('medicineId: $medicineId, ')
           ..write('doctorId: $doctorId, ')
+          ..write('doseAmount: $doseAmount, ')
           ..write('location: $location, ')
           ..write('startAt: $startAt, ')
           ..write('repeatRule: $repeatRule, ')
@@ -4774,6 +4781,214 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
   }
 }
 
+class $AppSettingsTable extends AppSettings
+    with TableInfo<$AppSettingsTable, AppSetting> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AppSettingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  @override
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
+    'key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  @override
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+    'value',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [key, value];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'app_settings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AppSetting> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('key')) {
+      context.handle(
+        _keyMeta,
+        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_keyMeta);
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+        _valueMeta,
+        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {key};
+  @override
+  AppSetting map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AppSetting(
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      value: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}value'],
+      )!,
+    );
+  }
+
+  @override
+  $AppSettingsTable createAlias(String alias) {
+    return $AppSettingsTable(attachedDatabase, alias);
+  }
+}
+
+class AppSetting extends DataClass implements Insertable<AppSetting> {
+  final String key;
+  final String value;
+  const AppSetting({required this.key, required this.value});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['key'] = Variable<String>(key);
+    map['value'] = Variable<String>(value);
+    return map;
+  }
+
+  AppSettingsCompanion toCompanion(bool nullToAbsent) {
+    return AppSettingsCompanion(key: Value(key), value: Value(value));
+  }
+
+  factory AppSetting.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AppSetting(
+      key: serializer.fromJson<String>(json['key']),
+      value: serializer.fromJson<String>(json['value']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'key': serializer.toJson<String>(key),
+      'value': serializer.toJson<String>(value),
+    };
+  }
+
+  AppSetting copyWith({String? key, String? value}) =>
+      AppSetting(key: key ?? this.key, value: value ?? this.value);
+  AppSetting copyWithCompanion(AppSettingsCompanion data) {
+    return AppSetting(
+      key: data.key.present ? data.key.value : this.key,
+      value: data.value.present ? data.value.value : this.value,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AppSetting(')
+          ..write('key: $key, ')
+          ..write('value: $value')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(key, value);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AppSetting &&
+          other.key == this.key &&
+          other.value == this.value);
+}
+
+class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
+  final Value<String> key;
+  final Value<String> value;
+  final Value<int> rowid;
+  const AppSettingsCompanion({
+    this.key = const Value.absent(),
+    this.value = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AppSettingsCompanion.insert({
+    required String key,
+    required String value,
+    this.rowid = const Value.absent(),
+  }) : key = Value(key),
+       value = Value(value);
+  static Insertable<AppSetting> custom({
+    Expression<String>? key,
+    Expression<String>? value,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (key != null) 'key': key,
+      if (value != null) 'value': value,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AppSettingsCompanion copyWith({
+    Value<String>? key,
+    Value<String>? value,
+    Value<int>? rowid,
+  }) {
+    return AppSettingsCompanion(
+      key: key ?? this.key,
+      value: value ?? this.value,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AppSettingsCompanion(')
+          ..write('key: $key, ')
+          ..write('value: $value, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4785,6 +5000,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RecordAttachmentsTable recordAttachments =
       $RecordAttachmentsTable(this);
   late final $ExpensesTable expenses = $ExpensesTable(this);
+  late final $AppSettingsTable appSettings = $AppSettingsTable(this);
   late final Index idxMedicinesDoctor = Index(
     'idx_medicines_doctor',
     'CREATE INDEX idx_medicines_doctor ON medicines (doctor_id)',
@@ -4845,6 +5061,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     reminderLogs,
     recordAttachments,
     expenses,
+    appSettings,
     idxMedicinesDoctor,
     idxMedicinesActive,
     idxRemindersNext,
@@ -6307,7 +6524,6 @@ typedef $$MedicinesTableCreateCompanionBuilder =
       required String name,
       Value<String?> strength,
       Value<MedicineForm> form,
-      Value<double> doseAmount,
       Value<String> doseUnit,
       Value<MealRelation> mealRelation,
       Value<int?> doctorId,
@@ -6328,7 +6544,6 @@ typedef $$MedicinesTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String?> strength,
       Value<MedicineForm> form,
-      Value<double> doseAmount,
       Value<String> doseUnit,
       Value<MealRelation> mealRelation,
       Value<int?> doctorId,
@@ -6449,11 +6664,6 @@ class $$MedicinesTableFilterComposer
         column: $table.form,
         builder: (column) => ColumnWithTypeConverterFilters(column),
       );
-
-  ColumnFilters<double> get doseAmount => $composableBuilder(
-    column: $table.doseAmount,
-    builder: (column) => ColumnFilters(column),
-  );
 
   ColumnFilters<String> get doseUnit => $composableBuilder(
     column: $table.doseUnit,
@@ -6637,11 +6847,6 @@ class $$MedicinesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get doseAmount => $composableBuilder(
-    column: $table.doseAmount,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get doseUnit => $composableBuilder(
     column: $table.doseUnit,
     builder: (column) => ColumnOrderings(column),
@@ -6764,11 +6969,6 @@ class $$MedicinesTableAnnotationComposer
 
   GeneratedColumnWithTypeConverter<MedicineForm, String> get form =>
       $composableBuilder(column: $table.form, builder: (column) => column);
-
-  GeneratedColumn<double> get doseAmount => $composableBuilder(
-    column: $table.doseAmount,
-    builder: (column) => column,
-  );
 
   GeneratedColumn<String> get doseUnit =>
       $composableBuilder(column: $table.doseUnit, builder: (column) => column);
@@ -6946,7 +7146,6 @@ class $$MedicinesTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String?> strength = const Value.absent(),
                 Value<MedicineForm> form = const Value.absent(),
-                Value<double> doseAmount = const Value.absent(),
                 Value<String> doseUnit = const Value.absent(),
                 Value<MealRelation> mealRelation = const Value.absent(),
                 Value<int?> doctorId = const Value.absent(),
@@ -6965,7 +7164,6 @@ class $$MedicinesTableTableManager
                 name: name,
                 strength: strength,
                 form: form,
-                doseAmount: doseAmount,
                 doseUnit: doseUnit,
                 mealRelation: mealRelation,
                 doctorId: doctorId,
@@ -6986,7 +7184,6 @@ class $$MedicinesTableTableManager
                 required String name,
                 Value<String?> strength = const Value.absent(),
                 Value<MedicineForm> form = const Value.absent(),
-                Value<double> doseAmount = const Value.absent(),
                 Value<String> doseUnit = const Value.absent(),
                 Value<MealRelation> mealRelation = const Value.absent(),
                 Value<int?> doctorId = const Value.absent(),
@@ -7005,7 +7202,6 @@ class $$MedicinesTableTableManager
                 name: name,
                 strength: strength,
                 form: form,
-                doseAmount: doseAmount,
                 doseUnit: doseUnit,
                 mealRelation: mealRelation,
                 doctorId: doctorId,
@@ -7165,6 +7361,7 @@ typedef $$RemindersTableCreateCompanionBuilder =
       Value<String?> description,
       Value<int?> medicineId,
       Value<int?> doctorId,
+      Value<double?> doseAmount,
       Value<String?> location,
       required DateTime startAt,
       Value<RepeatRule> repeatRule,
@@ -7187,6 +7384,7 @@ typedef $$RemindersTableUpdateCompanionBuilder =
       Value<String?> description,
       Value<int?> medicineId,
       Value<int?> doctorId,
+      Value<double?> doseAmount,
       Value<String?> location,
       Value<DateTime> startAt,
       Value<RepeatRule> repeatRule,
@@ -7286,6 +7484,11 @@ class $$RemindersTableFilterComposer
 
   ColumnFilters<String> get description => $composableBuilder(
     column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get doseAmount => $composableBuilder(
+    column: $table.doseAmount,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7456,6 +7659,11 @@ class $$RemindersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get doseAmount => $composableBuilder(
+    column: $table.doseAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get location => $composableBuilder(
     column: $table.location,
     builder: (column) => ColumnOrderings(column),
@@ -7588,6 +7796,11 @@ class $$RemindersTableAnnotationComposer
 
   GeneratedColumn<String> get description => $composableBuilder(
     column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get doseAmount => $composableBuilder(
+    column: $table.doseAmount,
     builder: (column) => column,
   );
 
@@ -7755,6 +7968,7 @@ class $$RemindersTableTableManager
                 Value<String?> description = const Value.absent(),
                 Value<int?> medicineId = const Value.absent(),
                 Value<int?> doctorId = const Value.absent(),
+                Value<double?> doseAmount = const Value.absent(),
                 Value<String?> location = const Value.absent(),
                 Value<DateTime> startAt = const Value.absent(),
                 Value<RepeatRule> repeatRule = const Value.absent(),
@@ -7775,6 +7989,7 @@ class $$RemindersTableTableManager
                 description: description,
                 medicineId: medicineId,
                 doctorId: doctorId,
+                doseAmount: doseAmount,
                 location: location,
                 startAt: startAt,
                 repeatRule: repeatRule,
@@ -7797,6 +8012,7 @@ class $$RemindersTableTableManager
                 Value<String?> description = const Value.absent(),
                 Value<int?> medicineId = const Value.absent(),
                 Value<int?> doctorId = const Value.absent(),
+                Value<double?> doseAmount = const Value.absent(),
                 Value<String?> location = const Value.absent(),
                 required DateTime startAt,
                 Value<RepeatRule> repeatRule = const Value.absent(),
@@ -7817,6 +8033,7 @@ class $$RemindersTableTableManager
                 description: description,
                 medicineId: medicineId,
                 doctorId: doctorId,
+                doseAmount: doseAmount,
                 location: location,
                 startAt: startAt,
                 repeatRule: repeatRule,
@@ -9219,6 +9436,145 @@ typedef $$ExpensesTableProcessedTableManager =
         bool receiptRecordId,
       })
     >;
+typedef $$AppSettingsTableCreateCompanionBuilder =
+    AppSettingsCompanion Function({
+      required String key,
+      required String value,
+      Value<int> rowid,
+    });
+typedef $$AppSettingsTableUpdateCompanionBuilder =
+    AppSettingsCompanion Function({
+      Value<String> key,
+      Value<String> value,
+      Value<int> rowid,
+    });
+
+class $$AppSettingsTableFilterComposer
+    extends Composer<_$AppDatabase, $AppSettingsTable> {
+  $$AppSettingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$AppSettingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $AppSettingsTable> {
+  $$AppSettingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AppSettingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AppSettingsTable> {
+  $$AppSettingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get key =>
+      $composableBuilder(column: $table.key, builder: (column) => column);
+
+  GeneratedColumn<String> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+}
+
+class $$AppSettingsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AppSettingsTable,
+          AppSetting,
+          $$AppSettingsTableFilterComposer,
+          $$AppSettingsTableOrderingComposer,
+          $$AppSettingsTableAnnotationComposer,
+          $$AppSettingsTableCreateCompanionBuilder,
+          $$AppSettingsTableUpdateCompanionBuilder,
+          (
+            AppSetting,
+            BaseReferences<_$AppDatabase, $AppSettingsTable, AppSetting>,
+          ),
+          AppSetting,
+          PrefetchHooks Function()
+        > {
+  $$AppSettingsTableTableManager(_$AppDatabase db, $AppSettingsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AppSettingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AppSettingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AppSettingsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> key = const Value.absent(),
+                Value<String> value = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AppSettingsCompanion(key: key, value: value, rowid: rowid),
+          createCompanionCallback:
+              ({
+                required String key,
+                required String value,
+                Value<int> rowid = const Value.absent(),
+              }) => AppSettingsCompanion.insert(
+                key: key,
+                value: value,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AppSettingsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AppSettingsTable,
+      AppSetting,
+      $$AppSettingsTableFilterComposer,
+      $$AppSettingsTableOrderingComposer,
+      $$AppSettingsTableAnnotationComposer,
+      $$AppSettingsTableCreateCompanionBuilder,
+      $$AppSettingsTableUpdateCompanionBuilder,
+      (
+        AppSetting,
+        BaseReferences<_$AppDatabase, $AppSettingsTable, AppSetting>,
+      ),
+      AppSetting,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -9237,4 +9593,6 @@ class $AppDatabaseManager {
       $$RecordAttachmentsTableTableManager(_db, _db.recordAttachments);
   $$ExpensesTableTableManager get expenses =>
       $$ExpensesTableTableManager(_db, _db.expenses);
+  $$AppSettingsTableTableManager get appSettings =>
+      $$AppSettingsTableTableManager(_db, _db.appSettings);
 }

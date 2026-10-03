@@ -19,6 +19,7 @@ import '../../../core/widgets/selection_sheet.dart';
 import '../../doctors/presentation/widgets/doctor_picker_field.dart';
 import '../../records/presentation/widgets/prescription_picker_field.dart';
 import '../../reminders/domain/reminder_text.dart';
+import '../domain/dose_time.dart';
 import '../domain/scanned_medicine.dart';
 import '../providers/medicines_providers.dart';
 import 'widgets/dose_section.dart';
@@ -53,9 +54,6 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
   late final _name = TextEditingController(text: _m?.name);
   late final _strength = TextEditingController(text: _m?.strength);
   late final _notes = TextEditingController(text: _m?.notes);
-  late final _doseAmount = TextEditingController(
-    text: ReminderText.formatAmount(_m?.doseAmount ?? 1),
-  );
   late final _doseUnit = TextEditingController(
     text: _m?.doseUnit ?? _form.defaultUnit,
   );
@@ -76,7 +74,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
   late int? _prescriptionId = _m?.prescriptionId;
   late DateTime _startDate = _m?.startDate ?? DateTime.now();
   late DateTime? _endDate = _m?.endDate;
-  List<TimeOfDay> _times = const [];
+  List<DoseTime> _doses = const [];
   bool _saving = false;
   bool _scanning = false;
 
@@ -92,7 +90,6 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
       _name,
       _strength,
       _notes,
-      _doseAmount,
       _doseUnit,
       _unitPrice,
       _stock,
@@ -147,7 +144,9 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
   static String? _scanSummary(BuildContext context, ScannedMedicine m) {
     final parts = [
       ?m.dosePattern,
-      for (final t in m.times) t.format(context).toLowerCase(),
+      for (final d in m.doses)
+        '${d.time.format(context).toLowerCase()} '
+            '(${ReminderText.formatAmount(d.amount)})',
     ];
     return parts.isEmpty ? null : parts.join(' · ');
   }
@@ -156,12 +155,9 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
     if (s.form case final form?) _onFormChanged(form);
     _name.text = s.name;
     if (s.strength case final v?) _strength.text = v;
-    if (s.doseAmount case final v?) {
-      _doseAmount.text = ReminderText.formatAmount(v);
-    }
     setState(() {
       if (s.meal case final m?) _meal = m;
-      if (s.times.isNotEmpty) _times = s.times;
+      if (s.doses.isNotEmpty) _doses = s.doses;
       // An N-day course ends on its Nth day.
       if (s.durationDays case final d?) {
         _endDate = DateUtils.dateOnly(_startDate).add(Duration(days: d - 1));
@@ -176,7 +172,6 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
     ),
     notes: Value(_notes.text.trim().isEmpty ? null : _notes.text.trim()),
     form: Value(_form),
-    doseAmount: Value(double.parse(_doseAmount.text.trim())),
     doseUnit: Value(_doseUnit.text.trim()),
     mealRelation: Value(_meal),
     doctorId: Value(_doctorId),
@@ -203,7 +198,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
           .read(medicineScheduleServiceProvider)
           .createWithTimes(
             _companion(),
-            _times,
+            _doses,
             startDate: _startDate,
             endDate: _endDate,
           );
@@ -259,15 +254,19 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
               maxLines: 3,
             ),
             DoseSection(
-              amount: _doseAmount,
               unit: _doseUnit,
               meal: _meal,
               onMealChanged: (m) => setState(() => _meal = m),
             ),
             if (!_isEdit)
-              ReminderTimesEditor(
-                times: _times,
-                onChanged: (t) => setState(() => _times = t),
+              // Rebuild on unit edits so chips read "2 tablet" → "2 ml".
+              ListenableBuilder(
+                listenable: _doseUnit,
+                builder: (context, _) => ReminderTimesEditor(
+                  doses: _doses,
+                  unit: _doseUnit.text.trim(),
+                  onChanged: (d) => setState(() => _doses = d),
+                ),
               ),
             DoctorPickerField(
               label: MedicineStrings.medicineDoctor,

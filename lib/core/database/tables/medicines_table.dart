@@ -17,8 +17,8 @@ class Medicines extends Table {
     Constant(MedicineForm.tablet.name),
   )();
 
-  /// Units consumed per dose (1 tablet, 5 ml, 2 puffs...).
-  RealColumn get doseAmount => real().withDefault(const Constant(1))();
+  /// Unit of each dose (tablet, ml, puff…). The amount per dose lives on
+  /// each reminder ([Reminders.doseAmount]) so it can differ by time of day.
   TextColumn get doseUnit => text().withDefault(const Constant('tablet'))();
   TextColumn get mealRelation => textEnum<MealRelation>().withDefault(
     Constant(MealRelation.anytime.name),
@@ -39,7 +39,7 @@ class Medicines extends Table {
   )();
 
   /// Price of ONE unit (one tablet / one ml) in minor units. Projected cost is
-  /// unitPriceMinor × doseAmount × doses per period (from [Reminders]).
+  /// unitPriceMinor × the units its reminders consume per period.
   IntColumn get unitPriceMinor => integer().withDefault(const Constant(0))();
   RealColumn get stockQuantity => real().nullable()();
   RealColumn get refillThreshold => real().nullable()();
@@ -52,8 +52,5 @@ class Medicines extends Table {
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 
   @override
-  List<String> get customConstraints => [
-    'CHECK (dose_amount > 0)',
-    'CHECK (unit_price_minor >= 0)',
-  ];
+  List<String> get customConstraints => ['CHECK (unit_price_minor >= 0)'];
 }

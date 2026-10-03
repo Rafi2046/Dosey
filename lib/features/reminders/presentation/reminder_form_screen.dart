@@ -6,6 +6,7 @@ import '../../../core/constants/constants.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/utils/pickers.dart';
+import '../../../core/widgets/amount_stepper.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/choice_pills.dart';
 import '../../../core/widgets/confirm_dialog.dart';
@@ -58,6 +59,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   late int _interval = widget.existing?.repeatInterval ?? 1;
   late DateTime? _endAt = widget.existing?.endAt;
   late bool _critical = widget.existing?.isCritical ?? true;
+  late double _doseAmount = widget.existing?.doseAmount ?? 1;
   late int _snooze =
       widget.existing?.snoozeMinutes ?? AppConstants.defaultSnoozeMinutes;
 
@@ -96,6 +98,13 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
     super.dispose();
   }
 
+  /// Unit of the chosen medicine ("tablet", "ml"), for the amount stepper.
+  String? get _selectedUnit => (ref.watch(medicinesProvider).value ?? const [])
+      .where((m) => m.medicine.id == _medicineId)
+      .firstOrNull
+      ?.medicine
+      .doseUnit;
+
   void _onMedicineChanged(int? id) {
     setState(() => _medicineId = id);
     // Default the title to the medicine's name.
@@ -120,6 +129,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
         _type == ReminderType.medicine ? null : _textOrNull(_location),
       ),
       medicineId: Value(_type == ReminderType.medicine ? _medicineId : null),
+      doseAmount: Value(_type == ReminderType.medicine ? _doseAmount : null),
       doctorId: Value(_doctorId),
       startAt: Value(_startAt),
       repeatRule: Value(_repeat),
@@ -195,6 +205,18 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
                 allowNone: false,
                 errorText: _medicineError,
                 onChanged: _onMedicineChanged,
+              ),
+            if (isMedicine)
+              LabeledField(
+                label: MedicineStrings.doseHowMany,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: AmountStepper(
+                    value: _doseAmount,
+                    suffix: _selectedUnit,
+                    onChanged: (v) => setState(() => _doseAmount = v),
+                  ),
+                ),
               ),
             AppTextField(
               label: ReminderStrings.reminderTitle,

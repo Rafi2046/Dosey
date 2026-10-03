@@ -30,6 +30,10 @@ class Reminders extends Table {
     onDelete: KeyAction.setNull,
   )();
 
+  /// Units to take at this time (2 tablets at 08:00, 1 at 14:00…), in the
+  /// medicine's [Medicines.doseUnit]. Null for non-medicine reminders.
+  RealColumn get doseAmount => real().nullable()();
+
   /// Clinic / lab / vaccination centre.
   TextColumn get location => text().nullable()();
 
@@ -62,6 +66,7 @@ class Reminders extends Table {
   @override
   List<String> get customConstraints => [
     "CHECK (type <> 'medicine' OR medicine_id IS NOT NULL)",
+    'CHECK (dose_amount IS NULL OR dose_amount > 0)',
     "CHECK (repeat_rule <> 'everyNDays' OR (repeat_interval IS NOT NULL AND repeat_interval >= 1))",
     "CHECK (repeat_rule <> 'weekly' OR (weekdays_mask IS NOT NULL AND weekdays_mask BETWEEN 1 AND 127))",
   ];

@@ -1,12 +1,11 @@
 import 'package:drift/drift.dart';
-import 'package:flutter/material.dart' show TimeOfDay;
-
 import '../../../core/database/app_database.dart';
 import '../../reminders/data/reminders_repository.dart';
+import '../domain/dose_time.dart';
 import 'medicines_repository.dart';
 
-/// Creates a medicine together with one daily reminder per intake time, so
-/// "add medicine" is a single atomic step for the user.
+/// Creates a medicine together with one daily reminder per intake time (each
+/// with its own amount), so "add medicine" is a single atomic step.
 class MedicineScheduleService {
   MedicineScheduleService(this._db, this._medicines, this._reminders);
 
@@ -16,14 +15,14 @@ class MedicineScheduleService {
 
   Future<int> createWithTimes(
     MedicinesCompanion medicine,
-    List<TimeOfDay> times, {
+    List<DoseTime> doses, {
     required DateTime startDate,
     DateTime? endDate,
   }) => _db.transaction(() async {
     final id = await _medicines.create(medicine);
     final name = medicine.name.value;
-    for (final t in times) {
-      await addTime(id, name, t, startDate: startDate, endDate: endDate);
+    for (final d in doses) {
+      await addTime(id, name, d, startDate: startDate, endDate: endDate);
     }
     return id;
   });
@@ -32,7 +31,7 @@ class MedicineScheduleService {
   Future<Reminder> addTime(
     int medicineId,
     String medicineName,
-    TimeOfDay time, {
+    DoseTime dose, {
     required DateTime startDate,
     DateTime? endDate,
   }) => _reminders.create(
@@ -44,9 +43,10 @@ class MedicineScheduleService {
         startDate.year,
         startDate.month,
         startDate.day,
-        time.hour,
-        time.minute,
+        dose.time.hour,
+        dose.time.minute,
       ),
+      doseAmount: Value(dose.amount),
       repeatRule: const Value(RepeatRule.daily),
       endAt: Value(endOfDay(endDate)),
     ),

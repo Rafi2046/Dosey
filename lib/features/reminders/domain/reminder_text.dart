@@ -6,14 +6,14 @@ import 'reminder_with_details.dart';
 
 /// Human-readable lines for a reminder, shared by notifications and UI.
 abstract final class ReminderText {
-  /// e.g. "2 tablet · After meal" for medicines, "At Square Hospital" for
-  /// appointments; falls back to the description.
+  /// e.g. "2 tablet · After meal" (this reminder's amount) for medicines,
+  /// "At Square Hospital" for appointments; falls back to the description.
   static String body(ReminderWithDetails d) {
     final parts = <String>[];
     final medicine = d.medicine;
     if (medicine != null) {
       parts
-        ..add('${formatAmount(medicine.doseAmount)} ${medicine.doseUnit}')
+        ..add(dose(d.reminder.doseAmount ?? 1, medicine.doseUnit))
         ..add(medicine.mealRelation.label);
     }
     final location = d.reminder.location;
@@ -30,6 +30,23 @@ abstract final class ReminderText {
     return description == null || description.isEmpty
         ? summary
         : '$summary\n$description';
+  }
+
+  /// "2 tablet", "0.5 tablet", "5 ml".
+  static String dose(double amount, String unit) =>
+      '${formatAmount(amount)} $unit';
+
+  /// Per-time amounts in time order: "2 + 1 + 2 tablet", or "1 tablet" when
+  /// there's a single time.
+  static String doseSummary(List<Reminder> reminders, String unit) {
+    final sorted = [...reminders]
+      ..sort((a, b) {
+        int minutes(Reminder r) => r.startAt.hour * 60 + r.startAt.minute;
+        return minutes(a) - minutes(b);
+      });
+    if (sorted.isEmpty) return unit;
+    final amounts = [for (final r in sorted) formatAmount(r.doseAmount ?? 1)];
+    return '${amounts.join(' + ')} $unit';
   }
 
   /// 1.0 → "1", 2.5 → "2.5"

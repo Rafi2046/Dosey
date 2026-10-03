@@ -181,13 +181,9 @@ class RemindersRepository {
   }) async {
     final reminder = await getById(reminderId);
     final medicineId = reminder?.medicineId;
-    if (medicineId == null) return;
-    final medicine = await (_db.select(
-      _db.medicines,
-    )..where((m) => m.id.equals(medicineId))).getSingle();
-    await _db.adjustMedicineStock(
-      medicineId,
-      restore ? medicine.doseAmount : -medicine.doseAmount,
-    );
+    if (reminder == null || medicineId == null) return;
+    // Each time can have its own amount (2 at 08:00, 1 at 14:00).
+    final amount = reminder.doseAmount ?? 1;
+    await _db.adjustMedicineStock(medicineId, restore ? amount : -amount);
   }
 }

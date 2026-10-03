@@ -3,7 +3,8 @@ import 'package:dosey/features/medicines/domain/prescription_parser.dart';
 import 'package:dosey/features/medicines/domain/scanned_medicine.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-List<int> hours(ScannedMedicine m) => [for (final t in m.times) t.hour];
+List<int> hours(ScannedMedicine m) => [for (final d in m.doses) d.time.hour];
+List<double> amounts(ScannedMedicine m) => [for (final d in m.doses) d.amount];
 
 void main() {
   test('reads a typical printed prescription', () {
@@ -30,7 +31,7 @@ void main() {
     expect(napa.form, MedicineForm.tablet);
     expect(napa.strength, '500mg');
     expect(hours(napa), [8, 21]);
-    expect(napa.doseAmount, 1);
+    expect(amounts(napa), [1, 1]);
     expect(napa.meal, MealRelation.afterMeal);
     expect(napa.durationDays, 7);
     expect(napa.dosePattern, '1+0+1');
@@ -45,7 +46,7 @@ void main() {
     expect(ambrox.form, MedicineForm.syrup);
     expect(ambrox.strength, '15mg/5ml');
     expect(hours(ambrox), [8, 14, 21]);
-    expect(ambrox.doseAmount, 2);
+    expect(amounts(ambrox), [2, 2, 2]); // "2 tsf" at each time
     expect(ambrox.dosePattern, 'TDS');
 
     final montair = meds[3];
@@ -56,10 +57,20 @@ void main() {
   test('four-slot, half-dose and dash patterns', () {
     final m = PrescriptionParser.parse(['Tab. Losectil ½+½+½+½']).single;
     expect(hours(m), [8, 14, 18, 21]);
-    expect(m.doseAmount, 0.5);
+    expect(amounts(m), [0.5, 0.5, 0.5, 0.5]);
 
     final d = PrescriptionParser.parse(['Tab Amdocal 5mg 0 - 0 - 1']).single;
     expect(hours(d), [21]);
+  });
+
+  test('different amounts at different times', () {
+    final m = PrescriptionParser.parse(['Tab. Napa 500mg 2+1+2']).single;
+    expect(hours(m), [8, 14, 21]);
+    expect(amounts(m), [2, 1, 2]);
+
+    final half = PrescriptionParser.parse(['Tab. Rivo 0.5mg ½+0+1']).single;
+    expect(hours(half), [8, 21]);
+    expect(amounts(half), [0.5, 1]);
   });
 
   test('Latin abbreviations and time words', () {
@@ -91,7 +102,7 @@ void main() {
       'Tab. Rivotril 0.5mg',
       'Next visit 12-10-2026',
     ]).single;
-    expect(m.times, isEmpty);
+    expect(m.doses, isEmpty);
   });
 
   test('duplicates collapse and nothing is invented', () {

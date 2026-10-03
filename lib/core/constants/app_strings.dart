@@ -30,6 +30,7 @@ abstract final class AppStrings {
   static const String choose = 'Choose';
   static const String clear = 'Clear';
   static const String addTime = 'Add time';
+  static const String done = 'Done';
   static const String daysUnit = 'days';
   static String daysCount(int n) => n == 1 ? '1 day' : '$n days';
   static String pagesCount(int n) => n == 1 ? '1 page' : '$n pages';

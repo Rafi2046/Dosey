@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/constants.dart';
+import '../../../core/database/app_database.dart';
 import '../../../core/utils/enum_labels.dart';
 import '../../../core/utils/money.dart';
 import '../../../core/widgets/async_value_view.dart';
@@ -14,6 +15,7 @@ import '../../../core/widgets/status_chip.dart';
 import '../../doctors/presentation/doctor_detail_screen.dart';
 import '../../expenses/providers/expenses_providers.dart';
 import '../../reminders/domain/reminder_text.dart';
+import '../../reminders/providers/reminders_providers.dart';
 import '../domain/medicine_with_doctor.dart';
 import '../providers/medicines_providers.dart';
 import 'medicine_form_screen.dart';
@@ -128,6 +130,11 @@ class _DetailBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final m = item.medicine;
+    final reminders = <Reminder>[
+      for (final d
+          in ref.watch(remindersByMedicineProvider(m.id)).value ?? const [])
+        d.reminder,
+    ];
     final end = m.endDate;
     final duration = end == null
         ? AppStrings.ongoing
@@ -165,7 +172,7 @@ class _DetailBody extends ConsumerWidget {
         InfoBlock(
           label: MedicineStrings.doses,
           value:
-              '${ReminderText.formatAmount(m.doseAmount)} ${m.doseUnit}'
+              '${ReminderText.doseSummary(reminders, m.doseUnit)}'
               '${NotificationStrings.notifDoseSeparator}${m.mealRelation.label}',
         ),
         if (doctor != null)

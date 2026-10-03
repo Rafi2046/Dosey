@@ -22,6 +22,9 @@ class DoctorsScreen extends ConsumerWidget {
     return TabScrollView(
       // Nothing to list: centre the empty state in the space left.
       centerLast: doctors.value?.isEmpty ?? false,
+      onRefresh: () async {
+        ref.invalidate(doctorsWithStatsProvider);
+      },
       children: [
         ScreenHeader(
           title: context.l10n.doctorsTitle,

@@ -129,6 +129,9 @@ abstract final class AppSpacing {
 
   /// Bottom nav returns this long after scrolling stops.
   static const Duration navShowDelay = Duration(milliseconds: 300);
+
+  /// Pull-to-refresh shows its skeleton at least this long.
+  static const Duration refreshMinDuration = Duration(milliseconds: 700);
   static const Duration alarmShake = Duration(milliseconds: 900);
   static const double alarmShakeTurns = 0.012;
 

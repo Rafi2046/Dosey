@@ -27,6 +27,9 @@ class RecordsScreen extends ConsumerWidget {
     return TabScrollView(
       // Nothing to list: centre the empty state in the space left.
       centerLast: records.value?.isEmpty ?? false,
+      onRefresh: () async {
+        ref.invalidate(recordSummariesProvider);
+      },
       children: [
         ScreenHeader(
           title: context.l10n.recordsTitle,

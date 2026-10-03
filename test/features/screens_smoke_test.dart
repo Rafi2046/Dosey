@@ -11,6 +11,8 @@ import 'package:dosey/core/widgets/amount_stepper.dart';
 import 'package:dosey/core/widgets/app_text_field.dart';
 import 'package:dosey/core/widgets/async_value_view.dart';
 import 'package:dosey/core/widgets/labeled_field.dart';
+import 'package:dosey/core/widgets/screen_header.dart';
+import 'package:dosey/core/widgets/skeleton.dart';
 import 'package:dosey/core/widgets/pill_button.dart';
 import 'package:dosey/core/database/enums.dart';
 import 'package:dosey/core/utils/enum_labels.dart';
@@ -392,6 +394,29 @@ void main() {
     );
     expect(subtitle, findsOneWidget);
     expect(find.textContaining('ট্যাবলেট'), findsNothing);
+    await unmount(tester);
+  });
+
+  testWidgets('pulling down refreshes with a shimmer skeleton', (tester) async {
+    await pumpApp(tester);
+    await openTab(tester, HomeTab.medicines);
+    expect(find.text('Metformin 500 mg'), findsOneWidget);
+
+    await tester.fling(
+      find.text('Metformin 500 mg'),
+      const Offset(0, 400),
+      1000,
+    );
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1)); // indicator settles
+    expect(find.byType(Skeleton), findsOneWidget);
+    expect(find.text('Metformin 500 mg'), findsNothing);
+    // The header stays while the list shimmers.
+    expect(find.byType(ScreenHeader), findsOneWidget);
+
+    await settle(tester, frames: 20);
+    expect(find.byType(Skeleton), findsNothing);
+    expect(find.text('Metformin 500 mg'), findsOneWidget);
     await unmount(tester);
   });
 

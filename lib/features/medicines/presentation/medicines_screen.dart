@@ -32,6 +32,10 @@ class MedicinesScreen extends ConsumerWidget {
       centerLast:
           medicines.value?.every((m) => m.medicine.isActive == showStopped) ??
           false,
+      onRefresh: () async {
+        ref.invalidate(medicinesProvider);
+        ref.invalidate(medicineCostProjectionProvider);
+      },
       children: [
         ScreenHeader(
           title: context.l10n.medicinesTitle,

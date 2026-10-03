@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/utils/clock_providers.dart';
 import '../../../core/widgets/section_header.dart';
+import '../../../core/widgets/tab_scroll_view.dart';
+import '../../medicines/providers/medicines_providers.dart';
+import '../../reminders/providers/reminders_providers.dart';
 import '../../expenses/presentation/widgets/expense_summary_widget.dart';
 import '../../expenses/providers/expenses_providers.dart';
 import '../../reminders/presentation/reminder_form_screen.dart';
@@ -31,41 +34,44 @@ class DashboardScreen extends ConsumerWidget {
     final spent = ref.watch(currentMonthExpenseTotalProvider).value ?? 0;
     final projection = ref.watch(medicineCostProjectionProvider).value;
 
-    return SafeArea(
-      bottom: false,
-      child: ListView(
-        padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
-        children: [
-          DashboardHeader(now: now, onBellTap: onOpenReminders),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
-            child: Text(
-              context.l10n.dashboardTitle,
-              style: AppTextStyles.display,
-            ),
+    return TabScrollView(
+      // Everything below the greeting and title shimmers while refreshing.
+      refreshFrom: 2,
+      onRefresh: () async {
+        ref.invalidate(todayScheduleProvider);
+        ref.invalidate(lowStockMedicinesProvider);
+        ref.invalidate(remindersProvider);
+        ref.invalidate(currentMonthExpenseTotalProvider);
+        ref.invalidate(medicineCostProjectionProvider);
+      },
+      children: [
+        DashboardHeader(now: now, onBellTap: onOpenReminders),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
+          child: Text(
+            context.l10n.dashboardTitle,
+            style: AppTextStyles.display,
           ),
-          TodayReminderStack(
-            onAddReminder: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const ReminderFormScreen(),
-              ),
-            ),
+        ),
+        TodayReminderStack(
+          onAddReminder: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => const ReminderFormScreen()),
           ),
-          const LowStockSection(),
-          UpcomingEventsSection(onSeeAll: onOpenReminders),
-          SectionHeader(
-            title: context.l10n.medicineCost,
-            actionLabel: context.l10n.seeAll,
-            onAction: onOpenExpenses,
-          ),
-          ExpenseSummaryWidget(
-            spentMinor: spent,
-            projectedMonthlyMinor: projection?.monthlyMinor ?? 0,
-            projectedDailyMinor: projection?.dailyMinor ?? 0,
-            onTap: onOpenExpenses,
-          ),
-        ],
-      ),
+        ),
+        const LowStockSection(),
+        UpcomingEventsSection(onSeeAll: onOpenReminders),
+        SectionHeader(
+          title: context.l10n.medicineCost,
+          actionLabel: context.l10n.seeAll,
+          onAction: onOpenExpenses,
+        ),
+        ExpenseSummaryWidget(
+          spentMinor: spent,
+          projectedMonthlyMinor: projection?.monthlyMinor ?? 0,
+          projectedDailyMinor: projection?.dailyMinor ?? 0,
+          onTap: onOpenExpenses,
+        ),
+      ],
     );
   }
 }

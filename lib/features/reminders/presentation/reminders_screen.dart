@@ -33,6 +33,9 @@ class RemindersScreen extends ConsumerWidget {
     return TabScrollView(
       // Nothing to list: centre the empty state in the space left.
       centerLast: reminders.value?.isEmpty ?? false,
+      onRefresh: () async {
+        ref.invalidate(remindersProvider);
+      },
       children: [
         ScreenHeader(
           title: context.l10n.remindersTitle,

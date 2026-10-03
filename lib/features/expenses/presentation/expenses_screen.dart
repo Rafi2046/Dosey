@@ -38,6 +38,12 @@ class ExpensesScreen extends ConsumerWidget {
     return TabScrollView(
       // No expenses this month: centre the empty state in the space left.
       centerLast: expenses.value?.isEmpty ?? false,
+      onRefresh: () async {
+        ref.invalidate(monthExpensesProvider);
+        ref.invalidate(expenseTrendProvider);
+        ref.invalidate(monthCategoryTotalsProvider);
+        ref.invalidate(medicineCostProjectionProvider);
+      },
       children: [
         ScreenHeader(title: context.l10n.expensesTitle),
         MonthSwitcher(
@@ -74,7 +80,8 @@ class ExpensesScreen extends ConsumerWidget {
               ? EmptyState(
                   title: context.l10n.noExpenses,
                   message: context.l10n.expensesEmptyBody,
-                  image: AppImages.medOther,
+                  image: null,
+                  compact: true,
                   actionLabel: context.l10n.addExpense,
                   onAction: () => _openForm(context),
                 )

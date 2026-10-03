@@ -31,18 +31,23 @@ final alarmSyncProvider = Provider<void>((ref) {
       .watchAllRaw()
       .listen((rows) async {
         final present = <int>{};
+        var changed = false;
         for (final r in rows) {
           present.add(r.id);
           final signature = (r.isEnabled, r.nextTriggerAt, r.isCritical);
           if (signatures[r.id] == signature) continue;
           signatures[r.id] = signature;
-          await engine.sync(r);
+          changed = true;
         }
         final removed = signatures.keys.where((id) => !present.contains(id));
         for (final id in removed.toList()) {
           signatures.remove(id);
           await engine.cancel(id);
+          changed = true;
         }
+        // Any change can regroup medicines due at the same minute, so
+        // re-derive every alarm at once (one alarm per group).
+        if (changed) await engine.syncAll();
       });
   ref.onDispose(subscription.cancel);
 });

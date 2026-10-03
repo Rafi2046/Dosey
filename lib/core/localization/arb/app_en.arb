@@ -755,5 +755,25 @@
         "type": "String"
       }
     }
+  },
+  "alarmGroupNotifTitle": "{count, plural, =1{Time for 1 medicine} other{Time for {count} medicines}}",
+  "alarmGroupCount": "{count, plural, =1{1 medicine} other{{count} medicines}}",
+  "notifAllTaken": "All taken",
+  "alarmMarkAllTaken": "All taken",
+  "@alarmGroupNotifTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "@alarmGroupCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
   }
 }

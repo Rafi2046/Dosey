@@ -465,5 +465,9 @@
   "exitTitle": "Dosey বন্ধ করবেন?",
   "exitBody": "অ্যাপ বন্ধ থাকলেও রিমাইন্ডার ঠিক সময়ে বাজবে।",
   "exitStay": "থাকুন",
-  "exitConfirm": "বের হন"
+  "exitConfirm": "বের হন",
+  "alarmGroupNotifTitle": "{count, plural, other{{count}টি ওষুধ খাওয়ার সময়}}",
+  "alarmGroupCount": "{count, plural, other{{count}টি ওষুধ}}",
+  "notifAllTaken": "সব খেয়েছি",
+  "alarmMarkAllTaken": "সব খেয়েছি"
 }

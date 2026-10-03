@@ -17,7 +17,12 @@ abstract interface class AlarmScheduler {
 
 /// Shows/dismisses the ringing notification for a reminder occurrence.
 abstract interface class NotificationPresenter {
-  Future<void> showAlarm(ReminderWithDetails details, DateTime scheduledFor);
+  /// One notification for [group]: a single reminder, or several medicines
+  /// due at the same minute (listed together, filed under the lowest id).
+  Future<void> showAlarm(
+    List<ReminderWithDetails> group,
+    DateTime scheduledFor,
+  );
   Future<void> dismiss(int reminderId);
 
   /// "Zulfidin is running low: about 3 days left."

@@ -77,6 +77,32 @@ class RemindersRepository {
 
   Future<ReminderWithDetails?> getDetails(int id) => watchById(id).first;
 
+  /// Enabled medicine reminders whose next alarm is exactly [at]: the ones
+  /// that ring together as one grouped alarm.
+  Future<List<Reminder>> getMedicinesDueAt(DateTime at) =>
+      (_db.select(_db.reminders)
+            ..where(
+              (r) =>
+                  r.isEnabled.equals(true) &
+                  r.type.equalsValue(ReminderType.medicine) &
+                  r.nextTriggerAt.equals(at),
+            )
+            ..orderBy([(r) => OrderingTerm.asc(r.id)]))
+          .get();
+
+  /// What was already recorded for [ids] at [scheduledFor].
+  Future<Map<int, ReminderLogStatus>> statusesFor(
+    List<int> ids,
+    DateTime scheduledFor,
+  ) async => {
+    for (final l
+        in await (_db.select(_db.reminderLogs)..where(
+              (l) => l.reminderId.isIn(ids) & l.scheduledFor.equals(scheduledFor),
+            ))
+            .get())
+      l.reminderId: l.status,
+  };
+
   /// Reminders currently ringing (awaiting Taken/Skip/Snooze), oldest first.
   Stream<List<ReminderWithDetails>> watchRinging() => _watch(
     _joined()
@@ -173,6 +199,24 @@ class RemindersRepository {
     final isTaken = status == ReminderLogStatus.taken;
     if (wasTaken != isTaken) {
       await _adjustStockForDose(reminderId, restore: wasTaken);
+    }
+  });
+
+  /// [logAction] for several reminders of one occurrence, all or nothing
+  /// (a grouped alarm's "Taken" records every medicine together).
+  Future<void> logActions({
+    required List<int> reminderIds,
+    required DateTime scheduledFor,
+    required ReminderLogStatus status,
+  }) => _db.transaction(() async {
+    final actedAt = DateTime.now();
+    for (final id in reminderIds) {
+      await logAction(
+        reminderId: id,
+        scheduledFor: scheduledFor,
+        status: status,
+        actedAt: actedAt,
+      );
     }
   });
 

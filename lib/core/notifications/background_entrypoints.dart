@@ -30,10 +30,11 @@ Future<void> onNotificationAction(ReceivedAction received) async {
   };
   if (occurrence == null || action == null) return;
 
-  final (reminderId, scheduledFor) = occurrence;
+  // A grouped alarm's buttons act on every medicine it lists.
+  final (reminderIds, scheduledFor) = occurrence;
   final engine = await AlarmRuntime.engine();
   await engine.handleAction(
-    reminderId: reminderId,
+    reminderIds: reminderIds,
     scheduledFor: scheduledFor,
     action: action,
   );

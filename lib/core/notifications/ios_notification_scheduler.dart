@@ -4,6 +4,7 @@ import '../../features/reminders/data/reminders_repository.dart';
 import '../constants/app_constants.dart';
 import 'alarm_ports.dart';
 import 'awesome_notification_presenter.dart';
+import 'reminder_alarm_engine.dart';
 
 /// [AlarmScheduler] for iOS, which has no AlarmManager: instead of waking a
 /// background isolate at fire time, the notification itself is scheduled with
@@ -22,17 +23,21 @@ class IosNotificationScheduler implements AlarmScheduler {
     required Map<String, dynamic> params,
     required bool critical,
   }) async {
-    final reminderId = alarmId >= AppConstants.snoozeIdOffset
+    final leaderId = alarmId >= AppConstants.snoozeIdOffset
         ? alarmId - AppConstants.snoozeIdOffset
         : alarmId;
-    final details = await _reminders.getDetails(reminderId);
-    if (details == null) return;
+    // Grouped medicines: one notification listing them all.
+    final group = [
+      for (final id in ReminderAlarmEngine.idsFromParams(params) ?? [leaderId])
+        ?await _reminders.getDetails(id),
+    ];
+    if (group.isEmpty) return;
     final scheduledFor =
         DateTime.tryParse(
           params[AppConstants.alarmParamScheduledFor] as String? ?? '',
         ) ??
         at;
-    await _presenter.schedule(details, scheduledFor, id: alarmId, at: at);
+    await _presenter.schedule(group, scheduledFor, id: alarmId, at: at);
   }
 
   @override

@@ -88,12 +88,17 @@ abstract final class AppConstants {
   static const String alarmParamScheduledFor = 'scheduledFor';
   static const String alarmParamIsSnooze = 'isSnooze';
 
+  /// Every reminder an alarm/notification covers (several medicines due at
+  /// the same minute share one alarm), as comma-separated ids.
+  static const String payloadReminderIds = 'reminderIds';
+  static const String alarmParamReminderIds = 'reminderIds';
+
   // ── Alarm scheduling ──────────────────────────────────────────────────────
   static const int defaultSnoozeMinutes = 10;
   static const List<int> snoozeOptions = [5, 10, 15, 30];
 
-  /// Snooze alarms use `snoozeIdOffset + reminderId` so they never collide
-  /// with the reminder's own alarm id.
+  /// Snooze alarms use `snoozeIdOffset + reminderId` (the group's lowest
+  /// id) so they never collide with a reminder's own alarm id.
   static const int snoozeIdOffset = 1000000000;
 
   /// Fixed alarm id used by the boot receiver to run the resync callback.

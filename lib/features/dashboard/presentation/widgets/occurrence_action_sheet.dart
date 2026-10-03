@@ -40,7 +40,8 @@ class _OccurrenceSheet extends ConsumerWidget {
     await ref
         .read(alarmEngineProvider)
         .handleAction(
-          reminderId: occurrence.details.reminder.id,
+          // Just this card's medicine, even if it rang with others.
+          reminderIds: [occurrence.details.reminder.id],
           scheduledFor: occurrence.at,
           action: action,
         );

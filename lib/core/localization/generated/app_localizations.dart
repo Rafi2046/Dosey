@@ -2531,7 +2531,7 @@ abstract class AppLocalizations {
   /// No description provided for @unitsPerStrip.
   ///
   /// In en, this message translates to:
-  /// **'{unit} per strip'**
+  /// **'Per strip ({unit})'**
   String unitsPerStrip(String unit);
 
   /// No description provided for @daysLeft.

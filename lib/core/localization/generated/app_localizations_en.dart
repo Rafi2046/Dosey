@@ -1419,7 +1419,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String unitsPerStrip(String unit) {
-    return '$unit per strip';
+    return 'Per strip ($unit)';
   }
 
   @override

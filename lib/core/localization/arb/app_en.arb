@@ -594,7 +594,7 @@
   "addOneStrip": "+1 strip",
   "refillAlert": "Refill alert",
   "refillAlertNeedsStock": "Enter your stock above to get a refill alert.",
-  "unitsPerStrip": "{unit} per strip",
+  "unitsPerStrip": "Per strip ({unit})",
   "@unitsPerStrip": {
     "placeholders": {
       "unit": {

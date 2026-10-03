@@ -37,6 +37,9 @@ abstract final class AppSpacing {
   /// Space below each labelled form field.
   static const double fieldGap = lg;
 
+  /// Height the time picker keeps free of the keyboard (see AppPickers).
+  static const double timePickerMinRoom = 320;
+
   // ── Loading skeletons ─────────────────────────────────────────────────────
   static const double skeletonCard = 104;
   static const double skeletonLine = 14;

@@ -2893,6 +2893,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Exit'**
   String get exitConfirm;
+
+  /// No description provided for @alarmGroupNotifTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Time for 1 medicine} other{Time for {count} medicines}}'**
+  String alarmGroupNotifTitle(int count);
+
+  /// No description provided for @alarmGroupCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 medicine} other{{count} medicines}}'**
+  String alarmGroupCount(int count);
+
+  /// No description provided for @notifAllTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'All taken'**
+  String get notifAllTaken;
+
+  /// No description provided for @alarmMarkAllTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'All taken'**
+  String get alarmMarkAllTaken;
 }
 
 class _AppLocalizationsDelegate

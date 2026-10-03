@@ -1701,4 +1701,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exitConfirm => 'Exit';
+
+  @override
+  String alarmGroupNotifTitle(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Time for $countString medicines',
+      one: 'Time for 1 medicine',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String alarmGroupCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString medicines',
+      one: '1 medicine',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifAllTaken => 'All taken';
+
+  @override
+  String get alarmMarkAllTaken => 'All taken';
 }

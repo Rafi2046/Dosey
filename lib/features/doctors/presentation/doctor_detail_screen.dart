@@ -3,11 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/database/app_database.dart';
-import '../../../core/utils/money.dart';
 import '../../../core/widgets/async_value_view.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/cream_scaffold.dart';
-import '../../../core/widgets/info_block.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../../reminders/presentation/reminder_form_screen.dart';
 import '../providers/doctors_providers.dart';
@@ -112,32 +110,8 @@ class DoctorDetailScreen extends ConsumerWidget {
             : ListView(
                 padding: AppSpacing.screenPadding,
                 children: [
-                  DoctorProfileHeader(doctor: doctor),
-                  if (doctor.clinic != null)
-                    InfoBlock(
-                      label: context.l10n.doctorClinic,
-                      value: doctor.clinic!,
-                    ),
-                  if (doctor.address != null)
-                    InfoBlock(
-                      label: context.l10n.doctorAddress,
-                      value: doctor.address!,
-                    ),
-                  if (doctor.phone != null)
-                    InfoBlock(
-                      label: context.l10n.doctorPhone,
-                      value: doctor.phone!,
-                    ),
-                  if (doctor.consultationFeeMinor != null)
-                    InfoBlock(
-                      label: context.l10n.doctorFee,
-                      value: Money.format(doctor.consultationFeeMinor!),
-                    ),
-                  if (doctor.notes != null)
-                    InfoBlock(
-                      label: context.l10n.doctorNotes,
-                      value: doctor.notes!,
-                    ),
+                  DoctorProfileCard(doctor: doctor),
+                  AppSpacing.gapLg,
                   DoctorLinkedSections(doctorId: doctor.id),
                 ],
               ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'native_bridge.dart';
@@ -29,6 +31,22 @@ enum AppPermission {
 class PermissionService {
   final AwesomeNotifications _awn = AwesomeNotifications();
 
+  static const _defaultPermissions = [
+    NotificationPermission.Alert,
+    NotificationPermission.Sound,
+    NotificationPermission.Badge,
+    NotificationPermission.Vibration,
+    NotificationPermission.Light,
+  ];
+
+  /// Critical Alerts ring through silent/DND, but iOS only grants them once
+  /// Apple approves the entitlement (see ios/Runner/CriticalAlerts.entitlements).
+  /// Until then iOS silently ignores the request; the rest still applies.
+  static const _iosPermissions = [
+    ..._defaultPermissions,
+    NotificationPermission.CriticalAlert,
+  ];
+
   Future<Set<AppPermission>> granted() async {
     final special = await NativeBridge.specialPermissionStatus();
     return {
@@ -41,7 +59,9 @@ class PermissionService {
 
   Future<void> request(AppPermission permission) async {
     if (permission == AppPermission.notifications) {
-      await _awn.requestPermissionToSendNotifications();
+      await _awn.requestPermissionToSendNotifications(
+        permissions: Platform.isIOS ? _iosPermissions : _defaultPermissions,
+      );
     } else {
       await NativeBridge.openPermissionSettings(permission.name);
     }

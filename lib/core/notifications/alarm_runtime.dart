@@ -1,11 +1,14 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 
 import '../../features/reminders/data/reminders_repository.dart';
 import '../database/app_database.dart';
+import 'alarm_ports.dart';
 import 'android_alarm_scheduler.dart';
 import 'awesome_notification_presenter.dart';
+import 'ios_notification_scheduler.dart';
 import 'notification_service.dart';
 import 'reminder_alarm_engine.dart';
 
@@ -28,11 +31,20 @@ abstract final class AlarmRuntime {
   static Future<ReminderAlarmEngine> engine() =>
       _engine != null ? Future.value(_engine) : (_starting ??= _start());
 
-  static ReminderAlarmEngine engineFor(AppDatabase db) => ReminderAlarmEngine(
-    reminders: RemindersRepository(db),
-    scheduler: AndroidAlarmScheduler(),
-    notifier: AwesomeNotificationPresenter(),
-  );
+  static ReminderAlarmEngine engineFor(AppDatabase db) {
+    final reminders = RemindersRepository(db);
+    return ReminderAlarmEngine(
+      reminders: reminders,
+      scheduler: schedulerFor(reminders),
+      notifier: AwesomeNotificationPresenter(),
+    );
+  }
+
+  /// AlarmManager on Android; OS-scheduled notifications on iOS.
+  static AlarmScheduler schedulerFor(RemindersRepository reminders) =>
+      Platform.isIOS
+      ? IosNotificationScheduler(reminders, AwesomeNotificationPresenter())
+      : AndroidAlarmScheduler();
 
   static Future<ReminderAlarmEngine> _start() async {
     if (_db == null) {

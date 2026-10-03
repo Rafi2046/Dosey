@@ -13,12 +13,29 @@ import 'notification_channels.dart';
 /// device, appear over the lock screen and loop until acted on.
 class AwesomeNotificationPresenter implements NotificationPresenter {
   @override
-  Future<void> showAlarm(ReminderWithDetails details, DateTime scheduledFor) {
+  Future<void> showAlarm(ReminderWithDetails details, DateTime scheduledFor) =>
+      schedule(details, scheduledFor, id: details.reminder.id);
+
+  /// Posts the alarm now, or at [at] when given (iOS pre-scheduling, where no
+  /// background code runs at fire time). [id] differs for snoozes.
+  Future<void> schedule(
+    ReminderWithDetails details,
+    DateTime scheduledFor, {
+    required int id,
+    DateTime? at,
+  }) {
     final r = details.reminder;
     final critical = r.isCritical;
     return AwesomeNotifications().createNotification(
+      schedule: at == null
+          ? null
+          : NotificationCalendar.fromDate(
+              date: at,
+              allowWhileIdle: true,
+              preciseAlarm: true,
+            ),
       content: NotificationContent(
-        id: r.id,
+        id: id,
         channelKey: NotificationChannels.keyFor(r.type, critical: critical),
         title: r.title,
         body: ReminderText.body(details),

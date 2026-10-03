@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
@@ -40,6 +41,9 @@ abstract final class NotificationService {
     await AwesomeNotifications().setListeners(
       onActionReceivedMethod: onNotificationAction,
     );
+    // AlarmManager and the boot-resync hook are Android-only; on iOS the
+    // plugin is missing and initialize() would throw before runApp.
+    if (!Platform.isAndroid) return;
     await AndroidAlarmManager.initialize();
 
     final handle = PluginUtilities.getCallbackHandle(onAlarmCallback);

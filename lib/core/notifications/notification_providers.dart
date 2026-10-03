@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../features/reminders/providers/reminders_providers.dart';
-import 'android_alarm_scheduler.dart';
+import 'alarm_runtime.dart';
 import 'awesome_notification_presenter.dart';
 import 'permission_service.dart';
 import 'reminder_alarm_engine.dart';
@@ -10,13 +10,14 @@ final permissionServiceProvider = Provider<PermissionService>(
   (ref) => PermissionService(),
 );
 
-final alarmEngineProvider = Provider<ReminderAlarmEngine>(
-  (ref) => ReminderAlarmEngine(
-    reminders: ref.watch(remindersRepositoryProvider),
-    scheduler: AndroidAlarmScheduler(),
+final alarmEngineProvider = Provider<ReminderAlarmEngine>((ref) {
+  final reminders = ref.watch(remindersRepositoryProvider);
+  return ReminderAlarmEngine(
+    reminders: reminders,
+    scheduler: AlarmRuntime.schedulerFor(reminders),
     notifier: AwesomeNotificationPresenter(),
-  ),
-);
+  );
+});
 
 /// While the UI is alive, mirrors every reminder change (create, edit,
 /// enable/disable, delete) into OS alarms. Keep it alive by watching it from

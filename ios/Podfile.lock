@@ -1,0 +1,47 @@
+PODS:
+  - awesome_notifications (0.12.0):
+    - Flutter
+    - IosAwnCore (~> 0.12.0)
+  - Flutter (1.0.0)
+  - flutter_native_splash (2.4.3):
+    - Flutter
+  - image_picker_ios (0.0.1):
+    - Flutter
+  - IosAwnCore (0.12.1)
+  - url_launcher_ios (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
+  - Flutter (from `Flutter`)
+  - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
+  - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+
+SPEC REPOS:
+  trunk:
+    - IosAwnCore
+
+EXTERNAL SOURCES:
+  awesome_notifications:
+    :path: ".symlinks/plugins/awesome_notifications/ios"
+  Flutter:
+    :path: Flutter
+  flutter_native_splash:
+    :path: ".symlinks/plugins/flutter_native_splash/ios"
+  image_picker_ios:
+    :path: ".symlinks/plugins/image_picker_ios/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
+
+SPEC CHECKSUMS:
+  awesome_notifications: e52a8e6a8cdaca4edbd31f38f345305a377445c5
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
+  image_picker_ios: e0ece4aa2a75771a7de3fa735d26d90817041326
+  IosAwnCore: ea91b2d2ee2fd3236748e1b9cdc16194f9558327
+  url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
+
+PODFILE CHECKSUM: 76d0b796dc81b46a7c7d2bf3b9fc05fcf30a537f
+
+COCOAPODS: 1.16.2

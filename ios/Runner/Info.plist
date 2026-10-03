@@ -6,6 +6,11 @@
 		<string>Dosey uses the camera to photograph prescriptions and test reports.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>Dosey lets you attach prescription and report photos from your library.</string>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>fetch</string>
+			<string>remote-notification</string>
+		</array>
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
 			<string>tel</string>

@@ -103,8 +103,10 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
 
   void _onFormChanged(MedicineForm form) {
     // Keep the unit in sync unless the user typed a custom one.
-    if (_doseUnit.text == _form.defaultUnit(context.l10n))
-      _doseUnit.text = form.defaultUnit(context.l10n);
+    final l10n = context.l10n;
+    if (_doseUnit.text == _form.defaultUnit(l10n)) {
+      _doseUnit.text = form.defaultUnit(l10n);
+    }
     setState(() => _form = form);
   }
 

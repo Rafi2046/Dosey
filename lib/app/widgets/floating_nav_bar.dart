@@ -87,11 +87,11 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: tab.label,
+      message: tab.label(context.l10n),
       child: Semantics(
         selected: selected,
         button: true,
-        label: tab.label,
+        label: tab.label(context.l10n),
         child: InkResponse(
           onTap: onTap,
           child: Center(

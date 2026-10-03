@@ -57,9 +57,7 @@ class DoctorCard extends StatelessWidget {
                   ),
                 AppSpacing.gapSm,
                 StatusChip(
-                  label: context.l10n.activeMedicines(
-                    item.activeMedicineCount,
-                  ),
+                  label: context.l10n.activeMedicines(item.activeMedicineCount),
                   icon: Icons.medication_rounded,
                   background: light ? AppColors.moss : AppColors.creamLight,
                   foreground: light ? AppColors.textOnDark : AppColors.ink,

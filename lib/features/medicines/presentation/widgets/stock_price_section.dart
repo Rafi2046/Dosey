@@ -21,12 +21,12 @@ class StockPriceSection extends StatelessWidget {
   static String? _optionalAmount(String? v) =>
       (v == null || v.trim().isEmpty || Money.parse(v) != null)
       ? null
-      : context.l10n.invalidAmount;
+      : AppLocale.l10n.invalidAmount;
 
   static String? _optionalNumber(String? v) =>
       (v == null || v.trim().isEmpty || (double.tryParse(v) ?? -1) >= 0)
       ? null
-      : context.l10n.invalidNumber;
+      : AppLocale.l10n.invalidNumber;
 
   @override
   Widget build(BuildContext context) {

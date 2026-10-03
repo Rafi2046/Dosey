@@ -20,37 +20,39 @@ abstract final class NotificationChannels {
     };
   }
 
-  static final List<NotificationChannelGroup> groups = [
+  // Getters, not constants: names follow the app language (AppLocale) at the
+  // time the channels are registered.
+  static List<NotificationChannelGroup> get groups => [
     NotificationChannelGroup(
       channelGroupKey: AppConstants.channelGroupKey,
-      channelGroupName: context.l10n.channelGroupName,
+      channelGroupName: AppLocale.l10n.channelGroupName,
     ),
   ];
 
   /// (key, name, description, color) of each critical alarm channel.
-  static const List<(String, String, String, Color)> _alarmSpecs = [
+  static List<(String, String, String, Color)> get _alarmSpecs => [
     (
       AppConstants.channelMedicine,
-      context.l10n.channelMedicineName,
-      context.l10n.channelMedicineDesc,
+      AppLocale.l10n.channelMedicineName,
+      AppLocale.l10n.channelMedicineDesc,
       AppColors.medicine,
     ),
     (
       AppConstants.channelAppointment,
-      context.l10n.channelAppointmentName,
-      context.l10n.channelAppointmentDesc,
+      AppLocale.l10n.channelAppointmentName,
+      AppLocale.l10n.channelAppointmentDesc,
       AppColors.appointment,
     ),
     (
       AppConstants.channelVaccine,
-      context.l10n.channelVaccineName,
-      context.l10n.channelVaccineDesc,
+      AppLocale.l10n.channelVaccineName,
+      AppLocale.l10n.channelVaccineDesc,
       AppColors.vaccine,
     ),
     (
       AppConstants.channelMedicalTest,
-      context.l10n.channelTestName,
-      context.l10n.channelTestDesc,
+      AppLocale.l10n.channelTestName,
+      AppLocale.l10n.channelTestDesc,
       AppColors.medicalTest,
     ),
   ];
@@ -61,8 +63,8 @@ abstract final class NotificationChannels {
     NotificationChannel(
       channelGroupKey: AppConstants.channelGroupKey,
       channelKey: AppConstants.channelGentle,
-      channelName: context.l10n.channelGentleName,
-      channelDescription: context.l10n.channelGentleDesc,
+      channelName: AppLocale.l10n.channelGentleName,
+      channelDescription: AppLocale.l10n.channelGentleDesc,
       importance: NotificationImportance.High,
       defaultRingtoneType: DefaultRingtoneType.Notification,
       defaultColor: AppColors.accent,
@@ -75,7 +77,7 @@ abstract final class NotificationChannels {
   /// USAGE_ALARM audio (see AlarmChannels.kt).
   static Map<String, Object> get nativeAlarmChannelArgs => {
     'groupKey': AppConstants.channelGroupKey,
-    'groupName': context.l10n.channelGroupName,
+    'groupName': AppLocale.l10n.channelGroupName,
     'keep': [for (final c in all) c.channelKey!],
     'channels': [
       for (final (key, name, description, color) in _alarmSpecs)

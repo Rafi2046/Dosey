@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/constants/constants.dart';
 import '../core/localization/l10n.dart';
 
 /// Bottom-navigation destinations, in display order.
 enum HomeTab {
-  dashboard(Icons.space_dashboard_rounded, context.l10n.navHome),
-  reminders(Icons.alarm_rounded, context.l10n.navReminders),
-  medicines(Icons.medication_rounded, context.l10n.navMedicines),
-  doctors(Icons.medical_services_rounded, context.l10n.navDoctors),
-  records(Icons.folder_copy_rounded, context.l10n.navRecords),
-  expenses(Icons.account_balance_wallet_rounded, context.l10n.navExpenses);
+  dashboard(Icons.space_dashboard_rounded),
+  reminders(Icons.alarm_rounded),
+  medicines(Icons.medication_rounded),
+  doctors(Icons.medical_services_rounded),
+  records(Icons.folder_copy_rounded),
+  expenses(Icons.account_balance_wallet_rounded);
 
-  const HomeTab(this.icon, this.label);
+  const HomeTab(this.icon);
 
   final IconData icon;
-  final String label;
+
+  String label(AppLocalizations l) => switch (this) {
+    dashboard => l.navHome,
+    reminders => l.navReminders,
+    medicines => l.navMedicines,
+    doctors => l.navDoctors,
+    records => l.navRecords,
+    expenses => l.navExpenses,
+  };
 }
 
 /// Selected tab; any screen can switch tabs (e.g. dashboard → expenses).

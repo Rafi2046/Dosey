@@ -45,7 +45,8 @@ class MedicineTimesSection extends ConsumerWidget {
     final reminders =
         ref.watch(remindersByMedicineProvider(medicine.id)).value ?? const [];
     final weekdayLabels = {
-      for (final d in reminders) ReminderText.frequency(d.reminder),
+      for (final d in reminders)
+        ReminderText.frequency(context.l10n, d.reminder),
     };
 
     return Column(

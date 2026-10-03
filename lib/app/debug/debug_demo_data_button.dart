@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/constants/constants.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/widgets/pill_button.dart';
 import '../../features/records/providers/records_providers.dart';
@@ -21,15 +20,14 @@ class DebugDemoDataButton extends ConsumerWidget {
       trailingIcon: Icons.dataset_rounded,
       onPressed: () async {
         final messenger = ScaffoldMessenger.of(context);
+        final loaded = context.l10n.debugDemoLoaded;
         Navigator.of(context).pop();
         await DemoDataSeeder.seed(
           ref.read(appDatabaseProvider),
           ref.read(remindersRepositoryProvider),
           ref.read(recordsRepositoryProvider),
         );
-        messenger.showSnackBar(
-          SnackBar(content: Text(context.l10n.debugDemoLoaded)),
-        );
+        messenger.showSnackBar(SnackBar(content: Text(loaded)));
       },
     );
   }

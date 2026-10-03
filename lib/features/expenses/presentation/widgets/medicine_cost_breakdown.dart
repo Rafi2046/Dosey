@@ -21,10 +21,7 @@ class MedicineCostBreakdown extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            context.l10n.projectedHint,
-            style: AppTextStyles.captionOnLight,
-          ),
+          Text(context.l10n.projectedHint, style: AppTextStyles.captionOnLight),
           AppSpacing.gapMd,
           if (lines.isEmpty)
             Text(context.l10n.noProjection, style: AppTextStyles.bodyOnLight)

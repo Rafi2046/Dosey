@@ -39,7 +39,7 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
         id: id,
         channelKey: NotificationChannels.keyFor(r.type, critical: critical),
         title: r.title,
-        body: ReminderText.body(details),
+        body: ReminderText.body(AppLocale.l10n, details),
         category: critical
             ? NotificationCategory.Alarm
             : NotificationCategory.Reminder,
@@ -62,20 +62,20 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
     NotificationActionButton(
       key: AppConstants.actionTaken,
       label: type == ReminderType.medicine
-          ? context.l10n.notifTaken
-          : context.l10n.alarmDone,
+          ? AppLocale.l10n.notifTaken
+          : AppLocale.l10n.alarmDone,
       color: AppColors.mint,
       actionType: ActionType.SilentBackgroundAction,
     ),
     NotificationActionButton(
       key: AppConstants.actionSnooze,
-      label: context.l10n.notifSnooze,
+      label: AppLocale.l10n.notifSnooze,
       actionType: ActionType.SilentBackgroundAction,
     ),
     if (type == ReminderType.medicine)
       NotificationActionButton(
         key: AppConstants.actionSkip,
-        label: context.l10n.notifSkip,
+        label: AppLocale.l10n.notifSkip,
         actionType: ActionType.SilentBackgroundAction,
       ),
   ];

@@ -2,7 +2,6 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/constants/constants.dart';
 import '../../core/database/app_database.dart';
 import '../../core/widgets/pill_button.dart';
 import '../../features/medicines/providers/medicines_providers.dart';
@@ -32,7 +31,7 @@ class DebugTestAlarmButton extends ConsumerWidget {
         .read(medicinesRepositoryProvider)
         .create(
           MedicinesCompanion.insert(
-            name: context.l10n.debugTestAlarmTitle,
+            name: AppLocale.l10n.debugTestAlarmTitle,
             startDate: now,
             mealRelation: const Value(MealRelation.afterMeal),
           ),
@@ -42,14 +41,14 @@ class DebugTestAlarmButton extends ConsumerWidget {
         .create(
           RemindersCompanion.insert(
             type: ReminderType.medicine,
-            title: context.l10n.debugTestAlarmTitle,
-            description: Value(context.l10n.debugTestAlarmBody),
+            title: AppLocale.l10n.debugTestAlarmTitle,
+            description: Value(AppLocale.l10n.debugTestAlarmBody),
             startAt: at,
             medicineId: Value(medicineId),
           ),
         );
     messenger.showSnackBar(
-      SnackBar(content: Text(context.l10n.debugTestAlarmScheduled)),
+      SnackBar(content: Text(AppLocale.l10n.debugTestAlarmScheduled)),
     );
   }
 

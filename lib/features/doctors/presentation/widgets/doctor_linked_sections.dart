@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/constants.dart';
 import '../../../../core/utils/date_format.dart';
 import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/widgets/link_tile.dart';
@@ -38,10 +37,7 @@ class DoctorLinkedSections extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (medicines.isNotEmpty) ...[
-          SectionHeader(
-            title: context.l10n.prescribedMedicines,
-            onLight: true,
-          ),
+          SectionHeader(title: context.l10n.prescribedMedicines, onLight: true),
           for (final m in medicines)
             LinkTile(
               icon: Icons.medication_rounded,
@@ -54,24 +50,18 @@ class DoctorLinkedSections extends ConsumerWidget {
             ),
         ],
         if (reminders.isNotEmpty) ...[
-          SectionHeader(
-            title: context.l10n.doctorAppointments,
-            onLight: true,
-          ),
+          SectionHeader(title: context.l10n.doctorAppointments, onLight: true),
           for (final d in reminders)
             LinkTile(
               icon: d.reminder.type.icon,
               title: d.reminder.title,
-              subtitle: ReminderText.schedule(d.reminder),
+              subtitle: ReminderText.schedule(context.l10n, d.reminder),
               onTap: () =>
                   _push(context, ReminderFormScreen(existing: d.reminder)),
             ),
         ],
         if (records.isNotEmpty) ...[
-          SectionHeader(
-            title: context.l10n.doctorRecords,
-            onLight: true,
-          ),
+          SectionHeader(title: context.l10n.doctorRecords, onLight: true),
           for (final r in records)
             LinkTile(
               icon: r.record.type.icon,

@@ -352,9 +352,6 @@ class AppLocalizationsBn extends AppLocalizations {
   String get medicineForm => 'ধরন';
 
   @override
-  String get medicineDose => 'প্রতিবার ডোজ';
-
-  @override
   String get medicineDoseUnit => 'একক';
 
   @override

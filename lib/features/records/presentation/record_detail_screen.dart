@@ -46,7 +46,10 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
         );
       case _MenuAction.deletePage:
         if (pages.isEmpty) return;
-        if (!await confirmDelete(context, body: context.l10n.deleteConfirmBody)) {
+        if (!await confirmDelete(
+          context,
+          body: context.l10n.deleteConfirmBody,
+        )) {
           return;
         }
         await repo.deletePage(pages[_page.clamp(0, pages.length - 1)]);

@@ -1,5 +1,4 @@
 import 'package:dosey/app/app.dart';
-import 'package:dosey/core/constants/constants.dart';
 import 'package:dosey/core/database/app_database.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/features/alarm/presentation/alarm_ring_screen.dart';
@@ -12,6 +11,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'support/fakes.dart';
 import 'support/harness.dart';
+import 'package:dosey/core/localization/l10n.dart';
+
+/// Tests run in English (the default for an en_US test device).
+final en = lookupAppLocalizations(AppLocale.english);
 
 void main() {
   late AppDatabase db;
@@ -34,14 +37,11 @@ void main() {
     await tester.pumpWidget(app());
     await settle(tester);
 
-    expect(find.text(OnboardingStrings.permNotificationsTitle), findsOneWidget);
-    expect(
-      find.text(OnboardingStrings.onboardingEssentialHint),
-      findsOneWidget,
-    );
+    expect(find.text(en.permNotificationsTitle), findsOneWidget);
+    expect(find.text(en.onboardingEssentialHint), findsOneWidget);
 
     for (var i = 0; i < 2; i++) {
-      final allow = find.text(OnboardingStrings.allow).first;
+      final allow = find.text(en.allow).first;
       await tester.ensureVisible(allow);
       await tester.tap(allow);
       await settle(tester);
@@ -51,11 +51,11 @@ void main() {
       AppPermission.notifications,
       AppPermission.exactAlarms,
     ]);
-    expect(find.text(OnboardingStrings.onboardingEssentialHint), findsNothing);
+    expect(find.text(en.onboardingEssentialHint), findsNothing);
 
-    await tester.tap(find.text(OnboardingStrings.onboardingContinue));
+    await tester.tap(find.text(en.onboardingContinue));
     await settle(tester);
-    expect(find.text(DashboardStrings.dashboardTitle), findsOneWidget);
+    expect(find.text(en.dashboardTitle), findsOneWidget);
     await unmount(tester);
   });
 
@@ -66,7 +66,7 @@ void main() {
     permissions.grantedSet.addAll(AppPermission.values);
     await tester.pumpWidget(app());
     await settle(tester);
-    expect(find.text(DashboardStrings.dashboardTitle), findsOneWidget);
+    expect(find.text(en.dashboardTitle), findsOneWidget);
 
     final at = DateTime(2026, 10, 3, 9);
     await dbRun(tester, () async {
@@ -93,7 +93,7 @@ void main() {
     await settle(tester);
 
     expect(find.byType(AlarmRingScreen), findsOneWidget);
-    await tester.tap(find.text(AlarmStrings.alarmMarkTaken));
+    await tester.tap(find.text(en.alarmMarkTaken));
     await settle(tester);
 
     expect(find.byType(AlarmRingScreen), findsNothing);

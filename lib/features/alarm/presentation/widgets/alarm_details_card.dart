@@ -50,7 +50,10 @@ class AlarmDetailsCard extends StatelessWidget {
           AppSpacing.gapMd,
           Text(reminder.title, style: AppTextStyles.displayOnLight),
           AppSpacing.gapSm,
-          Text(ReminderText.body(details), style: AppTextStyles.bodyOnLight),
+          Text(
+            ReminderText.body(context.l10n, details),
+            style: AppTextStyles.bodyOnLight,
+          ),
         ],
       ),
     );

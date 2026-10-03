@@ -31,7 +31,10 @@ class CategoryBreakdown extends StatelessWidget {
                 AppSpacing.gapSm,
                 SizedBox(
                   width: AppSpacing.categoryLabelWidth,
-                  child: Text(e.key.label(context.l10n), style: AppTextStyles.caption),
+                  child: Text(
+                    e.key.label(context.l10n),
+                    style: AppTextStyles.caption,
+                  ),
                 ),
                 Expanded(
                   child: ClipRRect(

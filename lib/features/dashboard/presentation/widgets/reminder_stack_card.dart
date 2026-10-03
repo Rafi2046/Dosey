@@ -61,9 +61,9 @@ class ReminderStackCard extends StatelessWidget {
     final overline = isNext
         ? context.l10n.nextTypeIn(
             r.type.label(context.l10n),
-            ReminderText.until(occurrence.at, now),
+            ReminderText.until(context.l10n, occurrence.at, now),
           )
-        : ReminderText.slotLabel(r, occurrence.at);
+        : ReminderText.slotLabel(context.l10n, r, occurrence.at);
     final (pillBg, pillFg, pillIcon) = _pillStyle();
 
     return SurfaceCard(
@@ -106,7 +106,7 @@ class ReminderStackCard extends StatelessWidget {
                 ),
                 AppSpacing.gapXs,
                 Text(
-                  ReminderText.body(occurrence.details),
+                  ReminderText.body(context.l10n, occurrence.details),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.caption.copyWith(color: muted),

@@ -66,7 +66,7 @@ class ReminderTile extends StatelessWidget {
                 ),
                 AppSpacing.gapXs,
                 Text(
-                  ReminderText.schedule(r),
+                  ReminderText.schedule(context.l10n, r),
                   style: AppTextStyles.caption.copyWith(color: muted),
                 ),
                 AppSpacing.gapMd,

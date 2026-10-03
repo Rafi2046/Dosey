@@ -776,12 +776,6 @@ abstract class AppLocalizations {
   /// **'Form'**
   String get medicineForm;
 
-  /// No description provided for @medicineDose.
-  ///
-  /// In en, this message translates to:
-  /// **'Dose per intake'**
-  String get medicineDose;
-
   /// No description provided for @medicineDoseUnit.
   ///
   /// In en, this message translates to:

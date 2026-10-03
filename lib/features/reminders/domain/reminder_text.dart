@@ -1,4 +1,3 @@
-import '../../../core/constants/constants.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/utils/enum_labels.dart';
@@ -10,25 +9,25 @@ import '../../../core/utils/numbers.dart';
 abstract final class ReminderText {
   /// e.g. "2 tablet · After meal" (this reminder's amount) for medicines,
   /// "At Square Hospital" for appointments; falls back to the description.
-  static String body(ReminderWithDetails d) {
+  static String body(AppLocalizations l, ReminderWithDetails d) {
     final parts = <String>[];
     final medicine = d.medicine;
     if (medicine != null) {
       parts
         ..add(dose(d.reminder.doseAmount ?? 1, medicine.doseUnit))
-        ..add(medicine.mealRelation.label(context.l10n));
+        ..add(medicine.mealRelation.label(l));
     }
     final location = d.reminder.location;
     if (location != null && location.isNotEmpty) {
-      parts.add('${context.l10n.notifAtLocation}$location');
+      parts.add('${l.notifAtLocation}$location');
     }
     final doctor = d.doctor;
     if (doctor != null && medicine == null) {
-      parts.add('${context.l10n.notifWithDoctor}${doctor.name}');
+      parts.add('${l.notifWithDoctor}${doctor.name}');
     }
     final description = d.reminder.description;
-    if (parts.isEmpty) return description ?? d.reminder.type.label;
-    final summary = parts.join(context.l10n.notifDoseSeparator);
+    if (parts.isEmpty) return description ?? d.reminder.type.label(l);
+    final summary = parts.join(l.notifDoseSeparator);
     return description == null || description.isEmpty
         ? summary
         : '$summary\n$description';
@@ -61,52 +60,53 @@ abstract final class ReminderText {
 
   /// "Daily · 08:00 am", "Mon, Wed · 08:00 am", "Every 3 days · …",
   /// "Mon, 5 Oct · 08:00 am" for one-off reminders.
-  static String schedule(Reminder r) {
+  static String schedule(AppLocalizations l, Reminder r) {
     final time = AppDateFormat.time(r.startAt);
-    final sep = context.l10n.notifDoseSeparator;
+    final sep = l.notifDoseSeparator;
     return switch (r.repeatRule) {
       RepeatRule.once => AppDateFormat.dateTime(r.startAt),
-      RepeatRule.daily => '${context.l10n.repeatDaily}$sep$time',
+      RepeatRule.daily => '${l.repeatDaily}$sep$time',
       RepeatRule.everyNDays =>
-        '${context.l10n.everyNDays(r.repeatInterval ?? 1)}$sep$time',
-      RepeatRule.weekly => '${weekdays(r.weekdaysMask ?? 0)}$sep$time',
+        '${l.everyNDays(r.repeatInterval ?? 1)}$sep$time',
+      RepeatRule.weekly => '${weekdays(l, r.weekdaysMask ?? 0)}$sep$time',
     };
   }
 
   /// How often it rings, without the time: "Every day", "Mon, Wed",
   /// "Every 3 days", or the date for one-off reminders.
-  static String frequency(Reminder r) => switch (r.repeatRule) {
-    RepeatRule.once => AppDateFormat.shortDate(r.startAt),
-    RepeatRule.daily => context.l10n.everyDay,
-    RepeatRule.everyNDays => context.l10n.everyNDays(r.repeatInterval ?? 1),
-    RepeatRule.weekly => weekdays(r.weekdaysMask ?? 0),
-  };
+  static String frequency(AppLocalizations l, Reminder r) =>
+      switch (r.repeatRule) {
+        RepeatRule.once => AppDateFormat.shortDate(r.startAt),
+        RepeatRule.daily => l.everyDay,
+        RepeatRule.everyNDays => l.everyNDays(r.repeatInterval ?? 1),
+        RepeatRule.weekly => weekdays(l, r.weekdaysMask ?? 0),
+      };
 
   /// "Mon, Wed, Fri" — or "Every day" when all seven are set.
-  static String weekdays(int mask) {
+  static String weekdays(AppLocalizations l, int mask) {
     const all = 127;
-    if (mask == all) return context.l10n.everyDay;
+    if (mask == all) return l.everyDay;
     return [
-      for (var i = 0; i < context.l10n.weekdaysShort.length; i++)
-        if (mask & (1 << i) != 0) context.l10n.weekdaysShort[i],
+      for (var i = 0; i < l.weekdaysShort.length; i++)
+        if (mask & (1 << i) != 0) l.weekdaysShort[i],
     ].join(', ');
   }
 
   /// Card overline such as "Evening Medicine" (from the design).
-  static String slotLabel(Reminder r, DateTime at) {
+  static String slotLabel(AppLocalizations l, Reminder r, DateTime at) {
     final hour = at.hour;
     final slot = switch (hour) {
-      >= 5 && < 12 => context.l10n.morning,
-      >= 12 && < 17 => context.l10n.afternoon,
-      >= 17 && < 21 => context.l10n.evening,
-      _ => context.l10n.bedtime,
+      >= 5 && < 12 => l.morning,
+      >= 12 && < 17 => l.afternoon,
+      >= 17 && < 21 => l.evening,
+      _ => l.bedtime,
     };
-    return '$slot ${r.type.label}';
+    return '$slot ${r.type.label(l)}';
   }
 
   /// "45 min", "2 h 10 min" until [target] (clamped at zero).
-  static String until(DateTime target, DateTime now) {
+  static String until(AppLocalizations l, DateTime target, DateTime now) {
     final minutes = target.difference(now).inMinutes.clamp(0, 1 << 30);
-    return context.l10n.inHoursMinutes(minutes ~/ 60, minutes % 60);
+    return l.inHoursMinutes(minutes ~/ 60, minutes % 60);
   }
 }

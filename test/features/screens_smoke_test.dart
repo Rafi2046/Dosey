@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dosey/app/app.dart';
 import 'package:dosey/app/home_tab.dart';
 import 'package:dosey/app/widgets/floating_nav_bar.dart';
-import 'package:dosey/core/constants/constants.dart';
 import 'package:dosey/core/database/app_database.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/core/storage/file_storage_service.dart';
@@ -23,6 +22,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../support/fakes.dart';
 import '../support/harness.dart';
+import 'package:dosey/core/localization/l10n.dart';
+
+/// Tests run in English (the default for an en_US test device).
+final en = lookupAppLocalizations(AppLocale.english);
 
 /// 1×1 transparent PNG, so record thumbnails have a real file to load.
 const _png = [
@@ -202,7 +205,7 @@ void main() {
     await tester.tap(
       find.descendant(
         of: find.byType(FloatingNavBar),
-        matching: find.byTooltip(tab.label),
+        matching: find.byTooltip(tab.label(en)),
       ),
     );
     await settle(tester);
@@ -241,30 +244,22 @@ void main() {
   ) async {
     await pumpApp(tester);
 
-    expect(find.text(DashboardStrings.dashboardTitle), findsOneWidget);
+    expect(find.text(en.dashboardTitle), findsOneWidget);
     // 10:15 → 13:00 Vitamin D is next.
     expect(
-      find.text(
-        DashboardStrings.nextTypeIn(ReminderStrings.typeMedicine, '2 h 45 min'),
-      ),
+      find.text(en.nextTypeIn(en.typeMedicine, '2 h 45 min')),
       findsOneWidget,
     );
     expect(await scrollTo(tester, 'Insulin'), findsOneWidget);
-    expect(await scrollTo(tester, DashboardStrings.runningLow), findsOneWidget);
+    expect(await scrollTo(tester, en.runningLow), findsOneWidget);
     expect(await scrollTo(tester, 'Diabetes follow-up'), findsOneWidget);
-    expect(
-      await scrollTo(tester, DashboardStrings.spentThisMonth),
-      findsOneWidget,
-    );
+    expect(await scrollTo(tester, en.spentThisMonth), findsOneWidget);
 
     // Mark the 08:00 dose taken from the stack (scroll back to the top).
-    await tester.drag(
-      find.text(DashboardStrings.spentThisMonth),
-      const Offset(0, 3000),
-    );
+    await tester.drag(find.text(en.spentThisMonth), const Offset(0, 3000));
     await settle(tester);
     await tapText(tester, 'Metformin');
-    await tapText(tester, AlarmStrings.alarmMarkTaken);
+    await tapText(tester, en.alarmMarkTaken);
     final log = await dbRun(tester, () => db.select(db.reminderLogs).get());
     expect(log.single.status, ReminderLogStatus.taken);
     await unmount(tester);
@@ -278,7 +273,7 @@ void main() {
 
     await openTab(tester, HomeTab.medicines);
     expect(find.text('Metformin 500 mg'), findsOneWidget);
-    expect(find.text(MedicineStrings.lowStock), findsOneWidget);
+    expect(find.text(en.lowStock), findsOneWidget);
 
     await openTab(tester, HomeTab.doctors);
     expect(find.text('Dr. Kamal Hossain'), findsOneWidget);
@@ -287,7 +282,7 @@ void main() {
     expect(find.text('Endocrinology prescription'), findsOneWidget);
 
     await openTab(tester, HomeTab.expenses);
-    expect(await scrollTo(tester, ExpenseStrings.byCategory), findsOneWidget);
+    expect(await scrollTo(tester, en.byCategory), findsOneWidget);
     expect(await scrollTo(tester, 'HbA1c test'), findsOneWidget);
     await unmount(tester);
   });
@@ -297,16 +292,13 @@ void main() {
 
     await openTab(tester, HomeTab.medicines);
     await tapText(tester, 'Insulin 500 mg');
-    expect(find.text(MedicineStrings.medicineTime), findsOneWidget);
-    expect(find.text(MedicineStrings.changeSetting), findsOneWidget);
+    expect(find.text(en.medicineTime), findsOneWidget);
+    expect(find.text(en.changeSetting), findsOneWidget);
     await back(tester);
 
     await openTab(tester, HomeTab.doctors);
     await tapText(tester, 'Dr. Farhana Rahman');
-    expect(
-      await scrollTo(tester, DoctorStrings.doctorAppointments),
-      findsOneWidget,
-    );
+    expect(await scrollTo(tester, en.doctorAppointments), findsOneWidget);
     expect(
       await scrollTo(tester, 'Endocrinology prescription'),
       findsOneWidget,
@@ -315,7 +307,7 @@ void main() {
 
     await openTab(tester, HomeTab.records);
     await tapText(tester, 'Endocrinology prescription');
-    expect(find.text(RecordStrings.addPages), findsOneWidget);
+    expect(find.text(en.addPages), findsOneWidget);
     await back(tester);
     await unmount(tester);
   });
@@ -324,12 +316,12 @@ void main() {
     await pumpApp(tester);
 
     for (final label in [
-      ReminderStrings.addReminder,
-      DoctorStrings.addDoctor,
-      RecordStrings.addRecord,
-      ExpenseStrings.addExpense,
+      en.addReminder,
+      en.addDoctor,
+      en.addRecord,
+      en.addExpense,
     ]) {
-      await tester.tap(find.byTooltip(AppStrings.add));
+      await tester.tap(find.byTooltip(en.add));
       await settle(tester);
       await tapText(tester, label);
       expect(find.byType(Form), findsOneWidget, reason: label);
@@ -337,12 +329,12 @@ void main() {
     }
 
     // Medicine is two steps: type grid → form.
-    await tester.tap(find.byTooltip(AppStrings.add));
+    await tester.tap(find.byTooltip(en.add));
     await settle(tester);
-    await tapText(tester, MedicineStrings.addMedicine);
-    expect(find.text(MedicineStrings.chooseMedicineType), findsOneWidget);
-    await tapText(tester, MedicineStrings.formCapsule);
-    await tapText(tester, AppStrings.next);
+    await tapText(tester, en.addMedicine);
+    expect(find.text(en.chooseMedicineType), findsOneWidget);
+    await tapText(tester, en.formCapsule);
+    await tapText(tester, en.next);
     expect(find.byType(Form), findsOneWidget);
     await unmount(tester);
   });
@@ -351,16 +343,16 @@ void main() {
     tester,
   ) async {
     await pumpApp(tester);
-    await tester.tap(find.byTooltip(AppStrings.add));
+    await tester.tap(find.byTooltip(en.add));
     await settle(tester);
-    await tapText(tester, MedicineStrings.addMedicine);
-    await tapText(tester, AppStrings.next);
+    await tapText(tester, en.addMedicine);
+    await tapText(tester, en.next);
 
     await tester.enterText(
       find.byType(TextFormField).first, // medicine name
       'Napa',
     );
-    await tapText(tester, AppStrings.save);
+    await tapText(tester, en.save);
 
     final meds = await dbRun(
       tester,
@@ -397,12 +389,12 @@ void main() {
         ),
       ],
     );
-    await tester.tap(find.byTooltip(AppStrings.add));
+    await tester.tap(find.byTooltip(en.add));
     await settle(tester);
-    await tapText(tester, MedicineStrings.addMedicine);
-    await tapText(tester, AppStrings.next);
+    await tapText(tester, en.addMedicine);
+    await tapText(tester, en.next);
 
-    await tapText(tester, MedicineStrings.scanTitle);
+    await tapText(tester, en.scanTitle);
     expect(scanner.scannedPaths, ['/tmp/rx.jpg']);
     // One medicine found: it fills this form directly.
 
@@ -426,13 +418,13 @@ void main() {
     );
     await settle(tester);
     expect(find.text('1½ tablet'), findsOneWidget);
-    await tapText(tester, AppStrings.done);
+    await tapText(tester, en.done);
     await scrollTo(tester, '9:00 pm · 1.5 tablet');
     // The "review the fields" snackbar covers Save until it times out.
-    expect(find.text(MedicineStrings.scanFilled), findsOneWidget);
+    expect(find.text(en.scanFilled), findsOneWidget);
     await tester.pump(const Duration(seconds: 5));
     await settle(tester);
-    await tapText(tester, AppStrings.save);
+    await tapText(tester, en.save);
 
     final med = await dbRun(
       tester,
@@ -489,46 +481,46 @@ void main() {
         ),
       ],
     );
-    await tester.tap(find.byTooltip(AppStrings.add));
+    await tester.tap(find.byTooltip(en.add));
     await settle(tester);
-    await tapText(tester, MedicineStrings.addMedicine);
-    await tapText(tester, AppStrings.next);
-    await tapText(tester, MedicineStrings.scanTitle);
+    await tapText(tester, en.addMedicine);
+    await tapText(tester, en.next);
+    await tapText(tester, en.scanTitle);
 
     // Review screen lists all three, with the prescription's own pattern.
-    expect(find.text(MedicineStrings.bulkTitle), findsOneWidget);
-    expect(find.text(MedicineStrings.bulkAsWritten('2+0+1')), findsOneWidget);
-    expect(find.text(MedicineStrings.bulkSaveAll(3)), findsOneWidget);
+    expect(find.text(en.bulkTitle), findsOneWidget);
+    expect(find.text(en.bulkAsWritten('2+0+1')), findsOneWidget);
+    expect(find.text(en.bulkSaveAll(3)), findsOneWidget);
 
     // Seclo was misread: remove its card.
     final seclo = await scrollTo(tester, 'Seclo');
     await tester.tap(
       find.descendant(
         of: find.ancestor(of: seclo, matching: find.byType(MedicineDraftCard)),
-        matching: find.byTooltip(MedicineStrings.bulkRemove),
+        matching: find.byTooltip(en.bulkRemove),
       ),
     );
     await settle(tester);
     expect(find.byType(MedicineDraftCard), findsNWidgets(2));
-    expect(find.text(MedicineStrings.bulkSaveAll(2)), findsOneWidget);
+    expect(find.text(en.bulkSaveAll(2)), findsOneWidget);
 
     // A medicine the scan missed: add it by hand.
-    await tapText(tester, MedicineStrings.bulkAddAnother);
+    await tapText(tester, en.bulkAddAnother);
     final newCard = find.byType(MedicineDraftCard).last;
     final newName = find
         .descendant(of: newCard, matching: find.byType(TextFormField))
         .first;
     // Saving with the new card still blank is refused.
-    await tester.tap(find.text(MedicineStrings.bulkSaveAll(3)));
+    await tester.tap(find.text(en.bulkSaveAll(3)));
     await settle(tester);
-    expect(find.text(MedicineStrings.bulkFixMedicine(3)), findsOneWidget);
+    expect(find.text(en.bulkFixMedicine(3)), findsOneWidget);
     await tester.enterText(newName, 'Omidon');
     await settle(tester);
-    expect(find.text(MedicineStrings.bulkSaveAll(3)), findsOneWidget);
+    expect(find.text(en.bulkSaveAll(3)), findsOneWidget);
 
     await tester.pump(const Duration(seconds: 5)); // snackbar times out
     await settle(tester);
-    await tester.tap(find.text(MedicineStrings.bulkSaveAll(3)));
+    await tester.tap(find.text(en.bulkSaveAll(3)));
     await settle(tester);
 
     final meds = await dbRun(tester, () => db.select(db.medicines).get());
@@ -547,8 +539,8 @@ void main() {
     expect(dosesOf('Omidon'), isEmpty);
 
     // Saving closes both the review screen and the Add Medicine form.
-    expect(find.text(MedicineStrings.bulkTitle), findsNothing);
-    expect(find.text(MedicineStrings.addMedicine), findsNothing);
+    expect(find.text(en.bulkTitle), findsNothing);
+    expect(find.text(en.addMedicine), findsNothing);
     await unmount(tester);
   });
 }

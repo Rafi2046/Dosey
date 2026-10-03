@@ -72,7 +72,10 @@ class RecordCard extends StatelessWidget {
                 ),
                 AppSpacing.gapXs,
                 Text(AppDateFormat.date(r.recordDate), style: caption),
-                Text(context.l10n.pagesCount(summary.pageCount), style: caption),
+                Text(
+                  context.l10n.pagesCount(summary.pageCount),
+                  style: caption,
+                ),
               ],
             ),
           ),

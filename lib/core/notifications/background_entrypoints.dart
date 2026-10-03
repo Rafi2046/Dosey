@@ -12,6 +12,7 @@ import 'reminder_alarm_engine.dart';
 @pragma('vm:entry-point')
 Future<void> onAlarmCallback(int alarmId, Map<String, dynamic> params) async {
   final engine = await AlarmRuntime.engine();
+  await AlarmRuntime.applySavedLanguage();
   await engine.onAlarmFired(alarmId, params);
 }
 

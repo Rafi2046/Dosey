@@ -352,9 +352,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get medicineForm => 'Form';
 
   @override
-  String get medicineDose => 'Dose per intake';
-
-  @override
   String get medicineDoseUnit => 'Unit';
 
   @override

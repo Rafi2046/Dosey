@@ -113,7 +113,6 @@
   "medicineName": "ওষুধের নাম",
   "medicineStrength": "মাত্রা (যেমন ৫০০ মি.গ্রা.)",
   "medicineForm": "ধরন",
-  "medicineDose": "প্রতিবার ডোজ",
   "medicineDoseUnit": "একক",
   "medicineMeal": "কখন খাবেন",
   "medicineUnitPrice": "প্রতি ইউনিটের দাম",

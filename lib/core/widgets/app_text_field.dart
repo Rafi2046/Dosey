@@ -43,10 +43,10 @@ class AppTextField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final List<TextInputFormatter>? inputFormatters;
 
-  /// Shared "required" validator.
+  /// Shared "required" validator (message in the current language).
   static String? required(String? value) =>
       (value == null || value.trim().isEmpty)
-      ? context.l10n.fieldRequired
+      ? AppLocale.l10n.fieldRequired
       : null;
 
   @override

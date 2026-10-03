@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/localization/l10n.dart';
+import '../../../settings/presentation/settings_screen.dart';
 
 /// "Good morning" with the app mark on the left and a bell on the right,
 /// following the design's "Hello, Lora" header.
@@ -15,10 +16,10 @@ class DashboardHeader extends StatelessWidget {
   final DateTime now;
   final VoidCallback onBellTap;
 
-  String get _greeting => switch (now.hour) {
-    < 12 => context.l10n.goodMorning,
-    < 17 => context.l10n.goodAfternoon,
-    _ => context.l10n.goodEvening,
+  String _greeting(AppLocalizations l) => switch (now.hour) {
+    < 12 => l.goodMorning,
+    < 17 => l.goodAfternoon,
+    _ => l.goodEvening,
   };
 
   @override
@@ -35,7 +36,19 @@ class DashboardHeader extends StatelessWidget {
             ),
           ),
           AppSpacing.gapMd,
-          Expanded(child: Text(_greeting, style: AppTextStyles.subtitle)),
+          Expanded(
+            child: Text(_greeting(context.l10n), style: AppTextStyles.subtitle),
+          ),
+          IconButton(
+            tooltip: context.l10n.settingsTitle,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
+            ),
+            icon: const Icon(
+              Icons.settings_rounded,
+              color: AppColors.textOnDark,
+            ),
+          ),
           IconButton(
             tooltip: context.l10n.navReminders,
             onPressed: onBellTap,

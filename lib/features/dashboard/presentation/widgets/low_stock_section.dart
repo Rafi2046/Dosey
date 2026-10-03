@@ -7,7 +7,6 @@ import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../../medicines/presentation/medicine_detail_screen.dart';
 import '../../../medicines/providers/medicines_providers.dart';
-import '../../../reminders/domain/reminder_text.dart';
 import '../../../../core/localization/l10n.dart';
 import '../../../../core/utils/numbers.dart';
 

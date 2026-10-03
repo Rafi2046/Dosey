@@ -113,7 +113,6 @@
   "medicineName": "Medicine name",
   "medicineStrength": "Strength (e.g. 500 mg)",
   "medicineForm": "Form",
-  "medicineDose": "Dose per intake",
   "medicineDoseUnit": "Unit",
   "medicineMeal": "When to take",
   "medicineUnitPrice": "Price per unit",

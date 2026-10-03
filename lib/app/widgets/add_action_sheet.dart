@@ -23,24 +23,14 @@ Future<void> showAddActionSheet(BuildContext context) =>
 class _AddActionSheet extends StatelessWidget {
   const _AddActionSheet();
 
-  static final List<(IconData, String, Widget Function())> _actions = [
-    (
-      Icons.alarm_add_rounded,
-      context.l10n.addReminder,
-      ReminderFormScreen.new,
-    ),
-    (
-      Icons.medication_rounded,
-      context.l10n.addMedicine,
-      MedicineTypeScreen.new,
-    ),
-    (
-      Icons.person_add_alt_1_rounded,
-      context.l10n.addDoctor,
-      DoctorFormScreen.new,
-    ),
-    (Icons.add_a_photo_rounded, context.l10n.addRecord, RecordFormScreen.new),
-    (Icons.payments_rounded, context.l10n.addExpense, ExpenseFormScreen.new),
+  static List<(IconData, String, Widget Function())> _actions(
+    AppLocalizations l,
+  ) => [
+    (Icons.alarm_add_rounded, l.addReminder, ReminderFormScreen.new),
+    (Icons.medication_rounded, l.addMedicine, MedicineTypeScreen.new),
+    (Icons.person_add_alt_1_rounded, l.addDoctor, DoctorFormScreen.new),
+    (Icons.add_a_photo_rounded, l.addRecord, RecordFormScreen.new),
+    (Icons.payments_rounded, l.addExpense, ExpenseFormScreen.new),
   ];
 
   @override
@@ -62,7 +52,9 @@ class _AddActionSheet extends StatelessWidget {
               crossAxisSpacing: AppSpacing.md,
               childAspectRatio: AppSpacing.addTileAspect,
               children: [
-                for (final (i, (icon, label, builder)) in _actions.indexed)
+                for (final (i, (icon, label, builder)) in _actions(
+                  context.l10n,
+                ).indexed)
                   _AddTile(
                     icon: icon,
                     label: label,

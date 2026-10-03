@@ -48,6 +48,17 @@ abstract final class AlarmRuntime {
       ? IosNotificationScheduler(reminders, AwesomeNotificationPresenter())
       : AndroidAlarmScheduler();
 
+  /// Notification text follows the user's language. Background isolates
+  /// outlive language changes made in the UI, so callbacks re-read it.
+  static Future<void> applySavedLanguage() async {
+    final db = _db;
+    if (db == null) return;
+    final saved = await SettingsRepository(db).get(AppLocale.settingKey);
+    AppLocale.apply(
+      AppLocale.resolve(saved, PlatformDispatcher.instance.locale),
+    );
+  }
+
   static Future<ReminderAlarmEngine> _start() async {
     if (_db == null) {
       // Background isolate: plugins implemented in Dart (path_provider) must
@@ -55,11 +66,7 @@ abstract final class AlarmRuntime {
       WidgetsFlutterBinding.ensureInitialized();
       DartPluginRegistrant.ensureInitialized();
       _db = AppDatabase();
-      // Notification text in the user's language (no UI here to ask).
-      final language = await SettingsRepository(_db!).get(AppLocale.settingKey);
-      AppLocale.apply(
-        AppLocale.resolve(language, PlatformDispatcher.instance.locale),
-      );
+      await applySavedLanguage();
       await NotificationService.initialize();
     }
     return _engine = engineFor(_db!);

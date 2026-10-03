@@ -12,7 +12,7 @@ class PickerField extends StatelessWidget {
     required this.label,
     required this.value,
     required this.onTap,
-    this.placeholder = context.l10n.choose,
+    this.placeholder,
     this.icon = Icons.expand_more_rounded,
     this.onClear,
     this.errorText,
@@ -20,7 +20,9 @@ class PickerField extends StatelessWidget {
 
   final String label;
   final String? value;
-  final String placeholder;
+
+  /// Shown when [value] is null; defaults to "Choose".
+  final String? placeholder;
   final IconData icon;
   final VoidCallback onTap;
   final VoidCallback? onClear;
@@ -46,7 +48,7 @@ class PickerField extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        value ?? placeholder,
+                        value ?? placeholder ?? context.l10n.choose,
                         style: hasValue
                             ? AppTextStyles.inputOnLight
                             : AppTextStyles.captionOnLight,

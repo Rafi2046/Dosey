@@ -155,10 +155,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   }
 
   Future<void> _delete() async {
-    if (!await confirmDelete(
-      context,
-      body: context.l10n.deleteReminderBody,
-    )) {
+    if (!await confirmDelete(context, body: context.l10n.deleteReminderBody)) {
       return;
     }
     await ref.read(remindersRepositoryProvider).delete(widget.existing!.id);
@@ -172,9 +169,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   Widget build(BuildContext context) {
     final isMedicine = _type == ReminderType.medicine;
     return CreamScaffold(
-      title: _isEdit
-          ? context.l10n.editReminder
-          : context.l10n.addReminder,
+      title: _isEdit ? context.l10n.editReminder : context.l10n.addReminder,
       actions: [
         if (_isEdit)
           IconButton(

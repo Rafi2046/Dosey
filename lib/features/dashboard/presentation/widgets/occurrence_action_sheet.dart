@@ -66,7 +66,7 @@ class _OccurrenceSheet extends ConsumerWidget {
             ),
             AppSpacing.gapSm,
             Text(
-              ReminderText.body(occurrence.details),
+              ReminderText.body(context.l10n, occurrence.details),
               style: AppTextStyles.bodyOnLight,
             ),
             if (status != null) ...[

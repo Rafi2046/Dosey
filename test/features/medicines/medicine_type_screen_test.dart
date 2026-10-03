@@ -13,9 +13,7 @@ void main() {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: MediaQuery(
-        data: MediaQueryData(
-          textScaler: textScaler ?? TextScaler.noScaling,
-        ),
+        data: MediaQueryData(textScaler: textScaler ?? TextScaler.noScaling),
         child: child,
       ),
     );
@@ -35,36 +33,47 @@ void main() {
     final en = await AppLocalizations.delegate.load(const Locale('en'));
 
     // Tap each medicine type and verify no RenderFlex overflow occurs.
-    for (final label in [en.formCapsule, en.formInjection, en.formOther, en.formTablet]) {
+    for (final label in [
+      en.formCapsule,
+      en.formInjection,
+      en.formOther,
+      en.formTablet,
+    ]) {
       await tester.tap(find.text(label).first);
       await settle(tester);
       expect(tester.takeException(), isNull);
     }
   });
 
-  testWidgets('MedicineTypeScreen renders without overflow on small device with text scaling', (
-    tester,
-  ) async {
-    // 360 logical width (common compact Android phone)
-    tester.view.physicalSize = const Size(1080, 2160);
-    tester.view.devicePixelRatio = 3.0; // 360x720
-    addTearDown(tester.view.reset);
+  testWidgets(
+    'MedicineTypeScreen renders without overflow on small device with text scaling',
+    (tester) async {
+      // 360 logical width (common compact Android phone)
+      tester.view.physicalSize = const Size(1080, 2160);
+      tester.view.devicePixelRatio = 3.0; // 360x720
+      addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(
-      testable(
-        const MedicineTypeScreen(),
-        textScaler: const TextScaler.linear(1.15),
-      ),
-    );
-    await settle(tester);
-
-    expect(tester.takeException(), isNull);
-
-    final en = await AppLocalizations.delegate.load(const Locale('en'));
-    for (final label in [en.formCapsule, en.formInjection, en.formOther, en.formTablet]) {
-      await tester.tap(find.text(label).first);
+      await tester.pumpWidget(
+        testable(
+          const MedicineTypeScreen(),
+          textScaler: const TextScaler.linear(1.15),
+        ),
+      );
       await settle(tester);
+
       expect(tester.takeException(), isNull);
-    }
-  });
+
+      final en = await AppLocalizations.delegate.load(const Locale('en'));
+      for (final label in [
+        en.formCapsule,
+        en.formInjection,
+        en.formOther,
+        en.formTablet,
+      ]) {
+        await tester.tap(find.text(label).first);
+        await settle(tester);
+        expect(tester.takeException(), isNull);
+      }
+    },
+  );
 }

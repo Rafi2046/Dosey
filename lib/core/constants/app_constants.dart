@@ -43,6 +43,14 @@ abstract final class AppConstants {
   static const int doseBedtimeHour = 22;
   static const int doseBedtimeMinute = 30;
 
+  // ── Stock ─────────────────────────────────────────────────────────────────
+  /// Default "warn me N days before it runs out" for new medicines.
+  static const int defaultRefillAlertDays = 3;
+  static const int maxRefillAlertDays = 30;
+
+  /// Low-stock notifications use `lowStockIdOffset + medicineId`.
+  static const int lowStockIdOffset = 1500000000;
+
   /// First dose of "every N hours" schedules.
   static const int doseIntervalStartHour = 8;
 

@@ -117,7 +117,6 @@
   "medicineMeal": "কখন খাবেন",
   "medicineUnitPrice": "প্রতি ইউনিটের দাম",
   "medicineStock": "হাতে আছে",
-  "medicineRefillAt": "রিফিল অ্যালার্ট যখন বাকি",
   "medicineDoctor": "প্রেসক্রাইব করেছেন",
   "medicineStartDate": "শুরুর তারিখ",
   "medicineEndDate": "শেষ তারিখ",
@@ -399,5 +398,17 @@
   "ringAsAlarmHint": "সাইলেন্টেও ফুল-স্ক্রিন অ্যালার্ম বাজবে। বন্ধ করলে শুধু সাধারণ নোটিফিকেশন আসবে।",
   "medicinePickerEmpty": "আপনি এখনো কোনো ওষুধ যোগ করেননি",
   "medicinePickerEmptyHint": "আগে ওষুধটি যোগ করুন। এর খাওয়ার সময়গুলো নিজে থেকেই রিমাইন্ডার হয়ে যায়, তাই আলাদা রিমাইন্ডার নাও লাগতে পারে।",
-  "addNewMedicine": "নতুন ওষুধ যোগ করুন"
+  "addNewMedicine": "নতুন ওষুধ যোগ করুন",
+  "packSize": "প্যাকের মাপ",
+  "stripsPerBox": "প্রতি বক্সে পাতা",
+  "addOneBox": "+১ বক্স",
+  "addOneStrip": "+১ পাতা",
+  "refillAlert": "রিফিল অ্যালার্ট",
+  "refillAlertNeedsStock": "রিফিল অ্যালার্ট পেতে ওপরে হাতে কত আছে লিখুন।",
+  "unitsPerStrip": "প্রতি পাতায় {unit}",
+  "daysLeft": "{count, plural, =0{আজই শেষ} other{~{count} দিন বাকি}}",
+  "refillAlertDays": "{count, plural, other{শেষ হওয়ার {count} দিন আগে}}",
+  "refillAlertUnits": "বর্তমান ডোজে এটি প্রায় {amount} {unit}।",
+  "lowStockTitle": "{name} শেষ হয়ে আসছে",
+  "lowStockBody": "{count, plural, =0{আজই শেষ হয়ে যাবে। এখনই কিনে নিন।} other{আর প্রায় {count} দিনের মতো আছে। এখনই কিনে নিন।}}"
 }

@@ -5,10 +5,4 @@ class MedicineWithDoctor {
 
   final Medicine medicine;
   final Doctor? doctor;
-
-  bool get isLowStock {
-    final stock = medicine.stockQuantity;
-    final threshold = medicine.refillThreshold;
-    return stock != null && threshold != null && stock <= threshold;
-  }
 }

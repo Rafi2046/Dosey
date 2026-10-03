@@ -47,9 +47,14 @@ class LowStockSection extends ConsumerWidget {
                   ),
                 ),
                 StatusChip(
-                  label: context.l10n.unitsLeft(
-                    AppNumber.format(item.medicine.stockQuantity!),
-                  ),
+                  label: switch (ref
+                      .watch(stockStatusProvider(item.medicine))
+                      .daysLeft) {
+                    final d? => context.l10n.daysLeft(d),
+                    null => context.l10n.unitsLeft(
+                      AppNumber.format(item.medicine.stockQuantity!),
+                    ),
+                  },
                   background: AppColors.accent,
                   foreground: AppColors.textOnAccent,
                 ),

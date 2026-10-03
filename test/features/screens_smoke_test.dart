@@ -8,6 +8,7 @@ import 'package:dosey/core/database/app_database.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/core/storage/file_storage_service.dart';
 import 'package:dosey/core/widgets/amount_stepper.dart';
+import 'package:dosey/core/widgets/app_text_field.dart';
 import 'package:dosey/core/widgets/async_value_view.dart';
 import 'package:dosey/features/medicines/domain/dose_time.dart';
 import 'package:dosey/features/medicines/presentation/bulk/medicine_draft_card.dart';
@@ -781,5 +782,54 @@ void main() {
     await tester.pump();
     expect(find.byType(Shimmer), findsOneWidget);
     expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('stock calculator: boxes and strips become tablets', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await tester.tap(find.byTooltip(en.add));
+    await settle(tester);
+    await tapText(tester, en.addMedicine);
+    await tapText(tester, en.next);
+    await tester.enterText(find.byType(TextFormField).first, 'Zulfidin');
+    await tapText(tester, en.slotMorning);
+
+    Future<void> fill(String label, String text) async {
+      await scrollTo(tester, label);
+      await tester.enterText(
+        find.descendant(
+          of: find.byWidgetPredicate(
+            (w) => w is AppTextField && w.label == label,
+          ),
+          matching: find.byType(TextFormField),
+        ),
+        text,
+      );
+      await settle(tester);
+    }
+
+    await fill(en.unitsPerStrip('tablet'), '10');
+    await fill(en.stripsPerBox, '10');
+    await tapText(tester, en.addOneBox);
+    await tapText(tester, en.addOneBox);
+    expect(find.widgetWithText(TextFormField, '200'), findsOneWidget);
+    // 1 tablet a day, alert 3 days before → about 3 tablets.
+    await scrollTo(tester, en.refillAlertDays(3));
+    expect(find.text(en.refillAlertUnits('3', 'tablet')), findsOneWidget);
+
+    await tapText(tester, en.save);
+    final med = await dbRun(
+      tester,
+      () => (db.select(
+        db.medicines,
+      )..where((m) => m.name.equals('Zulfidin'))).getSingle(),
+    );
+    expect(med.stockQuantity, 200);
+    expect(med.unitsPerStrip, 10);
+    expect(med.stripsPerBox, 10);
+    expect(med.refillAlertDays, 3);
+    expect(med.refillThreshold, isNull);
+    await unmount(tester);
   });
 }

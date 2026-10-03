@@ -117,7 +117,6 @@
   "medicineMeal": "When to take",
   "medicineUnitPrice": "Price per unit",
   "medicineStock": "Stock on hand",
-  "medicineRefillAt": "Refill alert at",
   "medicineDoctor": "Prescribed by",
   "medicineStartDate": "Start date",
   "medicineEndDate": "End date",
@@ -588,5 +587,65 @@
   "ringAsAlarmHint": "Full-screen alarm that rings even on silent. Turn off for a quiet notification.",
   "medicinePickerEmpty": "You haven't added any medicines yet",
   "medicinePickerEmptyHint": "Add the medicine first. Its intake times become reminders automatically, so you may not need a separate one.",
-  "addNewMedicine": "Add new medicine"
+  "addNewMedicine": "Add new medicine",
+  "packSize": "Pack size",
+  "stripsPerBox": "Strips per box",
+  "addOneBox": "+1 box",
+  "addOneStrip": "+1 strip",
+  "refillAlert": "Refill alert",
+  "refillAlertNeedsStock": "Enter your stock above to get a refill alert.",
+  "unitsPerStrip": "{unit} per strip",
+  "@unitsPerStrip": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "daysLeft": "{count, plural, =0{Runs out today} =1{~1 day left} other{~{count} days left}}",
+  "@daysLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "refillAlertDays": "{count, plural, =1{1 day before it runs out} other{{count} days before it runs out}}",
+  "@refillAlertDays": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "refillAlertUnits": "At your current dose that's about {amount} {unit}.",
+  "@refillAlertUnits": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "lowStockTitle": "{name} is running low",
+  "@lowStockTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "lowStockBody": "{count, plural, =0{It runs out today. Time to buy more.} =1{About 1 day left. Time to buy more.} other{About {count} days left. Time to buy more.}}",
+  "@lowStockBody": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  }
 }

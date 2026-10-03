@@ -149,4 +149,39 @@ void main() {
     await engine.sync(r);
     expect(scheduler.alarms[r.id]!.critical, isFalse);
   });
+
+  test('warns once when a dose brings stock into the refill window', () async {
+    // 2 tablets a day, alert 3 days before: 8 tablets = 4 days (fine).
+    final med = await db
+        .into(db.medicines)
+        .insert(
+          MedicinesCompanion.insert(
+            name: 'Zulfidin',
+            startDate: DateTime(2026),
+            stockQuantity: const Value(8),
+            refillAlertDays: const Value(3),
+          ),
+        );
+    final r = await repo.create(
+      RemindersCompanion.insert(
+        type: ReminderType.medicine,
+        title: 'Zulfidin',
+        startAt: DateTime(2026, 10, 1, 8),
+        medicineId: Value(med),
+        repeatRule: const Value(RepeatRule.daily),
+        doseAmount: const Value(2),
+      ),
+      now: now,
+    );
+    Future<void> take(int day) => engine.handleAction(
+      reminderId: r.id,
+      scheduledFor: DateTime(2026, 10, day, 8),
+      action: AlarmAction.taken,
+    );
+
+    await take(3); // 8 → 6 tablets = 3 days: crosses into the window.
+    expect(notifier.lowStock, [('Zulfidin', 3)]);
+    await take(4); // 6 → 4: already low, no second notification.
+    expect(notifier.lowStock, hasLength(1));
+  });
 }

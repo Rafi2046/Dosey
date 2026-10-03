@@ -1,3 +1,4 @@
+import '../../features/medicines/domain/stock_status.dart';
 import '../../features/reminders/data/reminders_repository.dart';
 import '../constants/app_constants.dart';
 import '../database/app_database.dart';
@@ -105,6 +106,17 @@ class ReminderAlarmEngine {
     await _notifier.showAlarm(details, scheduledFor);
   }
 
+  // ── Stock ─────────────────────────────────────────────────────────────────
+
+  /// Notifies once, when a dose moves the medicine into its refill-alert
+  /// window (not again on every later dose).
+  Future<void> _warnIfNowLow(int reminderId, StockStatus before) async {
+    if (before.isLow) return;
+    final after = await _reminders.stockStatusFor(reminderId);
+    if (after == null || !after.isLow) return;
+    await _notifier.showLowStock(after.medicine, after.daysLeft ?? 0);
+  }
+
   // ── User actions (notification buttons or alarm screen) ───────────────────
 
   Future<void> handleAction({
@@ -117,6 +129,9 @@ class ReminderAlarmEngine {
       AlarmAction.skip => ReminderLogStatus.skipped,
       AlarmAction.snooze => ReminderLogStatus.snoozed,
     };
+    final stockBefore = action == AlarmAction.taken
+        ? await _reminders.stockStatusFor(reminderId)
+        : null;
     await _reminders.logAction(
       reminderId: reminderId,
       scheduledFor: scheduledFor,
@@ -124,6 +139,7 @@ class ReminderAlarmEngine {
     );
     await _reminders.setRinging(reminderId, null);
     await _notifier.dismiss(reminderId);
+    if (stockBefore != null) await _warnIfNowLow(reminderId, stockBefore);
 
     final snoozeId = snoozeAlarmId(reminderId);
     if (action != AlarmAction.snooze) {

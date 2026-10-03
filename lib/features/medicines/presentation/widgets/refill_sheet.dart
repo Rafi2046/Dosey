@@ -7,6 +7,8 @@ import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/pill_button.dart';
+import '../../../../core/widgets/status_chip.dart';
+import '../../../reminders/domain/reminder_text.dart';
 import '../../providers/medicines_providers.dart';
 import '../../../../core/localization/l10n.dart';
 
@@ -53,6 +55,12 @@ class _RefillSheetState extends ConsumerState<_RefillSheet> {
     super.dispose();
   }
 
+  /// "+1 box" / "+1 strip": add a pack's worth of units to the quantity.
+  void _addUnits(int units) {
+    final current = double.tryParse(_quantity.text.trim()) ?? 0;
+    _quantity.text = ReminderText.formatAmount(current + units);
+  }
+
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
@@ -91,6 +99,25 @@ class _RefillSheetState extends ConsumerState<_RefillSheet> {
                   ? null
                   : context.l10n.invalidNumber,
             ),
+            if (widget.medicine.unitsPerStrip case final perStrip?) ...[
+              Wrap(
+                spacing: AppSpacing.sm,
+                children: [
+                  if (widget.medicine.stripsPerBox case final perBox?)
+                    StatusChip(
+                      label: context.l10n.addOneBox,
+                      icon: Icons.inventory_2_rounded,
+                      onTap: () => _addUnits(perStrip * perBox),
+                    ),
+                  StatusChip(
+                    label: context.l10n.addOneStrip,
+                    icon: Icons.view_agenda_rounded,
+                    onTap: () => _addUnits(perStrip),
+                  ),
+                ],
+              ),
+              AppSpacing.gapLg,
+            ],
             AppTextField.decimal(
               label: context.l10n.refillTotal,
               controller: _total,

@@ -2,8 +2,8 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 
 import '../../features/reminders/domain/reminder_text.dart';
 import '../../features/reminders/domain/reminder_with_details.dart';
+import '../database/app_database.dart';
 import '../constants/constants.dart';
-import '../database/enums.dart';
 import '../utils/enum_labels.dart';
 import 'alarm_ports.dart';
 import 'notification_channels.dart';
@@ -57,6 +57,22 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
   @override
   Future<void> dismiss(int reminderId) =>
       AwesomeNotifications().dismiss(reminderId);
+
+  /// A normal (non-alarm) notification on the gentle channel.
+  @override
+  Future<void> showLowStock(Medicine medicine, int daysLeft) {
+    final l10n = AppLocale.l10n;
+    return AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: AppConstants.lowStockIdOffset + medicine.id,
+        channelKey: AppConstants.channelGentle,
+        title: l10n.lowStockTitle(medicine.name),
+        body: l10n.lowStockBody(daysLeft),
+        category: NotificationCategory.Reminder,
+        color: AppColors.accent,
+      ),
+    );
+  }
 
   static List<NotificationActionButton> _buttons(ReminderType type) => [
     NotificationActionButton(

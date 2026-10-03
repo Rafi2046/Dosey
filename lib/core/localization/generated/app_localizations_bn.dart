@@ -364,9 +364,6 @@ class AppLocalizationsBn extends AppLocalizations {
   String get medicineStock => 'হাতে আছে';
 
   @override
-  String get medicineRefillAt => 'রিফিল অ্যালার্ট যখন বাকি';
-
-  @override
   String get medicineDoctor => 'প্রেসক্রাইব করেছেন';
 
   @override
@@ -1389,4 +1386,82 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get addNewMedicine => 'নতুন ওষুধ যোগ করুন';
+
+  @override
+  String get packSize => 'প্যাকের মাপ';
+
+  @override
+  String get stripsPerBox => 'প্রতি বক্সে পাতা';
+
+  @override
+  String get addOneBox => '+১ বক্স';
+
+  @override
+  String get addOneStrip => '+১ পাতা';
+
+  @override
+  String get refillAlert => 'রিফিল অ্যালার্ট';
+
+  @override
+  String get refillAlertNeedsStock =>
+      'রিফিল অ্যালার্ট পেতে ওপরে হাতে কত আছে লিখুন।';
+
+  @override
+  String unitsPerStrip(String unit) {
+    return 'প্রতি পাতায় $unit';
+  }
+
+  @override
+  String daysLeft(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '~$countString দিন বাকি',
+      zero: 'আজই শেষ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String refillAlertDays(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'শেষ হওয়ার $countString দিন আগে',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String refillAlertUnits(String amount, String unit) {
+    return 'বর্তমান ডোজে এটি প্রায় $amount $unit।';
+  }
+
+  @override
+  String lowStockTitle(String name) {
+    return '$name শেষ হয়ে আসছে';
+  }
+
+  @override
+  String lowStockBody(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'আর প্রায় $countString দিনের মতো আছে। এখনই কিনে নিন।',
+      zero: 'আজই শেষ হয়ে যাবে। এখনই কিনে নিন।',
+    );
+    return '$_temp0';
+  }
 }

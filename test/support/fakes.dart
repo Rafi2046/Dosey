@@ -1,3 +1,4 @@
+import 'package:dosey/core/database/app_database.dart';
 import 'package:dosey/core/notifications/alarm_ports.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/features/medicines/data/prescription_scanner_service.dart';
@@ -35,6 +36,13 @@ class FakeNotificationPresenter implements NotificationPresenter {
 
   @override
   Future<void> dismiss(int reminderId) async => showing.remove(reminderId);
+
+  /// (medicine name, days left) of each low-stock notification.
+  final List<(String, int)> lowStock = [];
+
+  @override
+  Future<void> showLowStock(Medicine medicine, int daysLeft) async =>
+      lowStock.add((medicine.name, daysLeft));
 }
 
 class FakePermissionService implements PermissionService {

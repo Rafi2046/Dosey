@@ -7,7 +7,9 @@ import '../data/medicine_schedule_service.dart';
 import '../data/medicines_repository.dart';
 import '../data/prescription_scanner_service.dart';
 import '../../records/presentation/widgets/image_source_sheet.dart';
+import '../../../core/database/app_database.dart';
 import '../domain/medicine_with_doctor.dart';
+import '../domain/stock_status.dart';
 
 final medicinesRepositoryProvider = Provider<MedicinesRepository>(
   (ref) => MedicinesRepository(ref.watch(appDatabaseProvider)),
@@ -21,12 +23,33 @@ final activeMedicinesProvider = StreamProvider<List<MedicineWithDoctor>>(
   (ref) => ref.watch(medicinesRepositoryProvider).watchAll(activeOnly: true),
 );
 
+/// Units each medicine uses per day (from its enabled reminders).
+final unitsPerDayProvider = Provider<Map<int, double>>(
+  (ref) => unitsPerDayByMedicine([
+    for (final d in ref.watch(enabledRemindersProvider).value ?? const [])
+      d.reminder,
+  ]),
+);
+
+/// Days left / low-stock state of one medicine at its current dose.
+final stockStatusProvider = Provider.family<StockStatus, Medicine>(
+  (ref, m) => StockStatus(m, ref.watch(unitsPerDayProvider)[m.id] ?? 0),
+);
+
 final lowStockMedicinesProvider =
-    Provider<AsyncValue<List<MedicineWithDoctor>>>(
-      (ref) => ref
+    Provider<AsyncValue<List<MedicineWithDoctor>>>((ref) {
+      final units = ref.watch(unitsPerDayProvider);
+      return ref
           .watch(activeMedicinesProvider)
-          .whenData((list) => list.where((m) => m.isLowStock).toList()),
-    );
+          .whenData(
+            (list) => list
+                .where(
+                  (m) =>
+                      StockStatus(m.medicine, units[m.medicine.id] ?? 0).isLow,
+                )
+                .toList(),
+          );
+    });
 
 final medicinesByDoctorProvider = StreamProvider.autoDispose
     .family<List<MedicineWithDoctor>, int>(

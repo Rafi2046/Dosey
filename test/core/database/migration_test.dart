@@ -5,10 +5,34 @@ import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Exact v2 schema, dumped from sqlite_master before the v3 change.
+/// Exact v2 / v3 schemas, dumped from sqlite_master before each change.
 final _v2Schema = File(
   'test/core/database/fixtures/schema_v2.sql',
 ).readAsStringSync();
+final _v3Schema = File(
+  'test/core/database/fixtures/schema_v3.sql',
+).readAsStringSync();
+
+/// A v3 database (dose per reminder, settings table) with real data.
+AppDatabase _openV3() => AppDatabase(
+  NativeDatabase.memory(
+    setup: (raw) {
+      raw.execute(_v3Schema);
+      raw.execute('PRAGMA user_version = 3');
+      raw.execute('''
+        INSERT INTO medicines (id, name, form, dose_unit, meal_relation,
+            unit_price_minor, stock_quantity, refill_threshold, start_date)
+        VALUES (1, 'Zulfidin', 'tablet', 'tablet', 'afterMeal', 300, 40, 12, 0);
+        INSERT INTO reminders (id, type, title, medicine_id, start_at,
+            repeat_rule, is_critical, is_enabled, snooze_minutes, dose_amount)
+        VALUES (10, 'medicine', 'Zulfidin', 1, 1000, 'daily', 1, 1, 10, 2.0);
+        INSERT INTO reminder_logs (reminder_id, scheduled_for, status)
+        VALUES (10, 1000, 'taken');
+        INSERT INTO app_settings (key, value) VALUES ('locale', 'bn');
+      ''');
+    },
+  ),
+);
 
 /// A v2 database holding real-looking data, as an existing user would have.
 AppDatabase _openV2() => AppDatabase(
@@ -79,7 +103,32 @@ void main() {
     expect(await db.select(db.reminders).get(), hasLength(3));
   });
 
-  test('a migrated database is identical to a fresh v3 install', () async {
+  test('v3 → v4 adds stock planning, keeping every row', () async {
+    final db = _openV3();
+    addTearDown(db.close);
+    final med = await db.select(db.medicines).getSingle();
+    expect(med.stockQuantity, 40);
+    expect(med.refillThreshold, 12); // old alert still honoured
+    expect(med.unitsPerStrip, isNull);
+    expect(med.refillAlertDays, isNull);
+    expect((await db.select(db.reminders).getSingle()).doseAmount, 2.0);
+    expect(await db.select(db.reminderLogs).get(), hasLength(1));
+    expect((await db.select(db.appSettings).getSingle()).value, 'bn');
+    expect(await db.customSelect('PRAGMA foreign_key_check').get(), isEmpty);
+  });
+
+  test(
+    'a v3 database migrates to the same schema as a fresh install',
+    () async {
+      final migrated = _openV3();
+      final fresh = AppDatabase(NativeDatabase.memory());
+      addTearDown(migrated.close);
+      addTearDown(fresh.close);
+      expect(await _schema(migrated), await _schema(fresh));
+    },
+  );
+
+  test('a migrated database is identical to a fresh install', () async {
     final migrated = _openV2();
     final fresh = AppDatabase(NativeDatabase.memory());
     addTearDown(migrated.close);

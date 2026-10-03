@@ -1303,6 +1303,39 @@ class $MedicinesTable extends Medicines
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _unitsPerStripMeta = const VerificationMeta(
+    'unitsPerStrip',
+  );
+  @override
+  late final GeneratedColumn<int> unitsPerStrip = GeneratedColumn<int>(
+    'units_per_strip',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _stripsPerBoxMeta = const VerificationMeta(
+    'stripsPerBox',
+  );
+  @override
+  late final GeneratedColumn<int> stripsPerBox = GeneratedColumn<int>(
+    'strips_per_box',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _refillAlertDaysMeta = const VerificationMeta(
+    'refillAlertDays',
+  );
+  @override
+  late final GeneratedColumn<int> refillAlertDays = GeneratedColumn<int>(
+    'refill_alert_days',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _startDateMeta = const VerificationMeta(
     'startDate',
   );
@@ -1386,6 +1419,9 @@ class $MedicinesTable extends Medicines
     unitPriceMinor,
     stockQuantity,
     refillThreshold,
+    unitsPerStrip,
+    stripsPerBox,
+    refillAlertDays,
     startDate,
     endDate,
     isActive,
@@ -1467,6 +1503,33 @@ class $MedicinesTable extends Medicines
         refillThreshold.isAcceptableOrUnknown(
           data['refill_threshold']!,
           _refillThresholdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('units_per_strip')) {
+      context.handle(
+        _unitsPerStripMeta,
+        unitsPerStrip.isAcceptableOrUnknown(
+          data['units_per_strip']!,
+          _unitsPerStripMeta,
+        ),
+      );
+    }
+    if (data.containsKey('strips_per_box')) {
+      context.handle(
+        _stripsPerBoxMeta,
+        stripsPerBox.isAcceptableOrUnknown(
+          data['strips_per_box']!,
+          _stripsPerBoxMeta,
+        ),
+      );
+    }
+    if (data.containsKey('refill_alert_days')) {
+      context.handle(
+        _refillAlertDaysMeta,
+        refillAlertDays.isAcceptableOrUnknown(
+          data['refill_alert_days']!,
+          _refillAlertDaysMeta,
         ),
       );
     }
@@ -1565,6 +1628,18 @@ class $MedicinesTable extends Medicines
         DriftSqlType.double,
         data['${effectivePrefix}refill_threshold'],
       ),
+      unitsPerStrip: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}units_per_strip'],
+      ),
+      stripsPerBox: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}strips_per_box'],
+      ),
+      refillAlertDays: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}refill_alert_days'],
+      ),
       startDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}start_date'],
@@ -1628,7 +1703,17 @@ class Medicine extends DataClass implements Insertable<Medicine> {
   /// unitPriceMinor × the units its reminders consume per period.
   final int unitPriceMinor;
   final double? stockQuantity;
+
+  /// Legacy refill alert in units (stock ≤ this). Superseded by
+  /// [refillAlertDays]; still honoured for medicines saved before v4.
   final double? refillThreshold;
+
+  /// Pack sizes for the stock calculator ("+1 strip", "+1 box").
+  final int? unitsPerStrip;
+  final int? stripsPerBox;
+
+  /// Warn this many days before stock runs out, from the daily dose.
+  final int? refillAlertDays;
   final DateTime startDate;
   final DateTime? endDate;
   final bool isActive;
@@ -1647,6 +1732,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     required this.unitPriceMinor,
     this.stockQuantity,
     this.refillThreshold,
+    this.unitsPerStrip,
+    this.stripsPerBox,
+    this.refillAlertDays,
     required this.startDate,
     this.endDate,
     required this.isActive,
@@ -1686,6 +1774,15 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     if (!nullToAbsent || refillThreshold != null) {
       map['refill_threshold'] = Variable<double>(refillThreshold);
     }
+    if (!nullToAbsent || unitsPerStrip != null) {
+      map['units_per_strip'] = Variable<int>(unitsPerStrip);
+    }
+    if (!nullToAbsent || stripsPerBox != null) {
+      map['strips_per_box'] = Variable<int>(stripsPerBox);
+    }
+    if (!nullToAbsent || refillAlertDays != null) {
+      map['refill_alert_days'] = Variable<int>(refillAlertDays);
+    }
     map['start_date'] = Variable<DateTime>(startDate);
     if (!nullToAbsent || endDate != null) {
       map['end_date'] = Variable<DateTime>(endDate);
@@ -1722,6 +1819,15 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       refillThreshold: refillThreshold == null && nullToAbsent
           ? const Value.absent()
           : Value(refillThreshold),
+      unitsPerStrip: unitsPerStrip == null && nullToAbsent
+          ? const Value.absent()
+          : Value(unitsPerStrip),
+      stripsPerBox: stripsPerBox == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stripsPerBox),
+      refillAlertDays: refillAlertDays == null && nullToAbsent
+          ? const Value.absent()
+          : Value(refillAlertDays),
       startDate: Value(startDate),
       endDate: endDate == null && nullToAbsent
           ? const Value.absent()
@@ -1756,6 +1862,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       unitPriceMinor: serializer.fromJson<int>(json['unitPriceMinor']),
       stockQuantity: serializer.fromJson<double?>(json['stockQuantity']),
       refillThreshold: serializer.fromJson<double?>(json['refillThreshold']),
+      unitsPerStrip: serializer.fromJson<int?>(json['unitsPerStrip']),
+      stripsPerBox: serializer.fromJson<int?>(json['stripsPerBox']),
+      refillAlertDays: serializer.fromJson<int?>(json['refillAlertDays']),
       startDate: serializer.fromJson<DateTime>(json['startDate']),
       endDate: serializer.fromJson<DateTime?>(json['endDate']),
       isActive: serializer.fromJson<bool>(json['isActive']),
@@ -1783,6 +1892,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       'unitPriceMinor': serializer.toJson<int>(unitPriceMinor),
       'stockQuantity': serializer.toJson<double?>(stockQuantity),
       'refillThreshold': serializer.toJson<double?>(refillThreshold),
+      'unitsPerStrip': serializer.toJson<int?>(unitsPerStrip),
+      'stripsPerBox': serializer.toJson<int?>(stripsPerBox),
+      'refillAlertDays': serializer.toJson<int?>(refillAlertDays),
       'startDate': serializer.toJson<DateTime>(startDate),
       'endDate': serializer.toJson<DateTime?>(endDate),
       'isActive': serializer.toJson<bool>(isActive),
@@ -1804,6 +1916,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     int? unitPriceMinor,
     Value<double?> stockQuantity = const Value.absent(),
     Value<double?> refillThreshold = const Value.absent(),
+    Value<int?> unitsPerStrip = const Value.absent(),
+    Value<int?> stripsPerBox = const Value.absent(),
+    Value<int?> refillAlertDays = const Value.absent(),
     DateTime? startDate,
     Value<DateTime?> endDate = const Value.absent(),
     bool? isActive,
@@ -1828,6 +1943,13 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     refillThreshold: refillThreshold.present
         ? refillThreshold.value
         : this.refillThreshold,
+    unitsPerStrip: unitsPerStrip.present
+        ? unitsPerStrip.value
+        : this.unitsPerStrip,
+    stripsPerBox: stripsPerBox.present ? stripsPerBox.value : this.stripsPerBox,
+    refillAlertDays: refillAlertDays.present
+        ? refillAlertDays.value
+        : this.refillAlertDays,
     startDate: startDate ?? this.startDate,
     endDate: endDate.present ? endDate.value : this.endDate,
     isActive: isActive ?? this.isActive,
@@ -1858,6 +1980,15 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       refillThreshold: data.refillThreshold.present
           ? data.refillThreshold.value
           : this.refillThreshold,
+      unitsPerStrip: data.unitsPerStrip.present
+          ? data.unitsPerStrip.value
+          : this.unitsPerStrip,
+      stripsPerBox: data.stripsPerBox.present
+          ? data.stripsPerBox.value
+          : this.stripsPerBox,
+      refillAlertDays: data.refillAlertDays.present
+          ? data.refillAlertDays.value
+          : this.refillAlertDays,
       startDate: data.startDate.present ? data.startDate.value : this.startDate,
       endDate: data.endDate.present ? data.endDate.value : this.endDate,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
@@ -1881,6 +2012,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
           ..write('unitPriceMinor: $unitPriceMinor, ')
           ..write('stockQuantity: $stockQuantity, ')
           ..write('refillThreshold: $refillThreshold, ')
+          ..write('unitsPerStrip: $unitsPerStrip, ')
+          ..write('stripsPerBox: $stripsPerBox, ')
+          ..write('refillAlertDays: $refillAlertDays, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
           ..write('isActive: $isActive, ')
@@ -1904,6 +2038,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     unitPriceMinor,
     stockQuantity,
     refillThreshold,
+    unitsPerStrip,
+    stripsPerBox,
+    refillAlertDays,
     startDate,
     endDate,
     isActive,
@@ -1926,6 +2063,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
           other.unitPriceMinor == this.unitPriceMinor &&
           other.stockQuantity == this.stockQuantity &&
           other.refillThreshold == this.refillThreshold &&
+          other.unitsPerStrip == this.unitsPerStrip &&
+          other.stripsPerBox == this.stripsPerBox &&
+          other.refillAlertDays == this.refillAlertDays &&
           other.startDate == this.startDate &&
           other.endDate == this.endDate &&
           other.isActive == this.isActive &&
@@ -1946,6 +2086,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
   final Value<int> unitPriceMinor;
   final Value<double?> stockQuantity;
   final Value<double?> refillThreshold;
+  final Value<int?> unitsPerStrip;
+  final Value<int?> stripsPerBox;
+  final Value<int?> refillAlertDays;
   final Value<DateTime> startDate;
   final Value<DateTime?> endDate;
   final Value<bool> isActive;
@@ -1964,6 +2107,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     this.unitPriceMinor = const Value.absent(),
     this.stockQuantity = const Value.absent(),
     this.refillThreshold = const Value.absent(),
+    this.unitsPerStrip = const Value.absent(),
+    this.stripsPerBox = const Value.absent(),
+    this.refillAlertDays = const Value.absent(),
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
     this.isActive = const Value.absent(),
@@ -1983,6 +2129,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     this.unitPriceMinor = const Value.absent(),
     this.stockQuantity = const Value.absent(),
     this.refillThreshold = const Value.absent(),
+    this.unitsPerStrip = const Value.absent(),
+    this.stripsPerBox = const Value.absent(),
+    this.refillAlertDays = const Value.absent(),
     required DateTime startDate,
     this.endDate = const Value.absent(),
     this.isActive = const Value.absent(),
@@ -2003,6 +2152,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     Expression<int>? unitPriceMinor,
     Expression<double>? stockQuantity,
     Expression<double>? refillThreshold,
+    Expression<int>? unitsPerStrip,
+    Expression<int>? stripsPerBox,
+    Expression<int>? refillAlertDays,
     Expression<DateTime>? startDate,
     Expression<DateTime>? endDate,
     Expression<bool>? isActive,
@@ -2022,6 +2174,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
       if (unitPriceMinor != null) 'unit_price_minor': unitPriceMinor,
       if (stockQuantity != null) 'stock_quantity': stockQuantity,
       if (refillThreshold != null) 'refill_threshold': refillThreshold,
+      if (unitsPerStrip != null) 'units_per_strip': unitsPerStrip,
+      if (stripsPerBox != null) 'strips_per_box': stripsPerBox,
+      if (refillAlertDays != null) 'refill_alert_days': refillAlertDays,
       if (startDate != null) 'start_date': startDate,
       if (endDate != null) 'end_date': endDate,
       if (isActive != null) 'is_active': isActive,
@@ -2043,6 +2198,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     Value<int>? unitPriceMinor,
     Value<double?>? stockQuantity,
     Value<double?>? refillThreshold,
+    Value<int?>? unitsPerStrip,
+    Value<int?>? stripsPerBox,
+    Value<int?>? refillAlertDays,
     Value<DateTime>? startDate,
     Value<DateTime?>? endDate,
     Value<bool>? isActive,
@@ -2062,6 +2220,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
       unitPriceMinor: unitPriceMinor ?? this.unitPriceMinor,
       stockQuantity: stockQuantity ?? this.stockQuantity,
       refillThreshold: refillThreshold ?? this.refillThreshold,
+      unitsPerStrip: unitsPerStrip ?? this.unitsPerStrip,
+      stripsPerBox: stripsPerBox ?? this.stripsPerBox,
+      refillAlertDays: refillAlertDays ?? this.refillAlertDays,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       isActive: isActive ?? this.isActive,
@@ -2111,6 +2272,15 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     if (refillThreshold.present) {
       map['refill_threshold'] = Variable<double>(refillThreshold.value);
     }
+    if (unitsPerStrip.present) {
+      map['units_per_strip'] = Variable<int>(unitsPerStrip.value);
+    }
+    if (stripsPerBox.present) {
+      map['strips_per_box'] = Variable<int>(stripsPerBox.value);
+    }
+    if (refillAlertDays.present) {
+      map['refill_alert_days'] = Variable<int>(refillAlertDays.value);
+    }
     if (startDate.present) {
       map['start_date'] = Variable<DateTime>(startDate.value);
     }
@@ -2146,6 +2316,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
           ..write('unitPriceMinor: $unitPriceMinor, ')
           ..write('stockQuantity: $stockQuantity, ')
           ..write('refillThreshold: $refillThreshold, ')
+          ..write('unitsPerStrip: $unitsPerStrip, ')
+          ..write('stripsPerBox: $stripsPerBox, ')
+          ..write('refillAlertDays: $refillAlertDays, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
           ..write('isActive: $isActive, ')
@@ -6531,6 +6704,9 @@ typedef $$MedicinesTableCreateCompanionBuilder =
       Value<int> unitPriceMinor,
       Value<double?> stockQuantity,
       Value<double?> refillThreshold,
+      Value<int?> unitsPerStrip,
+      Value<int?> stripsPerBox,
+      Value<int?> refillAlertDays,
       required DateTime startDate,
       Value<DateTime?> endDate,
       Value<bool> isActive,
@@ -6551,6 +6727,9 @@ typedef $$MedicinesTableUpdateCompanionBuilder =
       Value<int> unitPriceMinor,
       Value<double?> stockQuantity,
       Value<double?> refillThreshold,
+      Value<int?> unitsPerStrip,
+      Value<int?> stripsPerBox,
+      Value<int?> refillAlertDays,
       Value<DateTime> startDate,
       Value<DateTime?> endDate,
       Value<bool> isActive,
@@ -6688,6 +6867,21 @@ class $$MedicinesTableFilterComposer
 
   ColumnFilters<double> get refillThreshold => $composableBuilder(
     column: $table.refillThreshold,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get unitsPerStrip => $composableBuilder(
+    column: $table.unitsPerStrip,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get stripsPerBox => $composableBuilder(
+    column: $table.stripsPerBox,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get refillAlertDays => $composableBuilder(
+    column: $table.refillAlertDays,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6872,6 +7066,21 @@ class $$MedicinesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get unitsPerStrip => $composableBuilder(
+    column: $table.unitsPerStrip,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get stripsPerBox => $composableBuilder(
+    column: $table.stripsPerBox,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get refillAlertDays => $composableBuilder(
+    column: $table.refillAlertDays,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get startDate => $composableBuilder(
     column: $table.startDate,
     builder: (column) => ColumnOrderings(column),
@@ -6991,6 +7200,21 @@ class $$MedicinesTableAnnotationComposer
 
   GeneratedColumn<double> get refillThreshold => $composableBuilder(
     column: $table.refillThreshold,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get unitsPerStrip => $composableBuilder(
+    column: $table.unitsPerStrip,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get stripsPerBox => $composableBuilder(
+    column: $table.stripsPerBox,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get refillAlertDays => $composableBuilder(
+    column: $table.refillAlertDays,
     builder: (column) => column,
   );
 
@@ -7153,6 +7377,9 @@ class $$MedicinesTableTableManager
                 Value<int> unitPriceMinor = const Value.absent(),
                 Value<double?> stockQuantity = const Value.absent(),
                 Value<double?> refillThreshold = const Value.absent(),
+                Value<int?> unitsPerStrip = const Value.absent(),
+                Value<int?> stripsPerBox = const Value.absent(),
+                Value<int?> refillAlertDays = const Value.absent(),
                 Value<DateTime> startDate = const Value.absent(),
                 Value<DateTime?> endDate = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
@@ -7171,6 +7398,9 @@ class $$MedicinesTableTableManager
                 unitPriceMinor: unitPriceMinor,
                 stockQuantity: stockQuantity,
                 refillThreshold: refillThreshold,
+                unitsPerStrip: unitsPerStrip,
+                stripsPerBox: stripsPerBox,
+                refillAlertDays: refillAlertDays,
                 startDate: startDate,
                 endDate: endDate,
                 isActive: isActive,
@@ -7191,6 +7421,9 @@ class $$MedicinesTableTableManager
                 Value<int> unitPriceMinor = const Value.absent(),
                 Value<double?> stockQuantity = const Value.absent(),
                 Value<double?> refillThreshold = const Value.absent(),
+                Value<int?> unitsPerStrip = const Value.absent(),
+                Value<int?> stripsPerBox = const Value.absent(),
+                Value<int?> refillAlertDays = const Value.absent(),
                 required DateTime startDate,
                 Value<DateTime?> endDate = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
@@ -7209,6 +7442,9 @@ class $$MedicinesTableTableManager
                 unitPriceMinor: unitPriceMinor,
                 stockQuantity: stockQuantity,
                 refillThreshold: refillThreshold,
+                unitsPerStrip: unitsPerStrip,
+                stripsPerBox: stripsPerBox,
+                refillAlertDays: refillAlertDays,
                 startDate: startDate,
                 endDate: endDate,
                 isActive: isActive,

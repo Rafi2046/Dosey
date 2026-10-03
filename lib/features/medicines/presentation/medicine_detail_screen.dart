@@ -134,6 +134,7 @@ class _DetailBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final m = item.medicine;
+    final stock = ref.watch(stockStatusProvider(m));
     final reminders = <Reminder>[
       for (final d
           in ref.watch(remindersByMedicineProvider(m.id)).value ?? const [])
@@ -194,10 +195,11 @@ class _DetailBody extends ConsumerWidget {
           ),
         if (m.stockQuantity != null)
           InfoBlock(
-            label: item.isLowStock
-                ? context.l10n.lowStock
-                : context.l10n.inStock,
-            value: '${AppNumber.format(m.stockQuantity!)} ${m.doseUnit}',
+            label: stock.isLow ? context.l10n.lowStock : context.l10n.inStock,
+            value: [
+              '${AppNumber.format(m.stockQuantity!)} ${m.doseUnit}',
+              if (stock.daysLeft case final d?) context.l10n.daysLeft(d),
+            ].join(context.l10n.notifDoseSeparator),
           ),
         if ((monthly ?? 0) > 0)
           InfoBlock(

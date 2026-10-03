@@ -31,7 +31,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -42,6 +42,8 @@ class AppDatabase extends _$AppDatabase {
       await customStatement('PRAGMA foreign_keys = OFF');
       if (from < 2) await m.addColumn(reminders, reminders.ringingFor);
       if (from < 3) await _moveDoseAmountToReminders(m);
+      // From v2 the v3 rebuild above already produced the v4 table.
+      if (from == 3) await _addStockPlanning(m);
     },
     beforeOpen: (details) async {
       // SQLite ships with FK enforcement off; cascades depend on it.
@@ -66,9 +68,33 @@ class AppDatabase extends _$AppDatabase {
         },
       ),
     );
-    await m.alterTable(TableMigration(medicines));
+    // Rebuilt with the current definition, so v4's columns arrive here too.
+    await m.alterTable(
+      TableMigration(
+        medicines,
+        newColumns: [
+          medicines.unitsPerStrip,
+          medicines.stripsPerBox,
+          medicines.refillAlertDays,
+        ],
+      ),
+    );
     await m.createTable(appSettings);
   }
+
+  /// v4: pack sizes and a days-based refill alert. The table is rebuilt
+  /// (not ALTER ADD COLUMN) so the new CHECK constraints apply too; existing
+  /// rows keep their values with the new columns empty.
+  Future<void> _addStockPlanning(Migrator m) => m.alterTable(
+    TableMigration(
+      medicines,
+      newColumns: [
+        medicines.unitsPerStrip,
+        medicines.stripsPerBox,
+        medicines.refillAlertDays,
+      ],
+    ),
+  );
 
   /// Adds [delta] (negative to consume) to a medicine's stock, clamped at
   /// zero. No-op when stock isn't tracked (null).

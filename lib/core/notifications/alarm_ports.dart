@@ -1,4 +1,5 @@
 import '../../features/reminders/domain/reminder_with_details.dart';
+import '../database/app_database.dart';
 
 /// Schedules exact OS alarms that wake the app's background isolate.
 abstract interface class AlarmScheduler {
@@ -18,4 +19,7 @@ abstract interface class AlarmScheduler {
 abstract interface class NotificationPresenter {
   Future<void> showAlarm(ReminderWithDetails details, DateTime scheduledFor);
   Future<void> dismiss(int reminderId);
+
+  /// "Zulfidin is running low: about 3 days left."
+  Future<void> showLowStock(Medicine medicine, int daysLeft);
 }

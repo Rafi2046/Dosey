@@ -364,9 +364,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get medicineStock => 'Stock on hand';
 
   @override
-  String get medicineRefillAt => 'Refill alert at';
-
-  @override
   String get medicineDoctor => 'Prescribed by';
 
   @override
@@ -1400,4 +1397,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addNewMedicine => 'Add new medicine';
+
+  @override
+  String get packSize => 'Pack size';
+
+  @override
+  String get stripsPerBox => 'Strips per box';
+
+  @override
+  String get addOneBox => '+1 box';
+
+  @override
+  String get addOneStrip => '+1 strip';
+
+  @override
+  String get refillAlert => 'Refill alert';
+
+  @override
+  String get refillAlertNeedsStock =>
+      'Enter your stock above to get a refill alert.';
+
+  @override
+  String unitsPerStrip(String unit) {
+    return '$unit per strip';
+  }
+
+  @override
+  String daysLeft(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '~$countString days left',
+      one: '~1 day left',
+      zero: 'Runs out today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String refillAlertDays(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString days before it runs out',
+      one: '1 day before it runs out',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String refillAlertUnits(String amount, String unit) {
+    return 'At your current dose that\'s about $amount $unit.';
+  }
+
+  @override
+  String lowStockTitle(String name) {
+    return '$name is running low';
+  }
+
+  @override
+  String lowStockBody(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'About $countString days left. Time to buy more.',
+      one: 'About 1 day left. Time to buy more.',
+      zero: 'It runs out today. Time to buy more.',
+    );
+    return '$_temp0';
+  }
 }

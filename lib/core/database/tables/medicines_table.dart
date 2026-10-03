@@ -42,7 +42,17 @@ class Medicines extends Table {
   /// unitPriceMinor × the units its reminders consume per period.
   IntColumn get unitPriceMinor => integer().withDefault(const Constant(0))();
   RealColumn get stockQuantity => real().nullable()();
+
+  /// Legacy refill alert in units (stock ≤ this). Superseded by
+  /// [refillAlertDays]; still honoured for medicines saved before v4.
   RealColumn get refillThreshold => real().nullable()();
+
+  /// Pack sizes for the stock calculator ("+1 strip", "+1 box").
+  IntColumn get unitsPerStrip => integer().nullable()();
+  IntColumn get stripsPerBox => integer().nullable()();
+
+  /// Warn this many days before stock runs out, from the daily dose.
+  IntColumn get refillAlertDays => integer().nullable()();
 
   DateTimeColumn get startDate => dateTime()();
   DateTimeColumn get endDate => dateTime().nullable()();
@@ -52,5 +62,10 @@ class Medicines extends Table {
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 
   @override
-  List<String> get customConstraints => ['CHECK (unit_price_minor >= 0)'];
+  List<String> get customConstraints => [
+    'CHECK (unit_price_minor >= 0)',
+    'CHECK (units_per_strip IS NULL OR units_per_strip > 0)',
+    'CHECK (strips_per_box IS NULL OR strips_per_box > 0)',
+    'CHECK (refill_alert_days IS NULL OR refill_alert_days > 0)',
+  ];
 }

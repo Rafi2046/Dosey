@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import '../../../core/database/app_database.dart';
 import '../domain/reminder_schedule.dart';
 import '../domain/reminder_with_details.dart';
+import '../../medicines/domain/stock_status.dart';
 
 class RemindersRepository {
   RemindersRepository(this._db);
@@ -185,5 +186,23 @@ class RemindersRepository {
     // Each time can have its own amount (2 at 08:00, 1 at 14:00).
     final amount = reminder.doseAmount ?? 1;
     await _db.adjustMedicineStock(medicineId, restore ? amount : -amount);
+  }
+
+  /// Stock state of the medicine [reminderId] belongs to, at its current
+  /// dose (null for non-medicine reminders).
+  Future<StockStatus?> stockStatusFor(int reminderId) async {
+    final medicineId = (await getById(reminderId))?.medicineId;
+    if (medicineId == null) return null;
+    final medicine = await (_db.select(
+      _db.medicines,
+    )..where((m) => m.id.equals(medicineId))).getSingleOrNull();
+    if (medicine == null) return null;
+    final reminders = await (_db.select(
+      _db.reminders,
+    )..where((r) => r.medicineId.equals(medicineId))).get();
+    return StockStatus(
+      medicine,
+      unitsPerDayByMedicine(reminders)[medicineId] ?? 0,
+    );
   }
 }

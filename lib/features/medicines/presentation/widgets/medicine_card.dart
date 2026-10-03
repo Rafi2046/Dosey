@@ -10,6 +10,7 @@ import '../../../../core/widgets/surface_card.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/providers/reminders_providers.dart';
 import '../../domain/medicine_with_doctor.dart';
+import '../../providers/medicines_providers.dart';
 import '../../../../core/localization/l10n.dart';
 import '../../../../core/utils/numbers.dart';
 
@@ -32,6 +33,7 @@ class MedicineCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final m = item.medicine;
+    final stock = ref.watch(stockStatusProvider(m));
     final reminders = <Reminder>[
       for (final d
           in ref.watch(remindersByMedicineProvider(m.id)).value ?? const [])
@@ -77,7 +79,7 @@ class MedicineCard extends ConsumerWidget {
                         label: context.l10n.stopped,
                         icon: Icons.pause_rounded,
                       ),
-                    if (item.isLowStock)
+                    if (stock.isLow)
                       StatusChip(
                         label: context.l10n.lowStock,
                         icon: Icons.warning_amber_rounded,
@@ -87,9 +89,11 @@ class MedicineCard extends ConsumerWidget {
                     else if (m.stockQuantity != null)
                       _chip(
                         light,
-                        context.l10n.unitsLeft(
-                          AppNumber.format(m.stockQuantity!),
-                        ),
+                        stock.daysLeft == null
+                            ? context.l10n.unitsLeft(
+                                AppNumber.format(m.stockQuantity!),
+                              )
+                            : context.l10n.daysLeft(stock.daysLeft!),
                         Icons.inventory_2_rounded,
                       ),
                     if ((monthlyCostMinor ?? 0) > 0)

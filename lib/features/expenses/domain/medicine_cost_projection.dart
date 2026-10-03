@@ -1,6 +1,6 @@
 import '../../../core/constants/app_constants.dart';
 import '../../../core/database/app_database.dart';
-import '../../reminders/domain/reminder_schedule.dart';
+import '../../medicines/domain/stock_status.dart';
 
 class MedicineCostLine {
   const MedicineCostLine({required this.medicine, required this.unitsPerDay});
@@ -26,19 +26,7 @@ class MedicineCostProjection {
     required List<Medicine> activeMedicines,
     required List<Reminder> reminders,
   }) {
-    final unitsByMedicine = <int, double>{};
-    for (final r in reminders) {
-      final medicineId = r.medicineId;
-      if (!r.isEnabled || medicineId == null) continue;
-      unitsByMedicine[medicineId] =
-          (unitsByMedicine[medicineId] ?? 0) +
-          (r.doseAmount ?? 1) *
-              ReminderSchedule.dosesPerDay(
-                r.repeatRule,
-                repeatInterval: r.repeatInterval,
-                weekdaysMask: r.weekdaysMask,
-              );
-    }
+    final unitsByMedicine = unitsPerDayByMedicine(reminders);
     return MedicineCostProjection(
       [
         for (final m in activeMedicines)

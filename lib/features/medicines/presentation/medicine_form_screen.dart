@@ -67,9 +67,14 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
   late final _stock = TextEditingController(
     text: _formatOptional(_m?.stockQuantity),
   );
-  late final _refillAt = TextEditingController(
-    text: _formatOptional(_m?.refillThreshold),
+  late final _unitsPerStrip = TextEditingController(
+    text: _m?.unitsPerStrip?.toString(),
   );
+  late final _stripsPerBox = TextEditingController(
+    text: _m?.stripsPerBox?.toString(),
+  );
+  late int _alertDays =
+      _m?.refillAlertDays ?? AppConstants.defaultRefillAlertDays;
 
   late MealRelation _meal = _m?.mealRelation ?? MealRelation.afterMeal;
   late int? _doctorId = _m?.doctorId ?? widget.initialDoctorId;
@@ -96,7 +101,8 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
       _doseUnit,
       _unitPrice,
       _stock,
-      _refillAt,
+      _unitsPerStrip,
+      _stripsPerBox,
     ]) {
       c.dispose();
     }
@@ -174,7 +180,11 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
     prescriptionId: Value(_prescriptionId),
     unitPriceMinor: Value(Money.parse(_unitPrice.text) ?? 0),
     stockQuantity: Value(_parseOptional(_stock)),
-    refillThreshold: Value(_parseOptional(_refillAt)),
+    unitsPerStrip: Value(int.tryParse(_unitsPerStrip.text.trim())),
+    stripsPerBox: Value(int.tryParse(_stripsPerBox.text.trim())),
+    // Days-based alert replaces the old unit threshold once saved.
+    refillAlertDays: Value(_parseOptional(_stock) == null ? null : _alertDays),
+    refillThreshold: const Value(null),
     startDate: Value(_startDate),
     endDate: Value(_endDate),
   );
@@ -279,10 +289,23 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
               recordId: _prescriptionId,
               onChanged: (id) => setState(() => _prescriptionId = id),
             ),
-            StockPriceSection(
-              unitPrice: _unitPrice,
-              stock: _stock,
-              refillAt: _refillAt,
+            ListenableBuilder(
+              listenable: _doseUnit,
+              builder: (context, _) => StockPriceSection(
+                unitPrice: _unitPrice,
+                stock: _stock,
+                unitsPerStrip: _unitsPerStrip,
+                stripsPerBox: _stripsPerBox,
+                alertDays: _alertDays,
+                onAlertDaysChanged: (d) => setState(() => _alertDays = d),
+                unit: _doseUnit.text.trim(),
+                unitsPerDay: _isEdit
+                    ? ref.watch(unitsPerDayProvider)[_m!.id] ?? 0
+                    : _doses.fold(0.0, (sum, d) => sum + d.amount),
+                showPacks:
+                    _form == MedicineForm.tablet ||
+                    _form == MedicineForm.capsule,
+              ),
             ),
             PickerField(
               label: context.l10n.medicineStartDate,

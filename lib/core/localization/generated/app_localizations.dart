@@ -800,12 +800,6 @@ abstract class AppLocalizations {
   /// **'Stock on hand'**
   String get medicineStock;
 
-  /// No description provided for @medicineRefillAt.
-  ///
-  /// In en, this message translates to:
-  /// **'Refill alert at'**
-  String get medicineRefillAt;
-
   /// No description provided for @medicineDoctor.
   ///
   /// In en, this message translates to:
@@ -2497,6 +2491,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add new medicine'**
   String get addNewMedicine;
+
+  /// No description provided for @packSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Pack size'**
+  String get packSize;
+
+  /// No description provided for @stripsPerBox.
+  ///
+  /// In en, this message translates to:
+  /// **'Strips per box'**
+  String get stripsPerBox;
+
+  /// No description provided for @addOneBox.
+  ///
+  /// In en, this message translates to:
+  /// **'+1 box'**
+  String get addOneBox;
+
+  /// No description provided for @addOneStrip.
+  ///
+  /// In en, this message translates to:
+  /// **'+1 strip'**
+  String get addOneStrip;
+
+  /// No description provided for @refillAlert.
+  ///
+  /// In en, this message translates to:
+  /// **'Refill alert'**
+  String get refillAlert;
+
+  /// No description provided for @refillAlertNeedsStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your stock above to get a refill alert.'**
+  String get refillAlertNeedsStock;
+
+  /// No description provided for @unitsPerStrip.
+  ///
+  /// In en, this message translates to:
+  /// **'{unit} per strip'**
+  String unitsPerStrip(String unit);
+
+  /// No description provided for @daysLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Runs out today} =1{~1 day left} other{~{count} days left}}'**
+  String daysLeft(int count);
+
+  /// No description provided for @refillAlertDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day before it runs out} other{{count} days before it runs out}}'**
+  String refillAlertDays(int count);
+
+  /// No description provided for @refillAlertUnits.
+  ///
+  /// In en, this message translates to:
+  /// **'At your current dose that\'s about {amount} {unit}.'**
+  String refillAlertUnits(String amount, String unit);
+
+  /// No description provided for @lowStockTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is running low'**
+  String lowStockTitle(String name);
+
+  /// No description provided for @lowStockBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{It runs out today. Time to buy more.} =1{About 1 day left. Time to buy more.} other{About {count} days left. Time to buy more.}}'**
+  String lowStockBody(int count);
 }
 
 class _AppLocalizationsDelegate

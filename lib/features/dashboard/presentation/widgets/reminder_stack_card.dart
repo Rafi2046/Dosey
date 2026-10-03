@@ -20,7 +20,7 @@ class ReminderStackCard extends StatelessWidget {
     required this.color,
     required this.isNext,
     required this.now,
-    required this.bottomInset,
+    this.bottomInset = AppSpacing.stackOverlap,
     required this.onTap,
   });
 

@@ -24,10 +24,14 @@ void main() {
 
     // Verify scale constant is 0.68
     expect(AppSpacing.switchScale, 0.68);
-    final transform = tester.widget<Transform>(find.descendant(
-      of: find.byType(AppSwitch),
-      matching: find.byType(Transform),
-    ).first);
+    final transform = tester.widget<Transform>(
+      find
+          .descendant(
+            of: find.byType(AppSwitch),
+            matching: find.byType(Transform),
+          )
+          .first,
+    );
     expect(transform.transform.entry(0, 0), closeTo(0.68, 0.001));
     expect(transform.transform.entry(1, 1), closeTo(0.68, 0.001));
 
@@ -41,7 +45,9 @@ void main() {
     expect(value, false);
   });
 
-  testWidgets('SwitchRow contains AppSwitch and row tap toggles value', (tester) async {
+  testWidgets('SwitchRow contains AppSwitch and row tap toggles value', (
+    tester,
+  ) async {
     bool value = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -61,10 +67,14 @@ void main() {
     );
 
     expect(find.byType(AppSwitch), findsOneWidget);
-    final transform = tester.widget<Transform>(find.descendant(
-      of: find.byType(AppSwitch),
-      matching: find.byType(Transform),
-    ).first);
+    final transform = tester.widget<Transform>(
+      find
+          .descendant(
+            of: find.byType(AppSwitch),
+            matching: find.byType(Transform),
+          )
+          .first,
+    );
     expect(transform.transform.entry(0, 0), closeTo(0.68, 0.001));
     expect(transform.transform.entry(1, 1), closeTo(0.68, 0.001));
 

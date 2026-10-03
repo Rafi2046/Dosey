@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/constants.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../features/doctors/presentation/doctor_form_screen.dart';
 import '../../features/expenses/presentation/expense_form_screen.dart';
 import '../../features/medicines/presentation/medicine_type_screen.dart';
+import '../../features/medicines/presentation/scan_prescription_flow.dart';
 import '../../features/records/presentation/record_form_screen.dart';
 import '../../features/reminders/presentation/reminder_form_screen.dart';
 import '../debug/debug_demo_data_button.dart';
@@ -23,15 +25,28 @@ Future<void> showAddActionSheet(BuildContext context) =>
 class _AddActionSheet extends StatelessWidget {
   const _AddActionSheet();
 
-  static List<(IconData, String, Widget Function())> _actions(
-    AppLocalizations l,
-  ) => [
-    (Icons.alarm_add_rounded, l.addReminder, ReminderFormScreen.new),
-    (Icons.medication_rounded, l.addMedicine, MedicineTypeScreen.new),
-    (Icons.person_add_alt_1_rounded, l.addDoctor, DoctorFormScreen.new),
-    (Icons.add_a_photo_rounded, l.addRecord, RecordFormScreen.new),
-    (Icons.payments_rounded, l.addExpense, ExpenseFormScreen.new),
-  ];
+  /// Each action gets the navigator's context (still alive after this
+  /// sheet closes) and the provider container.
+  static List<
+    (IconData, String, void Function(BuildContext, ProviderContainer))
+  >
+  _actions(AppLocalizations l) {
+    void Function(BuildContext, ProviderContainer) open(
+      Widget Function() screen,
+    ) =>
+        (context, _) => Navigator.of(
+          context,
+        ).push(MaterialPageRoute<void>(builder: (_) => screen()));
+    return [
+      (Icons.alarm_add_rounded, l.addReminder, open(ReminderFormScreen.new)),
+      (Icons.medication_rounded, l.addMedicine, open(MedicineTypeScreen.new)),
+      // A whole prescription → every medicine on it, reviewed together.
+      (Icons.document_scanner_rounded, l.scanTitle, scanPrescriptionToBulkAdd),
+      (Icons.person_add_alt_1_rounded, l.addDoctor, open(DoctorFormScreen.new)),
+      (Icons.add_a_photo_rounded, l.addRecord, open(RecordFormScreen.new)),
+      (Icons.payments_rounded, l.addExpense, open(ExpenseFormScreen.new)),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +67,7 @@ class _AddActionSheet extends StatelessWidget {
               crossAxisSpacing: AppSpacing.md,
               childAspectRatio: AppSpacing.addTileAspect,
               children: [
-                for (final (i, (icon, label, builder)) in _actions(
+                for (final (i, (icon, label, action)) in _actions(
                   context.l10n,
                 ).indexed)
                   _AddTile(
@@ -63,10 +78,9 @@ class _AddActionSheet extends StatelessWidget {
                             AppColors.cardCycleOnLight.length],
                     onTap: () {
                       final navigator = Navigator.of(context);
+                      final container = ProviderScope.containerOf(context);
                       navigator.pop();
-                      navigator.push(
-                        MaterialPageRoute<void>(builder: (_) => builder()),
-                      );
+                      action(navigator.context, container);
                     },
                   ),
               ],

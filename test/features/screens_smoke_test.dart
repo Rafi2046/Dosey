@@ -866,4 +866,55 @@ void main() {
     expect(meds.map((m) => m.name), contains('Metformin'));
     await unmount(tester);
   });
+
+  testWidgets('"+" › Scan prescription reviews every medicine found', (
+    tester,
+  ) async {
+    final scanner = FakePrescriptionScanner([
+      const ScannedMedicine(name: 'Zulfidin', strength: '500mg'),
+    ]);
+    await pumpApp(
+      tester,
+      overrides: [
+        prescriptionScannerProvider.overrideWithValue(scanner),
+        prescriptionImagePickerProvider.overrideWithValue(
+          (_) async => '/tmp/rx.jpg',
+        ),
+      ],
+    );
+    await tester.tap(find.byTooltip(en.add));
+    await settle(tester);
+    await tester.tap(find.text(en.scanTitle));
+    await settle(tester);
+
+    // Even a single medicine goes to the review screen from here.
+    expect(scanner.scannedPaths, ['/tmp/rx.jpg']);
+    expect(find.text(en.bulkTitle), findsOneWidget);
+    expect(find.text(en.bulkSaveAll(1)), findsOneWidget);
+    await unmount(tester);
+  });
+
+  testWidgets('a scan that finds nothing says so instead of opening', (
+    tester,
+  ) async {
+    await pumpApp(
+      tester,
+      overrides: [
+        prescriptionScannerProvider.overrideWithValue(
+          FakePrescriptionScanner(const []),
+        ),
+        prescriptionImagePickerProvider.overrideWithValue(
+          (_) async => '/tmp/blank.jpg',
+        ),
+      ],
+    );
+    await tester.tap(find.byTooltip(en.add));
+    await settle(tester);
+    await tester.tap(find.text(en.scanTitle));
+    await settle(tester);
+
+    expect(find.text(en.scanNothingFound), findsOneWidget);
+    expect(find.text(en.bulkTitle), findsNothing);
+    await unmount(tester);
+  });
 }

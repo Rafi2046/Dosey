@@ -23,6 +23,7 @@ import '../domain/dose_time.dart';
 import '../domain/scanned_medicine.dart';
 import '../providers/medicines_providers.dart';
 import 'bulk/bulk_add_screen.dart';
+import 'scan_prescription_flow.dart';
 import 'widgets/dose_section.dart';
 import 'widgets/reminder_times_editor.dart';
 import 'widgets/scan_prescription_card.dart';
@@ -121,23 +122,14 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
   /// Photo → OCR → suggestions. The chosen one only pre-fills the fields;
   /// nothing is saved until the user reviews and taps Save.
   Future<void> _scan() async {
-    final path = await ref.read(prescriptionImagePickerProvider)(context);
-    if (path == null || !mounted) return;
-    setState(() => _scanning = true);
-    List<ScannedMedicine>? found;
-    try {
-      found = await ref.read(prescriptionScannerProvider).scan(path);
-    } on Exception {
-      found = null;
-    }
-    if (!mounted) return;
-    setState(() => _scanning = false);
-    if (found == null) {
-      return showAppSnack(context, context.l10n.scanFailed);
-    }
-    if (found.isEmpty) {
-      return showAppSnack(context, context.l10n.scanNothingFound);
-    }
+    final found = await scanPrescription(
+      context,
+      ProviderScope.containerOf(context),
+      onBusy: (busy) {
+        if (mounted) setState(() => _scanning = busy);
+      },
+    );
+    if (found == null || !mounted) return;
     if (found.length == 1) {
       _applyScan(found.single);
       return showAppSnack(context, context.l10n.scanFilled);

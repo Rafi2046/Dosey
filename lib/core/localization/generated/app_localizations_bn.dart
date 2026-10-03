@@ -1190,9 +1190,6 @@ class AppLocalizationsBn extends AppLocalizations {
   String get licenses => 'ওপেন-সোর্স লাইসেন্স';
 
   @override
-  String get appTagline => 'অ্যালার্মের মতো বাজে এমন ওষুধের রিমাইন্ডার';
-
-  @override
   String get couldNotOpen => 'এটি খোলা যায়নি। আবার চেষ্টা করুন।';
 
   @override

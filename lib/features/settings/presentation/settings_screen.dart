@@ -60,8 +60,6 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: AppSpacing.screenPadding.copyWith(bottom: AppSpacing.xxl),
         children: [
-          _AppHeader(version: version),
-          AppSpacing.gapXl,
           SettingsSection(
             title: l10n.settingsPreferences,
             children: [
@@ -217,63 +215,6 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
         ],
-      ),
-    );
-  }
-}
-
-/// Logo, name, tagline and version on a gradient card.
-class _AppHeader extends StatelessWidget {
-  const _AppHeader({required this.version});
-
-  final String? version;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.mint, AppColors.moss],
-        ),
-      ),
-      child: Padding(
-        padding: AppSpacing.cardPaddingLg,
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-              child: Image.asset(
-                AppImages.logo,
-                width: AppSpacing.appIconLarge,
-                height: AppSpacing.appIconLarge,
-              ),
-            ),
-            AppSpacing.gapLg,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(l10n.appName, style: AppTextStyles.title),
-                  AppSpacing.gapXs,
-                  Text(l10n.appTagline, style: AppTextStyles.caption),
-                  if (version case final v?) ...[
-                    AppSpacing.gapSm,
-                    StatusChip(
-                      label: v,
-                      background: AppColors.creamLight.withValues(
-                        alpha: AppSpacing.badgeOpacity,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

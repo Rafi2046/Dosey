@@ -2168,12 +2168,6 @@ abstract class AppLocalizations {
   /// **'Open-source licences'**
   String get licenses;
 
-  /// No description provided for @appTagline.
-  ///
-  /// In en, this message translates to:
-  /// **'Medicine reminders that ring like an alarm'**
-  String get appTagline;
-
   /// No description provided for @couldNotOpen.
   ///
   /// In en, this message translates to:

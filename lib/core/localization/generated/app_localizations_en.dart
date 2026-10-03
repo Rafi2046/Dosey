@@ -1199,9 +1199,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get licenses => 'Open-source licences';
 
   @override
-  String get appTagline => 'Medicine reminders that ring like an alarm';
-
-  @override
   String get couldNotOpen => 'Couldn\'t open that. Please try again.';
 
   @override

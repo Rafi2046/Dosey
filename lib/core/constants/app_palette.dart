@@ -27,6 +27,10 @@ class AppPalette {
     required this.divider,
     required this.shadow,
     required this.scrim,
+    required this.selected,
+    required this.onSelected,
+    required this.highlight,
+    required this.onHighlight,
   });
 
   final Brightness brightness;
@@ -58,6 +62,14 @@ class AppPalette {
   final Color shadow;
   final Color scrim;
 
+  /// Selected pill / chip on a [cream] surface, and its text.
+  final Color selected;
+  final Color onSelected;
+
+  /// Selected indicator on a dark surface (nav bar, pills on cards).
+  final Color highlight;
+  final Color onHighlight;
+
   /// The original design (docs/design/ui_design_ideas.png).
   static const AppPalette light = AppPalette(
     brightness: Brightness.light,
@@ -77,6 +89,10 @@ class AppPalette {
     divider: Color(0x1F1B1D1A),
     shadow: Color(0x40000000),
     scrim: Color(0x99000000),
+    selected: Color(0xFF50594E),
+    onSelected: Color(0xFFEEEBDD),
+    highlight: Color(0xFFE6E3D3),
+    onHighlight: Color(0xFF1B1D1A),
   );
 
   /// Night version: deep green-charcoal, same hues, cream text.
@@ -98,5 +114,10 @@ class AppPalette {
     divider: Color(0x24EEEBDD),
     shadow: Color(0x80000000),
     scrim: Color(0xB3000000),
+    // Pale mint so "selected" reads brighter than the dark surfaces.
+    selected: Color(0xFFD4E6DC),
+    onSelected: Color(0xFF14201A),
+    highlight: Color(0xFFD4E6DC),
+    onHighlight: Color(0xFF14201A),
   );
 }

@@ -67,7 +67,7 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               SettingsTile(
                 icon: Icons.translate_rounded,
-                color: AppColors.mint,
+                color: AppColors.tileMint,
                 title: l10n.settingsLanguage,
                 subtitle: l10n.settingsLanguageHint,
                 below: ChoicePills<String?>(
@@ -84,7 +84,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
               SettingsTile(
                 icon: Icons.contrast_rounded,
-                color: AppColors.stone,
+                color: AppColors.tileStone,
                 title: l10n.settingsAppearance,
                 subtitle: l10n.settingsAppearanceHint,
                 below: ChoicePills<ThemeMode>(
@@ -134,7 +134,7 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               SettingsTile(
                 icon: Icons.mail_rounded,
-                color: AppColors.olive,
+                color: AppColors.tileOlive,
                 title: l10n.contactSupport,
                 subtitle: l10n.contactSupportHint,
                 onTap: () => _launch(
@@ -163,7 +163,7 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               SettingsTile(
                 icon: Icons.lock_rounded,
-                color: AppColors.moss,
+                color: AppColors.tileMoss,
                 title: l10n.privacyPolicy,
                 subtitle: l10n.privacyPolicyHint,
                 onTap: () => _push(
@@ -173,7 +173,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
               SettingsTile(
                 icon: Icons.description_rounded,
-                color: AppColors.stone,
+                color: AppColors.tileStone,
                 title: l10n.termsOfUse,
                 onTap: () => _push(
                   context,
@@ -182,7 +182,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
               SettingsTile(
                 icon: Icons.health_and_safety_rounded,
-                color: AppColors.mint,
+                color: AppColors.tileMint,
                 title: l10n.medicalDisclaimer,
                 subtitle: l10n.medicalDisclaimerHint,
                 onTap: () => _push(
@@ -192,7 +192,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
               SettingsTile(
                 icon: Icons.code_rounded,
-                color: AppColors.olive,
+                color: AppColors.tileOlive,
                 title: l10n.licenses,
                 onTap: () => showLicensePage(
                   context: context,

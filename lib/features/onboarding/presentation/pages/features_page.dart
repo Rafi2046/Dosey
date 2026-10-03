@@ -27,9 +27,9 @@ class FeaturesPage extends StatelessWidget {
     ];
     final colors = [
       AppColors.accent,
-      AppColors.mint,
-      AppColors.olive,
-      AppColors.moss,
+      AppColors.tileMint,
+      AppColors.tileOlive,
+      AppColors.tileMoss,
     ];
     return SingleChildScrollView(
       padding: AppSpacing.screenPadding.copyWith(

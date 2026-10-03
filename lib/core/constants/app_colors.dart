@@ -74,4 +74,18 @@ abstract final class AppColors {
   static Color get divider => _palette.divider;
   static Color get shadow => _palette.shadow;
   static Color get scrim => _palette.scrim;
+
+  // ── Selection ─────────────────────────────────────────────────────────────
+  static Color get selected => _palette.selected;
+  static Color get onSelected => _palette.onSelected;
+  static Color get highlight => _palette.highlight;
+  static Color get onHighlight => _palette.onHighlight;
+
+  // ── Icon tiles ────────────────────────────────────────────────────────────
+  /// Mid-tone fills for small icon tiles: the light-mode card colors, which
+  /// read well on both light and dark surfaces.
+  static const Color tileMint = Color(0xFF64AA93);
+  static const Color tileOlive = Color(0xFF728268);
+  static const Color tileStone = Color(0xFF7E7D74);
+  static const Color tileMoss = Color(0xFF50594E);
 }

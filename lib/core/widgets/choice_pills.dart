@@ -71,9 +71,9 @@ class _Pill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (bg, fg) = switch ((selected, onDark)) {
-      (true, false) => (AppColors.moss, AppColors.textOnDark),
+      (true, false) => (AppColors.selected, AppColors.onSelected),
       (false, false) => (AppColors.sand, AppColors.ink),
-      (true, true) => (AppColors.creamLight, AppColors.ink),
+      (true, true) => (AppColors.highlight, AppColors.onHighlight),
       (false, true) => (AppColors.moss, AppColors.textOnDark),
     };
     return AnimatedContainer(

@@ -23,8 +23,8 @@ Future<void> showMoreSheet(
     }
 
     final items = [
-      (HomeTab.doctors, l10n.moreDoctorsHint, AppColors.olive),
-      (HomeTab.records, l10n.moreRecordsHint, AppColors.mint),
+      (HomeTab.doctors, l10n.moreDoctorsHint, AppColors.tileOlive),
+      (HomeTab.records, l10n.moreRecordsHint, AppColors.tileMint),
       (HomeTab.expenses, l10n.moreExpensesHint, AppColors.accent),
     ];
     return SafeArea(
@@ -47,7 +47,7 @@ Future<void> showMoreSheet(
               ),
             _MoreTile(
               icon: Icons.settings_rounded,
-              color: AppColors.stone,
+              color: AppColors.tileStone,
               title: l10n.settingsTitle,
               subtitle: l10n.moreSettingsHint,
               selected: false,

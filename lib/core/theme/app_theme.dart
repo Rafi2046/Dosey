@@ -64,7 +64,7 @@ abstract final class AppTheme {
     ),
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.sand,
-      selectedColor: AppColors.moss,
+      selectedColor: AppColors.selected,
       labelStyle: AppTextStyles.chip.copyWith(color: AppColors.ink),
       padding: AppSpacing.chipPadding,
       side: BorderSide.none,

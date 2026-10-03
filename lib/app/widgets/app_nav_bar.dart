@@ -113,7 +113,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = selected ? AppColors.ink : AppColors.textOnDarkMuted;
+    final color = selected ? AppColors.onHighlight : AppColors.textOnDarkMuted;
     return Tooltip(
       message: label,
       child: Semantics(
@@ -133,7 +133,7 @@ class _NavItem extends StatelessWidget {
                 width: AppSpacing.navIndicatorWidth,
                 height: AppSpacing.navIndicatorHeight,
                 decoration: BoxDecoration(
-                  color: selected ? AppColors.cream : AppColors.transparent,
+                  color: selected ? AppColors.highlight : AppColors.transparent,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
                 ),
                 child: Icon(icon, size: AppSpacing.iconMd, color: color),

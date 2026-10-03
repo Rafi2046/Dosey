@@ -38,6 +38,7 @@ class DoctorCard extends StatelessWidget {
       elevated: true,
       onTap: onTap,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InitialsAvatar(name: d.name),
           AppSpacing.gapLg,
@@ -51,11 +52,13 @@ class DoctorCard extends StatelessWidget {
                       ? AppTextStyles.cardTitleOnLight
                       : AppTextStyles.cardTitle,
                 ),
-                if (subtitle.isNotEmpty)
+                if (subtitle.isNotEmpty) ...[
+                  AppSpacing.gapXs,
                   Text(
                     subtitle,
                     style: AppTextStyles.caption.copyWith(color: muted),
                   ),
+                ],
                 AppSpacing.gapSm,
                 StatusChip(
                   label: context.l10n.activeMedicines(item.activeMedicineCount),

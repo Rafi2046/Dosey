@@ -14,11 +14,16 @@ class InitialsAvatar extends StatelessWidget {
   final double size;
 
   String get _initials {
-    final words = name
-        .replaceAll(RegExp(r'^(dr\.?|prof\.?)\s+', caseSensitive: false), '')
+    final clean = name.replaceAll(RegExp(r'[\(\)\[\]\{\}\.,]'), ' ');
+    final words = clean
         .split(RegExp(r'\s+'))
         .where((w) => w.isNotEmpty)
+        .where(
+          (w) =>
+              !RegExp(r'^(dr|prof|retd)$', caseSensitive: false).hasMatch(w),
+        )
         .toList();
+    if (words.isEmpty) return name.isNotEmpty ? name.trim()[0].toUpperCase() : '';
     return words.take(2).map((w) => w[0].toUpperCase()).join();
   }
 

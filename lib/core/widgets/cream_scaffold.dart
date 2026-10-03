@@ -29,36 +29,37 @@ class CreamScaffold extends StatelessWidget {
           ? SystemUiOverlayStyle.light
           : SystemUiOverlayStyle.dark,
       child: Scaffold(
-      backgroundColor: AppColors.cream,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: AppSpacing.screenPadding.copyWith(
-                top: AppSpacing.md,
-                bottom: AppSpacing.md,
-              ),
-              child: Row(
-                children: [
-                  CircleIconButton.back(context, color: AppColors.ink),
-                  AppSpacing.gapMd,
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: AppTextStyles.subtitle.copyWith(
-                        color: AppColors.ink,
+        backgroundColor: AppColors.cream,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: AppSpacing.screenPadding.copyWith(
+                  top: AppSpacing.md,
+                  bottom: AppSpacing.md,
+                ),
+                child: Row(
+                  children: [
+                    CircleIconButton.back(context, color: AppColors.ink),
+                    AppSpacing.gapMd,
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: AppTextStyles.subtitle.copyWith(
+                          color: AppColors.ink,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  ...actions,
-                ],
+                    ...actions,
+                  ],
+                ),
               ),
-            ),
-            Expanded(child: body),
-            if (bottomBar != null)
-              Padding(padding: AppSpacing.bottomBarPadding, child: bottomBar),
-          ],
+              Expanded(child: body),
+              if (bottomBar != null)
+                Padding(padding: AppSpacing.bottomBarPadding, child: bottomBar),
+            ],
+          ),
         ),
       ),
     );

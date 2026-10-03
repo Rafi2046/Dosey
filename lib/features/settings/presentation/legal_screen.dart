@@ -18,18 +18,19 @@ class LegalScreen extends StatelessWidget {
     final l10n = context.l10n;
     return CreamScaffold(
       title: document.title(l10n),
+      onDark: true,
       body: ListView(
         padding: AppSpacing.screenPadding.copyWith(bottom: AppSpacing.xxl),
         children: [
           Text(
             l10n.lastUpdated(AppDateFormat.date(AppConstants.legalUpdated)),
-            style: AppTextStyles.captionOnLight,
+            style: AppTextStyles.caption,
           ),
           AppSpacing.gapLg,
           for (final (heading, body) in document.sections(l10n)) ...[
-            Text(heading, style: AppTextStyles.cardTitleOnLight),
+            Text(heading, style: AppTextStyles.cardTitle),
             AppSpacing.gapXs,
-            Text(body, style: AppTextStyles.bodyOnLight),
+            Text(body, style: AppTextStyles.body),
             AppSpacing.gapXl,
           ],
         ],

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constants.dart';
 
-/// A titled group of settings rows on one rounded card, rows separated by
-/// hairlines.
+/// A titled group of settings rows on one rounded light card (on the sage
+/// Settings page), rows separated by hairlines.
 class SettingsSection extends StatelessWidget {
   const SettingsSection({
     super.key,
@@ -27,10 +27,7 @@ class SettingsSection extends StatelessWidget {
               left: AppSpacing.lg,
               bottom: AppSpacing.sm,
             ),
-            child: Text(
-              title.toUpperCase(),
-              style: AppTextStyles.overline.copyWith(color: AppColors.inkMuted),
-            ),
+            child: Text(title.toUpperCase(), style: AppTextStyles.overline),
           ),
           Material(
             color: AppColors.creamLight,

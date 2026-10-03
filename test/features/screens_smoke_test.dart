@@ -502,6 +502,32 @@ void main() {
     await unmount(tester);
   });
 
+  testWidgets('the time picker replaces the dose sheet, never stacks on it', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await tester.tap(find.byTooltip(en.add));
+    await settle(tester);
+    await tapText(tester, en.addMedicine);
+    await tapText(tester, en.next);
+    await tapText(tester, en.slotMorning);
+    await tapText(tester, '08:00 am · 1 tablet');
+    expect(find.text(en.doseTimeTitle), findsOneWidget);
+
+    // Tapping the time: the sheet closes and the picker is alone.
+    await tester.tap(find.text('08:00 am').last);
+    await settle(tester);
+    expect(find.byType(TimePickerDialog), findsOneWidget);
+    expect(find.text(en.doseTimeTitle), findsNothing);
+
+    // Confirming brings the sheet back, still one at a time.
+    await tester.tap(find.text('OK'));
+    await settle(tester);
+    expect(find.byType(TimePickerDialog), findsNothing);
+    expect(find.text(en.doseTimeTitle), findsOneWidget);
+    await unmount(tester);
+  });
+
   testWidgets('an empty list centres its empty state in the space left', (
     tester,
   ) async {

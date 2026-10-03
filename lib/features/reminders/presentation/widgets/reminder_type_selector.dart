@@ -21,6 +21,7 @@ class ReminderTypeSelector extends StatelessWidget {
     return LabeledField(
       label: context.l10n.reminderType,
       child: ChoicePills<ReminderType>(
+        columns: 2,
         options: ReminderType.values,
         selected: {value},
         labelOf: (t) => t.label(context.l10n),

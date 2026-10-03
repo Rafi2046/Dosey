@@ -26,19 +26,49 @@ class DoseRemoved extends DoseSheetResult {
   const DoseRemoved();
 }
 
+/// Tapping the time inside the sheet: close it, pick, then reopen.
+class _PickTime {
+  const _PickTime(this.dose);
+  final DoseTime dose;
+}
+
 /// Bottom sheet to set one intake: its time and how many units then.
 /// [canRemove] adds a "Remove this time" action (for existing times).
+///
+/// Only one sheet is on screen at a time: the time picker never opens over
+/// this sheet. Tapping the time closes the sheet, shows the picker on its
+/// own, then brings the sheet back with the new time. With [pickTimeFirst]
+/// (adding a time) the picker comes first and the sheet after it.
 Future<DoseSheetResult?> showDoseTimeSheet(
   BuildContext context, {
   required DoseTime initial,
   required String unit,
   bool canRemove = false,
-}) => showModalBottomSheet<DoseSheetResult>(
-  context: context,
-  isScrollControlled: true,
-  builder: (_) =>
-      _DoseTimeSheet(initial: initial, unit: unit, canRemove: canRemove),
-);
+  bool pickTimeFirst = false,
+}) async {
+  var dose = initial;
+  if (pickTimeFirst) {
+    final t = await AppPickers.time(context, initial: dose.time);
+    if (t == null || !context.mounted) return null;
+    dose = dose.copyWith(time: t);
+  }
+  while (true) {
+    if (!context.mounted) return null;
+    // A DoseSheetResult, a _PickTime, or null when dismissed.
+    final result = await showModalBottomSheet<Object>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) =>
+          _DoseTimeSheet(initial: dose, unit: unit, canRemove: canRemove),
+    );
+    if (result is! _PickTime) return result as DoseSheetResult?;
+    dose = result.dose;
+    if (!context.mounted) return null;
+    final t = await AppPickers.time(context, initial: dose.time);
+    // Cancelled picker: back to the sheet with the time unchanged.
+    if (t != null) dose = dose.copyWith(time: t);
+  }
+}
 
 class _DoseTimeSheet extends StatefulWidget {
   const _DoseTimeSheet({
@@ -73,10 +103,7 @@ class _DoseTimeSheetState extends State<_DoseTimeSheet> {
               label: context.l10n.medicineTime,
               value: AppDateFormat.timeOfDay(_dose.time),
               icon: Icons.schedule_rounded,
-              onTap: () async {
-                final t = await AppPickers.time(context, initial: _dose.time);
-                if (t != null) setState(() => _dose = _dose.copyWith(time: t));
-              },
+              onTap: () => Navigator.pop(context, _PickTime(_dose)),
             ),
             LabeledField(
               label: context.l10n.doseHowMany,

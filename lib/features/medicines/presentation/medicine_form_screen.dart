@@ -245,6 +245,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
             LabeledField(
               label: context.l10n.medicineForm,
               child: ChoicePills<MedicineForm>(
+                columns: 4,
                 options: MedicineForm.values,
                 selected: {_form},
                 labelOf: (f) => f.label(context.l10n),

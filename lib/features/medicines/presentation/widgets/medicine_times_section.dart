@@ -28,6 +28,7 @@ class MedicineTimesSection extends ConsumerWidget {
       context,
       initial: DoseTime(TimeOfDay.now()),
       unit: DoseUnit.display(medicine.doseUnit, context.l10n),
+      pickTimeFirst: true,
     );
     if (result is! DoseSaved) return;
     await ref

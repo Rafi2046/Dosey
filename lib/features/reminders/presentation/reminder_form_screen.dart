@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/utils/numbers.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/utils/pickers.dart';
 import '../../../core/widgets/amount_stepper.dart';
@@ -274,9 +275,11 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
             LabeledField(
               label: context.l10n.reminderSnooze,
               child: ChoicePills<int>(
+                columns: 4,
                 options: AppConstants.snoozeOptions,
                 selected: {_snooze},
-                labelOf: (m) => '$m ${context.l10n.minutesShort}',
+                labelOf: (m) =>
+                    '${AppNumber.format(m)} ${context.l10n.minutesShort}',
                 onChanged: (s) => setState(() => _snooze = s.single),
               ),
             ),

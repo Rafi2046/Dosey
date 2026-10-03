@@ -5,8 +5,9 @@ import '../constants/constants.dart';
 import 'back_arrow_button.dart';
 
 /// Light (cream) page used for details and forms, like the design's
-/// "Medicine" screen: outlined back button + small title, content below and
-/// an optional pinned bottom bar for primary actions.
+/// "Medicine" screen: back arrow + small title, content below and an
+/// optional pinned bottom bar for primary actions. [onDark] puts it on the
+/// sage background of the main tabs instead (Settings and its pages).
 class CreamScaffold extends StatelessWidget {
   const CreamScaffold({
     super.key,
@@ -14,22 +15,24 @@ class CreamScaffold extends StatelessWidget {
     required this.body,
     this.actions = const [],
     this.bottomBar,
+    this.onDark = false,
   });
 
   final String title;
   final Widget body;
   final List<Widget> actions;
   final Widget? bottomBar;
+  final bool onDark;
 
   @override
   Widget build(BuildContext context) {
     // Cream screens are light in light mode: dark status-bar icons there.
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: AppColors.isDark
+      value: AppColors.isDark || onDark
           ? SystemUiOverlayStyle.light
           : SystemUiOverlayStyle.dark,
       child: Scaffold(
-        backgroundColor: AppColors.cream,
+        backgroundColor: onDark ? AppColors.sage : AppColors.cream,
         body: SafeArea(
           child: Column(
             children: [
@@ -40,13 +43,15 @@ class CreamScaffold extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    BackArrowButton(color: AppColors.ink),
+                    BackArrowButton(
+                      color: onDark ? AppColors.textOnDark : AppColors.ink,
+                    ),
                     AppSpacing.gapSm,
                     Expanded(
                       child: Text(
                         title,
                         style: AppTextStyles.subtitle.copyWith(
-                          color: AppColors.ink,
+                          color: onDark ? AppColors.textOnDark : AppColors.ink,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),

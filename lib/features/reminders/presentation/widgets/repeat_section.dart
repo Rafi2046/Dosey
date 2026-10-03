@@ -46,6 +46,7 @@ class RepeatSection extends StatelessWidget {
         LabeledField(
           label: context.l10n.reminderRepeat,
           child: ChoicePills<RepeatRule>(
+            columns: 2,
             options: RepeatRule.values,
             selected: {rule},
             labelOf: (r) => r.label(context.l10n),
@@ -59,6 +60,7 @@ class RepeatSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ChoicePills<int>(
+                  columns: 7,
                   options: List.generate(
                     context.l10n.weekdaysShort.length,
                     (i) => i,

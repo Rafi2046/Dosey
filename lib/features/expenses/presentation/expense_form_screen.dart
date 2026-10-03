@@ -130,6 +130,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
             LabeledField(
               label: context.l10n.expenseCategory,
               child: ChoicePills<ExpenseCategory>(
+                columns: 3,
                 options: ExpenseCategory.values,
                 selected: {_category},
                 labelOf: (c) => c.label(context.l10n),

@@ -35,6 +35,7 @@ class DoseSection extends StatelessWidget {
         LabeledField(
           label: context.l10n.medicineMeal,
           child: ChoicePills<MealRelation>(
+            columns: 2,
             options: MealRelation.values,
             selected: {meal},
             labelOf: (m) => m.label(context.l10n),

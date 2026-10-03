@@ -90,6 +90,8 @@ class SettingsScreen extends ConsumerWidget {
 
     return CreamScaffold(
       title: l10n.settingsTitle,
+      // Same sage background as Home and the tabs; the cards stay light.
+      onDark: true,
       body: ListView(
         padding: AppSpacing.screenPadding.copyWith(bottom: AppSpacing.xxl),
         children: [
@@ -269,7 +271,7 @@ class SettingsScreen extends ConsumerWidget {
             Center(
               child: Text(
                 '${l10n.appName} · $version',
-                style: AppTextStyles.captionOnLight,
+                style: AppTextStyles.caption,
               ),
             ),
         ],

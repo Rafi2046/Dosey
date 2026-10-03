@@ -95,6 +95,7 @@ class MedicineDraftCard extends StatelessWidget {
           LabeledField(
             label: context.l10n.medicineForm,
             child: ChoicePills<MedicineForm>(
+              columns: 4,
               options: MedicineForm.values,
               selected: {draft.form},
               labelOf: (f) => f.label(context.l10n),
@@ -134,6 +135,7 @@ class MedicineDraftCard extends StatelessWidget {
           LabeledField(
             label: context.l10n.medicineMeal,
             child: ChoicePills<MealRelation>(
+              columns: 2,
               options: MealRelation.values,
               selected: {draft.meal},
               labelOf: (m) => m.label(context.l10n),

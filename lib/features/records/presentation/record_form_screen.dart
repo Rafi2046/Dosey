@@ -115,6 +115,7 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
             LabeledField(
               label: context.l10n.recordType,
               child: ChoicePills<RecordType>(
+                columns: 3,
                 options: RecordType.values,
                 selected: {_type},
                 labelOf: (t) => t.label(context.l10n),

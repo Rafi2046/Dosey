@@ -69,6 +69,7 @@ class ReminderTimesEditor extends StatelessWidget {
       context,
       initial: _suggestion().copyWith(amount: _defaultAmount),
       unit: unit,
+      pickTimeFirst: true,
     );
     if (result is! DoseSaved) return;
     // Same time twice: the new amount replaces the old one.
@@ -112,6 +113,7 @@ class ReminderTimesEditor extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ChoicePills<_Slot>(
+            columns: 4,
             options: _Slot.values,
             selected: {
               for (final s in _Slot.values)

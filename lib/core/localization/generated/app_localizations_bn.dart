@@ -1834,7 +1834,7 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String bpPulseValue(String pulse) {
-    return '♥ $pulse bpm';
+    return 'পালস $pulse';
   }
 
   @override

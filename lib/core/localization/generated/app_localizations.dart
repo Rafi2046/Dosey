@@ -3113,7 +3113,7 @@ abstract class AppLocalizations {
   /// No description provided for @bpPulseValue.
   ///
   /// In en, this message translates to:
-  /// **'♥ {pulse} bpm'**
+  /// **'Pulse {pulse}'**
   String bpPulseValue(String pulse);
 
   /// No description provided for @numberRange.

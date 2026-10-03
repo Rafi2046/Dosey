@@ -70,7 +70,10 @@ class BloodPressureScreen extends ConsumerWidget {
                 ),
                 ScreenHeader(
                   title: l10n.bpTitle,
-                  subtitle: list == null ? null : l10n.bpCount(list.length),
+                  // Empty: the empty state below already says so.
+                  subtitle: list == null || list.isEmpty
+                      ? null
+                      : l10n.bpCount(list.length),
                   padding: const EdgeInsets.only(bottom: AppSpacing.xl),
                 ),
                 AsyncValueView(

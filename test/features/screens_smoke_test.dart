@@ -1189,6 +1189,9 @@ void main() {
       await back(tester);
     }
 
+    // Back to the top: permissions is above the legal pages.
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, 3000));
+    await settle(tester);
     await tapText(tester, en.settingsPermissions);
     expect(find.text(en.allSet), findsOneWidget);
     await back(tester);

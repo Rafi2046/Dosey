@@ -826,7 +826,7 @@
       }
     }
   },
-  "bpPulseValue": "♥ {pulse} bpm",
+  "bpPulseValue": "Pulse {pulse}",
   "@bpPulseValue": {
     "placeholders": {
       "pulse": {

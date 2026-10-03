@@ -49,7 +49,11 @@ class _BloodPressureFormScreenState
     super.dispose();
   }
 
-  static final _digits = [FilteringTextInputFormatter.digitsOnly];
+  /// Whole numbers, at most 3 digits (no reading needs more).
+  static final _digits = [
+    FilteringTextInputFormatter.digitsOnly,
+    LengthLimitingTextInputFormatter(3),
+  ];
 
   FormFieldValidator<String> _range(
     int min,

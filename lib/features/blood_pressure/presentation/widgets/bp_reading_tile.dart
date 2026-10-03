@@ -39,13 +39,15 @@ class BpReadingTile extends StatelessWidget {
                   ),
                   AppSpacing.gapXs,
                   Text(
-                    [
-                      AppDateFormat.dateTime(r.measuredAt),
-                      if (r.pulse case final p?)
-                        l10n.bpPulseValue(AppNumber.format(p)),
-                    ].join(l10n.notifDoseSeparator),
+                    AppDateFormat.dateTime(r.measuredAt),
                     style: AppTextStyles.captionOnLight,
                   ),
+                  // Own line, so it never wraps mid-way.
+                  if (r.pulse case final p?)
+                    Text(
+                      l10n.bpPulseValue(AppNumber.format(p)),
+                      style: AppTextStyles.captionOnLight,
+                    ),
                   if (r.note case final n? when n.isNotEmpty)
                     Text(
                       n,

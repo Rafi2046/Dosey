@@ -53,12 +53,19 @@ class BpLatestCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text(
-                l10n.bpValue(
-                  AppNumber.format(latest.systolic),
-                  AppNumber.format(latest.diastolic),
+              // Shrinks rather than overflowing with large system fonts.
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    l10n.bpValue(
+                      AppNumber.format(latest.systolic),
+                      AppNumber.format(latest.diastolic),
+                    ),
+                    style: AppTextStyles.amount.copyWith(color: AppColors.ink),
+                  ),
                 ),
-                style: AppTextStyles.amount.copyWith(color: AppColors.ink),
               ),
               AppSpacing.gapSm,
               Text(AppConstants.bpUnit, style: AppTextStyles.bodyOnLight),

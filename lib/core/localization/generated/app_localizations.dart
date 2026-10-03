@@ -2743,6 +2743,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Matches a doctor you\'ve saved, so these medicines are linked to them.'**
   String get scanDoctorLinked;
+
+  /// No description provided for @headerMedicinesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No medicines yet} =1{1 medicine} other{{count} medicines}}'**
+  String headerMedicinesCount(int count);
+
+  /// No description provided for @headerRemindersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No reminders yet} =1{1 reminder} other{{count} reminders}}'**
+  String headerRemindersCount(int count);
+
+  /// No description provided for @headerDoctorsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No doctors yet} =1{1 doctor} other{{count} doctors}}'**
+  String headerDoctorsCount(int count);
+
+  /// No description provided for @headerRecordsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No records yet} =1{1 record} other{{count} records}}'**
+  String headerRecordsCount(int count);
 }
 
 class _AppLocalizationsDelegate

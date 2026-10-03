@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/widgets/async_value_view.dart';
-import '../../../core/widgets/circle_icon_button.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/screen_header.dart';
+import '../../../app/home_tab.dart';
 import '../providers/doctors_providers.dart';
 import 'doctor_detail_screen.dart';
 import 'doctor_form_screen.dart';
@@ -25,18 +25,12 @@ class DoctorsScreen extends ConsumerWidget {
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
           ScreenHeader(
-            title: context.l10n.doctorsTitle.replaceAll('\n', ' '),
-            style: AppTextStyles.headline.copyWith(fontSize: 24),
-            maxLines: 1,
-            trailing: CircleIconButton(
-              icon: Icons.add_rounded,
-              tooltip: context.l10n.addDoctor,
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const DoctorFormScreen(),
-                ),
-              ),
-            ),
+            title: context.l10n.doctorsTitle,
+            icon: HomeTab.doctors.icon,
+            subtitle: switch (doctors.value) {
+              final list? => context.l10n.headerDoctorsCount(list.length),
+              null => null,
+            },
           ),
           AsyncValueView(
             value: doctors,

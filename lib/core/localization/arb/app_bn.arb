@@ -440,5 +440,9 @@
   "scanDoctorTitle": "প্রেসক্রিপশনের ডাক্তার",
   "scanDoctorSave": "এই ডাক্তারকে সেভ করুন",
   "scanDoctorSaveHint": "ডাক্তারের তালিকায় যোগ হবে এবং এই ওষুধগুলো তাঁর সাথে যুক্ত হবে।",
-  "scanDoctorLinked": "আপনার সেভ করা একজন ডাক্তারের সাথে মিলেছে, তাই ওষুধগুলো তাঁর সাথে যুক্ত হবে।"
+  "scanDoctorLinked": "আপনার সেভ করা একজন ডাক্তারের সাথে মিলেছে, তাই ওষুধগুলো তাঁর সাথে যুক্ত হবে।",
+  "headerMedicinesCount": "{count, plural, =0{এখনো কোনো ওষুধ নেই} other{{count}টি ওষুধ}}",
+  "headerRemindersCount": "{count, plural, =0{এখনো কোনো রিমাইন্ডার নেই} other{{count}টি রিমাইন্ডার}}",
+  "headerDoctorsCount": "{count, plural, =0{এখনো কোনো ডাক্তার নেই} other{{count} জন ডাক্তার}}",
+  "headerRecordsCount": "{count, plural, =0{এখনো কোনো রেকর্ড নেই} other{{count}টি রেকর্ড}}"
 }

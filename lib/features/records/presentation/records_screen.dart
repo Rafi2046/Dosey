@@ -8,6 +8,7 @@ import '../../../core/widgets/async_value_view.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/filter_pills.dart';
 import '../../../core/widgets/screen_header.dart';
+import '../../../app/home_tab.dart';
 import '../domain/record_summary.dart';
 import '../providers/records_providers.dart';
 import 'record_detail_screen.dart';
@@ -28,7 +29,14 @@ class RecordsScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          ScreenHeader(title: context.l10n.recordsTitle),
+          ScreenHeader(
+            title: context.l10n.recordsTitle,
+            icon: HomeTab.records.icon,
+            subtitle: switch (records.value) {
+              final list? => context.l10n.headerRecordsCount(list.length),
+              null => null,
+            },
+          ),
           FilterPills<RecordType>(
             options: RecordType.values,
             selected: filter,

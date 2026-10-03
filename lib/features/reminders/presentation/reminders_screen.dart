@@ -8,6 +8,7 @@ import '../../../core/widgets/async_value_view.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/filter_pills.dart';
 import '../../../core/widgets/screen_header.dart';
+import '../../../app/home_tab.dart';
 import '../providers/reminders_providers.dart';
 import 'reminder_form_screen.dart';
 import 'widgets/reminder_tile.dart';
@@ -34,7 +35,14 @@ class RemindersScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          ScreenHeader(title: context.l10n.remindersTitle),
+          ScreenHeader(
+            title: context.l10n.remindersTitle,
+            icon: HomeTab.reminders.icon,
+            subtitle: switch (reminders.value) {
+              final list? => context.l10n.headerRemindersCount(list.length),
+              null => null,
+            },
+          ),
           FilterPills<ReminderType>(
             options: ReminderType.values,
             selected: filter,

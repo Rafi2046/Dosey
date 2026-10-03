@@ -687,5 +687,41 @@
   "scanDoctorTitle": "Doctor on this prescription",
   "scanDoctorSave": "Save this doctor",
   "scanDoctorSaveHint": "Adds them to Doctors and links these medicines to them.",
-  "scanDoctorLinked": "Matches a doctor you've saved, so these medicines are linked to them."
+  "scanDoctorLinked": "Matches a doctor you've saved, so these medicines are linked to them.",
+  "headerMedicinesCount": "{count, plural, =0{No medicines yet} =1{1 medicine} other{{count} medicines}}",
+  "@headerMedicinesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "headerRemindersCount": "{count, plural, =0{No reminders yet} =1{1 reminder} other{{count} reminders}}",
+  "@headerRemindersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "headerDoctorsCount": "{count, plural, =0{No doctors yet} =1{1 doctor} other{{count} doctors}}",
+  "@headerDoctorsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "headerRecordsCount": "{count, plural, =0{No records yet} =1{1 record} other{{count} records}}",
+  "@headerRecordsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  }
 }

@@ -1558,4 +1558,64 @@ class AppLocalizationsBn extends AppLocalizations {
   @override
   String get scanDoctorLinked =>
       'আপনার সেভ করা একজন ডাক্তারের সাথে মিলেছে, তাই ওষুধগুলো তাঁর সাথে যুক্ত হবে।';
+
+  @override
+  String headerMedicinesCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countStringটি ওষুধ',
+      zero: 'এখনো কোনো ওষুধ নেই',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String headerRemindersCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countStringটি রিমাইন্ডার',
+      zero: 'এখনো কোনো রিমাইন্ডার নেই',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String headerDoctorsCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString জন ডাক্তার',
+      zero: 'এখনো কোনো ডাক্তার নেই',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String headerRecordsCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countStringটি রেকর্ড',
+      zero: 'এখনো কোনো রেকর্ড নেই',
+    );
+    return '$_temp0';
+  }
 }

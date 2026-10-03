@@ -54,11 +54,7 @@ class DoctorProfileCard extends StatelessWidget {
           value: Money.format(fee),
         ),
       if (doctor.notes case final n?)
-        _InfoItem(
-          icon: Icons.notes_rounded,
-          label: l10n.doctorNotes,
-          value: n,
-        ),
+        _InfoItem(icon: Icons.notes_rounded, label: l10n.doctorNotes, value: n),
     ];
 
     return SurfaceCard(
@@ -142,21 +138,14 @@ class DoctorProfileCard extends StatelessWidget {
             color: AppColors.sand,
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            item.icon,
-            size: AppSpacing.iconSm,
-            color: AppColors.ink,
-          ),
+          child: Icon(item.icon, size: AppSpacing.iconSm, color: AppColors.ink),
         ),
         AppSpacing.gapMd,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                item.label.toUpperCase(),
-                style: AppTextStyles.labelOnLight,
-              ),
+              Text(item.label.toUpperCase(), style: AppTextStyles.labelOnLight),
               AppSpacing.gapXs,
               Text(
                 item.value,

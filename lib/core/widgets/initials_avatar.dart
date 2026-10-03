@@ -19,11 +19,11 @@ class InitialsAvatar extends StatelessWidget {
         .split(RegExp(r'\s+'))
         .where((w) => w.isNotEmpty)
         .where(
-          (w) =>
-              !RegExp(r'^(dr|prof|retd)$', caseSensitive: false).hasMatch(w),
+          (w) => !RegExp(r'^(dr|prof|retd)$', caseSensitive: false).hasMatch(w),
         )
         .toList();
-    if (words.isEmpty) return name.isNotEmpty ? name.trim()[0].toUpperCase() : '';
+    if (words.isEmpty)
+      return name.isNotEmpty ? name.trim()[0].toUpperCase() : '';
     return words.take(2).map((w) => w[0].toUpperCase()).join();
   }
 

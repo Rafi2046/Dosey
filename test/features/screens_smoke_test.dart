@@ -674,15 +674,19 @@ void main() {
     await settle(tester);
     expect(find.text(en.deleteAllConfirmTitle), findsOneWidget);
     await tester.tap(find.text(en.deleteEverything));
-    // Cancelling alarms + the DB wipe take a few rounds of DB work, which
-    // only advances while frames are pumped.
+    // The wipe mixes DB work (advances with pumped frames) and real file
+    // deletion (needs real time), so alternate both until it finishes.
     for (
       var i = 0;
-      i < 10 && find.text(en.allDataDeleted).evaluate().isEmpty;
+      i < 20 && find.text(en.allDataDeleted).evaluate().isEmpty;
       i++
     ) {
-      await settle(tester);
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 50)),
+      );
+      await settle(tester, frames: 2);
     }
+    await settle(tester);
 
     // Back on Home, told what happened.
     expect(find.text(en.dashboardTitle), findsOneWidget);

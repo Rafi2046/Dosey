@@ -485,7 +485,7 @@ void main() {
     );
 
     // Below the fold: scrollTo fails the test if a chip is missing.
-    await scrollTo(tester, '08:00 am · 2 tablet');
+    await scrollTo(tester, '08:00 am · 2 tablets');
     // Change one time's amount: 9 pm goes from 1 to 1½ tablets.
     await tapText(tester, '09:00 pm · 1 tablet');
     await tester.tap(
@@ -495,9 +495,9 @@ void main() {
       ),
     );
     await settle(tester);
-    expect(find.text('1½ tablet'), findsOneWidget);
+    expect(find.text('1½ tablets'), findsOneWidget);
     await tapText(tester, en.done);
-    await scrollTo(tester, '09:00 pm · 1.5 tablet');
+    await scrollTo(tester, '09:00 pm · 1.5 tablets');
     // The "review the fields" snackbar covers Save until it times out.
     expect(find.text(en.scanFilled), findsOneWidget);
     await tester.pump(const Duration(seconds: 5));
@@ -1030,8 +1030,8 @@ void main() {
     // …and Lunch / Dinner pick up the same amount.
     await tapText(tester, en.slotLunch);
     await tapText(tester, en.slotDinner);
-    await scrollTo(tester, '02:00 pm · 2 tablet');
-    await scrollTo(tester, '09:00 pm · 2 tablet');
+    await scrollTo(tester, '02:00 pm · 2 tablets');
+    await scrollTo(tester, '09:00 pm · 2 tablets');
 
     // A quiet notification instead of a full alarm.
     await tapText(tester, en.ringAsAlarm);
@@ -1102,14 +1102,14 @@ void main() {
       await settle(tester);
     }
 
-    await fill(en.unitsPerStrip('tablet'), '10');
+    await fill(en.unitsPerStrip('tablets'), '10');
     await fill(en.stripsPerBox, '10');
     await tapText(tester, en.addOneBox);
     await tapText(tester, en.addOneBox);
     expect(find.widgetWithText(TextFormField, '200'), findsOneWidget);
     // 1 tablet a day, alert 3 days before → about 3 tablets.
     await scrollTo(tester, en.refillAlertDays(3));
-    expect(find.text(en.refillAlertUnits('3', 'tablet')), findsOneWidget);
+    expect(find.text(en.refillAlertUnits('3', 'tablets')), findsOneWidget);
 
     await tapText(tester, en.save);
     final med = await dbRun(

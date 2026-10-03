@@ -2785,6 +2785,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Doctors, records, expenses and settings'**
   String get moreSheetSubtitle;
+
+  /// No description provided for @unitTabletPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'tablets'**
+  String get unitTabletPlural;
+
+  /// No description provided for @unitCapsulePlural.
+  ///
+  /// In en, this message translates to:
+  /// **'capsules'**
+  String get unitCapsulePlural;
+
+  /// No description provided for @unitMlPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'ml'**
+  String get unitMlPlural;
+
+  /// No description provided for @unitInjectionPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'units'**
+  String get unitInjectionPlural;
+
+  /// No description provided for @unitDropPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'drops'**
+  String get unitDropPlural;
+
+  /// No description provided for @unitPuffPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'puffs'**
+  String get unitPuffPlural;
+
+  /// No description provided for @unitApplicationPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'applications'**
+  String get unitApplicationPlural;
+
+  /// No description provided for @unitDosePlural.
+  ///
+  /// In en, this message translates to:
+  /// **'doses'**
+  String get unitDosePlural;
 }
 
 class _AppLocalizationsDelegate

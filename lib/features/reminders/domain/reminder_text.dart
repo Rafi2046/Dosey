@@ -15,12 +15,7 @@ abstract final class ReminderText {
     final medicine = d.medicine;
     if (medicine != null) {
       parts
-        ..add(
-          dose(
-            d.reminder.doseAmount ?? 1,
-            DoseUnit.display(medicine.doseUnit, l),
-          ),
-        )
+        ..add(dose(l, d.reminder.doseAmount ?? 1, medicine.doseUnit))
         ..add(medicine.mealRelation.label(l));
     }
     final location = d.reminder.location;
@@ -39,23 +34,27 @@ abstract final class ReminderText {
         : '$summary\n$description';
   }
 
-  /// "2 tablet", "0.5 tablet", "5 ml".
-  static String dose(double amount, String unit) =>
-      '${AppNumber.format(amount)} $unit';
+  /// "2 tablets", "0.5 tablet", "5 ml" ([unit] as saved or as shown).
+  static String dose(AppLocalizations l, double amount, String unit) =>
+      DoseUnit.withAmount(amount, unit, l);
 
-  /// Per-time amounts in time order: "2 + 1 + 2 tablet", or "1 tablet" when
-  /// there's a single time.
-  static String doseSummary(List<Reminder> reminders, String unit) {
+  /// Per-time amounts in time order: "2 + 1 + 2 tablets", or "1 tablet"
+  /// when there's a single time.
+  static String doseSummary(
+    AppLocalizations l,
+    List<Reminder> reminders,
+    String unit,
+  ) {
     final sorted = [...reminders]
       ..sort((a, b) {
         int minutes(Reminder r) => r.startAt.hour * 60 + r.startAt.minute;
         return minutes(a) - minutes(b);
       });
-    if (sorted.isEmpty) return unit;
-    final amounts = [
-      for (final r in sorted) AppNumber.format(r.doseAmount ?? 1),
-    ];
-    return '${amounts.join(' + ')} $unit';
+    if (sorted.isEmpty) return DoseUnit.display(unit, l);
+    final amounts = [for (final r in sorted) r.doseAmount ?? 1];
+    final total = amounts.fold<double>(0, (a, b) => a + b);
+    return '${amounts.map(AppNumber.format).join(' + ')} '
+        '${DoseUnit.display(unit, l, amount: total)}';
   }
 
   /// 1.0 → "1", 2.5 → "2.5", always Latin digits: for text-field values.

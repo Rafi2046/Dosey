@@ -137,7 +137,7 @@ class ReminderTimesEditor extends StatelessWidget {
                   label:
                       '${AppDateFormat.timeOfDay(d.time)}'
                       '${context.l10n.notifDoseSeparator}'
-                      '${ReminderText.dose(d.amount, unit)}',
+                      '${ReminderText.dose(context.l10n, d.amount, unit)}',
                   icon: Icons.edit_rounded,
                   background: AppColors.sand,
                   foreground: AppColors.ink,

@@ -64,7 +64,7 @@ class MedicineTimesSection extends ConsumerWidget {
                   label:
                       '${AppDateFormat.time(d.reminder.startAt)}'
                       '${context.l10n.notifDoseSeparator}'
-                      '${ReminderText.dose(d.reminder.doseAmount ?? 1, DoseUnit.display(medicine.doseUnit, context.l10n))}',
+                      '${ReminderText.dose(context.l10n, d.reminder.doseAmount ?? 1, medicine.doseUnit)}',
                   icon: d.reminder.isEnabled ? null : Icons.pause_rounded,
                   background: AppColors.sand,
                   foreground: AppColors.ink,

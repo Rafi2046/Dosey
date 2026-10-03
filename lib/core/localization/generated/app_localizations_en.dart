@@ -1645,4 +1645,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get moreSheetSubtitle => 'Doctors, records, expenses and settings';
+
+  @override
+  String get unitTabletPlural => 'tablets';
+
+  @override
+  String get unitCapsulePlural => 'capsules';
+
+  @override
+  String get unitMlPlural => 'ml';
+
+  @override
+  String get unitInjectionPlural => 'units';
+
+  @override
+  String get unitDropPlural => 'drops';
+
+  @override
+  String get unitPuffPlural => 'puffs';
+
+  @override
+  String get unitApplicationPlural => 'applications';
+
+  @override
+  String get unitDosePlural => 'doses';
 }

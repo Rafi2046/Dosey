@@ -1627,4 +1627,28 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get moreSheetSubtitle => 'ডাক্তার, রেকর্ড, খরচ ও সেটিংস';
+
+  @override
+  String get unitTabletPlural => 'ট্যাবলেট';
+
+  @override
+  String get unitCapsulePlural => 'ক্যাপসুল';
+
+  @override
+  String get unitMlPlural => 'মি.লি.';
+
+  @override
+  String get unitInjectionPlural => 'ইউনিট';
+
+  @override
+  String get unitDropPlural => 'ফোঁটা';
+
+  @override
+  String get unitPuffPlural => 'পাফ';
+
+  @override
+  String get unitApplicationPlural => 'বার লাগানো';
+
+  @override
+  String get unitDosePlural => 'ডোজ';
 }

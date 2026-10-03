@@ -105,7 +105,11 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
       switch ((ref.watch(medicinesProvider).value ?? const [])
           .where((m) => m.medicine.id == _medicineId)
           .firstOrNull) {
-        final m? => DoseUnit.display(m.medicine.doseUnit, context.l10n),
+        final m? => DoseUnit.display(
+          m.medicine.doseUnit,
+          context.l10n,
+          amount: _doseAmount,
+        ),
         null => null,
       };
 

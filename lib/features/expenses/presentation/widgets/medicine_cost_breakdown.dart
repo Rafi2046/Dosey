@@ -68,6 +68,7 @@ class MedicineCostBreakdown extends StatelessWidget {
                             DoseUnit.display(
                               line.medicine.doseUnit,
                               context.l10n,
+                              amount: line.unitsPerDay,
                             ),
                           ),
                           style: AppTextStyles.captionOnLight,

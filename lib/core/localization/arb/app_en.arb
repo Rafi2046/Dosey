@@ -726,5 +726,13 @@
   },
   "addSheetHeader": "Quick\nAdd",
   "moreSheetHeader": "Menu\nMore",
-  "moreSheetSubtitle": "Doctors, records, expenses and settings"
+  "moreSheetSubtitle": "Doctors, records, expenses and settings",
+  "unitTabletPlural": "tablets",
+  "unitCapsulePlural": "capsules",
+  "unitMlPlural": "ml",
+  "unitInjectionPlural": "units",
+  "unitDropPlural": "drops",
+  "unitPuffPlural": "puffs",
+  "unitApplicationPlural": "applications",
+  "unitDosePlural": "doses"
 }

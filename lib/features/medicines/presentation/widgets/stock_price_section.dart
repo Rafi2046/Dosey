@@ -10,6 +10,7 @@ import '../../../../core/widgets/labeled_field.dart';
 import '../../../../core/widgets/number_stepper.dart';
 import '../../../../core/widgets/status_chip.dart';
 import '../../../reminders/domain/reminder_text.dart';
+import '../../../../core/utils/dose_unit.dart';
 
 /// Price per unit, stock on hand (with a box/strip calculator) and a
 /// days-based refill alert.
@@ -93,7 +94,9 @@ class StockPriceSection extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _CountField(
-                      label: l10n.unitsPerStrip(unit),
+                      label: l10n.unitsPerStrip(
+                        DoseUnit.display(unit, l10n, amount: 2),
+                      ),
                       controller: unitsPerStrip,
                       validator: _optionalCount,
                     ),
@@ -166,7 +169,11 @@ class StockPriceSection extends StatelessWidget {
                         : unitsPerDay > 0
                         ? l10n.refillAlertUnits(
                             AppNumber.format(unitsPerDay * alertDays),
-                            unit,
+                            DoseUnit.display(
+                              unit,
+                              l10n,
+                              amount: unitsPerDay * alertDays,
+                            ),
                           )
                         : '',
                     style: AppTextStyles.captionOnLight,

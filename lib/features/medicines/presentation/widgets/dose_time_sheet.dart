@@ -9,6 +9,7 @@ import '../../../../core/widgets/picker_field.dart';
 import '../../../../core/widgets/pill_button.dart';
 import '../../domain/dose_time.dart';
 import '../../../../core/localization/l10n.dart';
+import '../../../../core/utils/dose_unit.dart';
 
 /// What the user did in [showDoseTimeSheet]; null when dismissed.
 sealed class DoseSheetResult {
@@ -82,7 +83,11 @@ class _DoseTimeSheetState extends State<_DoseTimeSheet> {
                 alignment: Alignment.centerLeft,
                 child: AmountStepper(
                   value: _dose.amount,
-                  suffix: widget.unit,
+                  suffix: DoseUnit.display(
+                    widget.unit,
+                    context.l10n,
+                    amount: _dose.amount,
+                  ),
                   onChanged: (v) =>
                       setState(() => _dose = _dose.copyWith(amount: v)),
                 ),

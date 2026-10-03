@@ -13,7 +13,6 @@ import '../../domain/medicine_with_doctor.dart';
 import '../../providers/medicines_providers.dart';
 import '../../../../core/localization/l10n.dart';
 import '../../../../core/utils/numbers.dart';
-import '../../../../core/utils/dose_unit.dart';
 
 /// Medicine summary: illustration, name/strength, dose, doctor, stock and
 /// projected monthly cost.
@@ -44,7 +43,7 @@ class MedicineCard extends ConsumerWidget {
     final muted = light ? AppColors.inkMuted : AppColors.textOnDarkMuted;
     final caption = AppTextStyles.caption.copyWith(color: muted);
     final dose =
-        '${ReminderText.doseSummary(reminders, DoseUnit.display(m.doseUnit, context.l10n))}'
+        '${ReminderText.doseSummary(context.l10n, reminders, m.doseUnit)}'
         '${context.l10n.notifDoseSeparator}${m.mealRelation.label(context.l10n)}';
 
     final chips = <Widget>[

@@ -60,6 +60,18 @@ extension MedicineFormX on MedicineForm {
     MedicineForm.other => l.unitDose,
   };
 
+  /// [defaultUnit] for more than one: "tablets" (same word in Bengali).
+  String defaultUnitPlural(AppLocalizations l) => switch (this) {
+    MedicineForm.tablet => l.unitTabletPlural,
+    MedicineForm.capsule => l.unitCapsulePlural,
+    MedicineForm.syrup => l.unitMlPlural,
+    MedicineForm.injection => l.unitInjectionPlural,
+    MedicineForm.drops => l.unitDropPlural,
+    MedicineForm.inhaler => l.unitPuffPlural,
+    MedicineForm.cream => l.unitApplicationPlural,
+    MedicineForm.other => l.unitDosePlural,
+  };
+
   String get image => switch (this) {
     MedicineForm.tablet => AppImages.medTablet,
     MedicineForm.capsule => AppImages.medCapsule,

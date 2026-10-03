@@ -95,7 +95,11 @@ class _RefillSheetState extends ConsumerState<_RefillSheet> {
             AppTextField.decimal(
               label: context.l10n.refillQuantity,
               controller: _quantity,
-              hint: DoseUnit.display(widget.medicine.doseUnit, context.l10n),
+              hint: DoseUnit.display(
+                widget.medicine.doseUnit,
+                context.l10n,
+                amount: 2,
+              ),
               validator: (v) => (double.tryParse(v ?? '') ?? 0) > 0
                   ? null
                   : context.l10n.invalidNumber,

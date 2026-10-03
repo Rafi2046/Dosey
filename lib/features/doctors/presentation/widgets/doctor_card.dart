@@ -38,7 +38,7 @@ class DoctorCard extends StatelessWidget {
       elevated: true,
       onTap: onTap,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           InitialsAvatar(name: d.name),
           AppSpacing.gapLg,

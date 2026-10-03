@@ -83,12 +83,12 @@ class _LanguageCard extends StatelessWidget {
             AnimatedSwitcher(
               duration: AppSpacing.animFast,
               child: selected
-                  ? const Icon(
+                  ? Icon(
                       Icons.check_circle_rounded,
                       key: ValueKey(true),
                       color: AppColors.mint,
                     )
-                  : const Icon(
+                  : Icon(
                       Icons.circle_outlined,
                       key: ValueKey(false),
                       color: AppColors.outlineOnDark,

@@ -40,7 +40,7 @@ class ExpenseSummaryWidget extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(Money.format(spentMinor), style: AppTextStyles.amount),
           ),
-          const Divider(height: AppSpacing.xxl, color: AppColors.outlineOnDark),
+          Divider(height: AppSpacing.xxl, color: AppColors.outlineOnDark),
           _Label(
             icon: Icons.medication_rounded,
             text: context.l10n.projectedMonthly,

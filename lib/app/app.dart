@@ -28,7 +28,7 @@ class _DoseyAppState extends ConsumerState<DoseyApp> {
       onGenerateTitle: (context) => context.l10n.appName,
       debugShowCheckedModeBanner: false,
       navigatorKey: _navigatorKey,
-      theme: AppTheme.light,
+      theme: AppTheme.current,
       // Null follows the phone; unsupported phone languages fall back to
       // English (the first supported locale).
       locale: language == null ? null : Locale(language),

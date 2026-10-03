@@ -114,7 +114,7 @@ class _PermissionsPageState extends ConsumerState<PermissionsPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.verified_rounded,
                           color: AppColors.textOnDark,
                         ),

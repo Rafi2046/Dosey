@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 
-/// Warm sage/cream theme with an orange accent (docs/design/ui_design_ideas.png).
+/// Warm sage/cream theme with an orange accent (docs/design/ui_design_ideas.png),
+/// in light or dark depending on the active [AppPalette].
 abstract final class AppTheme {
-  static final ThemeData light = ThemeData(
+  /// Built from the active palette (light or dark), see [AppColors.apply].
+  static ThemeData get current => ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
     colorScheme: _colorScheme,
@@ -14,7 +16,7 @@ abstract final class AppTheme {
     textTheme: _textTheme,
     dividerColor: AppColors.divider,
     splashFactory: InkSparkle.splashFactory,
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       backgroundColor: AppColors.transparent,
       surfaceTintColor: AppColors.transparent,
       elevation: AppSpacing.elevationNone,
@@ -86,7 +88,7 @@ abstract final class AppTheme {
       contentTextStyle: AppTextStyles.bodyOnLight,
       shape: _rounded(AppSpacing.radiusLg),
     ),
-    bottomSheetTheme: const BottomSheetThemeData(
+    bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: AppColors.cream,
       showDragHandle: true,
       shape: RoundedRectangleBorder(
@@ -106,7 +108,7 @@ abstract final class AppTheme {
     ),
   );
 
-  static const ColorScheme _colorScheme = ColorScheme.dark(
+  static ColorScheme get _colorScheme => ColorScheme.dark(
     primary: AppColors.accent,
     onPrimary: AppColors.textOnAccent,
     secondary: AppColors.mint,
@@ -120,7 +122,7 @@ abstract final class AppTheme {
     shadow: AppColors.shadow,
   );
 
-  static const TextTheme _textTheme = TextTheme(
+  static TextTheme get _textTheme => TextTheme(
     displayLarge: AppTextStyles.display,
     headlineMedium: AppTextStyles.headline,
     titleLarge: AppTextStyles.title,

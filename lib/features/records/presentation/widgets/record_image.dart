@@ -35,7 +35,7 @@ class _Placeholder extends StatelessWidget {
   const _Placeholder();
 
   @override
-  Widget build(BuildContext context) => const ColoredBox(
+  Widget build(BuildContext context) => ColoredBox(
     color: AppColors.sand,
     child: Center(
       child: Icon(Icons.image_not_supported_rounded, color: AppColors.inkMuted),

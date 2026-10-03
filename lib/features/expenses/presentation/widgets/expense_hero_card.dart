@@ -34,12 +34,12 @@ class ExpenseHeroCard extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [AppColors.mint, AppColors.moss],
         ),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
             color: AppColors.shadow,
             blurRadius: AppSpacing.shadowBlur,
@@ -54,7 +54,7 @@ class ExpenseHeroCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.account_balance_wallet_rounded,
                   size: AppSpacing.iconSm,
                   color: AppColors.textOnDark,
@@ -93,7 +93,7 @@ class ExpenseHeroCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.medication_rounded,
                     color: AppColors.textOnDark,
                   ),

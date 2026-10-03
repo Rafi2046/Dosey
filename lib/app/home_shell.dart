@@ -47,7 +47,7 @@ class HomeShell extends ConsumerWidget {
             ),
             // Content scrolling under the nav bar fades out instead of
             // peeking around it.
-            const Align(
+            Align(
               alignment: Alignment.bottomCenter,
               child: IgnorePointer(
                 child: SizedBox(

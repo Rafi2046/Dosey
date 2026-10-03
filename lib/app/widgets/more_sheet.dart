@@ -111,7 +111,7 @@ class _MoreTile extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.inkMuted),
+            Icon(Icons.chevron_right_rounded, color: AppColors.inkMuted),
           ],
         ),
       ),

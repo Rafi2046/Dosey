@@ -59,7 +59,7 @@ class PickerField extends StatelessWidget {
                       IconButton(
                         visualDensity: VisualDensity.compact,
                         tooltip: context.l10n.clear,
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.close_rounded,
                           color: AppColors.inkMuted,
                         ),

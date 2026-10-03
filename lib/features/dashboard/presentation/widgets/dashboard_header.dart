@@ -44,7 +44,7 @@ class DashboardHeader extends StatelessWidget {
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
             ),
-            icon: const Icon(
+            icon: Icon(
               Icons.settings_rounded,
               color: AppColors.textOnDark,
             ),
@@ -52,7 +52,7 @@ class DashboardHeader extends StatelessWidget {
           IconButton(
             tooltip: context.l10n.navReminders,
             onPressed: onBellTap,
-            icon: const Icon(
+            icon: Icon(
               Icons.notifications_rounded,
               color: AppColors.textOnDark,
             ),

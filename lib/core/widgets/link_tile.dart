@@ -35,7 +35,7 @@ class LinkTile extends StatelessWidget {
               : Text(subtitle!, style: AppTextStyles.captionOnLight),
           trailing: onTap == null
               ? null
-              : const Icon(
+              : Icon(
                   Icons.chevron_right_rounded,
                   color: AppColors.inkMuted,
                 ),

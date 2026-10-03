@@ -56,7 +56,7 @@ class PickedPagesStrip extends StatelessWidget {
                           style: IconButton.styleFrom(
                             backgroundColor: AppColors.scrim,
                           ),
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.close_rounded,
                             color: AppColors.textOnDark,
                           ),
@@ -73,7 +73,7 @@ class PickedPagesStrip extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   child: InkWell(
                     onTap: onAdd,
-                    child: const SizedBox(
+                    child: SizedBox(
                       width: AppSpacing.pageStripThumbWidth,
                       child: Icon(
                         Icons.add_a_photo_rounded,

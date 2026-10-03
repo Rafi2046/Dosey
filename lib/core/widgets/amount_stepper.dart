@@ -33,7 +33,7 @@ class AmountStepper extends StatelessWidget {
   Widget build(BuildContext context) {
     final label = format(value);
     return DecoratedBox(
-      decoration: const ShapeDecoration(
+      decoration: ShapeDecoration(
         color: AppColors.creamLight,
         shape: StadiumBorder(),
       ),
@@ -41,7 +41,7 @@ class AmountStepper extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: const Icon(Icons.remove_rounded, color: AppColors.ink),
+            icon: Icon(Icons.remove_rounded, color: AppColors.ink),
             onPressed: value > min ? () => onChanged(value - step) : null,
           ),
           Text(
@@ -49,7 +49,7 @@ class AmountStepper extends StatelessWidget {
             style: AppTextStyles.inputOnLight,
           ),
           IconButton(
-            icon: const Icon(Icons.add_rounded, color: AppColors.ink),
+            icon: Icon(Icons.add_rounded, color: AppColors.ink),
             onPressed: value < max ? () => onChanged(value + step) : null,
           ),
         ],

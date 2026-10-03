@@ -22,7 +22,7 @@ class NumberStepper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const ShapeDecoration(
+      decoration: ShapeDecoration(
         color: AppColors.creamLight,
         shape: StadiumBorder(),
       ),
@@ -30,7 +30,7 @@ class NumberStepper extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: const Icon(Icons.remove_rounded, color: AppColors.ink),
+            icon: Icon(Icons.remove_rounded, color: AppColors.ink),
             onPressed: value > min ? () => onChanged(value - 1) : null,
           ),
           Text(
@@ -38,7 +38,7 @@ class NumberStepper extends StatelessWidget {
             style: AppTextStyles.inputOnLight,
           ),
           IconButton(
-            icon: const Icon(Icons.add_rounded, color: AppColors.ink),
+            icon: Icon(Icons.add_rounded, color: AppColors.ink),
             onPressed: value < max ? () => onChanged(value + 1) : null,
           ),
         ],

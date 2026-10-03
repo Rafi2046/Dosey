@@ -7,7 +7,7 @@ class SurfaceCard extends StatelessWidget {
   const SurfaceCard({
     super.key,
     required this.child,
-    this.color = AppColors.olive,
+    this.color,
     this.padding = AppSpacing.cardPaddingLg,
     this.radius = AppSpacing.radiusLg,
     this.elevated = false,
@@ -15,7 +15,8 @@ class SurfaceCard extends StatelessWidget {
   });
 
   final Widget child;
-  final Color color;
+  /// Defaults to [AppColors.olive].
+  final Color? color;
   final EdgeInsetsGeometry padding;
   final double radius;
 
@@ -33,12 +34,13 @@ class SurfaceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = this.color ?? AppColors.olive;
     final borderRadius = BorderRadius.circular(radius);
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: borderRadius,
         boxShadow: elevated
-            ? const [
+            ? [
                 BoxShadow(
                   color: AppColors.shadow,
                   blurRadius: AppSpacing.shadowBlur,

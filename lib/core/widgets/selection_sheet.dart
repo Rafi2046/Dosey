@@ -81,7 +81,7 @@ class _SheetTile extends StatelessWidget {
           ? null
           : Text(subtitle!, style: AppTextStyles.captionOnLight),
       trailing: selected
-          ? const Icon(Icons.check_circle_rounded, color: AppColors.moss)
+          ? Icon(Icons.check_circle_rounded, color: AppColors.moss)
           : null,
     );
   }

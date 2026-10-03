@@ -44,7 +44,7 @@ class AppNavBar extends StatelessWidget {
     );
 
     return Padding(
-      padding: AppSpacing.bottomBarPadding,
+      padding: AppSpacing.navBarMargin,
       child: SizedBox(
         height: AppSpacing.navBarHeight + AppSpacing.navAddLift,
         child: Stack(
@@ -55,7 +55,7 @@ class AppNavBar extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.moss,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
                     color: AppColors.shadow,
                     blurRadius: AppSpacing.shadowBlur,
@@ -63,16 +63,17 @@ class AppNavBar extends StatelessWidget {
                   ),
                 ],
               ),
-              child: SizedBox(
+              child: Container(
                 height: AppSpacing.navBarHeight,
+                // Keeps the end tabs' highlight clear of the rounded corners.
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                // Five equal slots, "+" in the middle one: perfectly
+                // symmetric spacing on every screen width.
                 child: Row(
                   children: [
                     tab(HomeTab.dashboard),
                     tab(HomeTab.reminders),
-                    // Room for the raised "+".
-                    const SizedBox(
-                      width: AppSpacing.navAddButton + AppSpacing.md,
-                    ),
+                    const Spacer(),
                     tab(HomeTab.medicines),
                     Expanded(
                       child: _NavItem(
@@ -169,7 +170,7 @@ class _AddButton extends StatelessWidget {
       message: tooltip,
       child: Material(
         color: AppColors.accent,
-        shape: const CircleBorder(
+        shape: CircleBorder(
           side: BorderSide(color: AppColors.moss, width: AppSpacing.xs),
         ),
         elevation: AppSpacing.xs,

@@ -57,9 +57,13 @@ abstract final class AppSpacing {
   /// Fade behind the nav bar so content under it blends out.
   static const double navFadeHeight = 150;
 
+  /// Side margin of the nav bar (a little tighter than screen padding so
+  /// five labelled slots fit comfortably).
+  static const EdgeInsets navBarMargin = EdgeInsets.fromLTRB(lg, md, lg, md);
+
   /// How far the centre "+" rises above the nav bar.
   static const double navAddLift = 14;
-  static const double navIndicatorWidth = 56;
+  static const double navIndicatorWidth = 52;
   static const double navIndicatorHeight = 30;
 
   // ── Effects ───────────────────────────────────────────────────────────────

@@ -29,11 +29,11 @@ class ScanPrescriptionCard extends StatelessWidget {
             Container(
               width: AppSpacing.avatarMd,
               height: AppSpacing.avatarMd,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: AppColors.creamLight,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.document_scanner_rounded,
                 color: AppColors.mint,
                 size: AppSpacing.iconLg,
@@ -57,12 +57,12 @@ class ScanPrescriptionCard extends StatelessWidget {
             ),
             AppSpacing.gapSm,
             if (scanning)
-              const SizedBox.square(
+              SizedBox.square(
                 dimension: AppSpacing.iconMd,
                 child: CircularProgressIndicator(color: AppColors.textOnDark),
               )
             else
-              const Icon(
+              Icon(
                 Icons.photo_camera_rounded,
                 color: AppColors.textOnDark,
               ),

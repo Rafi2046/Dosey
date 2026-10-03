@@ -10,7 +10,7 @@ abstract final class AppTextStyles {
   static const String _body = 'DMSans';
 
   // ── Display (Bitter) ──────────────────────────────────────────────────────
-  static const TextStyle display = TextStyle(
+  static TextStyle get display => TextStyle(
     fontFamily: _display,
     fontSize: AppSpacing.fontDisplay,
     fontWeight: FontWeight.w800,
@@ -18,7 +18,7 @@ abstract final class AppTextStyles {
     height: AppSpacing.lineHeightTight,
   );
 
-  static const TextStyle headline = TextStyle(
+  static TextStyle get headline => TextStyle(
     fontFamily: _display,
     fontSize: AppSpacing.fontXxl,
     fontWeight: FontWeight.w800,
@@ -26,14 +26,14 @@ abstract final class AppTextStyles {
     height: AppSpacing.lineHeightTight,
   );
 
-  static const TextStyle title = TextStyle(
+  static TextStyle get title => TextStyle(
     fontFamily: _display,
     fontSize: AppSpacing.fontXl,
     fontWeight: FontWeight.w700,
     color: AppColors.textOnDark,
   );
 
-  static const TextStyle cardTitle = TextStyle(
+  static TextStyle get cardTitle => TextStyle(
     fontFamily: _display,
     fontSize: AppSpacing.fontLg,
     fontWeight: FontWeight.w700,
@@ -41,14 +41,14 @@ abstract final class AppTextStyles {
   );
 
   // ── Body (DM Sans) ────────────────────────────────────────────────────────
-  static const TextStyle subtitle = TextStyle(
+  static TextStyle get subtitle => TextStyle(
     fontFamily: _body,
     fontSize: AppSpacing.fontLg,
     fontWeight: FontWeight.w600,
     color: AppColors.textOnDark,
   );
 
-  static const TextStyle body = TextStyle(
+  static TextStyle get body => TextStyle(
     fontFamily: _body,
     fontSize: AppSpacing.fontMd,
     fontWeight: FontWeight.w400,
@@ -56,7 +56,7 @@ abstract final class AppTextStyles {
     height: AppSpacing.lineHeight,
   );
 
-  static const TextStyle bodyMuted = TextStyle(
+  static TextStyle get bodyMuted => TextStyle(
     fontFamily: _body,
     fontSize: AppSpacing.fontMd,
     fontWeight: FontWeight.w400,
@@ -64,14 +64,14 @@ abstract final class AppTextStyles {
     height: AppSpacing.lineHeight,
   );
 
-  static const TextStyle caption = TextStyle(
+  static TextStyle get caption => TextStyle(
     fontFamily: _body,
     fontSize: AppSpacing.fontSm,
     fontWeight: FontWeight.w500,
     color: AppColors.textOnDarkMuted,
   );
 
-  static const TextStyle overline = TextStyle(
+  static TextStyle get overline => TextStyle(
     fontFamily: _body,
     fontSize: AppSpacing.fontXs,
     fontWeight: FontWeight.w600,
@@ -92,7 +92,7 @@ abstract final class AppTextStyles {
   );
 
   /// Bottom-navigation labels.
-  static const TextStyle navLabel = TextStyle(
+  static TextStyle get navLabel => TextStyle(
     fontFamily: _body,
     fontSize: AppSpacing.fontXs,
     fontWeight: FontWeight.w500,
@@ -100,31 +100,31 @@ abstract final class AppTextStyles {
   );
 
   // ── Light-surface variants (cream cards / screens) ────────────────────────
-  static final TextStyle displayOnLight = display.copyWith(
+  static TextStyle get displayOnLight => display.copyWith(
     color: AppColors.ink,
   );
-  static final TextStyle titleOnLight = title.copyWith(color: AppColors.ink);
-  static final TextStyle cardTitleOnLight = cardTitle.copyWith(
+  static TextStyle get titleOnLight => title.copyWith(color: AppColors.ink);
+  static TextStyle get cardTitleOnLight => cardTitle.copyWith(
     color: AppColors.ink,
   );
-  static final TextStyle bodyOnLight = body.copyWith(color: AppColors.inkMuted);
-  static final TextStyle captionOnLight = caption.copyWith(
+  static TextStyle get bodyOnLight => body.copyWith(color: AppColors.inkMuted);
+  static TextStyle get captionOnLight => caption.copyWith(
     color: AppColors.inkMuted,
   );
-  static final TextStyle labelOnLight = caption.copyWith(
+  static TextStyle get labelOnLight => caption.copyWith(
     color: AppColors.inkMuted,
     fontWeight: FontWeight.w600,
   );
-  static final TextStyle inputOnLight = body.copyWith(color: AppColors.ink);
-  static final TextStyle subtitleOnLight = subtitle.copyWith(
+  static TextStyle get inputOnLight => body.copyWith(color: AppColors.ink);
+  static TextStyle get subtitleOnLight => subtitle.copyWith(
     color: AppColors.ink,
   );
-  static final TextStyle headlineOnLight = headline.copyWith(
+  static TextStyle get headlineOnLight => headline.copyWith(
     color: AppColors.ink,
   );
 
   /// Big money figure (expense totals).
-  static const TextStyle amount = TextStyle(
+  static TextStyle get amount => TextStyle(
     fontFamily: _display,
     fontSize: AppSpacing.amountFont,
     fontWeight: FontWeight.w800,
@@ -132,5 +132,5 @@ abstract final class AppTextStyles {
     height: AppSpacing.lineHeightTight,
   );
 
-  static final TextStyle errorText = caption.copyWith(color: AppColors.error);
+  static TextStyle get errorText => caption.copyWith(color: AppColors.error);
 }

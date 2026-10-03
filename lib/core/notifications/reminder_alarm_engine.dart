@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import '../../features/medicines/domain/stock_status.dart';
 import '../../features/reminders/data/reminders_repository.dart';
+import '../../features/reminders/domain/reminder_schedule.dart';
 import '../../features/reminders/domain/reminder_with_details.dart';
 import '../constants/app_constants.dart';
 import '../database/app_database.dart';
@@ -17,6 +18,13 @@ enum AlarmAction { taken, skip, snooze }
 /// (under the group's lowest reminder id, its "leader"), one notification
 /// and one alarm screen listing them all, and one action for all of them.
 /// Other reminders (appointments, tests…) ring on their own.
+///
+/// Platforms differ in what can run when an alarm is due:
+/// - Android ([AlarmScheduler]): an exact alarm wakes the app, which rings
+///   and then arms the next occurrence ([onAlarmFired]).
+/// - iOS ([BookAheadScheduler]): nothing runs, so every occurrence of the
+///   coming days is booked ahead as an OS notification ([syncAll]), and the
+///   alarm screen opens when the user taps one ([ringFromNotification]).
 class ReminderAlarmEngine {
   ReminderAlarmEngine({
     required RemindersRepository reminders,
@@ -65,6 +73,9 @@ class ReminderAlarmEngine {
   /// reminder, and none for disabled reminders or non-leader group members.
   Future<void> syncAll() async {
     final all = await _reminders.getAll();
+    if (_scheduler case final BookAheadScheduler ahead) {
+      return ahead.replaceBookings(planBookings(all, _clock()));
+    }
     final medicineGroups = <DateTime, List<Reminder>>{};
     final alone = <Reminder>[];
     for (final r in all) {
@@ -84,6 +95,56 @@ class ReminderAlarmEngine {
       await _schedule(group, at);
     }
   }
+
+  /// iOS bookings for the next [AppConstants.bookAhead]: one per minute
+  /// that has medicines due (all of them together, id from the time), and
+  /// the next occurrence of each other reminder (id = reminder id). Capped
+  /// at [AppConstants.bookAheadLimit], soonest first.
+  static List<AlarmBooking> planBookings(List<Reminder> all, DateTime now) {
+    final horizon = now.add(AppConstants.bookAhead);
+    final medicineSlots = <DateTime, List<Reminder>>{};
+    final bookings = <AlarmBooking>[];
+    for (final r in all.where((r) => r.isEnabled)) {
+      if (r.type != ReminderType.medicine) {
+        final next = ReminderSchedule.nextFor(r, now);
+        if (next != null && !next.isAfter(horizon)) {
+          bookings.add(
+            AlarmBooking(
+              id: r.id,
+              at: next,
+              reminderIds: [r.id],
+              critical: r.isCritical,
+            ),
+          );
+        }
+        continue;
+      }
+      var cursor = now;
+      while (true) {
+        final next = ReminderSchedule.nextFor(r, cursor);
+        if (next == null || next.isAfter(horizon)) break;
+        (medicineSlots[next] ??= []).add(r);
+        cursor = next;
+      }
+    }
+    for (final MapEntry(key: at, value: group) in medicineSlots.entries) {
+      bookings.add(
+        AlarmBooking(
+          id: slotNotificationId(at),
+          at: at,
+          reminderIds: [for (final r in group) r.id]..sort(),
+          critical: group.any((r) => r.isCritical),
+        ),
+      );
+    }
+    bookings.sort((a, b) => a.at.compareTo(b.at));
+    return bookings.take(AppConstants.bookAheadLimit).toList();
+  }
+
+  /// iOS notification id of the medicines due at [at] (one per minute).
+  static int slotNotificationId(DateTime at) =>
+      AppConstants.slotIdOffset +
+      at.millisecondsSinceEpoch ~/ Duration.millisecondsPerMinute;
 
   Future<void> _schedule(List<Reminder> group, DateTime at) async {
     final ids = [for (final r in group) r.id]..sort();
@@ -180,6 +241,22 @@ class ReminderAlarmEngine {
     return leader != null && leader.isEnabled ? [leader.id] : const [];
   }
 
+  /// iOS fallback for Android's full-screen intent: when a booked
+  /// notification is tapped (or arrives while Dosey is open), mark its
+  /// medicines as ringing so the in-app alarm screen opens. Doses already
+  /// taken or skipped, and very old notifications, are left alone.
+  Future<void> ringFromNotification(
+    List<int> reminderIds,
+    DateTime scheduledFor,
+  ) async {
+    if (_clock().difference(scheduledFor) > AppConstants.missedThreshold) {
+      return;
+    }
+    for (final id in await _stillSnoozed(reminderIds, scheduledFor)) {
+      await _reminders.setRinging(id, scheduledFor);
+    }
+  }
+
   /// A snoozed group, minus anything since taken or skipped (e.g. from the
   /// Home card) or disabled.
   Future<List<int>> _stillSnoozed(List<int> ids, DateTime at) async {
@@ -212,10 +289,13 @@ class ReminderAlarmEngine {
   /// Applies [action] to every reminder in [reminderIds] (one, or a whole
   /// group ringing together) for the occurrence at [scheduledFor]. The logs
   /// are written in a single transaction.
+  /// [notificationId]: the notification acted on, when it isn't filed under
+  /// a reminder id (iOS time-slot notifications), so it's removed too.
   Future<void> handleAction({
     required List<int> reminderIds,
     required DateTime scheduledFor,
     required AlarmAction action,
+    int? notificationId,
   }) async {
     if (reminderIds.isEmpty) return;
     final status = switch (action) {
@@ -235,6 +315,9 @@ class ReminderAlarmEngine {
     for (final id in reminderIds) {
       await _reminders.setRinging(id, null);
       await _notifier.dismiss(id);
+    }
+    if (notificationId != null && !reminderIds.contains(notificationId)) {
+      await _notifier.dismiss(notificationId);
     }
     for (final MapEntry(key: id, value: before) in stockBefore.entries) {
       await _warnIfNowLow(id, before);

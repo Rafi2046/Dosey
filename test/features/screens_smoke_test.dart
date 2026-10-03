@@ -199,6 +199,7 @@ void main() {
     WidgetTester tester, {
     List<Override> overrides = const [],
     FakeAlarmScheduler? scheduler,
+    FakePermissionService? permissions,
   }) async {
     usePhoneSize(tester);
     await tester.runAsync(() => _seed(db, now));
@@ -209,7 +210,9 @@ void main() {
             db: db,
             now: now,
             scheduler: scheduler,
-            permissions: FakePermissionService(AppPermission.values.toSet()),
+            permissions:
+                permissions ??
+                FakePermissionService(AppPermission.values.toSet()),
           ),
           ...overrides,
         ],
@@ -604,6 +607,32 @@ void main() {
     await pumpApp(tester);
     expect(await scrollTo(tester, '118/76 mmHg'), findsOneWidget);
     expect(find.text(en.bpNormal), findsOneWidget);
+    await unmount(tester);
+  });
+
+  testWidgets('iPhone: the permissions screen says when sound is off', (
+    tester,
+  ) async {
+    final permissions = FakePermissionService(AppPermission.values.toSet())
+      ..iosSound = (sound: false, critical: false);
+    await pumpApp(tester, permissions: permissions);
+    await tester.tap(find.byTooltip(en.settingsTitle));
+    await settle(tester);
+    await tapText(tester, en.settingsPermissions);
+
+    expect(await scrollTo(tester, en.iosSoundOff), findsOneWidget);
+    expect(await scrollTo(tester, en.iosCriticalOff), findsOneWidget);
+    await tapText(tester, en.openSettings);
+    expect(permissions.openedNotificationSettings, 1);
+    await unmount(tester);
+  });
+
+  testWidgets('Android: no iPhone sound card', (tester) async {
+    await pumpApp(tester);
+    await tester.tap(find.byTooltip(en.settingsTitle));
+    await settle(tester);
+    await tapText(tester, en.settingsPermissions);
+    expect(find.text(en.iosSoundTitle), findsNothing);
     await unmount(tester);
   });
 

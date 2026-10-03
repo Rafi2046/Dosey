@@ -1,4 +1,3 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -45,16 +44,6 @@ Future<void> main() async {
     AppLocale.resolve(language, PlatformDispatcher.instance.locale),
   );
   await NotificationService.startForeground();
-  // TMPDIAG
-  {
-    final allowed = await AwesomeNotifications().checkPermissionList(
-      permissions: NotificationPermission.values,
-    );
-    final pending = await AwesomeNotifications().listScheduledNotifications();
-    // ignore: avoid_print
-    print('TMPDIAG allowed=$allowed scheduled=${pending.length} '
-        'channels=${[for (final c in pending) c.content?.channelKey]}');
-  }
 
   // Alarms may have been lost (force-stop, missed boot broadcast): re-arm all.
   unawaited(AlarmRuntime.engine().then((engine) => engine.resyncAll()));

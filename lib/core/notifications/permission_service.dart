@@ -52,6 +52,27 @@ class PermissionService {
     NotificationPermission.CriticalAlert,
   ];
 
+  /// iOS only (null elsewhere): whether Dosey's notifications may play a
+  /// sound, and whether they ring through silent mode / Focus (Critical
+  /// Alerts, which iOS allows only for Apple-approved apps; until then the
+  /// request is ignored and reminders follow the ringer switch).
+  Future<({bool sound, bool critical})?> iosSoundStatus() async {
+    if (!Platform.isIOS) return null;
+    final allowed = await _awn.checkPermissionList(
+      permissions: const [
+        NotificationPermission.Sound,
+        NotificationPermission.CriticalAlert,
+      ],
+    );
+    return (
+      sound: allowed.contains(NotificationPermission.Sound),
+      critical: allowed.contains(NotificationPermission.CriticalAlert),
+    );
+  }
+
+  /// iOS Settings › Notifications › Dosey.
+  Future<void> openNotificationSettings() => _awn.showNotificationConfigPage();
+
   Future<Set<AppPermission>> granted() async {
     final special = await NativeBridge.specialPermissionStatus();
     return {

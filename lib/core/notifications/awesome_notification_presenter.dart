@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 
@@ -74,6 +75,13 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
         locked: critical,
         autoDismissible: !critical,
         color: r.type.color,
+        // iOS: stack Dosey's reminders in one Notification Center thread
+        // per type, and ring with the bundled alarm tone (the channel's
+        // ringtone setting is Android-only).
+        groupKey: Platform.isIOS ? 'dosey.${r.type.name}' : null,
+        customSound: Platform.isIOS && critical
+            ? AppConstants.iosAlarmSound
+            : null,
         payload: NotificationPayload.encode([
           for (final d in group) d.reminder.id,
         ], scheduledFor),

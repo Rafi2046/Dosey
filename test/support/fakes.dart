@@ -28,6 +28,16 @@ class FakeAlarmScheduler implements AlarmScheduler {
   Future<void> cancel(int alarmId) async => alarms.remove(alarmId);
 }
 
+/// iOS-style scheduler: records what the engine books ahead.
+class FakeBookAheadScheduler extends FakeAlarmScheduler
+    implements BookAheadScheduler {
+  List<AlarmBooking> bookings = [];
+
+  @override
+  Future<void> replaceBookings(List<AlarmBooking> next) async =>
+      bookings = next;
+}
+
 class FakeNotificationPresenter implements NotificationPresenter {
   /// Reminder id → occurrence, for every reminder in a shown notification.
   final Map<int, DateTime> showing = {};
@@ -70,6 +80,16 @@ class FakePermissionService implements PermissionService {
   final List<AppPermission> requested = [];
 
   void grant(AppPermission permission) => grantedSet.add(permission);
+
+  /// Set to simulate an iPhone; null = Android.
+  ({bool sound, bool critical})? iosSound;
+  int openedNotificationSettings = 0;
+
+  @override
+  Future<({bool sound, bool critical})?> iosSoundStatus() async => iosSound;
+
+  @override
+  Future<void> openNotificationSettings() async => openedNotificationSettings++;
 
   @override
   Future<Set<AppPermission>> granted() async => {...grantedSet};

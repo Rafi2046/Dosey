@@ -1841,4 +1841,24 @@ class AppLocalizationsBn extends AppLocalizations {
   String numberRange(String min, String max) {
     return '$min থেকে $max এর মধ্যে একটি সংখ্যা লিখুন';
   }
+
+  @override
+  String get iosSoundTitle => 'আইফোনের শব্দ';
+
+  @override
+  String get iosSoundOn => 'অ্যালার্মের শব্দ চালু আছে';
+
+  @override
+  String get iosSoundOff =>
+      'Dosey-র নোটিফিকেশনের শব্দ বন্ধ আছে। রিমাইন্ডার শুনতে সেটিংসে Sounds চালু করুন।';
+
+  @override
+  String get iosCriticalOn => 'সাইলেন্ট মোড ও ফোকাসেও বাজবে';
+
+  @override
+  String get iosCriticalOff =>
+      'সাইলেন্ট মোড বা ফোকাসে আইফোন রিমাইন্ডারের শব্দ বন্ধ রাখে। শুনতে চাইলে রিংগার চালু রাখুন।';
+
+  @override
+  String get openSettings => 'সেটিংস খুলুন';
 }

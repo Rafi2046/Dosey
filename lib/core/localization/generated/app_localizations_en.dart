@@ -1862,4 +1862,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String numberRange(String min, String max) {
     return 'Enter a number from $min to $max';
   }
+
+  @override
+  String get iosSoundTitle => 'iPhone sound';
+
+  @override
+  String get iosSoundOn => 'Alarm sound is on';
+
+  @override
+  String get iosSoundOff =>
+      'Sounds are off for Dosey notifications. Turn on Sounds in Settings to hear your reminders.';
+
+  @override
+  String get iosCriticalOn => 'Rings even in silent mode and Focus';
+
+  @override
+  String get iosCriticalOff =>
+      'In silent mode or Focus, your iPhone mutes reminders. Keep the ringer on so you hear them.';
+
+  @override
+  String get openSettings => 'Open settings';
 }

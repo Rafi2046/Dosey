@@ -7,6 +7,7 @@ import '../../../../core/notifications/permission_service.dart';
 import '../../../../core/widgets/pill_button.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../providers/permissions_provider.dart';
+import '../widgets/ios_sound_card.dart';
 import '../widgets/permission_tile.dart';
 
 /// Page 3: every permission the alarms need, each with its own card, plus
@@ -153,6 +154,7 @@ class _PermissionsPageState extends ConsumerState<PermissionsPage> {
             ),
             AppSpacing.gapMd,
           ],
+          const IosSoundCard(),
         ],
       ),
     );

@@ -503,5 +503,11 @@
   "bpCount": "{count, plural, =0{এখনো কোনো রিডিং নেই} other{{count}টি রিডিং}}",
   "bpValue": "{systolic}/{diastolic}",
   "bpPulseValue": "পালস {pulse}",
-  "numberRange": "{min} থেকে {max} এর মধ্যে একটি সংখ্যা লিখুন"
+  "numberRange": "{min} থেকে {max} এর মধ্যে একটি সংখ্যা লিখুন",
+  "iosSoundTitle": "আইফোনের শব্দ",
+  "iosSoundOn": "অ্যালার্মের শব্দ চালু আছে",
+  "iosSoundOff": "Dosey-র নোটিফিকেশনের শব্দ বন্ধ আছে। রিমাইন্ডার শুনতে সেটিংসে Sounds চালু করুন।",
+  "iosCriticalOn": "সাইলেন্ট মোড ও ফোকাসেও বাজবে",
+  "iosCriticalOff": "সাইলেন্ট মোড বা ফোকাসে আইফোন রিমাইন্ডারের শব্দ বন্ধ রাখে। শুনতে চাইলে রিংগার চালু রাখুন।",
+  "openSettings": "সেটিংস খুলুন"
 }

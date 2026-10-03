@@ -35,6 +35,14 @@ class PermissionsNotifier extends AsyncNotifier<Set<AppPermission>> {
   }
 }
 
+/// iOS sound status (null on Android); re-read with [permissionsProvider].
+final iosSoundStatusProvider = FutureProvider<({bool sound, bool critical})?>((
+  ref,
+) {
+  ref.watch(permissionsProvider);
+  return ref.read(permissionServiceProvider).iosSoundStatus();
+});
+
 extension GrantedPermissions on Set<AppPermission> {
   bool get hasEssentials =>
       AppPermission.values.where((p) => p.isRequired).every(contains);

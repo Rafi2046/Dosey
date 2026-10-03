@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import '../constants/app_constants.dart';
@@ -16,26 +18,49 @@ Future<void> onAlarmCallback(int alarmId, Map<String, dynamic> params) async {
   await engine.onAlarmFired(alarmId, params);
 }
 
-/// awesome_notifications action callback (Taken / Snooze / Skip buttons).
-/// A plain tap on the notification opens the app, which shows the alarm
-/// screen from the reminder's `ringingFor` state, so it needs no handling here.
+/// awesome_notifications action callback (Taken / Snooze / Skip buttons,
+/// or a tap on the notification itself).
+///
+/// A plain tap opens the app. On Android the alarm callback has already
+/// marked the reminders as ringing, so the alarm screen shows by itself. On
+/// iOS nothing ran when the notification fired, so the tap is what raises
+/// the in-app alarm screen (iOS has no full-screen intent).
 @pragma('vm:entry-point')
 Future<void> onNotificationAction(ReceivedAction received) async {
   final occurrence = NotificationPayload.decode(received.payload);
+  if (occurrence == null) return;
+  final (reminderIds, scheduledFor) = occurrence;
   final action = switch (received.buttonKeyPressed) {
     AppConstants.actionTaken => AlarmAction.taken,
     AppConstants.actionSkip => AlarmAction.skip,
     AppConstants.actionSnooze => AlarmAction.snooze,
     _ => null,
   };
-  if (occurrence == null || action == null) return;
+  final engine = await AlarmRuntime.engine();
+  if (action == null) {
+    if (Platform.isIOS) {
+      await engine.ringFromNotification(reminderIds, scheduledFor);
+    }
+    return;
+  }
 
   // A grouped alarm's buttons act on every medicine it lists.
-  final (reminderIds, scheduledFor) = occurrence;
-  final engine = await AlarmRuntime.engine();
   await engine.handleAction(
+    notificationId: received.id,
     reminderIds: reminderIds,
     scheduledFor: scheduledFor,
     action: action,
   );
+}
+
+/// iOS: a reminder notification arrived while Dosey is open. Show the alarm
+/// screen right away, as Android's full-screen intent would.
+@pragma('vm:entry-point')
+Future<void> onNotificationDisplayed(ReceivedNotification shown) async {
+  if (!Platform.isIOS) return;
+  final occurrence = NotificationPayload.decode(shown.payload);
+  if (occurrence == null) return;
+  final (reminderIds, scheduledFor) = occurrence;
+  final engine = await AlarmRuntime.engine();
+  await engine.ringFromNotification(reminderIds, scheduledFor);
 }

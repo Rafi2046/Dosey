@@ -844,5 +844,11 @@
         "type": "String"
       }
     }
-  }
+  },
+  "iosSoundTitle": "iPhone sound",
+  "iosSoundOn": "Alarm sound is on",
+  "iosSoundOff": "Sounds are off for Dosey notifications. Turn on Sounds in Settings to hear your reminders.",
+  "iosCriticalOn": "Rings even in silent mode and Focus",
+  "iosCriticalOff": "In silent mode or Focus, your iPhone mutes reminders. Keep the ringer on so you hear them.",
+  "openSettings": "Open settings"
 }

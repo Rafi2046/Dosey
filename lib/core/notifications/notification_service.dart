@@ -40,7 +40,16 @@ abstract final class NotificationService {
     await initialize();
     await AwesomeNotifications().setListeners(
       onActionReceivedMethod: onNotificationAction,
+      onNotificationDisplayedMethod: onNotificationDisplayed,
     );
+    if (Platform.isIOS) {
+      // Launched by tapping a notification while the app wasn't running:
+      // open its alarm screen too.
+      final initial = await AwesomeNotifications().getInitialNotificationAction(
+        removeFromActionEvents: true,
+      );
+      if (initial != null) await onNotificationAction(initial);
+    }
     // AlarmManager and the boot-resync hook are Android-only; on iOS the
     // plugin is missing and initialize() would throw before runApp.
     if (!Platform.isAndroid) return;

@@ -4,6 +4,7 @@ import 'package:dosey/core/notifications/reminder_alarm_engine.dart';
 import 'package:dosey/features/reminders/data/reminders_repository.dart';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/fakes.dart';
@@ -315,6 +316,109 @@ void main() {
       expect(notifier.posted, [
         [a.id],
       ]);
+    });
+  });
+
+  group('iOS (book ahead, nothing runs at fire time)', () {
+    late FakeBookAheadScheduler ios;
+    setUp(() {
+      ios = FakeBookAheadScheduler();
+      engine = ReminderAlarmEngine(
+        reminders: repo,
+        scheduler: ios,
+        notifier: notifier,
+        clock: () => now,
+      );
+    });
+
+    test('books every slot of the coming week, medicines grouped', () async {
+      final a = await addDaily(hour: 23);
+      final b = await addDaily(hour: 23);
+      final morning = await addDaily(hour: 8);
+      final visit = await repo.create(
+        RemindersCompanion.insert(
+          type: ReminderType.appointment,
+          title: 'Dr. Kamal',
+          startAt: DateTime(2026, 10, 4, 23),
+        ),
+        now: now,
+      );
+      await engine.syncAll();
+
+      // No per-reminder OS alarms on iOS: only notifications booked ahead.
+      expect(ios.alarms, isEmpty);
+      final night = ios.bookings.where(
+        (x) => x.at.hour == 23 && x.reminderIds.length == 2,
+      );
+      expect(night, hasLength(7)); // 3 Oct … 9 Oct, 7 days ahead of 07:00
+      expect(night.first.reminderIds, [a.id, b.id]);
+      expect(
+        night.first.id,
+        ReminderAlarmEngine.slotNotificationId(DateTime(2026, 10, 3, 23)),
+      );
+      expect(
+        ios.bookings.where((x) => listEquals(x.reminderIds, [morning.id])),
+        hasLength(7),
+      );
+      // The appointment: its own notification, under its reminder id.
+      expect(
+        ios.bookings.where((x) => x.id == visit.id).single.at,
+        DateTime(2026, 10, 4, 23),
+      );
+      // Soonest first, and every id distinct.
+      expect(ios.bookings.first.at, DateTime(2026, 10, 3, 8));
+      expect(
+        ios.bookings.map((x) => x.id).toSet(),
+        hasLength(ios.bookings.length),
+      );
+    });
+
+    test('never books more than iOS can hold', () async {
+      for (var h = 0; h < 12; h++) {
+        await addDaily(hour: h);
+      }
+      await engine.syncAll();
+      expect(ios.bookings, hasLength(AppConstants.bookAheadLimit));
+    });
+
+    test(
+      'tapping the notification opens the alarm for doses still due',
+      () async {
+        final a = await addDaily(hour: 23);
+        final b = await addDaily(hour: 23);
+        final at = DateTime(2026, 10, 3, 23);
+        now = at.add(const Duration(minutes: 3));
+        // B was already taken from its Home card.
+        await engine.handleAction(
+          reminderIds: [b.id],
+          scheduledFor: at,
+          action: AlarmAction.taken,
+        );
+
+        await engine.ringFromNotification([a.id, b.id], at);
+        expect((await repo.getById(a.id))!.ringingFor, at);
+        expect((await repo.getById(b.id))!.ringingFor, isNull);
+
+        // A day-old notification doesn't start ringing.
+        await repo.setRinging(a.id, null);
+        now = at.add(const Duration(days: 1));
+        await engine.ringFromNotification([a.id], at);
+        expect((await repo.getById(a.id))!.ringingFor, isNull);
+      },
+    );
+
+    test('acting on a slot notification removes that notification', () async {
+      final a = await addDaily(hour: 23);
+      final at = DateTime(2026, 10, 3, 23);
+      final slotId = ReminderAlarmEngine.slotNotificationId(at);
+      notifier.showing[slotId] = at;
+      await engine.handleAction(
+        reminderIds: [a.id],
+        scheduledFor: at,
+        action: AlarmAction.taken,
+        notificationId: slotId,
+      );
+      expect(notifier.showing.containsKey(slotId), isFalse);
     });
   });
 }

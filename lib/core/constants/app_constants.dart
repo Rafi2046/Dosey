@@ -104,6 +104,21 @@ abstract final class AppConstants {
   /// id) so they never collide with a reminder's own alarm id.
   static const int snoozeIdOffset = 1000000000;
 
+  /// iOS books medicine time slots ahead as `slotIdOffset + minutes since
+  /// the epoch` (one id per minute, below [snoozeIdOffset] for the next
+  /// ~1,500 years). Other reminder types keep their reminder id.
+  static const int slotIdOffset = 100000000;
+
+  /// How far ahead iOS books, and at most how many (iOS keeps only 64
+  /// pending local notifications per app; the rest is room for snoozes and
+  /// low-stock alerts).
+  static const Duration bookAhead = Duration(days: 7);
+  static const int bookAheadLimit = 48;
+
+  /// Bundled alarm tone for iOS (ios/Runner/dosey_alarm.aiff, under 30 s:
+  /// iOS plays the default sound for anything longer).
+  static const String iosAlarmSound = 'resource://raw/dosey_alarm';
+
   /// Fixed alarm id used by the boot receiver to run the resync callback.
   static const int resyncAlarmId = 2000000000;
 

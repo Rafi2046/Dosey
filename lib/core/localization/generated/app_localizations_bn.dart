@@ -1620,7 +1620,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get moreSheetHeader => 'মেনু\nআরও';
 
   @override
-  String get moreSheetSubtitle => 'ডাক্তার, রেকর্ড, খরচ ও সেটিংস';
+  String get moreSheetSubtitle => 'ডাক্তার, রেকর্ড, খরচ, রক্তচাপ ও সেটিংস';
 
   @override
   String get unitTabletPlural => 'ট্যাবলেট';

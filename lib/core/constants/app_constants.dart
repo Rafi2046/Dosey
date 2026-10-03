@@ -93,6 +93,9 @@ abstract final class AppConstants {
   static const String payloadReminderIds = 'reminderIds';
   static const String alarmParamReminderIds = 'reminderIds';
 
+  /// Blood pressure unit (the same in every language).
+  static const String bpUnit = 'mmHg';
+
   // ── Alarm scheduling ──────────────────────────────────────────────────────
   static const int defaultSnoozeMinutes = 10;
   static const List<int> snoozeOptions = [5, 10, 15, 30];

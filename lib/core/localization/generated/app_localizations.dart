@@ -2771,7 +2771,7 @@ abstract class AppLocalizations {
   /// No description provided for @moreSheetSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Doctors, records, expenses and settings'**
+  /// **'Doctors, records, expenses, blood pressure and settings'**
   String get moreSheetSubtitle;
 
   /// No description provided for @unitTabletPlural.

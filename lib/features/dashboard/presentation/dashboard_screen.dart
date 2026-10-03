@@ -11,6 +11,8 @@ import '../../settings/providers/settings_providers.dart';
 import '../../expenses/presentation/widgets/expense_summary_widget.dart';
 import '../../expenses/providers/expenses_providers.dart';
 import '../../reminders/presentation/reminder_form_screen.dart';
+import '../../blood_pressure/providers/blood_pressure_providers.dart';
+import 'widgets/blood_pressure_section.dart';
 import 'widgets/dashboard_header.dart';
 import 'widgets/low_stock_section.dart';
 import 'widgets/today_reminder_stack.dart';
@@ -44,6 +46,7 @@ class DashboardScreen extends ConsumerWidget {
         ref.invalidate(remindersProvider);
         ref.invalidate(currentMonthExpenseTotalProvider);
         ref.invalidate(medicineCostProjectionProvider);
+        ref.invalidate(bloodPressureReadingsProvider);
       },
       children: [
         DashboardHeader(
@@ -64,6 +67,7 @@ class DashboardScreen extends ConsumerWidget {
           ),
         ),
         const LowStockSection(),
+        const BloodPressureSection(),
         UpcomingEventsSection(onSeeAll: onOpenReminders),
         SectionHeader(
           title: context.l10n.medicineCost,

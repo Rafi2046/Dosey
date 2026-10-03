@@ -19,12 +19,16 @@ class TabScrollView extends StatefulWidget {
     this.centerLast = false,
     this.onRefresh,
     this.refreshFrom,
+    this.bottomPadding = AppSpacing.listBottomPadding,
   });
 
   final List<Widget> children;
   final bool centerLast;
   final Future<void> Function()? onRefresh;
   final int? refreshFrom;
+
+  /// Room left below the content (the floating nav bar on tabs).
+  final EdgeInsets bottomPadding;
 
   @override
   State<TabScrollView> createState() => _TabScrollViewState();
@@ -67,7 +71,7 @@ class _TabScrollViewState extends State<TabScrollView> {
       slivers: [
         SliverPadding(
           padding: fill == null
-              ? AppSpacing.screenPadding.add(AppSpacing.listBottomPadding)
+              ? AppSpacing.screenPadding.add(widget.bottomPadding)
               : AppSpacing.screenPadding,
           sliver: SliverList.list(children: top),
         ),
@@ -75,9 +79,7 @@ class _TabScrollViewState extends State<TabScrollView> {
           SliverFillRemaining(
             hasScrollBody: false,
             child: Padding(
-              padding: AppSpacing.screenPadding.add(
-                AppSpacing.listBottomPadding,
-              ),
+              padding: AppSpacing.screenPadding.add(widget.bottomPadding),
               child: Center(child: fill),
             ),
           ),

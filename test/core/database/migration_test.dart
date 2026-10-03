@@ -12,6 +12,30 @@ final _v2Schema = File(
 final _v3Schema = File(
   'test/core/database/fixtures/schema_v3.sql',
 ).readAsStringSync();
+final _v4Schema = File(
+  'test/core/database/fixtures/schema_v4.sql',
+).readAsStringSync();
+
+/// A v4 database (stock planning) with real data, before blood pressure.
+AppDatabase _openV4() => AppDatabase(
+  NativeDatabase.memory(
+    setup: (raw) {
+      raw.execute(_v4Schema);
+      raw.execute('PRAGMA user_version = 4');
+      raw.execute('''
+        INSERT INTO medicines (id, name, form, dose_unit, meal_relation,
+            unit_price_minor, stock_quantity, start_date, refill_alert_days)
+        VALUES (1, 'Zulfidin', 'tablet', 'tablet', 'afterMeal', 300, 40, 0, 5);
+        INSERT INTO reminders (id, type, title, medicine_id, start_at,
+            repeat_rule, is_critical, is_enabled, snooze_minutes, dose_amount)
+        VALUES (10, 'medicine', 'Zulfidin', 1, 1000, 'daily', 1, 1, 10, 2.0);
+        INSERT INTO reminder_logs (reminder_id, scheduled_for, status)
+        VALUES (10, 1000, 'taken');
+        INSERT INTO app_settings (key, value) VALUES ('user_name', 'Rafi');
+      ''');
+    },
+  ),
+);
 
 /// A v3 database (dose per reminder, settings table) with real data.
 AppDatabase _openV3() => AppDatabase(
@@ -135,6 +159,59 @@ void main() {
     addTearDown(fresh.close);
 
     expect(await _schema(migrated), await _schema(fresh));
+  });
+
+  test('v4 → v5 adds the blood pressure log, keeping every row', () async {
+    final db = _openV4();
+    addTearDown(db.close);
+    final med = await db.select(db.medicines).getSingle();
+    expect(med.stockQuantity, 40);
+    expect(med.refillAlertDays, 5);
+    expect((await db.select(db.reminders).getSingle()).doseAmount, 2.0);
+    expect(await db.select(db.reminderLogs).get(), hasLength(1));
+    expect((await db.select(db.appSettings).getSingle()).value, 'Rafi');
+
+    // The new table is there and usable.
+    expect(await db.select(db.bloodPressureReadings).get(), isEmpty);
+    await db
+        .into(db.bloodPressureReadings)
+        .insert(
+          BloodPressureReadingsCompanion.insert(
+            systolic: 128,
+            diastolic: 84,
+            measuredAt: DateTime(2026, 10, 4, 8),
+          ),
+        );
+    expect(await db.select(db.bloodPressureReadings).get(), hasLength(1));
+    expect(await db.customSelect('PRAGMA foreign_key_check').get(), isEmpty);
+  });
+
+  test(
+    'a v4 database migrates to the same schema as a fresh install',
+    () async {
+      final migrated = _openV4();
+      final fresh = AppDatabase(NativeDatabase.memory());
+      addTearDown(migrated.close);
+      addTearDown(fresh.close);
+      expect(await _schema(migrated), await _schema(fresh));
+    },
+  );
+
+  test('blood pressure values outside human ranges are refused', () async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+    Future<int> add(int sys, int dia) => db
+        .into(db.bloodPressureReadings)
+        .insert(
+          BloodPressureReadingsCompanion.insert(
+            systolic: sys,
+            diastolic: dia,
+            measuredAt: DateTime(2026),
+          ),
+        );
+    await expectLater(add(400, 80), throwsA(anything));
+    await expectLater(add(120, 5), throwsA(anything));
+    expect(await add(120, 80), greaterThan(0));
   });
 
   test('settings table works after upgrade', () async {

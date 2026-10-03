@@ -34,6 +34,7 @@ abstract final class AppSpacing {
   static const double onboardingHero = 260;
   static const double featureIcon = 52;
   static const double settingsIcon = 36;
+  static const double bpChartHeight = 160;
   static const double headerTickWidth = 3;
   static const double headerTickHeight = 14;
   static const double sheetTickHeight = 20;

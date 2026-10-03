@@ -528,6 +528,85 @@ void main() {
     await unmount(tester);
   });
 
+  testWidgets('blood pressure: log a reading, see it, edit and delete it', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AppNavBar),
+        matching: find.byTooltip(en.navMore),
+      ),
+    );
+    await settle(tester);
+    await tapText(tester, en.bpShortTitle);
+    expect(find.text(en.bpEmpty), findsOneWidget);
+
+    await tester.tap(find.text(en.bpAdd));
+    await settle(tester);
+    final fields = find.byType(TextFormField);
+    await tester.enterText(fields.at(0), '145');
+    await tester.enterText(fields.at(1), '150'); // lower ≥ upper: refused
+    await settle(tester);
+    await tester.tap(find.text(en.save));
+    await settle(tester);
+    expect(find.text(en.bpDiastolicHigher), findsOneWidget);
+
+    await tester.enterText(fields.at(1), '92');
+    await tester.enterText(fields.at(2), '70');
+    await settle(tester);
+    // The category shows live while typing.
+    expect(find.text(en.bpStage2), findsOneWidget);
+    await tester.pump(const Duration(seconds: 5)); // let any snackbar go
+    await settle(tester);
+    await tester.tap(find.text(en.save));
+    await settle(tester);
+
+    final saved = await dbRun(
+      tester,
+      () => db.select(db.bloodPressureReadings).getSingle(),
+    );
+    expect((saved.systolic, saved.diastolic, saved.pulse), (145, 92, 70));
+    expect(find.text(en.bpLatest), findsOneWidget);
+    expect(find.text('145/92'), findsOneWidget);
+    expect(find.text(en.bpCount(1)), findsOneWidget);
+
+    // Edit from history, then delete.
+    await tester.tap(find.text('145/92 mmHg').last);
+    await settle(tester);
+    expect(find.text(en.bpEditTitle), findsOneWidget);
+    await tester.tap(find.byTooltip(en.delete));
+    await settle(tester);
+    await tester.tap(find.text(en.delete).last);
+    await settle(tester);
+    expect(
+      await dbRun(tester, () => db.select(db.bloodPressureReadings).get()),
+      isEmpty,
+    );
+    expect(find.text(en.bpEmpty), findsOneWidget);
+    await unmount(tester);
+  });
+
+  testWidgets('Home shows the latest blood pressure once there is one', (
+    tester,
+  ) async {
+    await tester.runAsync(
+      () => db
+          .into(db.bloodPressureReadings)
+          .insert(
+            BloodPressureReadingsCompanion.insert(
+              systolic: 118,
+              diastolic: 76,
+              measuredAt: now.subtract(const Duration(hours: 1)),
+            ),
+          ),
+    );
+    await pumpApp(tester);
+    expect(await scrollTo(tester, '118/76 mmHg'), findsOneWidget);
+    expect(find.text(en.bpNormal), findsOneWidget);
+    await unmount(tester);
+  });
+
   testWidgets('an empty list centres its empty state in the space left', (
     tester,
   ) async {

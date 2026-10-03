@@ -1636,7 +1636,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moreSheetHeader => 'Menu\nMore';
 
   @override
-  String get moreSheetSubtitle => 'Doctors, records, expenses and settings';
+  String get moreSheetSubtitle =>
+      'Doctors, records, expenses, blood pressure and settings';
 
   @override
   String get unitTabletPlural => 'tablets';

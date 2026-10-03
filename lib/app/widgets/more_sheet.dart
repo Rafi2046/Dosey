@@ -4,6 +4,7 @@ import '../../core/constants/constants.dart';
 import '../../core/localization/l10n.dart';
 import '../../core/widgets/screen_header.dart';
 import '../../core/widgets/surface_card.dart';
+import '../../features/blood_pressure/presentation/blood_pressure_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../home_tab.dart';
 
@@ -50,6 +51,21 @@ Future<void> showMoreSheet(
                 selected: tab == current,
                 onTap: () => open(tab),
               ),
+            _MoreTile(
+              icon: Icons.monitor_heart_rounded,
+              color: AppColors.tileMoss,
+              title: l10n.bpShortTitle,
+              subtitle: l10n.moreBpHint,
+              selected: false,
+              onTap: () {
+                Navigator.pop(sheetContext);
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const BloodPressureScreen(),
+                  ),
+                );
+              },
+            ),
             _MoreTile(
               icon: Icons.settings_rounded,
               color: AppColors.tileStone,

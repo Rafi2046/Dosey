@@ -1,0 +1,7 @@
+# Play Store upload key. Copy to android/key.properties (git-ignored) and fill in.
+#   cp android/key.properties.example android/key.properties
+# storeFile: absolute path, or relative to android/app/. Keep the .jks out of git.
+storePassword=CHANGE_ME
+keyPassword=CHANGE_ME
+keyAlias=upload
+storeFile=/Users/YOUR_USER/keys/dosey-upload-keystore.jks

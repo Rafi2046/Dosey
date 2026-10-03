@@ -1,6 +1,5 @@
 /// Doctors list, detail and form text.
 abstract final class DoctorStrings {
-  static const String doctors = 'Doctors';
   static const String addDoctor = 'Add doctor';
   static const String editDoctor = 'Edit doctor';
   static const String doctorName = 'Name';

@@ -1,6 +1,5 @@
 /// Reminders list, form and schedule descriptions.
 abstract final class ReminderStrings {
-  static const String reminders = 'Reminders';
   static const String addReminder = 'Add reminder';
   static const String editReminder = 'Edit reminder';
   static const String reminderTitle = 'Title';

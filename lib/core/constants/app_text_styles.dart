@@ -40,15 +40,6 @@ abstract final class AppTextStyles {
     color: AppColors.textOnDark,
   );
 
-  /// Huge clock figure on the alarm screen.
-  static const TextStyle clock = TextStyle(
-    fontFamily: _display,
-    fontSize: AppSpacing.fontClock,
-    fontWeight: FontWeight.w800,
-    color: AppColors.textOnDark,
-    height: AppSpacing.lineHeightTight,
-  );
-
   // ── Body (DM Sans) ────────────────────────────────────────────────────────
   static const TextStyle subtitle = TextStyle(
     fontFamily: _body,

@@ -72,7 +72,6 @@ abstract final class AppSpacing {
   static const double fontXl = 21;
   static const double fontXxl = 30;
   static const double fontDisplay = 38;
-  static const double fontClock = 72;
   static const double letterSpacingWide = 0.6;
   static const double lineHeight = 1.4;
   static const double lineHeightTight = 1.12;

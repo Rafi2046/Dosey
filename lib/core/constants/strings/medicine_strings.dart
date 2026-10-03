@@ -1,6 +1,5 @@
 /// Medicines list, detail, form and dosage text.
 abstract final class MedicineStrings {
-  static const String medicines = 'Medicines';
   static const String addMedicine = 'Add medicine';
   static const String editMedicine = 'Edit medicine';
   static const String medicineName = 'Medicine name';

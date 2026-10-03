@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/utils/enum_labels.dart';
 import '../../../core/utils/money.dart';
@@ -17,6 +18,7 @@ import '../../../core/widgets/picker_field.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../../../core/widgets/switch_row.dart';
 import '../../doctors/presentation/widgets/doctor_picker_field.dart';
+import '../../doctors/providers/doctors_providers.dart';
 import '../../records/presentation/widgets/prescription_picker_field.dart';
 import '../../reminders/domain/reminder_text.dart';
 import '../domain/dose_time.dart';
@@ -28,7 +30,6 @@ import 'widgets/dose_section.dart';
 import 'widgets/reminder_times_editor.dart';
 import 'widgets/scan_prescription_card.dart';
 import 'widgets/stock_price_section.dart';
-import '../../../core/localization/l10n.dart';
 
 /// Step 2 of "Add Medicine", or editing an existing medicine. Reminder times
 /// are entered here on create; afterwards they're managed on the detail page.
@@ -130,16 +131,29 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
       },
     );
     if (found == null || !mounted) return;
-    if (found.length == 1) {
-      _applyScan(found.single);
+    final doctor = found.doctor;
+    final savedDoctor = doctor == null
+        ? null
+        : matchSavedDoctor(
+            await ref.read(doctorsRepositoryProvider).all(),
+            doctor,
+          );
+    if (!mounted) return;
+    // One medicine and no new doctor to save: fill this form directly.
+    if (found.medicines.length == 1 &&
+        (doctor == null || savedDoctor != null)) {
+      _applyScan(found.medicines.single);
+      if (savedDoctor != null) setState(() => _doctorId = savedDoctor.id);
       return showAppSnack(context, context.l10n.scanFilled);
     }
-    // Several medicines: review and save them all together.
-    final scanned = found;
+    // Several medicines (or a new doctor): review and save them together.
     final saved = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (_) =>
-            BulkAddScreen(scanned: scanned, initialDoctorId: _doctorId),
+        builder: (_) => BulkAddScreen(
+          scanned: found.medicines,
+          doctor: doctor,
+          initialDoctorId: _doctorId,
+        ),
       ),
     );
     if (saved == true && mounted) Navigator.pop(context, true);

@@ -37,6 +37,10 @@ abstract final class AppSpacing {
   /// Space below each labelled form field.
   static const double fieldGap = lg;
 
+  /// Drop-down of a SuggestField.
+  static const double suggestionsMaxHeight = 260;
+  static const double suggestionsMaxWidth = 360;
+
   /// Height the time picker keeps free of the keyboard (see AppPickers).
   static const double timePickerMinRoom = 320;
 

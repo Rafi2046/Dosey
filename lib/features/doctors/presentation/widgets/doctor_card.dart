@@ -7,6 +7,7 @@ import '../../../../core/widgets/surface_card.dart';
 import '../../domain/doctor_with_stats.dart';
 import 'contact_actions.dart';
 import '../../../../core/localization/l10n.dart';
+import '../../domain/specialty.dart';
 
 /// Doctor summary: initials avatar, name, specialty, clinic, active
 /// medicine count and a one-tap call button.
@@ -28,7 +29,7 @@ class DoctorCard extends StatelessWidget {
     final light = SurfaceCard.isLight(color);
     final muted = light ? AppColors.inkMuted : AppColors.textOnDarkMuted;
     final subtitle = [
-      ?d.specialty,
+      if (d.specialty case final s?) Specialty.display(s, context.l10n),
       ?d.clinic,
     ].join(context.l10n.notifDoseSeparator);
 

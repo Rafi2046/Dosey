@@ -4,20 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/constants.dart';
+import '../../../core/database/app_database.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../core/widgets/confirm_dialog.dart';
-import '../domain/scanned_medicine.dart';
+import '../domain/scanned_doctor.dart';
 import '../providers/medicines_providers.dart';
 import 'bulk/bulk_add_screen.dart';
 
-/// Pick a prescription photo and read it. Returns the medicines found, or
-/// null when the user cancelled or nothing could be read (they've been told
-/// why).
+/// Pick a prescription photo and read it. Returns what was found (always
+/// at least one medicine), or null when the user cancelled or no medicine
+/// could be read (they've been told why).
 ///
 /// Takes the [container] rather than a widget's `ref` because callers like
 /// the "+" sheet are gone before the scan finishes. [onBusy] lets a screen
 /// show its own progress; otherwise a "Reading prescription…" dialog shows.
-Future<List<ScannedMedicine>?> scanPrescription(
+Future<ScannedPrescription?> scanPrescription(
   BuildContext context,
   ProviderContainer container, {
   ValueChanged<bool>? onBusy,
@@ -39,7 +40,7 @@ Future<List<ScannedMedicine>?> scanPrescription(
     );
   }
 
-  List<ScannedMedicine>? found;
+  ScannedPrescription? found;
   try {
     found = await container.read(prescriptionScannerProvider).scan(path);
   } on Exception {
@@ -56,11 +57,18 @@ Future<List<ScannedMedicine>?> scanPrescription(
     showAppSnack(context, l10n.scanFailed);
     return null;
   }
-  if (found.isEmpty) {
+  if (found.medicines.isEmpty) {
     showAppSnack(context, l10n.scanNothingFound);
     return null;
   }
   return found;
+}
+
+/// The saved doctor the scanned one refers to (same name, ignoring "Dr."
+/// and punctuation), if any.
+Doctor? matchSavedDoctor(List<Doctor> saved, ScannedDoctor scanned) {
+  final key = ScannedDoctor.nameKey(scanned.name);
+  return saved.where((d) => ScannedDoctor.nameKey(d.name) == key).firstOrNull;
 }
 
 /// "+" › Scan prescription: read it, then review and save every medicine on
@@ -72,7 +80,10 @@ Future<void> scanPrescriptionToBulkAdd(
   final found = await scanPrescription(context, container);
   if (found == null || !context.mounted) return;
   await Navigator.of(context).push<bool>(
-    MaterialPageRoute(builder: (_) => BulkAddScreen(scanned: found)),
+    MaterialPageRoute(
+      builder: (_) =>
+          BulkAddScreen(scanned: found.medicines, doctor: found.doctor),
+    ),
   );
 }
 

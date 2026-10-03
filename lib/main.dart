@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,6 +17,18 @@ import 'features/settings/providers/settings_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Hospital/clinic search data (assets/data) is OpenStreetMap's; credit it
+  // in Settings › Open-source licences as the ODbL requires.
+  LicenseRegistry.addLicense(
+    () => Stream.value(
+      const LicenseEntryWithLineBreaks(
+        ['OpenStreetMap'],
+        'Hospital and clinic data © OpenStreetMap contributors.\n'
+        'Available under the Open Database License (ODbL) 1.0: '
+        'https://opendatacommons.org/licenses/odbl/',
+      ),
+    ),
+  );
   final documentsDirectory = await getApplicationDocumentsDirectory();
 
   // One DB connection shared by Riverpod and notification-action handlers.

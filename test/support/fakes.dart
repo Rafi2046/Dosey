@@ -2,6 +2,7 @@ import 'package:dosey/core/database/app_database.dart';
 import 'package:dosey/core/notifications/alarm_ports.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/features/medicines/data/prescription_scanner_service.dart';
+import 'package:dosey/features/medicines/domain/scanned_doctor.dart';
 import 'package:dosey/features/medicines/domain/scanned_medicine.dart';
 import 'package:dosey/features/reminders/domain/reminder_with_details.dart';
 
@@ -70,13 +71,14 @@ class FakePermissionService implements PermissionService {
 }
 
 class FakePrescriptionScanner implements PrescriptionScannerService {
-  FakePrescriptionScanner(this.result);
+  FakePrescriptionScanner(this.result, {this.doctor});
   final List<ScannedMedicine> result;
+  final ScannedDoctor? doctor;
   final List<String> scannedPaths = [];
 
   @override
-  Future<List<ScannedMedicine>> scan(String imagePath) async {
+  Future<ScannedPrescription> scan(String imagePath) async {
     scannedPaths.add(imagePath);
-    return result;
+    return ScannedPrescription(doctor: doctor, medicines: result);
   }
 }

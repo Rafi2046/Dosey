@@ -8,11 +8,19 @@ class DoctorsRepository {
 
   final AppDatabase _db;
 
-  Stream<List<Doctor>> watchAll({bool includeArchived = false}) {
+  Stream<List<Doctor>> watchAll({bool includeArchived = false}) =>
+      _all(includeArchived: includeArchived).watch();
+
+  /// One-shot list of the non-archived doctors.
+  Future<List<Doctor>> all() => _all().get();
+
+  SimpleSelectStatement<$DoctorsTable, Doctor> _all({
+    bool includeArchived = false,
+  }) {
     final query = _db.select(_db.doctors)
       ..orderBy([(d) => OrderingTerm.asc(d.name)]);
     if (!includeArchived) query.where((d) => d.isArchived.equals(false));
-    return query.watch();
+    return query;
   }
 
   /// Non-archived doctors with how many active medicines they prescribed.

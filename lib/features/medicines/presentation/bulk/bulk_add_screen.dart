@@ -1,7 +1,10 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/database/app_database.dart';
+import '../../../../core/localization/l10n.dart';
 import '../../../../core/utils/date_format.dart';
 import '../../../../core/utils/pickers.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
@@ -10,19 +13,30 @@ import '../../../../core/widgets/picker_field.dart';
 import '../../../../core/widgets/pill_button.dart';
 import '../../../../core/widgets/status_chip.dart';
 import '../../../doctors/presentation/widgets/doctor_picker_field.dart';
+import '../../../doctors/providers/doctors_providers.dart';
+import '../../domain/scanned_doctor.dart';
 import '../../domain/scanned_medicine.dart';
 import '../../providers/medicines_providers.dart';
+import '../scan_prescription_flow.dart';
 import 'medicine_draft.dart';
 import 'medicine_draft_card.dart';
-import '../../../../core/localization/l10n.dart';
+import 'scanned_doctor_card.dart';
 
 /// Review every medicine read off a prescription, fix mistakes, remove
 /// extras, add missed ones, then save them all in one transaction.
 /// Pops `true` once saved.
 class BulkAddScreen extends ConsumerStatefulWidget {
-  const BulkAddScreen({super.key, required this.scanned, this.initialDoctorId});
+  const BulkAddScreen({
+    super.key,
+    required this.scanned,
+    this.doctor,
+    this.initialDoctorId,
+  });
 
   final List<ScannedMedicine> scanned;
+
+  /// The doctor printed on the prescription, if one was read.
+  final ScannedDoctor? doctor;
   final int? initialDoctorId;
 
   @override
@@ -33,11 +47,44 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
   final _formKey = GlobalKey<FormState>();
   DateTime _startDate = DateUtils.dateOnly(DateTime.now());
   late int? _doctorId = widget.initialDoctorId;
+
+  /// The user chose "Prescribed by" themselves (or the form had a doctor),
+  /// so a saved match doesn't override it.
+  late bool _picked = widget.initialDoctorId != null;
   late final List<MedicineDraft> _drafts = [
     for (final s in widget.scanned)
       MedicineDraft.fromScan(context.l10n, s, _startDate),
   ];
   bool _saving = false;
+
+  /// Create the scanned doctor on save (when it isn't already saved and no
+  /// other doctor was picked).
+  bool _saveScannedDoctor = true;
+
+  Doctor? get _savedMatch => switch (widget.doctor) {
+    final d? => matchSavedDoctor(
+      ref.watch(doctorsProvider).value ?? const [],
+      d,
+    ),
+    null => null,
+  };
+
+  /// Who the medicines are linked to: the picked doctor, else a saved match.
+  int? get _linkedDoctorId => _picked ? _doctorId : _savedMatch?.id;
+
+  DoctorsCompanion? get _newDoctor {
+    final d = widget.doctor;
+    if (d == null || !_saveScannedDoctor || _linkedDoctorId != null) {
+      return null;
+    }
+    return DoctorsCompanion.insert(
+      name: d.name,
+      specialty: Value(d.specialty?.stored),
+      phone: Value(d.phone),
+      clinic: Value(d.clinic),
+      notes: Value(d.degrees),
+    );
+  }
 
   @override
   void dispose() {
@@ -67,8 +114,8 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
     try {
       await ref.read(medicineScheduleServiceProvider).createMany([
         for (final d in _drafts)
-          d.toNewMedicine(startDate: _startDate, doctorId: _doctorId),
-      ]);
+          d.toNewMedicine(startDate: _startDate, doctorId: _linkedDoctorId),
+      ], newDoctor: _newDoctor);
     } on Exception {
       // One transaction, so nothing was saved; let the user retry.
       if (!mounted) return;
@@ -82,6 +129,9 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final scannedDoctor = widget.doctor;
+    final savedMatch = _savedMatch;
+    final linkedId = _linkedDoctorId;
     return CreamScaffold(
       title: context.l10n.bulkTitle,
       bottomBar: PillButton(
@@ -101,11 +151,22 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
             children: [
               Text(context.l10n.bulkHint, style: AppTextStyles.bodyOnLight),
               AppSpacing.gapLg,
+              if (scannedDoctor != null)
+                ScannedDoctorCard(
+                  doctor: scannedDoctor,
+                  matchesSaved: savedMatch != null && linkedId == savedMatch.id,
+                  // Hidden once another doctor is picked: nothing to save.
+                  save: linkedId == null ? _saveScannedDoctor : null,
+                  onSaveChanged: (v) => setState(() => _saveScannedDoctor = v),
+                ),
               // Shared by every medicine on one prescription.
               DoctorPickerField(
                 label: context.l10n.medicineDoctor,
-                doctorId: _doctorId,
-                onChanged: (id) => setState(() => _doctorId = id),
+                doctorId: linkedId,
+                onChanged: (id) => setState(() {
+                  _picked = true;
+                  _doctorId = id;
+                }),
               ),
               PickerField(
                 label: context.l10n.medicineStartDate,

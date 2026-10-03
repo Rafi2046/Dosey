@@ -2575,6 +2575,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The {time} reminder for {name} will be deleted. Its other times stay.'**
   String deleteThisTimeBody(String time, String name);
+
+  /// No description provided for @specMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine'**
+  String get specMedicine;
+
+  /// No description provided for @specGeneralPhysician.
+  ///
+  /// In en, this message translates to:
+  /// **'General physician'**
+  String get specGeneralPhysician;
+
+  /// No description provided for @specCardiology.
+  ///
+  /// In en, this message translates to:
+  /// **'Cardiology (heart)'**
+  String get specCardiology;
+
+  /// No description provided for @specEndocrinology.
+  ///
+  /// In en, this message translates to:
+  /// **'Diabetes & hormones'**
+  String get specEndocrinology;
+
+  /// No description provided for @specPaediatrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Child specialist'**
+  String get specPaediatrics;
+
+  /// No description provided for @specGynaecology.
+  ///
+  /// In en, this message translates to:
+  /// **'Gynaecology & obstetrics'**
+  String get specGynaecology;
+
+  /// No description provided for @specSurgery.
+  ///
+  /// In en, this message translates to:
+  /// **'General surgery'**
+  String get specSurgery;
+
+  /// No description provided for @specOrthopaedics.
+  ///
+  /// In en, this message translates to:
+  /// **'Bone & joint (orthopaedics)'**
+  String get specOrthopaedics;
+
+  /// No description provided for @specNeurology.
+  ///
+  /// In en, this message translates to:
+  /// **'Neurology (brain & nerves)'**
+  String get specNeurology;
+
+  /// No description provided for @specNephrology.
+  ///
+  /// In en, this message translates to:
+  /// **'Kidney (nephrology)'**
+  String get specNephrology;
+
+  /// No description provided for @specGastroenterology.
+  ///
+  /// In en, this message translates to:
+  /// **'Stomach & liver'**
+  String get specGastroenterology;
+
+  /// No description provided for @specPulmonology.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest & asthma'**
+  String get specPulmonology;
+
+  /// No description provided for @specEnt.
+  ///
+  /// In en, this message translates to:
+  /// **'Ear, nose & throat'**
+  String get specEnt;
+
+  /// No description provided for @specEye.
+  ///
+  /// In en, this message translates to:
+  /// **'Eye'**
+  String get specEye;
+
+  /// No description provided for @specDermatology.
+  ///
+  /// In en, this message translates to:
+  /// **'Skin & VD'**
+  String get specDermatology;
+
+  /// No description provided for @specPsychiatry.
+  ///
+  /// In en, this message translates to:
+  /// **'Psychiatry (mental health)'**
+  String get specPsychiatry;
+
+  /// No description provided for @specUrology.
+  ///
+  /// In en, this message translates to:
+  /// **'Urology'**
+  String get specUrology;
+
+  /// No description provided for @specOncology.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancer (oncology)'**
+  String get specOncology;
+
+  /// No description provided for @specRheumatology.
+  ///
+  /// In en, this message translates to:
+  /// **'Rheumatology (arthritis)'**
+  String get specRheumatology;
+
+  /// No description provided for @specDentistry.
+  ///
+  /// In en, this message translates to:
+  /// **'Dentist'**
+  String get specDentistry;
+
+  /// No description provided for @specPhysicalMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Physical medicine & rehab'**
+  String get specPhysicalMedicine;
+
+  /// No description provided for @specNutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutritionist'**
+  String get specNutrition;
+
+  /// No description provided for @doctorSpecialtyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type or pick from the list'**
+  String get doctorSpecialtyHint;
+
+  /// No description provided for @doctorClinicHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search hospitals & clinics'**
+  String get doctorClinicHint;
+
+  /// No description provided for @scanDoctorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor on this prescription'**
+  String get scanDoctorTitle;
+
+  /// No description provided for @scanDoctorSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save this doctor'**
+  String get scanDoctorSave;
+
+  /// No description provided for @scanDoctorSaveHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds them to Doctors and links these medicines to them.'**
+  String get scanDoctorSaveHint;
+
+  /// No description provided for @scanDoctorLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches a doctor you\'ve saved, so these medicines are linked to them.'**
+  String get scanDoctorLinked;
 }
 
 class _AppLocalizationsDelegate

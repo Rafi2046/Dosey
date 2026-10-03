@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/picker_field.dart';
 import '../../../../core/widgets/selection_sheet.dart';
 import '../../providers/doctors_providers.dart';
+import '../../domain/specialty.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Picks one of the user's (non-archived) doctors, or none.
 class DoctorPickerField extends ConsumerWidget {
@@ -34,7 +36,10 @@ class DoctorPickerField extends ConsumerWidget {
           title: label,
           items: doctors,
           labelOf: (d) => d.name,
-          subtitleOf: (d) => d.specialty,
+          subtitleOf: (d) => switch (d.specialty) {
+            final s? => Specialty.display(s, context.l10n),
+            null => null,
+          },
           icon: Icons.person_rounded,
           selected: selected,
           allowNone: true,

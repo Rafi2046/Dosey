@@ -1486,4 +1486,90 @@ class AppLocalizationsEn extends AppLocalizations {
   String deleteThisTimeBody(String time, String name) {
     return 'The $time reminder for $name will be deleted. Its other times stay.';
   }
+
+  @override
+  String get specMedicine => 'Medicine';
+
+  @override
+  String get specGeneralPhysician => 'General physician';
+
+  @override
+  String get specCardiology => 'Cardiology (heart)';
+
+  @override
+  String get specEndocrinology => 'Diabetes & hormones';
+
+  @override
+  String get specPaediatrics => 'Child specialist';
+
+  @override
+  String get specGynaecology => 'Gynaecology & obstetrics';
+
+  @override
+  String get specSurgery => 'General surgery';
+
+  @override
+  String get specOrthopaedics => 'Bone & joint (orthopaedics)';
+
+  @override
+  String get specNeurology => 'Neurology (brain & nerves)';
+
+  @override
+  String get specNephrology => 'Kidney (nephrology)';
+
+  @override
+  String get specGastroenterology => 'Stomach & liver';
+
+  @override
+  String get specPulmonology => 'Chest & asthma';
+
+  @override
+  String get specEnt => 'Ear, nose & throat';
+
+  @override
+  String get specEye => 'Eye';
+
+  @override
+  String get specDermatology => 'Skin & VD';
+
+  @override
+  String get specPsychiatry => 'Psychiatry (mental health)';
+
+  @override
+  String get specUrology => 'Urology';
+
+  @override
+  String get specOncology => 'Cancer (oncology)';
+
+  @override
+  String get specRheumatology => 'Rheumatology (arthritis)';
+
+  @override
+  String get specDentistry => 'Dentist';
+
+  @override
+  String get specPhysicalMedicine => 'Physical medicine & rehab';
+
+  @override
+  String get specNutrition => 'Nutritionist';
+
+  @override
+  String get doctorSpecialtyHint => 'Type or pick from the list';
+
+  @override
+  String get doctorClinicHint => 'Search hospitals & clinics';
+
+  @override
+  String get scanDoctorTitle => 'Doctor on this prescription';
+
+  @override
+  String get scanDoctorSave => 'Save this doctor';
+
+  @override
+  String get scanDoctorSaveHint =>
+      'Adds them to Doctors and links these medicines to them.';
+
+  @override
+  String get scanDoctorLinked =>
+      'Matches a doctor you\'ve saved, so these medicines are linked to them.';
 }

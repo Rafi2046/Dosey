@@ -10,9 +10,14 @@ import 'package:dosey/core/storage/file_storage_service.dart';
 import 'package:dosey/core/widgets/amount_stepper.dart';
 import 'package:dosey/core/widgets/app_text_field.dart';
 import 'package:dosey/core/widgets/async_value_view.dart';
+import 'package:dosey/core/widgets/labeled_field.dart';
 import 'package:dosey/features/medicines/domain/dose_time.dart';
 import 'package:dosey/features/medicines/presentation/bulk/medicine_draft_card.dart';
 import 'package:dosey/features/medicines/domain/scanned_medicine.dart';
+import 'package:dosey/features/medicines/domain/scanned_doctor.dart';
+import 'package:dosey/features/doctors/data/health_facilities.dart';
+import 'package:dosey/features/doctors/domain/specialty.dart';
+import 'package:dosey/features/doctors/providers/doctors_providers.dart';
 import 'package:dosey/features/medicines/providers/medicines_providers.dart';
 import 'package:dosey/features/records/data/records_repository.dart';
 import 'package:dosey/features/reminders/data/reminders_repository.dart';
@@ -553,6 +558,233 @@ void main() {
     // Saving closes both the review screen and the Add Medicine form.
     expect(find.text(en.bulkTitle), findsNothing);
     expect(find.text(en.addMedicine), findsNothing);
+    await unmount(tester);
+  });
+
+  Future<void> scanFromPlus(
+    WidgetTester tester,
+    FakePrescriptionScanner scanner,
+  ) async {
+    await pumpApp(
+      tester,
+      overrides: [
+        prescriptionScannerProvider.overrideWithValue(scanner),
+        prescriptionImagePickerProvider.overrideWithValue(
+          (_) async => '/tmp/rx.jpg',
+        ),
+      ],
+    );
+    await tester.tap(find.byTooltip(en.add));
+    await settle(tester);
+    await tester.tap(find.text(en.scanTitle));
+    await settle(tester);
+  }
+
+  Future<void> scanInForm(WidgetTester tester, ScannedDoctor doctor) async {
+    await pumpApp(
+      tester,
+      overrides: [
+        prescriptionScannerProvider.overrideWithValue(
+          FakePrescriptionScanner([
+            const ScannedMedicine(name: 'Napa'),
+          ], doctor: doctor),
+        ),
+        prescriptionImagePickerProvider.overrideWithValue(
+          (_) async => '/tmp/rx.jpg',
+        ),
+      ],
+    );
+    await tester.tap(find.byTooltip(en.add));
+    await settle(tester);
+    await tapText(tester, en.addMedicine);
+    await tapText(tester, en.next);
+    await tapText(tester, en.scanTitle);
+  }
+
+  testWidgets('a one-medicine scan from a saved doctor fills the form', (
+    tester,
+  ) async {
+    await scanInForm(tester, const ScannedDoctor(name: 'Dr Farhana Rahman'));
+    expect(find.text(en.bulkTitle), findsNothing);
+    expect(find.widgetWithText(TextFormField, 'Napa'), findsOneWidget);
+    // "Prescribed by" is set to them.
+    expect(await scrollTo(tester, 'Dr. Farhana Rahman'), findsOneWidget);
+    await unmount(tester);
+  });
+
+  testWidgets('a one-medicine scan from a new doctor opens the review', (
+    tester,
+  ) async {
+    await scanInForm(tester, const ScannedDoctor(name: 'Dr. Sadia Islam'));
+    expect(find.text(en.bulkTitle), findsOneWidget);
+    expect(find.text(en.scanDoctorSave), findsOneWidget);
+    await unmount(tester);
+  });
+
+  testWidgets('a new doctor on the prescription is saved and linked', (
+    tester,
+  ) async {
+    await scanFromPlus(
+      tester,
+      FakePrescriptionScanner(
+        [
+          const ScannedMedicine(name: 'Napa', strength: '500mg'),
+          const ScannedMedicine(name: 'Seclo', strength: '20mg'),
+        ],
+        doctor: const ScannedDoctor(
+          name: 'Dr. Sadia Islam',
+          degrees: 'MBBS, FCPS',
+          specialty: Specialty.cardiology,
+          phone: '01711000000',
+          clinic: 'Popular Diagnostic Centre',
+        ),
+      ),
+    );
+
+    expect(find.text(en.scanDoctorTitle), findsOneWidget);
+    expect(find.text('Dr. Sadia Islam'), findsOneWidget);
+    expect(find.text(en.scanDoctorSave), findsOneWidget);
+    await tester.tap(find.text(en.bulkSaveAll(2)));
+    await settle(tester);
+
+    final doctor = await dbRun(
+      tester,
+      () => (db.select(
+        db.doctors,
+      )..where((d) => d.name.equals('Dr. Sadia Islam'))).getSingle(),
+    );
+    expect(doctor.specialty, Specialty.cardiology.stored);
+    expect(doctor.phone, '01711000000');
+    expect(doctor.clinic, 'Popular Diagnostic Centre');
+    expect(doctor.notes, 'MBBS, FCPS');
+    final meds = await dbRun(tester, () => db.select(db.medicines).get());
+    for (final name in ['Napa', 'Seclo']) {
+      expect(
+        meds.firstWhere((m) => m.name == name).doctorId,
+        doctor.id,
+        reason: name,
+      );
+    }
+    await unmount(tester);
+  });
+
+  testWidgets('a prescription from a saved doctor links to them', (
+    tester,
+  ) async {
+    // "Dr. Farhana Rahman" is seeded; the scan reads it without the dot.
+    await scanFromPlus(
+      tester,
+      FakePrescriptionScanner([
+        const ScannedMedicine(name: 'Napa'),
+      ], doctor: const ScannedDoctor(name: 'DR FARHANA RAHMAN')),
+    );
+    expect(find.text(en.scanDoctorLinked), findsOneWidget);
+    expect(find.text(en.scanDoctorSave), findsNothing);
+    await tester.tap(find.text(en.bulkSaveAll(1)));
+    await settle(tester);
+
+    final doctors = await dbRun(tester, () => db.select(db.doctors).get());
+    expect(doctors, hasLength(3)); // no duplicate
+    final farhana = doctors.firstWhere((d) => d.name == 'Dr. Farhana Rahman');
+    final napa = await dbRun(
+      tester,
+      () => (db.select(
+        db.medicines,
+      )..where((m) => m.name.equals('Napa'))).getSingle(),
+    );
+    expect(napa.doctorId, farhana.id);
+    await unmount(tester);
+  });
+
+  testWidgets('turning "Save this doctor" off saves only the medicines', (
+    tester,
+  ) async {
+    await scanFromPlus(
+      tester,
+      FakePrescriptionScanner([
+        const ScannedMedicine(name: 'Napa'),
+      ], doctor: const ScannedDoctor(name: 'Dr. Sadia Islam')),
+    );
+    await tapText(tester, en.scanDoctorSave);
+    await tester.tap(find.text(en.bulkSaveAll(1)));
+    await settle(tester);
+
+    final doctors = await dbRun(tester, () => db.select(db.doctors).get());
+    expect(doctors.map((d) => d.name), isNot(contains('Dr. Sadia Islam')));
+    final napa = await dbRun(
+      tester,
+      () => (db.select(
+        db.medicines,
+      )..where((m) => m.name.equals('Napa'))).getSingle(),
+    );
+    expect(napa.doctorId, isNull);
+    await unmount(tester);
+  });
+
+  testWidgets('doctor form suggests specialties and hospitals', (tester) async {
+    await pumpApp(
+      tester,
+      overrides: [
+        healthFacilitiesProvider.overrideWith(
+          (_) async => HealthFacilityIndex(const [
+            HealthFacility(
+              name: 'Square Hospital',
+              address: '18/F Bir Uttam Qazi Nuruzzaman Sarak, Dhaka',
+            ),
+            HealthFacility(name: 'Popular Diagnostic Centre'),
+          ]),
+        ),
+      ],
+    );
+    await tester.tap(find.byTooltip(en.add));
+    await settle(tester);
+    await tapText(tester, en.addDoctor);
+
+    TextField fieldFor(String label) => tester.widget<TextField>(
+      find.descendant(
+        of: find
+            .ancestor(of: find.text(label), matching: find.byType(LabeledField))
+            .first,
+        matching: find.byType(TextField),
+      ),
+    );
+
+    await tester.enterText(
+      find.descendant(
+        of: find
+            .ancestor(
+              of: find.text(en.doctorSpecialty),
+              matching: find.byType(LabeledField),
+            )
+            .first,
+        matching: find.byType(TextField),
+      ),
+      'heart',
+    );
+    await settle(tester);
+    await tester.tap(find.text(en.specCardiology).last);
+    await settle(tester);
+    expect(fieldFor(en.doctorSpecialty).controller!.text, en.specCardiology);
+
+    final clinic = find.descendant(
+      of: find
+          .ancestor(
+            of: find.text(en.doctorClinic),
+            matching: find.byType(LabeledField),
+          )
+          .first,
+      matching: find.byType(TextField),
+    );
+    await tester.ensureVisible(clinic);
+    await tester.enterText(clinic, 'squ');
+    await settle(tester);
+    await tester.tap(find.text('Square Hospital').last);
+    await settle(tester);
+    expect(fieldFor(en.doctorClinic).controller!.text, 'Square Hospital');
+    expect(
+      fieldFor(en.doctorAddress).controller!.text,
+      '18/F Bir Uttam Qazi Nuruzzaman Sarak, Dhaka',
+    );
     await unmount(tester);
   });
 

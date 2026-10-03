@@ -30,19 +30,28 @@ class MedicineScheduleService {
   );
 
   /// Bulk add (e.g. a scanned prescription): all medicines and their
-  /// reminders are saved, or none are.
-  Future<List<int>> createMany(List<NewMedicine> items) =>
-      _db.transaction(() async {
-        return [
-          for (final i in items)
-            await _create(
-              i.medicine,
-              i.doses,
-              startDate: i.startDate,
-              endDate: i.endDate,
-            ),
-        ];
-      });
+  /// reminders are saved, or none are. With [newDoctor] (the doctor read off
+  /// the prescription) that doctor is created too and every medicine is
+  /// linked to them.
+  Future<List<int>> createMany(
+    List<NewMedicine> items, {
+    DoctorsCompanion? newDoctor,
+  }) => _db.transaction(() async {
+    final doctorId = newDoctor == null
+        ? null
+        : await _db.into(_db.doctors).insert(newDoctor);
+    return [
+      for (final i in items)
+        await _create(
+          doctorId == null
+              ? i.medicine
+              : i.medicine.copyWith(doctorId: Value(doctorId)),
+          i.doses,
+          startDate: i.startDate,
+          endDate: i.endDate,
+        ),
+    ];
+  });
 
   Future<int> _create(
     MedicinesCompanion medicine,

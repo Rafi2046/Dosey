@@ -659,5 +659,33 @@
         "type": "String"
       }
     }
-  }
+  },
+  "specMedicine": "Medicine",
+  "specGeneralPhysician": "General physician",
+  "specCardiology": "Cardiology (heart)",
+  "specEndocrinology": "Diabetes & hormones",
+  "specPaediatrics": "Child specialist",
+  "specGynaecology": "Gynaecology & obstetrics",
+  "specSurgery": "General surgery",
+  "specOrthopaedics": "Bone & joint (orthopaedics)",
+  "specNeurology": "Neurology (brain & nerves)",
+  "specNephrology": "Kidney (nephrology)",
+  "specGastroenterology": "Stomach & liver",
+  "specPulmonology": "Chest & asthma",
+  "specEnt": "Ear, nose & throat",
+  "specEye": "Eye",
+  "specDermatology": "Skin & VD",
+  "specPsychiatry": "Psychiatry (mental health)",
+  "specUrology": "Urology",
+  "specOncology": "Cancer (oncology)",
+  "specRheumatology": "Rheumatology (arthritis)",
+  "specDentistry": "Dentist",
+  "specPhysicalMedicine": "Physical medicine & rehab",
+  "specNutrition": "Nutritionist",
+  "doctorSpecialtyHint": "Type or pick from the list",
+  "doctorClinicHint": "Search hospitals & clinics",
+  "scanDoctorTitle": "Doctor on this prescription",
+  "scanDoctorSave": "Save this doctor",
+  "scanDoctorSaveHint": "Adds them to Doctors and links these medicines to them.",
+  "scanDoctorLinked": "Matches a doctor you've saved, so these medicines are linked to them."
 }

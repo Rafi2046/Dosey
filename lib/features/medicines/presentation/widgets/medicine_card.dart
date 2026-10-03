@@ -44,20 +44,47 @@ class MedicineCard extends ConsumerWidget {
     final caption = AppTextStyles.caption.copyWith(color: muted);
     final dose =
         '${ReminderText.doseSummary(reminders, m.doseUnit)}'
-        '${context.l10n.notifDoseSeparator}${m.mealRelation.label}';
+        '${context.l10n.notifDoseSeparator}${m.mealRelation.label(context.l10n)}';
+
+    final chips = <Widget>[
+      if (!m.isActive)
+        StatusChip(label: context.l10n.stopped, icon: Icons.pause_rounded),
+      if (stock.isLow)
+        StatusChip(
+          label: context.l10n.lowStock,
+          icon: Icons.warning_amber_rounded,
+          background: AppColors.accent,
+          foreground: AppColors.textOnAccent,
+        )
+      else if (m.stockQuantity != null)
+        _chip(
+          light,
+          stock.daysLeft == null
+              ? context.l10n.unitsLeft(AppNumber.format(m.stockQuantity!))
+              : context.l10n.daysLeft(stock.daysLeft!),
+          Icons.inventory_2_rounded,
+        ),
+      if ((monthlyCostMinor ?? 0) > 0)
+        _chip(
+          light,
+          '${Money.format(monthlyCostMinor!)} ${context.l10n.perMonth}',
+          Icons.payments_rounded,
+        ),
+    ];
 
     return SurfaceCard(
       color: color,
       elevated: true,
       onTap: onTap,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(m.form.image, width: AppSpacing.medThumb),
           AppSpacing.gapLg,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   [m.name, ?m.strength].join(' '),
@@ -67,43 +94,18 @@ class MedicineCard extends ConsumerWidget {
                 ),
                 AppSpacing.gapXs,
                 Text(dose, style: caption),
-                if (item.doctor != null)
+                if (item.doctor != null) ...[
+                  AppSpacing.gapXs,
                   Text(item.doctor!.name, style: caption),
-                AppSpacing.gapMd,
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: [
-                    if (!m.isActive)
-                      StatusChip(
-                        label: context.l10n.stopped,
-                        icon: Icons.pause_rounded,
-                      ),
-                    if (stock.isLow)
-                      StatusChip(
-                        label: context.l10n.lowStock,
-                        icon: Icons.warning_amber_rounded,
-                        background: AppColors.accent,
-                        foreground: AppColors.textOnAccent,
-                      )
-                    else if (m.stockQuantity != null)
-                      _chip(
-                        light,
-                        stock.daysLeft == null
-                            ? context.l10n.unitsLeft(
-                                AppNumber.format(m.stockQuantity!),
-                              )
-                            : context.l10n.daysLeft(stock.daysLeft!),
-                        Icons.inventory_2_rounded,
-                      ),
-                    if ((monthlyCostMinor ?? 0) > 0)
-                      _chip(
-                        light,
-                        '${Money.format(monthlyCostMinor!)} ${context.l10n.perMonth}',
-                        Icons.payments_rounded,
-                      ),
-                  ],
-                ),
+                ],
+                if (chips.isNotEmpty) ...[
+                  AppSpacing.gapMd,
+                  Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.sm,
+                    children: chips,
+                  ),
+                ],
               ],
             ),
           ),

@@ -1472,4 +1472,90 @@ class AppLocalizationsBn extends AppLocalizations {
   String deleteThisTimeBody(String time, String name) {
     return '$name-এর $time-এর রিমাইন্ডারটি মুছে যাবে। অন্য সময়গুলো থাকবে।';
   }
+
+  @override
+  String get specMedicine => 'মেডিসিন';
+
+  @override
+  String get specGeneralPhysician => 'সাধারণ চিকিৎসক';
+
+  @override
+  String get specCardiology => 'হৃদরোগ (কার্ডিওলজি)';
+
+  @override
+  String get specEndocrinology => 'ডায়াবেটিস ও হরমোন';
+
+  @override
+  String get specPaediatrics => 'শিশু রোগ';
+
+  @override
+  String get specGynaecology => 'স্ত্রীরোগ ও প্রসূতি';
+
+  @override
+  String get specSurgery => 'জেনারেল সার্জারি';
+
+  @override
+  String get specOrthopaedics => 'হাড় ও জোড়া (অর্থোপেডিক্স)';
+
+  @override
+  String get specNeurology => 'নিউরোলজি (মস্তিষ্ক ও স্নায়ু)';
+
+  @override
+  String get specNephrology => 'কিডনি রোগ';
+
+  @override
+  String get specGastroenterology => 'পেট ও লিভার';
+
+  @override
+  String get specPulmonology => 'বক্ষব্যাধি ও অ্যাজমা';
+
+  @override
+  String get specEnt => 'নাক-কান-গলা';
+
+  @override
+  String get specEye => 'চক্ষু';
+
+  @override
+  String get specDermatology => 'চর্ম ও যৌন';
+
+  @override
+  String get specPsychiatry => 'মানসিক রোগ';
+
+  @override
+  String get specUrology => 'ইউরোলজি';
+
+  @override
+  String get specOncology => 'ক্যান্সার';
+
+  @override
+  String get specRheumatology => 'বাত রোগ';
+
+  @override
+  String get specDentistry => 'দন্ত চিকিৎসক';
+
+  @override
+  String get specPhysicalMedicine => 'ফিজিক্যাল মেডিসিন';
+
+  @override
+  String get specNutrition => 'পুষ্টিবিদ';
+
+  @override
+  String get doctorSpecialtyHint => 'লিখুন অথবা তালিকা থেকে বেছে নিন';
+
+  @override
+  String get doctorClinicHint => 'হাসপাতাল ও ক্লিনিক খুঁজুন';
+
+  @override
+  String get scanDoctorTitle => 'প্রেসক্রিপশনের ডাক্তার';
+
+  @override
+  String get scanDoctorSave => 'এই ডাক্তারকে সেভ করুন';
+
+  @override
+  String get scanDoctorSaveHint =>
+      'ডাক্তারের তালিকায় যোগ হবে এবং এই ওষুধগুলো তাঁর সাথে যুক্ত হবে।';
+
+  @override
+  String get scanDoctorLinked =>
+      'আপনার সেভ করা একজন ডাক্তারের সাথে মিলেছে, তাই ওষুধগুলো তাঁর সাথে যুক্ত হবে।';
 }

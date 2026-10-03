@@ -175,7 +175,7 @@ class _DetailBody extends ConsumerWidget {
           label: context.l10n.doses,
           value:
               '${ReminderText.doseSummary(reminders, m.doseUnit)}'
-              '${context.l10n.notifDoseSeparator}${m.mealRelation.label}',
+              '${context.l10n.notifDoseSeparator}${m.mealRelation.label(context.l10n)}',
         ),
         if (doctor != null)
           LabeledField(

@@ -6,6 +6,7 @@ import '../../../../core/widgets/initials_avatar.dart';
 import '../../../../core/widgets/status_chip.dart';
 import 'contact_actions.dart';
 import '../../../../core/localization/l10n.dart';
+import '../../domain/specialty.dart';
 
 /// Avatar, name, specialty and Call / Email pills.
 class DoctorProfileHeader extends StatelessWidget {
@@ -27,7 +28,10 @@ class DoctorProfileHeader extends StatelessWidget {
               children: [
                 Text(doctor.name, style: AppTextStyles.headlineOnLight),
                 if (doctor.specialty != null)
-                  Text(doctor.specialty!, style: AppTextStyles.bodyOnLight),
+                  Text(
+                    Specialty.display(doctor.specialty!, context.l10n),
+                    style: AppTextStyles.bodyOnLight,
+                  ),
                 AppSpacing.gapMd,
                 Wrap(
                   spacing: AppSpacing.sm,

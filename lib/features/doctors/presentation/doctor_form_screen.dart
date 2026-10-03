@@ -11,6 +11,9 @@ import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../providers/doctors_providers.dart';
 import '../../../core/localization/l10n.dart';
+import '../../../core/widgets/suggest_field.dart';
+import '../data/health_facilities.dart';
+import '../domain/specialty.dart';
 
 class DoctorFormScreen extends ConsumerStatefulWidget {
   const DoctorFormScreen({super.key, this.existing});
@@ -26,7 +29,13 @@ class _DoctorFormScreenState extends ConsumerState<DoctorFormScreen> {
   Doctor? get _d => widget.existing;
 
   late final _name = TextEditingController(text: _d?.name);
-  late final _specialty = TextEditingController(text: _d?.specialty);
+  // Lazy, so it can show a saved specialty in the current language.
+  late final _specialty = TextEditingController(
+    text: switch (_d?.specialty) {
+      final s? => Specialty.display(s, context.l10n),
+      null => null,
+    },
+  );
   late final _phone = TextEditingController(text: _d?.phone);
   late final _email = TextEditingController(text: _d?.email);
   late final _clinic = TextEditingController(text: _d?.clinic);
@@ -66,7 +75,7 @@ class _DoctorFormScreenState extends ConsumerState<DoctorFormScreen> {
     setState(() => _saving = true);
     final companion = DoctorsCompanion(
       name: Value(_name.text.trim()),
-      specialty: _opt(_specialty),
+      specialty: Value(Specialty.toStored(_specialty.text)),
       phone: _opt(_phone),
       email: _opt(_email),
       clinic: _opt(_clinic),
@@ -85,6 +94,8 @@ class _DoctorFormScreenState extends ConsumerState<DoctorFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Start loading the offline hospital list before the user gets there.
+    ref.watch(healthFacilitiesProvider);
     return CreamScaffold(
       title: _d == null ? context.l10n.addDoctor : context.l10n.editDoctor,
       bottomBar: PillButton(
@@ -104,10 +115,13 @@ class _DoctorFormScreenState extends ConsumerState<DoctorFormScreen> {
               textCapitalization: TextCapitalization.words,
               validator: AppTextField.required,
             ),
-            AppTextField(
+            SuggestField<Specialty>(
               label: context.l10n.doctorSpecialty,
               controller: _specialty,
-              textCapitalization: TextCapitalization.words,
+              hint: context.l10n.doctorSpecialtyHint,
+              icon: Icons.expand_more_rounded,
+              suggestions: (text) => Specialty.suggest(text, context.l10n),
+              labelOf: (s) => s.label(context.l10n),
             ),
             AppTextField(
               label: context.l10n.doctorPhone,
@@ -120,10 +134,22 @@ class _DoctorFormScreenState extends ConsumerState<DoctorFormScreen> {
               keyboardType: TextInputType.emailAddress,
               textCapitalization: TextCapitalization.none,
             ),
-            AppTextField(
+            SuggestField<HealthFacility>(
               label: context.l10n.doctorClinic,
               controller: _clinic,
-              textCapitalization: TextCapitalization.words,
+              hint: context.l10n.doctorClinicHint,
+              icon: Icons.local_hospital_rounded,
+              suggestions: (text) =>
+                  ref.read(healthFacilitiesProvider).value?.search(text) ??
+                  const [],
+              labelOf: (f) => f.name,
+              subtitleOf: (f) => f.address.isEmpty ? f.otherName : f.address,
+              onSelected: (f) {
+                // Don't overwrite an address the user already typed.
+                if (_address.text.trim().isEmpty && f.address.isNotEmpty) {
+                  _address.text = f.address;
+                }
+              },
             ),
             AppTextField(
               label: context.l10n.doctorAddress,

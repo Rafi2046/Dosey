@@ -103,6 +103,13 @@ class MedicinesRepository {
   });
 
   /// Cascades to the medicine's reminders and their logs.
+  /// The most recently created medicine, if any.
+  Future<Medicine?> newest() =>
+      (_db.select(_db.medicines)
+            ..orderBy([(m) => OrderingTerm.desc(m.id)])
+            ..limit(1))
+          .getSingleOrNull();
+
   Future<void> delete(int id) =>
       (_db.delete(_db.medicines)..where((m) => m.id.equals(id))).go();
 }

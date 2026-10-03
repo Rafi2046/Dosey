@@ -1379,4 +1379,14 @@ class AppLocalizationsBn extends AppLocalizations {
   @override
   String get ringAsAlarmHint =>
       'সাইলেন্টেও ফুল-স্ক্রিন অ্যালার্ম বাজবে। বন্ধ করলে শুধু সাধারণ নোটিফিকেশন আসবে।';
+
+  @override
+  String get medicinePickerEmpty => 'আপনি এখনো কোনো ওষুধ যোগ করেননি';
+
+  @override
+  String get medicinePickerEmptyHint =>
+      'আগে ওষুধটি যোগ করুন। এর খাওয়ার সময়গুলো নিজে থেকেই রিমাইন্ডার হয়ে যায়, তাই আলাদা রিমাইন্ডার নাও লাগতে পারে।';
+
+  @override
+  String get addNewMedicine => 'নতুন ওষুধ যোগ করুন';
 }

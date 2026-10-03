@@ -1390,4 +1390,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ringAsAlarmHint =>
       'Full-screen alarm that rings even on silent. Turn off for a quiet notification.';
+
+  @override
+  String get medicinePickerEmpty => 'You haven\'t added any medicines yet';
+
+  @override
+  String get medicinePickerEmptyHint =>
+      'Add the medicine first. Its intake times become reminders automatically, so you may not need a separate one.';
+
+  @override
+  String get addNewMedicine => 'Add new medicine';
 }

@@ -5,7 +5,7 @@ import 'package:dosey/features/alarm/presentation/alarm_ring_screen.dart';
 import 'package:dosey/features/reminders/data/reminders_repository.dart';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -185,6 +185,50 @@ void main() {
       () => db.select(db.reminderLogs).getSingle(),
     );
     expect(log.status, ReminderLogStatus.taken);
+    await unmount(tester);
+  });
+
+  testWidgets('medicine picker with no medicines offers to add one', (
+    tester,
+  ) async {
+    usePhoneSize(tester);
+    permissions = FakePermissionService(AppPermission.values.toSet());
+    await tester.pumpWidget(app());
+    await settle(tester);
+
+    await tester.tap(find.byTooltip(en.add));
+    await settle(tester);
+    await tester.tap(find.text(en.addReminder).last);
+    await settle(tester);
+    await tester.tap(find.text(en.choose).first);
+    await settle(tester);
+
+    // Not a blank sheet: it says why and what to do.
+    expect(find.text(en.medicinePickerEmpty), findsOneWidget);
+    await tester.tap(find.text(en.addNewMedicine));
+    await settle(tester);
+    await tester.tap(find.text(en.next));
+    await settle(tester);
+    await tester.enterText(find.byType(TextFormField).first, 'Zulfidin');
+    await tester.tap(find.text(en.save));
+    // Saving, popping both screens, then looking up the new medicine.
+    for (
+      var i = 0;
+      i < 5 && find.text(en.addReminder).evaluate().isEmpty;
+      i++
+    ) {
+      await settle(tester);
+    }
+
+    // Then the lookup that selects it (more DB round trips).
+    for (var i = 0; i < 10 && find.text('Zulfidin').evaluate().isEmpty; i++) {
+      await settle(tester);
+    }
+
+    // Back on the reminder, with the new medicine already chosen.
+    expect(find.text(en.addReminder), findsOneWidget);
+    expect(find.text('Zulfidin'), findsWidgets);
+    expect(find.text(en.selectMedicineError), findsNothing);
     await unmount(tester);
   });
 }

@@ -2479,6 +2479,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Full-screen alarm that rings even on silent. Turn off for a quiet notification.'**
   String get ringAsAlarmHint;
+
+  /// No description provided for @medicinePickerEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t added any medicines yet'**
+  String get medicinePickerEmpty;
+
+  /// No description provided for @medicinePickerEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the medicine first. Its intake times become reminders automatically, so you may not need a separate one.'**
+  String get medicinePickerEmptyHint;
+
+  /// No description provided for @addNewMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Add new medicine'**
+  String get addNewMedicine;
 }
 
 class _AppLocalizationsDelegate

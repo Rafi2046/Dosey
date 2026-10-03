@@ -24,34 +24,51 @@ class MedicineTypeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final light = SurfaceCard.isLight(color);
-    return AnimatedScale(
-      duration: AppSpacing.animFast,
-      scale: selected ? 1 : AppSpacing.unselectedTileScale,
-      child: SurfaceCard(
-        color: color,
-        elevated: selected,
-        padding: AppSpacing.cardPadding,
-        onTap: onTap,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(image, height: AppSpacing.medTypeImage),
-            AppSpacing.gapMd,
-            Text(
-              label,
-              style: light
-                  ? AppTextStyles.cardTitleOnLight
-                  : AppTextStyles.cardTitle,
-            ),
-            if (selected) ...[
+    return Semantics(
+      selected: selected,
+      button: true,
+      child: AnimatedScale(
+        duration: AppSpacing.animFast,
+        scale: selected ? 1 : AppSpacing.unselectedTileScale,
+        child: SurfaceCard(
+          color: color,
+          elevated: selected,
+          padding: AppSpacing.cardPadding,
+          onTap: onTap,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Image.asset(
+                  image,
+                  height: AppSpacing.medTypeImage,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              AppSpacing.gapMd,
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: light
+                    ? AppTextStyles.cardTitleOnLight
+                    : AppTextStyles.cardTitle,
+              ),
               AppSpacing.gapXs,
-              Icon(
-                Icons.check_circle_rounded,
-                size: AppSpacing.iconSm,
-                color: light ? AppColors.ink : AppColors.textOnDark,
+              AnimatedOpacity(
+                duration: AppSpacing.animFast,
+                opacity: selected ? 1.0 : 0.0,
+                child: ExcludeSemantics(
+                  excluding: !selected,
+                  child: Icon(
+                    Icons.check_circle_rounded,
+                    size: AppSpacing.iconSm,
+                    color: light ? AppColors.ink : AppColors.textOnDark,
+                  ),
+                ),
               ),
             ],
-          ],
+          ),
         ),
       ),
     );

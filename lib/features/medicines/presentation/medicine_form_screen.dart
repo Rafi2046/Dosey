@@ -144,7 +144,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
             BulkAddScreen(scanned: scanned, initialDoctorId: _doctorId),
       ),
     );
-    if (saved == true && mounted) Navigator.pop(context);
+    if (saved == true && mounted) Navigator.pop(context, true);
   }
 
   void _applyScan(ScannedMedicine s) {
@@ -202,7 +202,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
     }
     if (!mounted) return;
     showAppSnack(context, context.l10n.saved);
-    Navigator.pop(context);
+    Navigator.pop(context, true);
   }
 
   @override

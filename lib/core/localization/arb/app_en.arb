@@ -585,5 +585,8 @@
   "slotBedtime": "Bedtime",
   "quickTimesHint": "Tap to add or remove. Tap a time below to change it or its amount.",
   "ringAsAlarm": "Ring as an alarm",
-  "ringAsAlarmHint": "Full-screen alarm that rings even on silent. Turn off for a quiet notification."
+  "ringAsAlarmHint": "Full-screen alarm that rings even on silent. Turn off for a quiet notification.",
+  "medicinePickerEmpty": "You haven't added any medicines yet",
+  "medicinePickerEmptyHint": "Add the medicine first. Its intake times become reminders automatically, so you may not need a separate one.",
+  "addNewMedicine": "Add new medicine"
 }

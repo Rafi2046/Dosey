@@ -59,6 +59,7 @@ abstract final class AppSpacing {
   static const double maxZoom = 4;
   static const double categoryLabelWidth = 96;
   static const double addTileAspect = 1.6;
+  static const double medTypeAspect = 0.85;
   static const double stackOverlap = 28;
   static const double pageStripHeight = 120;
   static const double pageStripThumbWidth = 92;

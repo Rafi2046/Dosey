@@ -53,6 +53,7 @@ class MedicineTypeGrid extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           mainAxisSpacing: AppSpacing.lg,
           crossAxisSpacing: AppSpacing.lg,
+          childAspectRatio: AppSpacing.medTypeAspect,
           children: [
             for (final (i, form) in _primary.indexed)
               MedicineTypeTile(

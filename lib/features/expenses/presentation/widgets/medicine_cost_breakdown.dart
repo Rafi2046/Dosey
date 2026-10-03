@@ -5,6 +5,7 @@ import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../domain/medicine_cost_projection.dart';
 import '../../../../core/localization/l10n.dart';
+import '../../../../core/utils/numbers.dart';
 
 /// Per-medicine projected cost: doses per day and monthly total.
 class MedicineCostBreakdown extends StatelessWidget {
@@ -43,7 +44,7 @@ class MedicineCostBreakdown extends StatelessWidget {
                           ),
                           Text(
                             context.l10n.unitsPerDayLabel(
-                              line.unitsPerDay,
+                              AppNumber.format(line.unitsPerDay),
                               line.medicine.doseUnit,
                             ),
                             style: AppTextStyles.captionOnLight,

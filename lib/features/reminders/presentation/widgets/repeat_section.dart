@@ -48,7 +48,7 @@ class RepeatSection extends StatelessWidget {
           child: ChoicePills<RepeatRule>(
             options: RepeatRule.values,
             selected: {rule},
-            labelOf: (r) => r.label,
+            labelOf: (r) => r.label(context.l10n),
             onChanged: (s) => onRuleChanged(s.single),
           ),
         ),

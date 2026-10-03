@@ -51,10 +51,7 @@ class ScanPrescriptionCard extends StatelessWidget {
                     style: AppTextStyles.cardTitle,
                   ),
                   AppSpacing.gapXs,
-                  Text(
-                    context.l10n.scanSubtitle,
-                    style: AppTextStyles.caption,
-                  ),
+                  Text(context.l10n.scanSubtitle, style: AppTextStyles.caption),
                 ],
               ),
             ),

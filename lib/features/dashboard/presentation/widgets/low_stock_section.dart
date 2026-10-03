@@ -9,6 +9,7 @@ import '../../../medicines/presentation/medicine_detail_screen.dart';
 import '../../../medicines/providers/medicines_providers.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../../core/localization/l10n.dart';
+import '../../../../core/utils/numbers.dart';
 
 /// Medicines at or below their refill threshold. Hidden when none.
 class LowStockSection extends ConsumerWidget {
@@ -48,7 +49,7 @@ class LowStockSection extends ConsumerWidget {
                 ),
                 StatusChip(
                   label: context.l10n.unitsLeft(
-                    ReminderText.formatAmount(item.medicine.stockQuantity!),
+                    AppNumber.format(item.medicine.stockQuantity!),
                   ),
                   background: AppColors.accent,
                   foreground: AppColors.textOnAccent,

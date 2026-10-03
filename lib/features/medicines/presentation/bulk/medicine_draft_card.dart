@@ -97,7 +97,7 @@ class MedicineDraftCard extends StatelessWidget {
             child: ChoicePills<MedicineForm>(
               options: MedicineForm.values,
               selected: {draft.form},
-              labelOf: (f) => f.label,
+              labelOf: (f) => f.label(context.l10n),
               onChanged: (s) {
                 draft.changeForm(s.single);
                 onChanged();
@@ -136,7 +136,7 @@ class MedicineDraftCard extends StatelessWidget {
             child: ChoicePills<MealRelation>(
               options: MealRelation.values,
               selected: {draft.meal},
-              labelOf: (m) => m.label,
+              labelOf: (m) => m.label(context.l10n),
               onChanged: (s) {
                 draft.meal = s.single;
                 onChanged();

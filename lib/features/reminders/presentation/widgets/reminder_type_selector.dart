@@ -24,7 +24,7 @@ class ReminderTypeSelector extends StatelessWidget {
       child: ChoicePills<ReminderType>(
         options: ReminderType.values,
         selected: {value},
-        labelOf: (t) => t.label,
+        labelOf: (t) => t.label(context.l10n),
         iconOf: (t) => t.icon,
         onChanged: (s) => onChanged(s.single),
       ),

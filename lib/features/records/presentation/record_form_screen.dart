@@ -117,7 +117,7 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
               child: ChoicePills<RecordType>(
                 options: RecordType.values,
                 selected: {_type},
-                labelOf: (t) => t.label,
+                labelOf: (t) => t.label(context.l10n),
                 iconOf: (t) => t.icon,
                 onChanged: (s) => setState(() => _type = s.single),
               ),

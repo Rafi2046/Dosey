@@ -72,7 +72,7 @@ class _OccurrenceSheet extends ConsumerWidget {
             if (status != null) ...[
               AppSpacing.gapMd,
               StatusChip(
-                label: status.label,
+                label: status.label(context.l10n),
                 background: AppColors.sand,
                 foreground: AppColors.ink,
               ),

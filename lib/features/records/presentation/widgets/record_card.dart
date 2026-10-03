@@ -54,7 +54,7 @@ class RecordCard extends StatelessWidget {
                     AppSpacing.gapXs,
                     Expanded(
                       child: Text(
-                        r.type.label,
+                        r.type.label(context.l10n),
                         style: AppTextStyles.overline.copyWith(color: muted),
                         overflow: TextOverflow.ellipsis,
                       ),

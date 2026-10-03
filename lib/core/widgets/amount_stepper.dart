@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
+import '../utils/numbers.dart';
 
 /// "−  1½  +" stepper for dose amounts, in half steps (½ tablet is common).
 class AmountStepper extends StatelessWidget {
@@ -23,8 +24,9 @@ class AmountStepper extends StatelessWidget {
   static String format(double v) {
     final whole = v.truncate();
     final half = v - whole >= step;
-    if (!half) return '$whole';
-    return whole == 0 ? '½' : '$whole½';
+    final digits = AppNumber.format(whole);
+    if (!half) return digits;
+    return whole == 0 ? '½' : '$digits½';
   }
 
   @override

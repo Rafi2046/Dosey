@@ -60,7 +60,7 @@ class ReminderStackCard extends StatelessWidget {
     final muted = light ? AppColors.inkMuted : AppColors.textOnDarkMuted;
     final overline = isNext
         ? context.l10n.nextTypeIn(
-            r.type.label,
+            r.type.label(context.l10n),
             ReminderText.until(occurrence.at, now),
           )
         : ReminderText.slotLabel(r, occurrence.at);

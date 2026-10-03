@@ -38,7 +38,7 @@ class RemindersScreen extends ConsumerWidget {
           FilterPills<ReminderType>(
             options: ReminderType.values,
             selected: filter,
-            labelOf: (t) => t.label,
+            labelOf: (t) => t.label(context.l10n),
             onSelected: ref.read(reminderTypeFilterProvider.notifier).select,
           ),
           AppSpacing.gapLg,

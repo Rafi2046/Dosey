@@ -120,7 +120,7 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
                   AppSpacing.gapXl,
                   InfoBlock(
                     label: context.l10n.recordType,
-                    value: record.type.label,
+                    value: record.type.label(context.l10n),
                   ),
                   InfoBlock(
                     label: context.l10n.recordDate,

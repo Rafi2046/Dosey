@@ -11,6 +11,7 @@ import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/providers/reminders_providers.dart';
 import '../../domain/medicine_with_doctor.dart';
 import '../../../../core/localization/l10n.dart';
+import '../../../../core/utils/numbers.dart';
 
 /// Medicine summary: illustration, name/strength, dose, doctor, stock and
 /// projected monthly cost.
@@ -87,7 +88,7 @@ class MedicineCard extends ConsumerWidget {
                       _chip(
                         light,
                         context.l10n.unitsLeft(
-                          ReminderText.formatAmount(m.stockQuantity!),
+                          AppNumber.format(m.stockQuantity!),
                         ),
                         Icons.inventory_2_rounded,
                       ),

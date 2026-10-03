@@ -5,6 +5,7 @@ import '../../../../core/database/enums.dart';
 import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/widgets/choice_pills.dart';
 import 'medicine_type_tile.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// The design's 2×2 grid (Tablet, Capsule, Injection, Other). Choosing
 /// "Other" reveals the less common forms as pills.
@@ -55,14 +56,14 @@ class MedicineTypeGrid extends StatelessWidget {
           children: [
             for (final (i, form) in _primary.indexed)
               MedicineTypeTile(
-                label: form.label,
+                label: form.label(context.l10n),
                 image: form.image,
                 color: _colors[i],
                 selected: value == form,
                 onTap: () => onChanged(form),
               ),
             MedicineTypeTile(
-              label: MedicineForm.other.label,
+              label: MedicineForm.other.label(context.l10n),
               image: AppImages.medOther,
               color: _colors.last,
               selected: _isOther,
@@ -76,7 +77,7 @@ class MedicineTypeGrid extends StatelessWidget {
             onDark: true,
             options: _others,
             selected: {value},
-            labelOf: (f) => f.label,
+            labelOf: (f) => f.label(context.l10n),
             onChanged: (s) => onChanged(s.single),
           ),
         ],

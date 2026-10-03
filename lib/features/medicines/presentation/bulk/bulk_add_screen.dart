@@ -34,7 +34,8 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
   DateTime _startDate = DateUtils.dateOnly(DateTime.now());
   late int? _doctorId = widget.initialDoctorId;
   late final List<MedicineDraft> _drafts = [
-    for (final s in widget.scanned) MedicineDraft.fromScan(s, _startDate),
+    for (final s in widget.scanned)
+      MedicineDraft.fromScan(context.l10n, s, _startDate),
   ];
   bool _saving = false;
 
@@ -137,7 +138,8 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
                 child: StatusChip(
                   label: context.l10n.bulkAddAnother,
                   icon: Icons.add_rounded,
-                  onTap: () => setState(() => _drafts.add(MedicineDraft())),
+                  onTap: () =>
+                      setState(() => _drafts.add(MedicineDraft(context.l10n))),
                 ),
               ),
               AppSpacing.gapXl,

@@ -6,6 +6,7 @@ import '../../../../core/constants/constants.dart';
 import '../../../../core/database/enums.dart';
 import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/utils/money.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// One bar per category, scaled to the largest, with the amount on the right.
 class CategoryBreakdown extends StatelessWidget {
@@ -30,7 +31,7 @@ class CategoryBreakdown extends StatelessWidget {
                 AppSpacing.gapSm,
                 SizedBox(
                   width: AppSpacing.categoryLabelWidth,
-                  child: Text(e.key.label, style: AppTextStyles.caption),
+                  child: Text(e.key.label(context.l10n), style: AppTextStyles.caption),
                 ),
                 Expanded(
                   child: ClipRRect(

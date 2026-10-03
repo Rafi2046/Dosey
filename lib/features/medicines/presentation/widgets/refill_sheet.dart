@@ -80,10 +80,7 @@ class _RefillSheetState extends ConsumerState<_RefillSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              context.l10n.refillTitle,
-              style: AppTextStyles.titleOnLight,
-            ),
+            Text(context.l10n.refillTitle, style: AppTextStyles.titleOnLight),
             Text(widget.medicine.name, style: AppTextStyles.bodyOnLight),
             AppSpacing.gapXl,
             AppTextField.decimal(

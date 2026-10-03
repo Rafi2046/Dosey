@@ -38,7 +38,7 @@ class DoseSection extends StatelessWidget {
           child: ChoicePills<MealRelation>(
             options: MealRelation.values,
             selected: {meal},
-            labelOf: (m) => m.label,
+            labelOf: (m) => m.label(context.l10n),
             onChanged: (s) => onMealChanged(s.single),
           ),
         ),

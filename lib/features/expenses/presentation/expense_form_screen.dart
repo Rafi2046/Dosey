@@ -132,7 +132,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
               child: ChoicePills<ExpenseCategory>(
                 options: ExpenseCategory.values,
                 selected: {_category},
-                labelOf: (c) => c.label,
+                labelOf: (c) => c.label(context.l10n),
                 iconOf: (c) => c.icon,
                 onChanged: (s) => setState(() => _category = s.single),
               ),

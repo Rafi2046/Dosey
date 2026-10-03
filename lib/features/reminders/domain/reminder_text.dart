@@ -4,6 +4,7 @@ import '../../../core/utils/date_format.dart';
 import '../../../core/utils/enum_labels.dart';
 import 'reminder_with_details.dart';
 import '../../../core/localization/l10n.dart';
+import '../../../core/utils/numbers.dart';
 
 /// Human-readable lines for a reminder, shared by notifications and UI.
 abstract final class ReminderText {
@@ -15,7 +16,7 @@ abstract final class ReminderText {
     if (medicine != null) {
       parts
         ..add(dose(d.reminder.doseAmount ?? 1, medicine.doseUnit))
-        ..add(medicine.mealRelation.label);
+        ..add(medicine.mealRelation.label(context.l10n));
     }
     final location = d.reminder.location;
     if (location != null && location.isNotEmpty) {
@@ -35,7 +36,7 @@ abstract final class ReminderText {
 
   /// "2 tablet", "0.5 tablet", "5 ml".
   static String dose(double amount, String unit) =>
-      '${formatAmount(amount)} $unit';
+      '${AppNumber.format(amount)} $unit';
 
   /// Per-time amounts in time order: "2 + 1 + 2 tablet", or "1 tablet" when
   /// there's a single time.
@@ -46,11 +47,14 @@ abstract final class ReminderText {
         return minutes(a) - minutes(b);
       });
     if (sorted.isEmpty) return unit;
-    final amounts = [for (final r in sorted) formatAmount(r.doseAmount ?? 1)];
+    final amounts = [
+      for (final r in sorted) AppNumber.format(r.doseAmount ?? 1),
+    ];
     return '${amounts.join(' + ')} $unit';
   }
 
-  /// 1.0 → "1", 2.5 → "2.5"
+  /// 1.0 → "1", 2.5 → "2.5", always Latin digits: for text-field values.
+  /// Use [AppNumber.format] for display.
   static String formatAmount(double value) => value == value.roundToDouble()
       ? value.toInt().toString()
       : value.toString();

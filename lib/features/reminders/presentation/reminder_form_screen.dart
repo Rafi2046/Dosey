@@ -75,7 +75,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   }
 
   static Set<int> _maskToSet(int? mask) => {
-    for (var i = 0; i < context.l10n.weekdaysShort.length; i++)
+    for (var i = 0; i < DateTime.daysPerWeek; i++)
       if ((mask ?? 0) & (1 << i) != 0) i,
   };
 

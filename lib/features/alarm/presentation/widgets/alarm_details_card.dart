@@ -7,6 +7,7 @@ import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/domain/reminder_with_details.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// Cream card with what to do: type label, title, dose/details, and time.
 class AlarmDetailsCard extends StatelessWidget {
@@ -37,7 +38,7 @@ class AlarmDetailsCard extends StatelessWidget {
               ),
               AppSpacing.gapXs,
               Text(
-                reminder.type.label,
+                reminder.type.label(context.l10n),
                 style: AppTextStyles.overline.copyWith(
                   color: AppColors.inkMuted,
                 ),

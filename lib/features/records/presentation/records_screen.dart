@@ -32,7 +32,7 @@ class RecordsScreen extends ConsumerWidget {
           FilterPills<RecordType>(
             options: RecordType.values,
             selected: filter,
-            labelOf: (t) => t.label,
+            labelOf: (t) => t.label(context.l10n),
             onSelected: ref.read(recordTypeFilterProvider.notifier).select,
           ),
           AppSpacing.gapLg,

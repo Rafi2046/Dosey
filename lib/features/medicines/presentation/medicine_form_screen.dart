@@ -56,7 +56,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
   late final _strength = TextEditingController(text: _m?.strength);
   late final _notes = TextEditingController(text: _m?.notes);
   late final _doseUnit = TextEditingController(
-    text: _m?.doseUnit ?? _form.defaultUnit,
+    text: _m?.doseUnit ?? _form.defaultUnit(context.l10n),
   );
   late final _unitPrice = TextEditingController(
     text: (_m?.unitPriceMinor ?? 0) > 0
@@ -103,7 +103,8 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
 
   void _onFormChanged(MedicineForm form) {
     // Keep the unit in sync unless the user typed a custom one.
-    if (_doseUnit.text == _form.defaultUnit) _doseUnit.text = form.defaultUnit;
+    if (_doseUnit.text == _form.defaultUnit(context.l10n))
+      _doseUnit.text = form.defaultUnit(context.l10n);
     setState(() => _form = form);
   }
 
@@ -202,9 +203,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
   @override
   Widget build(BuildContext context) {
     return CreamScaffold(
-      title: _isEdit
-          ? context.l10n.editMedicine
-          : context.l10n.addMedicine,
+      title: _isEdit ? context.l10n.editMedicine : context.l10n.addMedicine,
       bottomBar: PillButton(
         label: _isEdit ? context.l10n.saveChanges : context.l10n.save,
         showRingChevron: true,
@@ -223,7 +222,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
               child: ChoicePills<MedicineForm>(
                 options: MedicineForm.values,
                 selected: {_form},
-                labelOf: (f) => f.label,
+                labelOf: (f) => f.label(context.l10n),
                 onChanged: (s) => _onFormChanged(s.single),
               ),
             ),

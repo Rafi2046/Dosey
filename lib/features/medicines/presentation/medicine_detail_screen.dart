@@ -22,6 +22,7 @@ import 'medicine_form_screen.dart';
 import 'widgets/medicine_times_section.dart';
 import 'widgets/refill_sheet.dart';
 import '../../../core/localization/l10n.dart';
+import '../../../core/utils/numbers.dart';
 
 enum _MenuAction { toggleActive, delete }
 
@@ -158,10 +159,7 @@ class _DetailBody extends ConsumerWidget {
           large: true,
         ),
         if (m.notes != null)
-          InfoBlock(
-            label: context.l10n.medicineDescription,
-            value: m.notes!,
-          ),
+          InfoBlock(label: context.l10n.medicineDescription, value: m.notes!),
         LabeledField(
           label: context.l10n.timeDuration,
           child: Align(
@@ -197,8 +195,7 @@ class _DetailBody extends ConsumerWidget {
             label: item.isLowStock
                 ? context.l10n.lowStock
                 : context.l10n.inStock,
-            value:
-                '${ReminderText.formatAmount(m.stockQuantity!)} ${m.doseUnit}',
+            value: '${AppNumber.format(m.stockQuantity!)} ${m.doseUnit}',
           ),
         if ((monthly ?? 0) > 0)
           InfoBlock(

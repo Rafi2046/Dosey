@@ -64,10 +64,7 @@ class _DoseTimeSheetState extends State<_DoseTimeSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              context.l10n.doseTimeTitle,
-              style: AppTextStyles.titleOnLight,
-            ),
+            Text(context.l10n.doseTimeTitle, style: AppTextStyles.titleOnLight),
             AppSpacing.gapMd,
             PickerField(
               label: context.l10n.medicineTime,

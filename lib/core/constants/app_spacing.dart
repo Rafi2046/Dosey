@@ -13,7 +13,6 @@ abstract final class AppSpacing {
   static const double xxxl = 48;
 
   // ── Radii (the design uses generous, pillowy corners) ─────────────────────
-  static const double radiusSm = 16;
   static const double radiusMd = 20;
   static const double radiusLg = 28;
   static const double radiusXl = 36;
@@ -34,7 +33,6 @@ abstract final class AppSpacing {
   static const double onboardingHero = 260;
   static const double featureIcon = 52;
   static const double settingsIcon = 36;
-  static const double headerIconTile = 52;
   static const double headerDot = 6;
 
   /// Space below each labelled form field.

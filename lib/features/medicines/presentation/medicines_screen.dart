@@ -6,7 +6,6 @@ import '../../../core/widgets/async_value_view.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/choice_pills.dart';
 import '../../../core/widgets/screen_header.dart';
-import '../../../app/home_tab.dart';
 import '../../expenses/providers/expenses_providers.dart';
 import '../providers/medicines_providers.dart';
 import 'medicine_detail_screen.dart';
@@ -34,7 +33,6 @@ class MedicinesScreen extends ConsumerWidget {
         children: [
           ScreenHeader(
             title: context.l10n.medicinesTitle,
-            icon: HomeTab.medicines.icon,
             subtitle: switch (medicines.value) {
               final list? => context.l10n.headerMedicinesCount(list.length),
               null => null,

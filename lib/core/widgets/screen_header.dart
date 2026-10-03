@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 
-/// Tab page header: an icon tile, a small eyebrow over a one-line serif
+/// Tab page header: a small eyebrow over a one-line serif
 /// title, an optional summary line below and an optional action.
 ///
 /// [title] may hold a line break ("Your\nMedicines"): everything before the
@@ -11,13 +11,11 @@ class ScreenHeader extends StatelessWidget {
   const ScreenHeader({
     super.key,
     required this.title,
-    this.icon,
     this.subtitle,
     this.trailing,
   });
 
   final String title;
-  final IconData? icon;
 
   /// Short live summary ("3 medicines"); hidden while null.
   final String? subtitle;
@@ -34,33 +32,18 @@ class ScreenHeader extends StatelessWidget {
       padding: const EdgeInsets.only(top: AppSpacing.lg, bottom: AppSpacing.xl),
       child: Row(
         children: [
-          if (icon != null) ...[
-            Container(
-              width: AppSpacing.headerIconTile,
-              height: AppSpacing.headerIconTile,
-              decoration: BoxDecoration(
-                color: AppColors.moss,
-                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                border: Border.all(
-                  color: AppColors.outlineOnDark,
-                  width: AppSpacing.borderThin,
-                ),
-              ),
-              child: Icon(
-                icon,
-                size: AppSpacing.iconMd,
-                color: AppColors.textOnDark,
-              ),
-            ),
-            AppSpacing.gapMd,
-          ],
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (eyebrow != null)
-                  Text(eyebrow.toUpperCase(), style: AppTextStyles.overline),
+                  Text(
+                    eyebrow.toUpperCase(),
+                    style: AppTextStyles.overline.copyWith(
+                      fontSize: AppSpacing.fontSm,
+                    ),
+                  ),
                 // One line, shrinking for long words or big fonts.
                 FittedBox(
                   fit: BoxFit.scaleDown,

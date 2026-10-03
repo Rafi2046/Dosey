@@ -5,7 +5,6 @@ import '../../../core/constants/constants.dart';
 import '../../../core/widgets/async_value_view.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/screen_header.dart';
-import '../../../app/home_tab.dart';
 import '../../../core/widgets/section_header.dart';
 import '../providers/expenses_providers.dart';
 import 'expense_form_screen.dart';
@@ -40,10 +39,7 @@ class ExpensesScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          ScreenHeader(
-            title: context.l10n.expensesTitle,
-            icon: HomeTab.expenses.icon,
-          ),
+          ScreenHeader(title: context.l10n.expensesTitle),
           MonthSwitcher(
             month: month,
             onPrevious: monthNotifier.previous,

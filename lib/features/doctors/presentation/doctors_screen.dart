@@ -5,7 +5,6 @@ import '../../../core/constants/constants.dart';
 import '../../../core/widgets/async_value_view.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/screen_header.dart';
-import '../../../app/home_tab.dart';
 import '../providers/doctors_providers.dart';
 import 'doctor_detail_screen.dart';
 import 'doctor_form_screen.dart';
@@ -26,7 +25,6 @@ class DoctorsScreen extends ConsumerWidget {
         children: [
           ScreenHeader(
             title: context.l10n.doctorsTitle,
-            icon: HomeTab.doctors.icon,
             subtitle: switch (doctors.value) {
               final list? => context.l10n.headerDoctorsCount(list.length),
               null => null,

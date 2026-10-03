@@ -358,7 +358,7 @@
   "privacySharingTitle": "তথ্য শেয়ার",
   "privacySharingBody": "Dosey আপনার তথ্য বিক্রি বা শেয়ার করে না। আপনি নিজে না পাঠালে (যেমন সাপোর্টে ইমেইল) কোনো তথ্য ফোনের বাইরে যায় না।",
   "privacyDeleteTitle": "তথ্য মুছে ফেলা",
-  "privacyDeleteBody": "অ্যাপের ভেতরে যেকোনো তথ্য মুছতে পারেন, অথবা অ্যাপের স্টোরেজ ক্লিয়ার করে বা Dosey আনইনস্টল করে সব মুছে ফেলতে পারেন।",
+  "privacyDeleteBody": "অ্যাপের ভেতরে যেকোনো তথ্য মুছতে পারেন, সেটিংস › সব তথ্য মুছে ফেলুন থেকে একবারে সব মুছতে পারেন, অথবা Dosey আনইনস্টল করতে পারেন।",
   "privacyChildrenTitle": "শিশু",
   "privacyChildrenBody": "Dosey প্রাপ্তবয়স্ক ও পরিচর্যাকারীদের জন্য; ১৩ বছরের কম বয়সী শিশুদের জন্য নয়।",
   "termsUseTitle": "Dosey ব্যবহার",
@@ -379,5 +379,15 @@
   "appVersion": "ভার্সন {version}",
   "lastUpdated": "সর্বশেষ হালনাগাদ: {date}",
   "privacyContactTitle": "যোগাযোগ",
-  "privacyContactBody": "প্রাইভেসি নিয়ে প্রশ্ন থাকলে ইমেইল করুন: {email}"
+  "privacyContactBody": "প্রাইভেসি নিয়ে প্রশ্ন থাকলে ইমেইল করুন: {email}",
+  "settingsYourData": "আপনার তথ্য",
+  "deleteAllData": "সব তথ্য মুছে ফেলুন",
+  "deleteAllDataHint": "ওষুধ, রিমাইন্ডার, রেকর্ড, ছবি ও খরচ",
+  "deleteAllTitle": "আপনার সব তথ্য মুছে ফেলবেন?",
+  "deleteAllBody": "এই ফোনের সব ওষুধ, রিমাইন্ডার, ডোজের ইতিহাস, ডাক্তার, রেকর্ড, ছবি ও খরচ মুছে যাবে এবং সব অ্যালার্ম বন্ধ হয়ে যাবে। আপনার ভাষা ও থিম ঠিক থাকবে।",
+  "deleteAllConfirmTitle": "আপনি কি নিশ্চিত?",
+  "deleteAllConfirmBody": "এটি আর ফেরানো যাবে না। Dosey আপনার তথ্যের কোনো ব্যাকআপ বা ক্লাউড কপি রাখে না।",
+  "deleteEverything": "সব মুছে ফেলুন",
+  "allDataDeleted": "আপনার সব তথ্য মুছে ফেলা হয়েছে",
+  "continueLabel": "চালিয়ে যান"
 }

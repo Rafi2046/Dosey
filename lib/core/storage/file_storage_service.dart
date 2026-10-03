@@ -34,6 +34,12 @@ class FileStorageService {
   Future<void> deleteAll(Iterable<String> relativePaths) =>
       Future.wait(relativePaths.map(delete));
 
+  /// Removes every saved record image, including any orphaned files.
+  Future<void> deleteRecordsFolder() async {
+    final folder = Directory(p.join(root.path, AppConstants.recordsFolder));
+    if (await folder.exists()) await folder.delete(recursive: true);
+  }
+
   static String _extensionOf(String path) {
     final ext = p.extension(path);
     return ext.isEmpty ? AppConstants.imageExtension : ext.toLowerCase();

@@ -183,6 +183,7 @@ void main() {
   Future<void> pumpApp(
     WidgetTester tester, {
     List<Override> overrides = const [],
+    FakeAlarmScheduler? scheduler,
   }) async {
     usePhoneSize(tester);
     await tester.runAsync(() => _seed(db, now));
@@ -192,6 +193,7 @@ void main() {
           ...testOverrides(
             db: db,
             now: now,
+            scheduler: scheduler,
             permissions: FakePermissionService(AppPermission.values.toSet()),
           ),
           ...overrides,
@@ -640,6 +642,64 @@ void main() {
     await tapText(tester, en.settingsPermissions);
     expect(find.text(en.allSet), findsOneWidget);
     await back(tester);
+    await unmount(tester);
+  });
+
+  testWidgets('delete all data wipes everything after two confirmations', (
+    tester,
+  ) async {
+    final scheduler = FakeAlarmScheduler();
+    await pumpApp(tester, scheduler: scheduler);
+    Future<int> count(TableInfo table) =>
+        dbRun(tester, () => db.select(table).get().then((rows) => rows.length));
+    expect(await count(db.medicines), greaterThan(0));
+    expect(scheduler.alarms, isNotEmpty);
+    final photos = Directory(
+      '${Directory.systemTemp.path}/${AppConstants.recordsFolder}',
+    );
+    expect(photos.existsSync(), isTrue);
+
+    await tester.tap(find.byTooltip(en.settingsTitle));
+    await settle(tester);
+
+    // Backing out at the first step deletes nothing.
+    await tapText(tester, en.deleteAllData);
+    await tester.tap(find.text(en.cancel));
+    await settle(tester);
+    expect(await count(db.medicines), greaterThan(0));
+
+    await tapText(tester, en.deleteAllData);
+    expect(find.text(en.deleteAllTitle), findsOneWidget);
+    await tester.tap(find.text(en.continueLabel));
+    await settle(tester);
+    expect(find.text(en.deleteAllConfirmTitle), findsOneWidget);
+    await tester.tap(find.text(en.deleteEverything));
+    // Cancelling alarms + the DB wipe take a few rounds of DB work, which
+    // only advances while frames are pumped.
+    for (
+      var i = 0;
+      i < 10 && find.text(en.allDataDeleted).evaluate().isEmpty;
+      i++
+    ) {
+      await settle(tester);
+    }
+
+    // Back on Home, told what happened.
+    expect(find.text(en.dashboardTitle), findsOneWidget);
+    expect(find.text(en.allDataDeleted), findsOneWidget);
+    for (final table in <TableInfo>[
+      db.medicines,
+      db.reminders,
+      db.reminderLogs,
+      db.doctors,
+      db.records,
+      db.recordAttachments,
+      db.expenses,
+    ]) {
+      expect(await count(table), 0, reason: table.actualTableName);
+    }
+    expect(scheduler.alarms, isEmpty);
+    expect(photos.existsSync(), isFalse);
     await unmount(tester);
   });
 }

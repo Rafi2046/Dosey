@@ -5,7 +5,9 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../core/notifications/permission_service.dart';
+import '../../../app/home_tab.dart';
 import '../../../core/widgets/choice_pills.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../onboarding/providers/permissions_provider.dart';
@@ -39,6 +41,34 @@ class SettingsScreen extends ConsumerWidget {
         ..hideCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(failed)));
     }
+  }
+
+  /// Two confirmations (it can't be undone), then wipe, back to Home.
+  static Future<void> _deleteAll(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
+    if (!await confirmDelete(
+      context,
+      title: l10n.deleteAllTitle,
+      body: l10n.deleteAllBody,
+      confirmLabel: l10n.continueLabel,
+    )) {
+      return;
+    }
+    if (!context.mounted) return;
+    if (!await confirmDelete(
+      context,
+      title: l10n.deleteAllConfirmTitle,
+      body: l10n.deleteAllConfirmBody,
+      confirmLabel: l10n.deleteEverything,
+    )) {
+      return;
+    }
+    await ref.read(dataResetServiceProvider).deleteAll();
+    ref.read(homeTabProvider.notifier).select(HomeTab.dashboard);
+    if (!context.mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    messenger.showSnackBar(SnackBar(content: Text(l10n.allDataDeleted)));
   }
 
   @override
@@ -124,6 +154,18 @@ class SettingsScreen extends ConsumerWidget {
                         foreground: AppColors.textOnAccent,
                       ),
                 onTap: () => _push(context, const PermissionsScreen()),
+              ),
+            ],
+          ),
+          SettingsSection(
+            title: l10n.settingsYourData,
+            children: [
+              SettingsTile(
+                icon: Icons.delete_forever_rounded,
+                color: AppColors.error,
+                title: l10n.deleteAllData,
+                subtitle: l10n.deleteAllDataHint,
+                onTap: () => _deleteAll(context, ref),
               ),
             ],
           ),

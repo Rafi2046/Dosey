@@ -1235,7 +1235,7 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get privacyDeleteBody =>
-      'অ্যাপের ভেতরে যেকোনো তথ্য মুছতে পারেন, অথবা অ্যাপের স্টোরেজ ক্লিয়ার করে বা Dosey আনইনস্টল করে সব মুছে ফেলতে পারেন।';
+      'অ্যাপের ভেতরে যেকোনো তথ্য মুছতে পারেন, সেটিংস › সব তথ্য মুছে ফেলুন থেকে একবারে সব মুছতে পারেন, অথবা Dosey আনইনস্টল করতে পারেন।';
 
   @override
   String get privacyChildrenTitle => 'শিশু';
@@ -1324,4 +1324,36 @@ class AppLocalizationsBn extends AppLocalizations {
   String privacyContactBody(String email) {
     return 'প্রাইভেসি নিয়ে প্রশ্ন থাকলে ইমেইল করুন: $email';
   }
+
+  @override
+  String get settingsYourData => 'আপনার তথ্য';
+
+  @override
+  String get deleteAllData => 'সব তথ্য মুছে ফেলুন';
+
+  @override
+  String get deleteAllDataHint => 'ওষুধ, রিমাইন্ডার, রেকর্ড, ছবি ও খরচ';
+
+  @override
+  String get deleteAllTitle => 'আপনার সব তথ্য মুছে ফেলবেন?';
+
+  @override
+  String get deleteAllBody =>
+      'এই ফোনের সব ওষুধ, রিমাইন্ডার, ডোজের ইতিহাস, ডাক্তার, রেকর্ড, ছবি ও খরচ মুছে যাবে এবং সব অ্যালার্ম বন্ধ হয়ে যাবে। আপনার ভাষা ও থিম ঠিক থাকবে।';
+
+  @override
+  String get deleteAllConfirmTitle => 'আপনি কি নিশ্চিত?';
+
+  @override
+  String get deleteAllConfirmBody =>
+      'এটি আর ফেরানো যাবে না। Dosey আপনার তথ্যের কোনো ব্যাকআপ বা ক্লাউড কপি রাখে না।';
+
+  @override
+  String get deleteEverything => 'সব মুছে ফেলুন';
+
+  @override
+  String get allDataDeleted => 'আপনার সব তথ্য মুছে ফেলা হয়েছে';
+
+  @override
+  String get continueLabel => 'চালিয়ে যান';
 }

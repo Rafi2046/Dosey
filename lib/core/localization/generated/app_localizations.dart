@@ -2249,7 +2249,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacyDeleteBody.
   ///
   /// In en, this message translates to:
-  /// **'Delete any item inside the app, or remove everything by clearing the app\'s storage or uninstalling Dosey.'**
+  /// **'Delete any item inside the app, delete everything at once in Settings › Delete all data, or uninstall Dosey.'**
   String get privacyDeleteBody;
 
   /// No description provided for @privacyChildrenTitle.
@@ -2377,6 +2377,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Questions about privacy? Email {email}.'**
   String privacyContactBody(String email);
+
+  /// No description provided for @settingsYourData.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data'**
+  String get settingsYourData;
+
+  /// No description provided for @deleteAllData.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all data'**
+  String get deleteAllData;
+
+  /// No description provided for @deleteAllDataHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicines, reminders, records, photos and expenses'**
+  String get deleteAllDataHint;
+
+  /// No description provided for @deleteAllTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all your data?'**
+  String get deleteAllTitle;
+
+  /// No description provided for @deleteAllBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every medicine, reminder, dose history, doctor, record, photo and expense on this phone will be deleted, and all alarms will stop. Your language and theme are kept.'**
+  String get deleteAllBody;
+
+  /// No description provided for @deleteAllConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure?'**
+  String get deleteAllConfirmTitle;
+
+  /// No description provided for @deleteAllConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This can\'t be undone. Dosey keeps no backup or cloud copy of your data.'**
+  String get deleteAllConfirmBody;
+
+  /// No description provided for @deleteEverything.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete everything'**
+  String get deleteEverything;
+
+  /// No description provided for @allDataDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'All your data was deleted'**
+  String get allDataDeleted;
+
+  /// No description provided for @continueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueLabel;
 }
 
 class _AppLocalizationsDelegate

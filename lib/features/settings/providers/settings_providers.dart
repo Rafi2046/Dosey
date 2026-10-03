@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/database/database_provider.dart';
+import '../../../core/notifications/notification_providers.dart';
+import '../../../core/storage/storage_providers.dart';
+import '../../reminders/providers/reminders_providers.dart';
+import '../data/data_reset_service.dart';
 import '../../../core/localization/l10n.dart';
 import '../data/settings_repository.dart';
 
@@ -80,3 +84,12 @@ final packageInfoProvider = FutureProvider<PackageInfo?>((ref) async {
     return null;
   }
 });
+
+final dataResetServiceProvider = Provider<DataResetService>(
+  (ref) => DataResetService(
+    ref.watch(appDatabaseProvider),
+    ref.watch(remindersRepositoryProvider),
+    ref.watch(alarmEngineProvider),
+    ref.watch(fileStorageProvider),
+  ),
+);

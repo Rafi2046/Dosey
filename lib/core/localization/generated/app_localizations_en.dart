@@ -1244,7 +1244,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacyDeleteBody =>
-      'Delete any item inside the app, or remove everything by clearing the app\'s storage or uninstalling Dosey.';
+      'Delete any item inside the app, delete everything at once in Settings › Delete all data, or uninstall Dosey.';
 
   @override
   String get privacyChildrenTitle => 'Children';
@@ -1334,4 +1334,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String privacyContactBody(String email) {
     return 'Questions about privacy? Email $email.';
   }
+
+  @override
+  String get settingsYourData => 'Your data';
+
+  @override
+  String get deleteAllData => 'Delete all data';
+
+  @override
+  String get deleteAllDataHint =>
+      'Medicines, reminders, records, photos and expenses';
+
+  @override
+  String get deleteAllTitle => 'Delete all your data?';
+
+  @override
+  String get deleteAllBody =>
+      'Every medicine, reminder, dose history, doctor, record, photo and expense on this phone will be deleted, and all alarms will stop. Your language and theme are kept.';
+
+  @override
+  String get deleteAllConfirmTitle => 'Are you sure?';
+
+  @override
+  String get deleteAllConfirmBody =>
+      'This can\'t be undone. Dosey keeps no backup or cloud copy of your data.';
+
+  @override
+  String get deleteEverything => 'Delete everything';
+
+  @override
+  String get allDataDeleted => 'All your data was deleted';
+
+  @override
+  String get continueLabel => 'Continue';
 }

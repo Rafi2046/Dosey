@@ -518,7 +518,7 @@
   "privacySharingTitle": "Sharing",
   "privacySharingBody": "Dosey does not sell or share your data. Nothing leaves your phone unless you choose to send it, for example by emailing support.",
   "privacyDeleteTitle": "Deleting your data",
-  "privacyDeleteBody": "Delete any item inside the app, or remove everything by clearing the app's storage or uninstalling Dosey.",
+  "privacyDeleteBody": "Delete any item inside the app, delete everything at once in Settings › Delete all data, or uninstall Dosey.",
   "privacyChildrenTitle": "Children",
   "privacyChildrenBody": "Dosey is meant for adults and caregivers, and is not directed at children under 13.",
   "termsUseTitle": "Using Dosey",
@@ -568,5 +568,15 @@
         "type": "String"
       }
     }
-  }
+  },
+  "settingsYourData": "Your data",
+  "deleteAllData": "Delete all data",
+  "deleteAllDataHint": "Medicines, reminders, records, photos and expenses",
+  "deleteAllTitle": "Delete all your data?",
+  "deleteAllBody": "Every medicine, reminder, dose history, doctor, record, photo and expense on this phone will be deleted, and all alarms will stop. Your language and theme are kept.",
+  "deleteAllConfirmTitle": "Are you sure?",
+  "deleteAllConfirmBody": "This can't be undone. Dosey keeps no backup or cloud copy of your data.",
+  "deleteEverything": "Delete everything",
+  "allDataDeleted": "All your data was deleted",
+  "continueLabel": "Continue"
 }

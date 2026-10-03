@@ -87,6 +87,8 @@ abstract final class MedicineStrings {
   static String bulkSaved(int n) =>
       n == 1 ? 'Added 1 medicine' : 'Added $n medicines';
   static String bulkAsWritten(String pattern) => 'Prescription says: $pattern';
+  static String bulkFixMedicine(int n) =>
+      'Medicine $n needs a name and unit before saving.';
   static const String bulkNoTimes =
       'No times set: this medicine will not ring.';
   static const String scanFilled =

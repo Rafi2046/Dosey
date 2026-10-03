@@ -52,13 +52,27 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
   }
 
   Future<void> _save() async {
-    if (!_formKey.currentState!.validate()) return;
+    final valid = _formKey.currentState!.validate();
+    final firstBad = _drafts.indexWhere((d) => !d.isValid);
+    if (!valid || firstBad >= 0) {
+      return showAppSnack(
+        context,
+        MedicineStrings.bulkFixMedicine(firstBad < 0 ? 1 : firstBad + 1),
+      );
+    }
     setState(() => _saving = true);
     final count = _drafts.length;
-    await ref.read(medicineScheduleServiceProvider).createMany([
-      for (final d in _drafts)
-        d.toNewMedicine(startDate: _startDate, doctorId: _doctorId),
-    ]);
+    try {
+      await ref.read(medicineScheduleServiceProvider).createMany([
+        for (final d in _drafts)
+          d.toNewMedicine(startDate: _startDate, doctorId: _doctorId),
+      ]);
+    } on Exception {
+      // One transaction, so nothing was saved; let the user retry.
+      if (!mounted) return;
+      setState(() => _saving = false);
+      return showAppSnack(context, ErrorStrings.genericError);
+    }
     if (!mounted) return;
     showAppSnack(context, MedicineStrings.bulkSaved(count));
     Navigator.pop(context, true);
@@ -76,53 +90,58 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
       ),
       body: Form(
         key: _formKey,
-        child: ListView(
+        // Not a lazy ListView: every card must be built so the Form can
+        // validate (and show errors on) all of them, even off-screen ones.
+        child: SingleChildScrollView(
           padding: AppSpacing.screenPadding,
-          children: [
-            Text(MedicineStrings.bulkHint, style: AppTextStyles.bodyOnLight),
-            AppSpacing.gapLg,
-            // Shared by every medicine on one prescription.
-            DoctorPickerField(
-              label: MedicineStrings.medicineDoctor,
-              doctorId: _doctorId,
-              onChanged: (id) => setState(() => _doctorId = id),
-            ),
-            PickerField(
-              label: MedicineStrings.medicineStartDate,
-              value: AppDateFormat.date(_startDate),
-              icon: Icons.event_rounded,
-              onTap: () async {
-                final d = await AppPickers.date(context, initial: _startDate);
-                if (d != null) setState(() => _startDate = d);
-              },
-            ),
-            AppSpacing.gapMd,
-            for (final (i, d) in _drafts.indexed)
-              MedicineDraftCard(
-                key: d.key,
-                draft: d,
-                number: i + 1,
-                onChanged: () => setState(() {}),
-                onRemove: () => _remove(d),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(MedicineStrings.bulkHint, style: AppTextStyles.bodyOnLight),
+              AppSpacing.gapLg,
+              // Shared by every medicine on one prescription.
+              DoctorPickerField(
+                label: MedicineStrings.medicineDoctor,
+                doctorId: _doctorId,
+                onChanged: (id) => setState(() => _doctorId = id),
               ),
-            if (_drafts.isEmpty)
-              Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-                child: Text(
-                  MedicineStrings.bulkEmpty,
-                  style: AppTextStyles.bodyOnLight,
+              PickerField(
+                label: MedicineStrings.medicineStartDate,
+                value: AppDateFormat.date(_startDate),
+                icon: Icons.event_rounded,
+                onTap: () async {
+                  final d = await AppPickers.date(context, initial: _startDate);
+                  if (d != null) setState(() => _startDate = d);
+                },
+              ),
+              AppSpacing.gapMd,
+              for (final (i, d) in _drafts.indexed)
+                MedicineDraftCard(
+                  key: d.key,
+                  draft: d,
+                  number: i + 1,
+                  onChanged: () => setState(() {}),
+                  onRemove: () => _remove(d),
+                ),
+              if (_drafts.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+                  child: Text(
+                    MedicineStrings.bulkEmpty,
+                    style: AppTextStyles.bodyOnLight,
+                  ),
+                ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: StatusChip(
+                  label: MedicineStrings.bulkAddAnother,
+                  icon: Icons.add_rounded,
+                  onTap: () => setState(() => _drafts.add(MedicineDraft())),
                 ),
               ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: StatusChip(
-                label: MedicineStrings.bulkAddAnother,
-                icon: Icons.add_rounded,
-                onTap: () => setState(() => _drafts.add(MedicineDraft())),
-              ),
-            ),
-            AppSpacing.gapXl,
-          ],
+              AppSpacing.gapXl,
+            ],
+          ),
         ),
       ),
     );

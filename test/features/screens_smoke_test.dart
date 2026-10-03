@@ -9,6 +9,7 @@ import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/core/storage/file_storage_service.dart';
 import 'package:dosey/core/widgets/amount_stepper.dart';
 import 'package:dosey/features/medicines/domain/dose_time.dart';
+import 'package:dosey/features/medicines/presentation/bulk/medicine_draft_card.dart';
 import 'package:dosey/features/medicines/domain/scanned_medicine.dart';
 import 'package:dosey/features/medicines/providers/medicines_providers.dart';
 import 'package:dosey/features/records/data/records_repository.dart';
@@ -386,7 +387,6 @@ void main() {
         durationDays: 7,
         dosePattern: '1+0+1',
       ),
-      const ScannedMedicine(name: 'Seclo', strength: '20mg'),
     ]);
     await pumpApp(
       tester,
@@ -404,8 +404,7 @@ void main() {
 
     await tapText(tester, MedicineStrings.scanTitle);
     expect(scanner.scannedPaths, ['/tmp/rx.jpg']);
-    // Two medicines found: the user picks which one this form is for.
-    await tapText(tester, 'Napa Extra 500mg');
+    // One medicine found: it fills this form directly.
 
     expect(find.widgetWithText(TextFormField, 'Napa Extra'), findsOneWidget);
     expect(find.widgetWithText(TextFormField, '500mg'), findsOneWidget);
@@ -458,6 +457,98 @@ void main() {
       {for (final r in reminders) r.startAt.hour: r.doseAmount},
       {8: 2.0, 21: 1.5},
     );
+    await unmount(tester);
+  });
+
+  testWidgets('a multi-medicine scan is reviewed and saved in bulk', (
+    tester,
+  ) async {
+    final scanner = FakePrescriptionScanner([
+      const ScannedMedicine(
+        name: 'Napa Extra',
+        strength: '500mg',
+        doses: [
+          DoseTime(TimeOfDay(hour: 8, minute: 0), 2),
+          DoseTime(TimeOfDay(hour: 21, minute: 0)),
+        ],
+        dosePattern: '2+0+1',
+      ),
+      const ScannedMedicine(name: 'Seclo', strength: '20mg'),
+      const ScannedMedicine(
+        name: 'Ambrox',
+        form: MedicineForm.syrup,
+        doses: [DoseTime(TimeOfDay(hour: 14, minute: 0), 10)],
+      ),
+    ]);
+    await pumpApp(
+      tester,
+      overrides: [
+        prescriptionScannerProvider.overrideWithValue(scanner),
+        prescriptionImagePickerProvider.overrideWithValue(
+          (_) async => '/tmp/rx.jpg',
+        ),
+      ],
+    );
+    await tester.tap(find.byTooltip(AppStrings.add));
+    await settle(tester);
+    await tapText(tester, MedicineStrings.addMedicine);
+    await tapText(tester, AppStrings.next);
+    await tapText(tester, MedicineStrings.scanTitle);
+
+    // Review screen lists all three, with the prescription's own pattern.
+    expect(find.text(MedicineStrings.bulkTitle), findsOneWidget);
+    expect(find.text(MedicineStrings.bulkAsWritten('2+0+1')), findsOneWidget);
+    expect(find.text(MedicineStrings.bulkSaveAll(3)), findsOneWidget);
+
+    // Seclo was misread: remove its card.
+    final seclo = await scrollTo(tester, 'Seclo');
+    await tester.tap(
+      find.descendant(
+        of: find.ancestor(of: seclo, matching: find.byType(MedicineDraftCard)),
+        matching: find.byTooltip(MedicineStrings.bulkRemove),
+      ),
+    );
+    await settle(tester);
+    expect(find.byType(MedicineDraftCard), findsNWidgets(2));
+    expect(find.text(MedicineStrings.bulkSaveAll(2)), findsOneWidget);
+
+    // A medicine the scan missed: add it by hand.
+    await tapText(tester, MedicineStrings.bulkAddAnother);
+    final newCard = find.byType(MedicineDraftCard).last;
+    final newName = find
+        .descendant(of: newCard, matching: find.byType(TextFormField))
+        .first;
+    // Saving with the new card still blank is refused.
+    await tester.tap(find.text(MedicineStrings.bulkSaveAll(3)));
+    await settle(tester);
+    expect(find.text(MedicineStrings.bulkFixMedicine(3)), findsOneWidget);
+    await tester.enterText(newName, 'Omidon');
+    await settle(tester);
+    expect(find.text(MedicineStrings.bulkSaveAll(3)), findsOneWidget);
+
+    await tester.pump(const Duration(seconds: 5)); // snackbar times out
+    await settle(tester);
+    await tester.tap(find.text(MedicineStrings.bulkSaveAll(3)));
+    await settle(tester);
+
+    final meds = await dbRun(tester, () => db.select(db.medicines).get());
+    final byName = {for (final m in meds) m.name: m};
+    expect(byName.keys, containsAll(['Napa Extra', 'Ambrox', 'Omidon']));
+    expect(byName.keys, isNot(contains('Seclo')));
+    expect(byName['Ambrox']!.doseUnit, 'ml');
+
+    final reminders = await dbRun(tester, () => db.select(db.reminders).get());
+    Map<int, double?> dosesOf(String name) => {
+      for (final r in reminders)
+        if (r.medicineId == byName[name]!.id) r.startAt.hour: r.doseAmount,
+    };
+    expect(dosesOf('Napa Extra'), {8: 2.0, 21: 1.0});
+    expect(dosesOf('Ambrox'), {14: 10.0});
+    expect(dosesOf('Omidon'), isEmpty);
+
+    // Saving closes both the review screen and the Add Medicine form.
+    expect(find.text(MedicineStrings.bulkTitle), findsNothing);
+    expect(find.text(MedicineStrings.addMedicine), findsNothing);
     await unmount(tester);
   });
 }

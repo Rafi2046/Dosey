@@ -52,6 +52,10 @@ class MedicineDraft {
   /// the user can compare it with the times read from it.
   final String? dosePattern;
 
+  /// Has what the database requires (a name and a unit).
+  bool get isValid =>
+      name.text.trim().isNotEmpty && unit.text.trim().isNotEmpty;
+
   /// Keeps the unit in sync with the form unless the user typed their own.
   void changeForm(MedicineForm next) {
     if (unit.text == form.defaultUnit) unit.text = next.defaultUnit;

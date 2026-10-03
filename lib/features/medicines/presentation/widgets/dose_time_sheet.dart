@@ -10,6 +10,7 @@ import '../../../../core/widgets/pill_button.dart';
 import '../../domain/dose_time.dart';
 import '../../../../core/localization/l10n.dart';
 import '../../../../core/utils/dose_unit.dart';
+import '../../../../core/widgets/sheet_title.dart';
 
 /// What the user did in [showDoseTimeSheet]; null when dismissed.
 sealed class DoseSheetResult {
@@ -66,7 +67,7 @@ class _DoseTimeSheetState extends State<_DoseTimeSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(context.l10n.doseTimeTitle, style: AppTextStyles.titleOnLight),
+            SheetTitle(context.l10n.doseTimeTitle),
             AppSpacing.gapMd,
             PickerField(
               label: context.l10n.medicineTime,

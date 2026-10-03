@@ -36,6 +36,7 @@ abstract final class AppSpacing {
   static const double settingsIcon = 36;
   static const double headerTickWidth = 3;
   static const double headerTickHeight = 14;
+  static const double sheetTickHeight = 20;
 
   /// Space below each labelled form field.
   static const double fieldGap = lg;

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants/constants.dart';
 import '../localization/l10n.dart';
 import 'pill_button.dart';
+import 'sheet_title.dart';
 
 /// Result wrapper so "None" (null) can be told apart from a dismissed sheet.
 class Selection<T> {
@@ -41,7 +42,7 @@ Future<Selection<T>?> showSelectionSheet<T>({
         controller: scroll,
         padding: AppSpacing.screenPadding.copyWith(bottom: AppSpacing.xl),
         children: [
-          Text(title, style: AppTextStyles.titleOnLight),
+          SheetTitle(title),
           AppSpacing.gapMd,
           if (allowNone)
             _SheetTile(

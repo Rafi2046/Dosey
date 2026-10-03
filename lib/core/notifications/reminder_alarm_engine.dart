@@ -225,8 +225,7 @@ class ReminderAlarmEngine {
     };
     final stockBefore = <int, StockStatus>{
       if (action == AlarmAction.taken)
-        for (final id in reminderIds)
-          id: ?await _reminders.stockStatusFor(id),
+        for (final id in reminderIds) id: ?await _reminders.stockStatusFor(id),
     };
     await _reminders.logActions(
       reminderIds: reminderIds,

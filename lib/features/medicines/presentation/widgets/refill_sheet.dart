@@ -12,6 +12,7 @@ import '../../../reminders/domain/reminder_text.dart';
 import '../../providers/medicines_providers.dart';
 import '../../../../core/localization/l10n.dart';
 import '../../../../core/utils/dose_unit.dart';
+import '../../../../core/widgets/sheet_title.dart';
 
 /// Records a purchase: adds stock and logs the cost as an expense.
 Future<void> showRefillSheet(BuildContext context, Medicine medicine) =>
@@ -89,7 +90,8 @@ class _RefillSheetState extends ConsumerState<_RefillSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(context.l10n.refillTitle, style: AppTextStyles.titleOnLight),
+            SheetTitle(context.l10n.refillTitle),
+            AppSpacing.gapXs,
             Text(widget.medicine.name, style: AppTextStyles.bodyOnLight),
             AppSpacing.gapXl,
             AppTextField.decimal(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import '../../features/reminders/domain/reminder_text.dart';
@@ -14,6 +16,8 @@ import '../localization/l10n.dart';
 /// reminders use the alarm category + full-screen intent so they wake the
 /// device, appear over the lock screen and loop until acted on.
 class AwesomeNotificationPresenter implements NotificationPresenter {
+  static const _html = HtmlEscape();
+
   @override
   Future<void> showAlarm(
     List<ReminderWithDetails> group,
@@ -48,12 +52,16 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
         id: id,
         channelKey: NotificationChannels.keyFor(r.type, critical: critical),
         title: grouped ? l10n.alarmGroupNotifTitle(group.length) : r.title,
-        // Several medicines: one line each, with that time's dose.
+        // Several medicines: one line each, with that time's dose. The body
+        // is rendered as HTML (a plain "\n" shows as a space), so lines are
+        // joined with <br> and the text escaped.
         body: grouped
             ? [
                 for (final d in group)
-                  '${d.reminder.title} — ${ReminderText.body(l10n, d)}',
-              ].join('\n')
+                  _html.convert(
+                    '${d.reminder.title} — ${ReminderText.body(l10n, d)}',
+                  ),
+              ].join('<br>')
             : ReminderText.body(l10n, group.first),
         notificationLayout: grouped
             ? NotificationLayout.BigText

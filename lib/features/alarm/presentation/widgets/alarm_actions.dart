@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/database/enums.dart';
 import '../../../../core/notifications/reminder_alarm_engine.dart';
+import '../../../../core/utils/numbers.dart';
 import '../../../../core/widgets/pill_button.dart';
 import '../../../../core/localization/l10n.dart';
 
@@ -43,8 +44,10 @@ class AlarmActions extends StatelessWidget {
         ),
         AppSpacing.gapMd,
         PillButton(
+          // AppNumber: "১০" in Bengali, "10" in English.
           label:
-              '${context.l10n.alarmSnooze} $snoozeMinutes ${context.l10n.minutesShort}',
+              '${context.l10n.alarmSnooze} ${AppNumber.format(snoozeMinutes)} '
+              '${context.l10n.minutesShort}',
           trailingIcon: Icons.snooze_rounded,
           onPressed: busy ? null : () => onAction(AlarmAction.snooze),
         ),

@@ -48,6 +48,9 @@ class InitialsAvatar extends StatelessWidget {
       child: Text(
         _initials,
         style: AppTextStyles.cardTitle.copyWith(
+          fontSize: size >= AppSpacing.avatarLg
+              ? AppSpacing.fontXl
+              : AppSpacing.fontLg,
           color: light ? AppColors.ink : AppColors.textOnDark,
         ),
       ),

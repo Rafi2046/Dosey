@@ -19,6 +19,7 @@ class DoctorProfileHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.xl),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InitialsAvatar(name: doctor.name, size: AppSpacing.avatarLg),
           AppSpacing.gapLg,
@@ -26,33 +27,37 @@ class DoctorProfileHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(doctor.name, style: AppTextStyles.headlineOnLight),
-                if (doctor.specialty != null)
+                Text(doctor.name, style: AppTextStyles.titleOnLight),
+                if (doctor.specialty != null) ...[
+                  AppSpacing.gapXs,
                   Text(
                     Specialty.display(doctor.specialty!, context.l10n),
                     style: AppTextStyles.bodyOnLight,
                   ),
-                AppSpacing.gapMd,
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: [
-                    if (doctor.phone != null)
-                      StatusChip(
-                        label: context.l10n.call,
-                        icon: Icons.call_rounded,
-                        onTap: () => ContactActions.call(doctor.phone!),
-                      ),
-                    if (doctor.email != null)
-                      StatusChip(
-                        label: context.l10n.email,
-                        icon: Icons.mail_rounded,
-                        background: AppColors.sand,
-                        foreground: AppColors.ink,
-                        onTap: () => ContactActions.email(doctor.email!),
-                      ),
-                  ],
-                ),
+                ],
+                if (doctor.phone != null || doctor.email != null) ...[
+                  AppSpacing.gapMd,
+                  Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.sm,
+                    children: [
+                      if (doctor.phone != null)
+                        StatusChip(
+                          label: context.l10n.call,
+                          icon: Icons.call_rounded,
+                          onTap: () => ContactActions.call(doctor.phone!),
+                        ),
+                      if (doctor.email != null)
+                        StatusChip(
+                          label: context.l10n.email,
+                          icon: Icons.mail_rounded,
+                          background: AppColors.sand,
+                          foreground: AppColors.ink,
+                          onTap: () => ContactActions.email(doctor.email!),
+                        ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),

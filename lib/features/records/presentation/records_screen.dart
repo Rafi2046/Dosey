@@ -8,6 +8,7 @@ import '../../../core/widgets/async_value_view.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/filter_pills.dart';
 import '../../../core/widgets/screen_header.dart';
+import '../../../core/widgets/tab_scroll_view.dart';
 import '../domain/record_summary.dart';
 import '../providers/records_providers.dart';
 import 'record_detail_screen.dart';
@@ -23,64 +24,62 @@ class RecordsScreen extends ConsumerWidget {
     final filter = ref.watch(recordTypeFilterProvider);
     final records = ref.watch(recordSummariesProvider);
 
-    return SafeArea(
-      bottom: false,
-      child: ListView(
-        padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
-        children: [
-          ScreenHeader(
-            title: context.l10n.recordsTitle,
-            subtitle: switch (records.value) {
-              final list? => context.l10n.headerRecordsCount(list.length),
-              null => null,
-            },
-          ),
-          FilterPills<RecordType>(
-            options: RecordType.values,
-            selected: filter,
-            labelOf: (t) => t.label(context.l10n),
-            onSelected: ref.read(recordTypeFilterProvider.notifier).select,
-          ),
-          AppSpacing.gapLg,
-          AsyncValueView(
-            value: records,
-            data: (list) => list.isEmpty
-                ? EmptyState(
-                    title: context.l10n.noRecords,
-                    image: AppImages.medOther,
-                    actionLabel: context.l10n.addRecord,
-                    onAction: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const RecordFormScreen(),
-                      ),
+    return TabScrollView(
+      // Nothing to list: centre the empty state in the space left.
+      centerLast: records.value?.isEmpty ?? false,
+      children: [
+        ScreenHeader(
+          title: context.l10n.recordsTitle,
+          subtitle: switch (records.value) {
+            final list? => context.l10n.headerRecordsCount(list.length),
+            null => null,
+          },
+        ),
+        FilterPills<RecordType>(
+          options: RecordType.values,
+          selected: filter,
+          labelOf: (t) => t.label(context.l10n),
+          onSelected: ref.read(recordTypeFilterProvider.notifier).select,
+        ),
+        AppSpacing.gapLg,
+        AsyncValueView(
+          value: records,
+          data: (list) => list.isEmpty
+              ? EmptyState(
+                  title: context.l10n.noRecords,
+                  image: AppImages.medOther,
+                  actionLabel: context.l10n.addRecord,
+                  onAction: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const RecordFormScreen(),
                     ),
-                  )
-                : Column(
-                    children: [
-                      // Rows of two with natural heights (titles may wrap).
-                      for (var i = 0; i < list.length; i += 2) ...[
-                        IntrinsicHeight(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              for (final j in [i, i + 1]) ...[
-                                if (j > i) AppSpacing.gapMd,
-                                Expanded(
-                                  child: j < list.length
-                                      ? _tile(context, list, j)
-                                      : const SizedBox.shrink(),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                        AppSpacing.gapMd,
-                      ],
-                    ],
                   ),
-          ),
-        ],
-      ),
+                )
+              : Column(
+                  children: [
+                    // Rows of two with natural heights (titles may wrap).
+                    for (var i = 0; i < list.length; i += 2) ...[
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            for (final j in [i, i + 1]) ...[
+                              if (j > i) AppSpacing.gapMd,
+                              Expanded(
+                                child: j < list.length
+                                    ? _tile(context, list, j)
+                                    : const SizedBox.shrink(),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      AppSpacing.gapMd,
+                    ],
+                  ],
+                ),
+        ),
+      ],
     );
   }
 

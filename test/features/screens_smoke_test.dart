@@ -11,6 +11,11 @@ import 'package:dosey/core/widgets/amount_stepper.dart';
 import 'package:dosey/core/widgets/app_text_field.dart';
 import 'package:dosey/core/widgets/async_value_view.dart';
 import 'package:dosey/core/widgets/labeled_field.dart';
+import 'package:dosey/core/widgets/pill_button.dart';
+import 'package:dosey/core/database/enums.dart';
+import 'package:dosey/core/utils/enum_labels.dart';
+import 'package:dosey/core/widgets/filter_pills.dart';
+import 'package:dosey/core/widgets/empty_state.dart';
 import 'package:dosey/features/medicines/domain/dose_time.dart';
 import 'package:dosey/features/medicines/presentation/bulk/medicine_draft_card.dart';
 import 'package:dosey/features/medicines/domain/scanned_medicine.dart';
@@ -387,6 +392,42 @@ void main() {
     );
     expect(subtitle, findsOneWidget);
     expect(find.textContaining('ট্যাবলেট'), findsNothing);
+    await unmount(tester);
+  });
+
+  testWidgets('an empty list centres its empty state in the space left', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await openTab(tester, HomeTab.records);
+    // Only a prescription is seeded: "Test report" is empty.
+    final pill = find.descendant(
+      of: find.byType(FilterPills<RecordType>),
+      matching: find.text(RecordType.testReport.label(en)),
+    );
+    await tester.ensureVisible(pill);
+    await settle(tester);
+    await tester.tap(pill);
+    await settle(tester);
+
+    // What the user sees: the picture down to the button.
+    Rect inEmpty(Finder f) => tester.getRect(
+      find.descendant(of: find.byType(EmptyState), matching: f),
+    );
+    final empty = Rect.fromLTRB(
+      0,
+      inEmpty(find.byType(Image)).top,
+      0,
+      inEmpty(find.byType(PillButton)).bottom,
+    );
+    final pillsBottom = tester
+        .getRect(find.byType(FilterPills<RecordType>))
+        .bottom;
+    final screenHeight =
+        tester.view.physicalSize.height / tester.view.devicePixelRatio;
+    final spaceTop = pillsBottom + AppSpacing.lg;
+    final spaceBottom = screenHeight - AppSpacing.listBottomPadding.bottom;
+    expect(empty.center.dy, closeTo((spaceTop + spaceBottom) / 2, 1));
     await unmount(tester);
   });
 

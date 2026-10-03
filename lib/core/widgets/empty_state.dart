@@ -25,6 +25,8 @@ class EmptyState extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxl),
       child: Column(
+        // Only as tall as its content, so a parent can centre it.
+        mainAxisSize: MainAxisSize.min,
         children: [
           Opacity(
             opacity: AppSpacing.emptyIllustrationOpacity,

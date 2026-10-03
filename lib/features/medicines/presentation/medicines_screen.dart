@@ -6,6 +6,7 @@ import '../../../core/widgets/async_value_view.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/choice_pills.dart';
 import '../../../core/widgets/screen_header.dart';
+import '../../../core/widgets/tab_scroll_view.dart';
 import '../../expenses/providers/expenses_providers.dart';
 import '../providers/medicines_providers.dart';
 import 'medicine_detail_screen.dart';
@@ -26,70 +27,68 @@ class MedicinesScreen extends ConsumerWidget {
         line.medicine.id: line.monthlyMinor,
     };
 
-    return SafeArea(
-      bottom: false,
-      child: ListView(
-        padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
-        children: [
-          ScreenHeader(
-            title: context.l10n.medicinesTitle,
-            subtitle: switch (medicines.value) {
-              final list? => context.l10n.headerMedicinesCount(list.length),
-              null => null,
-            },
-          ),
-          ChoicePills<bool>(
-            options: const [false, true],
-            onDark: true,
-            selected: {showStopped},
-            labelOf: (stopped) =>
-                stopped ? context.l10n.stopped : context.l10n.active,
-            onChanged: (s) =>
-                ref.read(showStoppedMedicinesProvider.notifier).set(s.single),
-          ),
-          AppSpacing.gapLg,
-          AsyncValueView(
-            value: medicines,
-            data: (all) {
-              final list = all
-                  .where((m) => m.medicine.isActive != showStopped)
-                  .toList();
-              if (list.isEmpty) {
-                return EmptyState(
-                  title: context.l10n.noMedicines,
-                  image: AppImages.medCapsule,
-                  actionLabel: showStopped ? null : context.l10n.addMedicine,
-                  onAction: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const MedicineTypeScreen(),
-                    ),
+    return TabScrollView(
+      // Nothing to list: centre the empty state in the space left.
+      centerLast:
+          medicines.value?.every((m) => m.medicine.isActive == showStopped) ??
+          false,
+      children: [
+        ScreenHeader(
+          title: context.l10n.medicinesTitle,
+          subtitle: switch (medicines.value) {
+            final list? => context.l10n.headerMedicinesCount(list.length),
+            null => null,
+          },
+        ),
+        ChoicePills<bool>(
+          options: const [false, true],
+          onDark: true,
+          selected: {showStopped},
+          labelOf: (stopped) =>
+              stopped ? context.l10n.stopped : context.l10n.active,
+          onChanged: (s) =>
+              ref.read(showStoppedMedicinesProvider.notifier).set(s.single),
+        ),
+        AppSpacing.gapLg,
+        AsyncValueView(
+          value: medicines,
+          data: (all) {
+            final list = all
+                .where((m) => m.medicine.isActive != showStopped)
+                .toList();
+            if (list.isEmpty) {
+              return EmptyState(
+                title: context.l10n.noMedicines,
+                image: AppImages.medCapsule,
+                actionLabel: showStopped ? null : context.l10n.addMedicine,
+                onAction: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const MedicineTypeScreen(),
                   ),
-                );
-              }
-              return Column(
-                children: [
-                  for (final (i, item) in list.indexed) ...[
-                    MedicineCard(
-                      item: item,
-                      color:
-                          AppColors.cardCycle[i % AppColors.cardCycle.length],
-                      monthlyCostMinor: monthlyById[item.medicine.id],
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => MedicineDetailScreen(
-                            medicineId: item.medicine.id,
-                          ),
-                        ),
+                ),
+              );
+            }
+            return Column(
+              children: [
+                for (final (i, item) in list.indexed) ...[
+                  MedicineCard(
+                    item: item,
+                    color: AppColors.cardCycle[i % AppColors.cardCycle.length],
+                    monthlyCostMinor: monthlyById[item.medicine.id],
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) =>
+                            MedicineDetailScreen(medicineId: item.medicine.id),
                       ),
                     ),
-                    AppSpacing.gapMd,
-                  ],
+                  ),
+                  AppSpacing.gapMd,
                 ],
-              );
-            },
-          ),
-        ],
-      ),
+              ],
+            );
+          },
+        ),
+      ],
     );
   }
 }

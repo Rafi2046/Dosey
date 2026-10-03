@@ -568,9 +568,9 @@
   },
   "settingsYourData": "Your data",
   "deleteAllData": "Delete all data",
-  "deleteAllDataHint": "Medicines, reminders, records, photos and expenses",
+  "deleteAllDataHint": "Medicines, reminders, records, photos, expenses and blood pressure",
   "deleteAllTitle": "Delete all your data?",
-  "deleteAllBody": "Every medicine, reminder, dose history, doctor, record, photo and expense on this phone will be deleted, and all alarms will stop. Your language and theme are kept.",
+  "deleteAllBody": "Every medicine, reminder, dose history, doctor, record, photo, expense and blood pressure reading on this phone will be deleted, and all alarms will stop. Your language and theme are kept.",
   "deleteAllConfirmTitle": "Are you sure?",
   "deleteAllConfirmBody": "This can't be undone. Dosey keeps no backup or cloud copy of your data.",
   "deleteEverything": "Delete everything",
@@ -773,6 +773,75 @@
       "count": {
         "type": "int",
         "format": "decimalPattern"
+      }
+    }
+  },
+  "bpTitle": "Your\nBlood pressure",
+  "bpShortTitle": "Blood pressure",
+  "moreBpHint": "Log readings and see your trend",
+  "bpAdd": "Add reading",
+  "bpEditTitle": "Edit reading",
+  "bpEmpty": "No readings yet",
+  "bpEmptyHint": "Write down each blood pressure check to see how it changes over time.",
+  "bpLatest": "Latest reading",
+  "bpSystolic": "Systolic (upper)",
+  "bpDiastolic": "Diastolic (lower)",
+  "bpPulse": "Pulse (optional)",
+  "bpMeasuredAt": "Measured at",
+  "bpNote": "Note",
+  "bpNoteHint": "e.g. after a walk, left arm",
+  "bpAverage7": "7-day average",
+  "bpTrend": "Trend",
+  "bpHistory": "History",
+  "bpSaved": "Reading saved",
+  "bpDeleteBody": "This reading will be deleted.",
+  "bpDiastolicHigher": "Must be lower than the upper number",
+  "bpLow": "Low",
+  "bpNormal": "Normal",
+  "bpElevated": "Elevated",
+  "bpStage1": "High · stage 1",
+  "bpStage2": "High · stage 2",
+  "bpCrisis": "Very high",
+  "bpCrisisHint": "Very high. If you also have chest pain, shortness of breath, weakness or trouble seeing or speaking, get emergency care now.",
+  "bpDisclaimer": "Categories follow the American Heart Association guide for adults. This isn't a diagnosis — talk to your doctor about your readings.",
+  "bpSystolicLegend": "Upper",
+  "bpDiastolicLegend": "Lower",
+  "bpCount": "{count, plural, =0{No readings yet} =1{1 reading} other{{count} readings}}",
+  "@bpCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "bpValue": "{systolic}/{diastolic}",
+  "@bpValue": {
+    "placeholders": {
+      "systolic": {
+        "type": "String"
+      },
+      "diastolic": {
+        "type": "String"
+      }
+    }
+  },
+  "bpPulseValue": "♥ {pulse} bpm",
+  "@bpPulseValue": {
+    "placeholders": {
+      "pulse": {
+        "type": "String"
+      }
+    }
+  },
+  "numberRange": "Enter a number from {min} to {max}",
+  "@numberRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
       }
     }
   }

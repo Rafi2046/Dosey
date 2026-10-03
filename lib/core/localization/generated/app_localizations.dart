@@ -2375,7 +2375,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteAllDataHint.
   ///
   /// In en, this message translates to:
-  /// **'Medicines, reminders, records, photos and expenses'**
+  /// **'Medicines, reminders, records, photos, expenses and blood pressure'**
   String get deleteAllDataHint;
 
   /// No description provided for @deleteAllTitle.
@@ -2387,7 +2387,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteAllBody.
   ///
   /// In en, this message translates to:
-  /// **'Every medicine, reminder, dose history, doctor, record, photo and expense on this phone will be deleted, and all alarms will stop. Your language and theme are kept.'**
+  /// **'Every medicine, reminder, dose history, doctor, record, photo, expense and blood pressure reading on this phone will be deleted, and all alarms will stop. Your language and theme are kept.'**
   String get deleteAllBody;
 
   /// No description provided for @deleteAllConfirmTitle.
@@ -2917,6 +2917,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All taken'**
   String get alarmMarkAllTaken;
+
+  /// No description provided for @bpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your\nBlood pressure'**
+  String get bpTitle;
+
+  /// No description provided for @bpShortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blood pressure'**
+  String get bpShortTitle;
+
+  /// No description provided for @moreBpHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Log readings and see your trend'**
+  String get moreBpHint;
+
+  /// No description provided for @bpAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add reading'**
+  String get bpAdd;
+
+  /// No description provided for @bpEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit reading'**
+  String get bpEditTitle;
+
+  /// No description provided for @bpEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No readings yet'**
+  String get bpEmpty;
+
+  /// No description provided for @bpEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write down each blood pressure check to see how it changes over time.'**
+  String get bpEmptyHint;
+
+  /// No description provided for @bpLatest.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest reading'**
+  String get bpLatest;
+
+  /// No description provided for @bpSystolic.
+  ///
+  /// In en, this message translates to:
+  /// **'Systolic (upper)'**
+  String get bpSystolic;
+
+  /// No description provided for @bpDiastolic.
+  ///
+  /// In en, this message translates to:
+  /// **'Diastolic (lower)'**
+  String get bpDiastolic;
+
+  /// No description provided for @bpPulse.
+  ///
+  /// In en, this message translates to:
+  /// **'Pulse (optional)'**
+  String get bpPulse;
+
+  /// No description provided for @bpMeasuredAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Measured at'**
+  String get bpMeasuredAt;
+
+  /// No description provided for @bpNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get bpNote;
+
+  /// No description provided for @bpNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. after a walk, left arm'**
+  String get bpNoteHint;
+
+  /// No description provided for @bpAverage7.
+  ///
+  /// In en, this message translates to:
+  /// **'7-day average'**
+  String get bpAverage7;
+
+  /// No description provided for @bpTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Trend'**
+  String get bpTrend;
+
+  /// No description provided for @bpHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get bpHistory;
+
+  /// No description provided for @bpSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading saved'**
+  String get bpSaved;
+
+  /// No description provided for @bpDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This reading will be deleted.'**
+  String get bpDeleteBody;
+
+  /// No description provided for @bpDiastolicHigher.
+  ///
+  /// In en, this message translates to:
+  /// **'Must be lower than the upper number'**
+  String get bpDiastolicHigher;
+
+  /// No description provided for @bpLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get bpLow;
+
+  /// No description provided for @bpNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get bpNormal;
+
+  /// No description provided for @bpElevated.
+  ///
+  /// In en, this message translates to:
+  /// **'Elevated'**
+  String get bpElevated;
+
+  /// No description provided for @bpStage1.
+  ///
+  /// In en, this message translates to:
+  /// **'High · stage 1'**
+  String get bpStage1;
+
+  /// No description provided for @bpStage2.
+  ///
+  /// In en, this message translates to:
+  /// **'High · stage 2'**
+  String get bpStage2;
+
+  /// No description provided for @bpCrisis.
+  ///
+  /// In en, this message translates to:
+  /// **'Very high'**
+  String get bpCrisis;
+
+  /// No description provided for @bpCrisisHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Very high. If you also have chest pain, shortness of breath, weakness or trouble seeing or speaking, get emergency care now.'**
+  String get bpCrisisHint;
+
+  /// No description provided for @bpDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories follow the American Heart Association guide for adults. This isn\'t a diagnosis — talk to your doctor about your readings.'**
+  String get bpDisclaimer;
+
+  /// No description provided for @bpSystolicLegend.
+  ///
+  /// In en, this message translates to:
+  /// **'Upper'**
+  String get bpSystolicLegend;
+
+  /// No description provided for @bpDiastolicLegend.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower'**
+  String get bpDiastolicLegend;
+
+  /// No description provided for @bpCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No readings yet} =1{1 reading} other{{count} readings}}'**
+  String bpCount(int count);
+
+  /// No description provided for @bpValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{systolic}/{diastolic}'**
+  String bpValue(String systolic, String diastolic);
+
+  /// No description provided for @bpPulseValue.
+  ///
+  /// In en, this message translates to:
+  /// **'♥ {pulse} bpm'**
+  String bpPulseValue(String pulse);
+
+  /// No description provided for @numberRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a number from {min} to {max}'**
+  String numberRange(String min, String max);
 }
 
 class _AppLocalizationsDelegate

@@ -1322,14 +1322,15 @@ class AppLocalizationsBn extends AppLocalizations {
   String get deleteAllData => 'সব তথ্য মুছে ফেলুন';
 
   @override
-  String get deleteAllDataHint => 'ওষুধ, রিমাইন্ডার, রেকর্ড, ছবি ও খরচ';
+  String get deleteAllDataHint =>
+      'ওষুধ, রিমাইন্ডার, রেকর্ড, ছবি, খরচ ও রক্তচাপ';
 
   @override
   String get deleteAllTitle => 'আপনার সব তথ্য মুছে ফেলবেন?';
 
   @override
   String get deleteAllBody =>
-      'এই ফোনের সব ওষুধ, রিমাইন্ডার, ডোজের ইতিহাস, ডাক্তার, রেকর্ড, ছবি ও খরচ মুছে যাবে এবং সব অ্যালার্ম বন্ধ হয়ে যাবে। আপনার ভাষা ও থিম ঠিক থাকবে।';
+      'এই ফোনের সব ওষুধ, রিমাইন্ডার, ডোজের ইতিহাস, ডাক্তার, রেকর্ড, ছবি, খরচ ও রক্তচাপের রিডিং মুছে যাবে এবং সব অ্যালার্ম বন্ধ হয়ে যাবে। আপনার ভাষা ও থিম ঠিক থাকবে।';
 
   @override
   String get deleteAllConfirmTitle => 'আপনি কি নিশ্চিত?';
@@ -1717,4 +1718,127 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get alarmMarkAllTaken => 'সব খেয়েছি';
+
+  @override
+  String get bpTitle => 'আপনার\nরক্তচাপ';
+
+  @override
+  String get bpShortTitle => 'রক্তচাপ';
+
+  @override
+  String get moreBpHint => 'রিডিং লিখে রাখুন, ট্রেন্ড দেখুন';
+
+  @override
+  String get bpAdd => 'রিডিং যোগ করুন';
+
+  @override
+  String get bpEditTitle => 'রিডিং এডিট করুন';
+
+  @override
+  String get bpEmpty => 'এখনো কোনো রিডিং নেই';
+
+  @override
+  String get bpEmptyHint =>
+      'প্রতিবার রক্তচাপ মাপার পর লিখে রাখুন — সময়ের সাথে কেমন বদলাচ্ছে দেখতে পাবেন।';
+
+  @override
+  String get bpLatest => 'সর্বশেষ রিডিং';
+
+  @override
+  String get bpSystolic => 'সিস্টোলিক (উপরের)';
+
+  @override
+  String get bpDiastolic => 'ডায়াস্টোলিক (নিচের)';
+
+  @override
+  String get bpPulse => 'পালস (ঐচ্ছিক)';
+
+  @override
+  String get bpMeasuredAt => 'মাপার সময়';
+
+  @override
+  String get bpNote => 'নোট';
+
+  @override
+  String get bpNoteHint => 'যেমন: হাঁটার পর, বাম হাত';
+
+  @override
+  String get bpAverage7 => '৭ দিনের গড়';
+
+  @override
+  String get bpTrend => 'ট্রেন্ড';
+
+  @override
+  String get bpHistory => 'ইতিহাস';
+
+  @override
+  String get bpSaved => 'রিডিং সেভ হয়েছে';
+
+  @override
+  String get bpDeleteBody => 'এই রিডিংটি মুছে যাবে।';
+
+  @override
+  String get bpDiastolicHigher => 'উপরের সংখ্যার চেয়ে কম হতে হবে';
+
+  @override
+  String get bpLow => 'নিম্ন';
+
+  @override
+  String get bpNormal => 'স্বাভাবিক';
+
+  @override
+  String get bpElevated => 'সামান্য বেশি';
+
+  @override
+  String get bpStage1 => 'উচ্চ · ধাপ ১';
+
+  @override
+  String get bpStage2 => 'উচ্চ · ধাপ ২';
+
+  @override
+  String get bpCrisis => 'অনেক বেশি';
+
+  @override
+  String get bpCrisisHint =>
+      'অনেক বেশি। এর সাথে বুকে ব্যথা, শ্বাসকষ্ট, দুর্বলতা বা দেখতে/কথা বলতে সমস্যা হলে এখনই জরুরি চিকিৎসা নিন।';
+
+  @override
+  String get bpDisclaimer =>
+      'শ্রেণিগুলো প্রাপ্তবয়স্কদের জন্য American Heart Association-এর নির্দেশিকা অনুযায়ী। এটি রোগনির্ণয় নয় — আপনার রিডিং নিয়ে ডাক্তারের সাথে কথা বলুন।';
+
+  @override
+  String get bpSystolicLegend => 'উপরের';
+
+  @override
+  String get bpDiastolicLegend => 'নিচের';
+
+  @override
+  String bpCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countStringটি রিডিং',
+      zero: 'এখনো কোনো রিডিং নেই',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bpValue(String systolic, String diastolic) {
+    return '$systolic/$diastolic';
+  }
+
+  @override
+  String bpPulseValue(String pulse) {
+    return '♥ $pulse bpm';
+  }
+
+  @override
+  String numberRange(String min, String max) {
+    return '$min থেকে $max এর মধ্যে একটি সংখ্যা লিখুন';
+  }
 }

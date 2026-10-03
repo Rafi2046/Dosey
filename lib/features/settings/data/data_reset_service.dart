@@ -25,6 +25,7 @@ class DataResetService {
       for (final table in <TableInfo<Table, dynamic>>[
         _db.reminderLogs,
         _db.reminders,
+        _db.bloodPressureReadings,
         _db.expenses,
         _db.recordAttachments,
         _db.records,

@@ -1332,14 +1332,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAllDataHint =>
-      'Medicines, reminders, records, photos and expenses';
+      'Medicines, reminders, records, photos, expenses and blood pressure';
 
   @override
   String get deleteAllTitle => 'Delete all your data?';
 
   @override
   String get deleteAllBody =>
-      'Every medicine, reminder, dose history, doctor, record, photo and expense on this phone will be deleted, and all alarms will stop. Your language and theme are kept.';
+      'Every medicine, reminder, dose history, doctor, record, photo, expense and blood pressure reading on this phone will be deleted, and all alarms will stop. Your language and theme are kept.';
 
   @override
   String get deleteAllConfirmTitle => 'Are you sure?';
@@ -1737,4 +1737,128 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alarmMarkAllTaken => 'All taken';
+
+  @override
+  String get bpTitle => 'Your\nBlood pressure';
+
+  @override
+  String get bpShortTitle => 'Blood pressure';
+
+  @override
+  String get moreBpHint => 'Log readings and see your trend';
+
+  @override
+  String get bpAdd => 'Add reading';
+
+  @override
+  String get bpEditTitle => 'Edit reading';
+
+  @override
+  String get bpEmpty => 'No readings yet';
+
+  @override
+  String get bpEmptyHint =>
+      'Write down each blood pressure check to see how it changes over time.';
+
+  @override
+  String get bpLatest => 'Latest reading';
+
+  @override
+  String get bpSystolic => 'Systolic (upper)';
+
+  @override
+  String get bpDiastolic => 'Diastolic (lower)';
+
+  @override
+  String get bpPulse => 'Pulse (optional)';
+
+  @override
+  String get bpMeasuredAt => 'Measured at';
+
+  @override
+  String get bpNote => 'Note';
+
+  @override
+  String get bpNoteHint => 'e.g. after a walk, left arm';
+
+  @override
+  String get bpAverage7 => '7-day average';
+
+  @override
+  String get bpTrend => 'Trend';
+
+  @override
+  String get bpHistory => 'History';
+
+  @override
+  String get bpSaved => 'Reading saved';
+
+  @override
+  String get bpDeleteBody => 'This reading will be deleted.';
+
+  @override
+  String get bpDiastolicHigher => 'Must be lower than the upper number';
+
+  @override
+  String get bpLow => 'Low';
+
+  @override
+  String get bpNormal => 'Normal';
+
+  @override
+  String get bpElevated => 'Elevated';
+
+  @override
+  String get bpStage1 => 'High · stage 1';
+
+  @override
+  String get bpStage2 => 'High · stage 2';
+
+  @override
+  String get bpCrisis => 'Very high';
+
+  @override
+  String get bpCrisisHint =>
+      'Very high. If you also have chest pain, shortness of breath, weakness or trouble seeing or speaking, get emergency care now.';
+
+  @override
+  String get bpDisclaimer =>
+      'Categories follow the American Heart Association guide for adults. This isn\'t a diagnosis — talk to your doctor about your readings.';
+
+  @override
+  String get bpSystolicLegend => 'Upper';
+
+  @override
+  String get bpDiastolicLegend => 'Lower';
+
+  @override
+  String bpCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString readings',
+      one: '1 reading',
+      zero: 'No readings yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String bpValue(String systolic, String diastolic) {
+    return '$systolic/$diastolic';
+  }
+
+  @override
+  String bpPulseValue(String pulse) {
+    return '♥ $pulse bpm';
+  }
+
+  @override
+  String numberRange(String min, String max) {
+    return 'Enter a number from $min to $max';
+  }
 }

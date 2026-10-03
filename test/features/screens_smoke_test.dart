@@ -1079,7 +1079,8 @@ void main() {
     // Still on Settings (no restart), now on the dark background.
     expect(find.text(en.settingsTitle), findsOneWidget);
     final scaffold = tester.widget<Scaffold>(find.byType(Scaffold).last);
-    expect(scaffold.backgroundColor, AppPalette.dark.cream);
+    // Settings sits on the same sage background as the tabs.
+    expect(scaffold.backgroundColor, AppPalette.dark.sage);
     final saved = await dbRun(
       tester,
       () => (db.select(

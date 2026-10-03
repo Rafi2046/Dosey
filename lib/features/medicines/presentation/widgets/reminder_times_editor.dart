@@ -113,7 +113,8 @@ class ReminderTimesEditor extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ChoicePills<_Slot>(
-            columns: 4,
+            // Two per row, like "when to take" above (full labels fit).
+            columns: 2,
             options: _Slot.values,
             selected: {
               for (final s in _Slot.values)

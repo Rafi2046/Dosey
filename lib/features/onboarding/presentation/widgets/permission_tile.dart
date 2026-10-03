@@ -67,13 +67,13 @@ class PermissionTile extends StatelessWidget {
           AppSpacing.gapMd,
           granted
               ? StatusChip(
-                  label: AppStrings.allowed,
+                  label: OnboardingStrings.allowed,
                   icon: Icons.check_rounded,
                   background: light ? AppColors.moss : AppColors.creamLight,
                   foreground: light ? AppColors.textOnDark : AppColors.ink,
                 )
               : StatusChip(
-                  label: AppStrings.allow,
+                  label: OnboardingStrings.allow,
                   background: AppColors.accent,
                   foreground: AppColors.textOnAccent,
                   onTap: onRequest,

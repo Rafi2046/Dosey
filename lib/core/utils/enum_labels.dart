@@ -5,10 +5,10 @@ import '../database/enums.dart';
 
 extension ReminderTypeX on ReminderType {
   String get label => switch (this) {
-    ReminderType.medicine => AppStrings.typeMedicine,
-    ReminderType.appointment => AppStrings.typeAppointment,
-    ReminderType.vaccine => AppStrings.typeVaccine,
-    ReminderType.medicalTest => AppStrings.typeMedicalTest,
+    ReminderType.medicine => ReminderStrings.typeMedicine,
+    ReminderType.appointment => ReminderStrings.typeAppointment,
+    ReminderType.vaccine => ReminderStrings.typeVaccine,
+    ReminderType.medicalTest => ReminderStrings.typeMedicalTest,
   };
 
   IconData get icon => switch (this) {
@@ -28,35 +28,35 @@ extension ReminderTypeX on ReminderType {
 
 extension MealRelationX on MealRelation {
   String get label => switch (this) {
-    MealRelation.beforeMeal => AppStrings.mealBefore,
-    MealRelation.withMeal => AppStrings.mealWith,
-    MealRelation.afterMeal => AppStrings.mealAfter,
-    MealRelation.anytime => AppStrings.mealAnytime,
+    MealRelation.beforeMeal => MedicineStrings.mealBefore,
+    MealRelation.withMeal => MedicineStrings.mealWith,
+    MealRelation.afterMeal => MedicineStrings.mealAfter,
+    MealRelation.anytime => MedicineStrings.mealAnytime,
   };
 }
 
 extension MedicineFormX on MedicineForm {
   String get label => switch (this) {
-    MedicineForm.tablet => AppStrings.formTablet,
-    MedicineForm.capsule => AppStrings.formCapsule,
-    MedicineForm.syrup => AppStrings.formSyrup,
-    MedicineForm.injection => AppStrings.formInjection,
-    MedicineForm.drops => AppStrings.formDrops,
-    MedicineForm.inhaler => AppStrings.formInhaler,
-    MedicineForm.cream => AppStrings.formCream,
-    MedicineForm.other => AppStrings.formOther,
+    MedicineForm.tablet => MedicineStrings.formTablet,
+    MedicineForm.capsule => MedicineStrings.formCapsule,
+    MedicineForm.syrup => MedicineStrings.formSyrup,
+    MedicineForm.injection => MedicineStrings.formInjection,
+    MedicineForm.drops => MedicineStrings.formDrops,
+    MedicineForm.inhaler => MedicineStrings.formInhaler,
+    MedicineForm.cream => MedicineStrings.formCream,
+    MedicineForm.other => MedicineStrings.formOther,
   };
 
   /// Sensible default dose unit for the form.
   String get defaultUnit => switch (this) {
-    MedicineForm.tablet => AppStrings.unitTablet,
-    MedicineForm.capsule => AppStrings.unitCapsule,
-    MedicineForm.syrup => AppStrings.unitMl,
-    MedicineForm.injection => AppStrings.unitInjection,
-    MedicineForm.drops => AppStrings.unitDrop,
-    MedicineForm.inhaler => AppStrings.unitPuff,
-    MedicineForm.cream => AppStrings.unitApplication,
-    MedicineForm.other => AppStrings.unitDose,
+    MedicineForm.tablet => MedicineStrings.unitTablet,
+    MedicineForm.capsule => MedicineStrings.unitCapsule,
+    MedicineForm.syrup => MedicineStrings.unitMl,
+    MedicineForm.injection => MedicineStrings.unitInjection,
+    MedicineForm.drops => MedicineStrings.unitDrop,
+    MedicineForm.inhaler => MedicineStrings.unitPuff,
+    MedicineForm.cream => MedicineStrings.unitApplication,
+    MedicineForm.other => MedicineStrings.unitDose,
   };
 
   String get image => switch (this) {
@@ -69,20 +69,20 @@ extension MedicineFormX on MedicineForm {
 
 extension RepeatRuleX on RepeatRule {
   String get label => switch (this) {
-    RepeatRule.once => AppStrings.repeatOnce,
-    RepeatRule.daily => AppStrings.repeatDaily,
-    RepeatRule.weekly => AppStrings.repeatWeekly,
-    RepeatRule.everyNDays => AppStrings.repeatEveryNDays,
+    RepeatRule.once => ReminderStrings.repeatOnce,
+    RepeatRule.daily => ReminderStrings.repeatDaily,
+    RepeatRule.weekly => ReminderStrings.repeatWeekly,
+    RepeatRule.everyNDays => ReminderStrings.repeatEveryNDays,
   };
 }
 
 extension RecordTypeX on RecordType {
   String get label => switch (this) {
-    RecordType.prescription => AppStrings.recordPrescription,
-    RecordType.testReport => AppStrings.recordTestReport,
-    RecordType.vaccineCertificate => AppStrings.recordVaccineCertificate,
-    RecordType.invoice => AppStrings.recordInvoice,
-    RecordType.other => AppStrings.recordOther,
+    RecordType.prescription => RecordStrings.recordPrescription,
+    RecordType.testReport => RecordStrings.recordTestReport,
+    RecordType.vaccineCertificate => RecordStrings.recordVaccineCertificate,
+    RecordType.invoice => RecordStrings.recordInvoice,
+    RecordType.other => RecordStrings.recordOther,
   };
 
   IconData get icon => switch (this) {
@@ -96,11 +96,11 @@ extension RecordTypeX on RecordType {
 
 extension ExpenseCategoryX on ExpenseCategory {
   String get label => switch (this) {
-    ExpenseCategory.medicine => AppStrings.categoryMedicine,
-    ExpenseCategory.consultation => AppStrings.categoryConsultation,
-    ExpenseCategory.test => AppStrings.categoryTest,
-    ExpenseCategory.vaccine => AppStrings.categoryVaccine,
-    ExpenseCategory.other => AppStrings.categoryOther,
+    ExpenseCategory.medicine => ExpenseStrings.categoryMedicine,
+    ExpenseCategory.consultation => ExpenseStrings.categoryConsultation,
+    ExpenseCategory.test => ExpenseStrings.categoryTest,
+    ExpenseCategory.vaccine => ExpenseStrings.categoryVaccine,
+    ExpenseCategory.other => ExpenseStrings.categoryOther,
   };
 
   IconData get icon => switch (this) {
@@ -122,9 +122,9 @@ extension ExpenseCategoryX on ExpenseCategory {
 
 extension ReminderLogStatusX on ReminderLogStatus {
   String get label => switch (this) {
-    ReminderLogStatus.taken => AppStrings.markTaken,
-    ReminderLogStatus.skipped => AppStrings.skipped,
-    ReminderLogStatus.snoozed => AppStrings.snoozed,
-    ReminderLogStatus.missed => AppStrings.missed,
+    ReminderLogStatus.taken => ReminderStrings.markTaken,
+    ReminderLogStatus.skipped => DashboardStrings.skipped,
+    ReminderLogStatus.snoozed => DashboardStrings.snoozed,
+    ReminderLogStatus.missed => DashboardStrings.missed,
   };
 }

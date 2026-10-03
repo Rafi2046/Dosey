@@ -18,7 +18,7 @@ Future<List<String>> pickRecordImages(BuildContext context) async {
               leading: const Icon(Icons.photo_camera_rounded),
               iconColor: AppColors.ink,
               title: Text(
-                AppStrings.takePhoto,
+                RecordStrings.takePhoto,
                 style: AppTextStyles.inputOnLight,
               ),
               onTap: () => Navigator.pop(context, ImageSource.camera),
@@ -27,7 +27,7 @@ Future<List<String>> pickRecordImages(BuildContext context) async {
               leading: const Icon(Icons.photo_library_rounded),
               iconColor: AppColors.ink,
               title: Text(
-                AppStrings.chooseFromGallery,
+                RecordStrings.chooseFromGallery,
                 style: AppTextStyles.inputOnLight,
               ),
               onTap: () => Navigator.pop(context, ImageSource.gallery),

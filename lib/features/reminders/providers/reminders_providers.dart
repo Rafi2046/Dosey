@@ -35,11 +35,6 @@ final remindersByMedicineProvider = StreamProvider.autoDispose
           ref.watch(remindersRepositoryProvider).watchByMedicine(medicineId),
     );
 
-final reminderByIdProvider = StreamProvider.autoDispose
-    .family<ReminderWithDetails?, int>(
-      (ref, id) => ref.watch(remindersRepositoryProvider).watchById(id),
-    );
-
 final _logsForDayProvider = StreamProvider.autoDispose
     .family<List<ReminderLog>, DateTime>(
       (ref, day) => ref

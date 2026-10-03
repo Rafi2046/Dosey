@@ -41,7 +41,7 @@ class MedicineDetailScreen extends ConsumerWidget {
       case _MenuAction.delete:
         if (!await confirmDelete(
           context,
-          body: AppStrings.deleteMedicineBody,
+          body: MedicineStrings.deleteMedicineBody,
         )) {
           return;
         }
@@ -56,7 +56,7 @@ class MedicineDetailScreen extends ConsumerWidget {
     final item = value.value;
 
     return CreamScaffold(
-      title: AppStrings.medicineDetails,
+      title: MedicineStrings.medicineDetails,
       actions: [
         if (item != null)
           PopupMenuButton<_MenuAction>(
@@ -67,8 +67,8 @@ class MedicineDetailScreen extends ConsumerWidget {
                 value: _MenuAction.toggleActive,
                 child: Text(
                   item.medicine.isActive
-                      ? AppStrings.stopMedicine
-                      : AppStrings.resumeMedicine,
+                      ? MedicineStrings.stopMedicine
+                      : MedicineStrings.resumeMedicine,
                 ),
               ),
               const PopupMenuItem(
@@ -84,14 +84,14 @@ class MedicineDetailScreen extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 PillButton(
-                  label: AppStrings.refill,
+                  label: MedicineStrings.refill,
                   tone: PillButtonTone.moss,
                   trailingIcon: Icons.add_shopping_cart_rounded,
                   onPressed: () => showRefillSheet(context, item.medicine),
                 ),
                 AppSpacing.gapMd,
                 PillButton(
-                  label: AppStrings.changeSetting,
+                  label: MedicineStrings.changeSetting,
                   trailingIcon: Icons.settings_rounded,
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
@@ -145,14 +145,17 @@ class _DetailBody extends ConsumerWidget {
       padding: AppSpacing.screenPadding,
       children: [
         InfoBlock(
-          label: AppStrings.medicineName,
+          label: MedicineStrings.medicineName,
           value: [m.name, ?m.strength].join(' '),
           large: true,
         ),
         if (m.notes != null)
-          InfoBlock(label: AppStrings.medicineDescription, value: m.notes!),
+          InfoBlock(
+            label: MedicineStrings.medicineDescription,
+            value: m.notes!,
+          ),
         LabeledField(
-          label: AppStrings.timeDuration,
+          label: MedicineStrings.timeDuration,
           child: Align(
             alignment: Alignment.centerLeft,
             child: _chip(duration, icon: Icons.date_range_rounded),
@@ -160,14 +163,14 @@ class _DetailBody extends ConsumerWidget {
         ),
         MedicineTimesSection(medicine: m),
         InfoBlock(
-          label: AppStrings.doses,
+          label: MedicineStrings.doses,
           value:
               '${ReminderText.formatAmount(m.doseAmount)} ${m.doseUnit}'
-              '${AppStrings.notifDoseSeparator}${m.mealRelation.label}',
+              '${NotificationStrings.notifDoseSeparator}${m.mealRelation.label}',
         ),
         if (doctor != null)
           LabeledField(
-            label: AppStrings.medicineDoctor,
+            label: MedicineStrings.medicineDoctor,
             child: Align(
               alignment: Alignment.centerLeft,
               child: _chip(
@@ -183,13 +186,15 @@ class _DetailBody extends ConsumerWidget {
           ),
         if (m.stockQuantity != null)
           InfoBlock(
-            label: item.isLowStock ? AppStrings.lowStock : AppStrings.inStock,
+            label: item.isLowStock
+                ? MedicineStrings.lowStock
+                : MedicineStrings.inStock,
             value:
                 '${ReminderText.formatAmount(m.stockQuantity!)} ${m.doseUnit}',
           ),
         if ((monthly ?? 0) > 0)
           InfoBlock(
-            label: AppStrings.costPerMonth,
+            label: MedicineStrings.costPerMonth,
             value: Money.format(monthly!),
           ),
       ],

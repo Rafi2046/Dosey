@@ -46,7 +46,7 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
   bool _saving = false;
 
   String? get _pagesError => _submitted && !_isEdit && _pages.isEmpty
-      ? AppStrings.addAtLeastOnePage
+      ? RecordStrings.addAtLeastOnePage
       : null;
 
   @override
@@ -85,7 +85,7 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
   @override
   Widget build(BuildContext context) {
     return CreamScaffold(
-      title: _isEdit ? AppStrings.edit : AppStrings.addRecord,
+      title: _isEdit ? AppStrings.edit : RecordStrings.addRecord,
       bottomBar: PillButton(
         label: _isEdit ? AppStrings.saveChanges : AppStrings.save,
         showRingChevron: true,
@@ -106,13 +106,13 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
                     setState(() => _pages = [..._pages]..remove(p)),
               ),
             AppTextField(
-              label: AppStrings.recordTitle,
+              label: RecordStrings.recordTitle,
               controller: _title,
-              hint: AppStrings.recordTitleHint,
+              hint: RecordStrings.recordTitleHint,
               validator: AppTextField.required,
             ),
             LabeledField(
-              label: AppStrings.recordType,
+              label: RecordStrings.recordType,
               child: ChoicePills<RecordType>(
                 options: RecordType.values,
                 selected: {_type},
@@ -122,7 +122,7 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
               ),
             ),
             PickerField(
-              label: AppStrings.recordDate,
+              label: RecordStrings.recordDate,
               value: AppDateFormat.date(_date),
               icon: Icons.event_rounded,
               onTap: () async {
@@ -131,12 +131,12 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
               },
             ),
             DoctorPickerField(
-              label: AppStrings.recordDoctor,
+              label: RecordStrings.recordDoctor,
               doctorId: _doctorId,
               onChanged: (id) => setState(() => _doctorId = id),
             ),
             AppTextField(
-              label: AppStrings.recordNotes,
+              label: RecordStrings.recordNotes,
               controller: _notes,
               maxLines: 3,
             ),

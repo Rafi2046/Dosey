@@ -34,11 +34,14 @@ void main() {
     await tester.pumpWidget(app());
     await settle(tester);
 
-    expect(find.text(AppStrings.permNotificationsTitle), findsOneWidget);
-    expect(find.text(AppStrings.onboardingEssentialHint), findsOneWidget);
+    expect(find.text(OnboardingStrings.permNotificationsTitle), findsOneWidget);
+    expect(
+      find.text(OnboardingStrings.onboardingEssentialHint),
+      findsOneWidget,
+    );
 
     for (var i = 0; i < 2; i++) {
-      final allow = find.text(AppStrings.allow).first;
+      final allow = find.text(OnboardingStrings.allow).first;
       await tester.ensureVisible(allow);
       await tester.tap(allow);
       await settle(tester);
@@ -48,11 +51,11 @@ void main() {
       AppPermission.notifications,
       AppPermission.exactAlarms,
     ]);
-    expect(find.text(AppStrings.onboardingEssentialHint), findsNothing);
+    expect(find.text(OnboardingStrings.onboardingEssentialHint), findsNothing);
 
-    await tester.tap(find.text(AppStrings.onboardingContinue));
+    await tester.tap(find.text(OnboardingStrings.onboardingContinue));
     await settle(tester);
-    expect(find.text(AppStrings.dashboardTitle), findsOneWidget);
+    expect(find.text(DashboardStrings.dashboardTitle), findsOneWidget);
     await unmount(tester);
   });
 
@@ -63,7 +66,7 @@ void main() {
     permissions.grantedSet.addAll(AppPermission.values);
     await tester.pumpWidget(app());
     await settle(tester);
-    expect(find.text(AppStrings.dashboardTitle), findsOneWidget);
+    expect(find.text(DashboardStrings.dashboardTitle), findsOneWidget);
 
     final at = DateTime(2026, 10, 3, 9);
     await dbRun(tester, () async {
@@ -90,7 +93,7 @@ void main() {
     await settle(tester);
 
     expect(find.byType(AlarmRingScreen), findsOneWidget);
-    await tester.tap(find.text(AppStrings.alarmMarkTaken));
+    await tester.tap(find.text(AlarmStrings.alarmMarkTaken));
     await settle(tester);
 
     expect(find.byType(AlarmRingScreen), findsNothing);

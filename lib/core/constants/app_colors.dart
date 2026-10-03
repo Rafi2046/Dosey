@@ -6,7 +6,6 @@ abstract final class AppColors {
   // ── Brand surfaces ────────────────────────────────────────────────────────
   /// Main sage background.
   static const Color sage = Color(0xFF687163);
-  static const Color sageDeep = Color(0xFF5B6457);
 
   /// Card tones used for stacked reminder cards and medicine-type tiles.
   static const Color olive = Color(0xFF728268);
@@ -27,8 +26,6 @@ abstract final class AppColors {
 
   // ── Accent ────────────────────────────────────────────────────────────────
   static const Color accent = Color(0xFFFD572F);
-  static const Color accentPressed = Color(0xFFE2461F);
-  static const Color accentSoft = Color(0x33FD572F);
 
   // ── Text ──────────────────────────────────────────────────────────────────
   /// On sage / dark cards.
@@ -42,7 +39,6 @@ abstract final class AppColors {
   static const Color textOnAccent = Color(0xFFFFFFFF);
 
   // ── Status ────────────────────────────────────────────────────────────────
-  static const Color success = mint;
   static const Color warning = Color(0xFFF2B84B);
   static const Color error = Color(0xFFE5484D);
 
@@ -56,7 +52,6 @@ abstract final class AppColors {
   static const Color transparent = Color(0x00000000);
   static const Color navBar = Color(0xB3979B92);
   static const Color outlineOnDark = Color(0x66EEEBDD);
-  static const Color outlineOnLight = Color(0x401B1D1A);
   static const Color divider = Color(0x1F1B1D1A);
   static const Color shadow = Color(0x40000000);
   static const Color scrim = Color(0x99000000);

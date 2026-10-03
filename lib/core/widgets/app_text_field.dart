@@ -44,7 +44,9 @@ class AppTextField extends StatelessWidget {
 
   /// Shared "required" validator.
   static String? required(String? value) =>
-      (value == null || value.trim().isEmpty) ? AppStrings.fieldRequired : null;
+      (value == null || value.trim().isEmpty)
+      ? ErrorStrings.fieldRequired
+      : null;
 
   @override
   Widget build(BuildContext context) {

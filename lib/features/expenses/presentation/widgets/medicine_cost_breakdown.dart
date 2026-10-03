@@ -19,10 +19,13 @@ class MedicineCostBreakdown extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AppStrings.projectedHint, style: AppTextStyles.captionOnLight),
+          Text(
+            ExpenseStrings.projectedHint,
+            style: AppTextStyles.captionOnLight,
+          ),
           AppSpacing.gapMd,
           if (lines.isEmpty)
-            Text(AppStrings.noProjection, style: AppTextStyles.bodyOnLight)
+            Text(ExpenseStrings.noProjection, style: AppTextStyles.bodyOnLight)
           else
             for (final line in lines)
               Padding(
@@ -38,7 +41,7 @@ class MedicineCostBreakdown extends StatelessWidget {
                             style: AppTextStyles.cardTitleOnLight,
                           ),
                           Text(
-                            AppStrings.dosesPerDayLabel(line.dosesPerDay),
+                            ExpenseStrings.dosesPerDayLabel(line.dosesPerDay),
                             style: AppTextStyles.captionOnLight,
                           ),
                         ],

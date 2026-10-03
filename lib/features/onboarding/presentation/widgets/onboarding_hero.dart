@@ -17,13 +17,13 @@ class OnboardingHero extends StatelessWidget {
         ),
         AppSpacing.gapLg,
         const Text(
-          AppStrings.onboardingTitle,
+          OnboardingStrings.onboardingTitle,
           style: AppTextStyles.display,
           textAlign: TextAlign.center,
         ),
         AppSpacing.gapMd,
         const Text(
-          AppStrings.onboardingBody,
+          OnboardingStrings.onboardingBody,
           style: AppTextStyles.bodyMuted,
           textAlign: TextAlign.center,
         ),

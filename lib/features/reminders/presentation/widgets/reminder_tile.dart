@@ -31,9 +31,9 @@ class ReminderTile extends StatelessWidget {
     final muted = light ? AppColors.inkMuted : AppColors.textOnDarkMuted;
     final next = r.nextTriggerAt;
     final status = !r.isEnabled
-        ? AppStrings.paused
+        ? ReminderStrings.paused
         : next == null
-        ? AppStrings.ended
+        ? ReminderStrings.ended
         : AppDateFormat.dateTime(next);
 
     return SurfaceCard(

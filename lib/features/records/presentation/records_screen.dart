@@ -27,7 +27,7 @@ class RecordsScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          const ScreenHeader(title: AppStrings.recordsTitle),
+          const ScreenHeader(title: RecordStrings.recordsTitle),
           FilterPills<RecordType>(
             options: RecordType.values,
             selected: filter,
@@ -39,9 +39,9 @@ class RecordsScreen extends ConsumerWidget {
             value: records,
             data: (list) => list.isEmpty
                 ? EmptyState(
-                    title: AppStrings.noRecords,
+                    title: RecordStrings.noRecords,
                     image: AppImages.medOther,
-                    actionLabel: AppStrings.addRecord,
+                    actionLabel: RecordStrings.addRecord,
                     onAction: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (_) => const RecordFormScreen(),

@@ -43,7 +43,7 @@ class RepeatSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LabeledField(
-          label: AppStrings.reminderRepeat,
+          label: ReminderStrings.reminderRepeat,
           child: ChoicePills<RepeatRule>(
             options: RepeatRule.values,
             selected: {rule},
@@ -53,17 +53,17 @@ class RepeatSection extends StatelessWidget {
         ),
         if (rule == RepeatRule.weekly)
           LabeledField(
-            label: AppStrings.daysInWeek,
+            label: MedicineStrings.daysInWeek,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ChoicePills<int>(
                   options: List.generate(
-                    AppStrings.weekdaysShort.length,
+                    ReminderStrings.weekdaysShort.length,
                     (i) => i,
                   ),
                   selected: weekdays,
-                  labelOf: (i) => AppStrings.weekdaysShort[i],
+                  labelOf: (i) => ReminderStrings.weekdaysShort[i],
                   multiSelect: true,
                   onChanged: onWeekdaysChanged,
                 ),
@@ -76,7 +76,7 @@ class RepeatSection extends StatelessWidget {
           ),
         if (rule == RepeatRule.everyNDays)
           LabeledField(
-            label: AppStrings.reminderEveryNDays,
+            label: ReminderStrings.reminderEveryNDays,
             child: NumberStepper(
               value: interval,
               suffix: AppStrings.daysUnit,
@@ -85,7 +85,7 @@ class RepeatSection extends StatelessWidget {
           ),
         if (rule != RepeatRule.once)
           PickerField(
-            label: AppStrings.reminderEndDate,
+            label: ReminderStrings.reminderEndDate,
             value: endAt == null ? null : AppDateFormat.date(endAt!),
             placeholder: AppStrings.ongoing,
             icon: Icons.event_rounded,

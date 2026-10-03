@@ -58,7 +58,7 @@ class ReminderStackCard extends StatelessWidget {
     final light = SurfaceCard.isLight(color);
     final muted = light ? AppColors.inkMuted : AppColors.textOnDarkMuted;
     final overline = isNext
-        ? AppStrings.nextTypeIn(
+        ? DashboardStrings.nextTypeIn(
             r.type.label,
             ReminderText.until(occurrence.at, now),
           )

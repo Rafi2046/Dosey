@@ -33,7 +33,10 @@ class DoctorDetailScreen extends ConsumerWidget {
       case _MenuAction.archive:
         await repo.setArchived(doctor.id, archived: !doctor.isArchived);
       case _MenuAction.delete:
-        if (!await confirmDelete(context, body: AppStrings.deleteDoctorBody)) {
+        if (!await confirmDelete(
+          context,
+          body: DoctorStrings.deleteDoctorBody,
+        )) {
           return;
         }
         if (context.mounted) Navigator.pop(context);
@@ -61,7 +64,9 @@ class DoctorDetailScreen extends ConsumerWidget {
               PopupMenuItem(
                 value: _MenuAction.archive,
                 child: Text(
-                  doctor.isArchived ? AppStrings.unarchive : AppStrings.archive,
+                  doctor.isArchived
+                      ? DoctorStrings.unarchive
+                      : AppStrings.archive,
                 ),
               ),
               const PopupMenuItem(
@@ -77,7 +82,7 @@ class DoctorDetailScreen extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 PillButton(
-                  label: AppStrings.addAppointment,
+                  label: DoctorStrings.addAppointment,
                   tone: PillButtonTone.moss,
                   trailingIcon: Icons.event_available_rounded,
                   onPressed: () => _push(
@@ -90,7 +95,7 @@ class DoctorDetailScreen extends ConsumerWidget {
                 ),
                 AppSpacing.gapMd,
                 PillButton(
-                  label: AppStrings.changeSetting,
+                  label: MedicineStrings.changeSetting,
                   trailingIcon: Icons.settings_rounded,
                   onPressed: () =>
                       _push(context, DoctorFormScreen(existing: doctor)),
@@ -107,27 +112,27 @@ class DoctorDetailScreen extends ConsumerWidget {
                   DoctorProfileHeader(doctor: doctor),
                   if (doctor.clinic != null)
                     InfoBlock(
-                      label: AppStrings.doctorClinic,
+                      label: DoctorStrings.doctorClinic,
                       value: doctor.clinic!,
                     ),
                   if (doctor.address != null)
                     InfoBlock(
-                      label: AppStrings.doctorAddress,
+                      label: DoctorStrings.doctorAddress,
                       value: doctor.address!,
                     ),
                   if (doctor.phone != null)
                     InfoBlock(
-                      label: AppStrings.doctorPhone,
+                      label: DoctorStrings.doctorPhone,
                       value: doctor.phone!,
                     ),
                   if (doctor.consultationFeeMinor != null)
                     InfoBlock(
-                      label: AppStrings.doctorFee,
+                      label: DoctorStrings.doctorFee,
                       value: Money.format(doctor.consultationFeeMinor!),
                     ),
                   if (doctor.notes != null)
                     InfoBlock(
-                      label: AppStrings.doctorNotes,
+                      label: DoctorStrings.doctorNotes,
                       value: doctor.notes!,
                     ),
                   DoctorLinkedSections(doctorId: doctor.id),

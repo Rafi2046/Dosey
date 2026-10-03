@@ -29,7 +29,7 @@ class ReminderTimesEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LabeledField(
-      label: AppStrings.medicineTime,
+      label: MedicineStrings.medicineTime,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -54,7 +54,7 @@ class ReminderTimesEditor extends StatelessWidget {
           ),
           AppSpacing.gapSm,
           Text(
-            AppStrings.reminderTimesHint,
+            MedicineStrings.reminderTimesHint,
             style: AppTextStyles.captionOnLight,
           ),
         ],

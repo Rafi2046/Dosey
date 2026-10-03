@@ -44,20 +44,20 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
     NotificationActionButton(
       key: AppConstants.actionTaken,
       label: type == ReminderType.medicine
-          ? AppStrings.notifTaken
-          : AppStrings.alarmDone,
+          ? NotificationStrings.notifTaken
+          : AlarmStrings.alarmDone,
       color: AppColors.mint,
       actionType: ActionType.SilentBackgroundAction,
     ),
     NotificationActionButton(
       key: AppConstants.actionSnooze,
-      label: AppStrings.notifSnooze,
+      label: NotificationStrings.notifSnooze,
       actionType: ActionType.SilentBackgroundAction,
     ),
     if (type == ReminderType.medicine)
       NotificationActionButton(
         key: AppConstants.actionSkip,
-        label: AppStrings.notifSkip,
+        label: NotificationStrings.notifSkip,
         actionType: ActionType.SilentBackgroundAction,
       ),
   ];

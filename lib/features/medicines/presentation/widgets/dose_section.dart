@@ -24,7 +24,7 @@ class DoseSection extends StatelessWidget {
 
   static String? _positive(String? v) {
     final n = double.tryParse(v ?? '');
-    return n == null || n <= 0 ? AppStrings.invalidNumber : null;
+    return n == null || n <= 0 ? ErrorStrings.invalidNumber : null;
   }
 
   @override
@@ -37,7 +37,7 @@ class DoseSection extends StatelessWidget {
           children: [
             Expanded(
               child: AppTextField.decimal(
-                label: AppStrings.medicineDose,
+                label: MedicineStrings.medicineDose,
                 controller: amount,
                 validator: _positive,
               ),
@@ -45,7 +45,7 @@ class DoseSection extends StatelessWidget {
             AppSpacing.gapMd,
             Expanded(
               child: AppTextField(
-                label: AppStrings.medicineDoseUnit,
+                label: MedicineStrings.medicineDoseUnit,
                 controller: unit,
                 validator: AppTextField.required,
                 textCapitalization: TextCapitalization.none,
@@ -54,7 +54,7 @@ class DoseSection extends StatelessWidget {
           ],
         ),
         LabeledField(
-          label: AppStrings.medicineMeal,
+          label: MedicineStrings.medicineMeal,
           child: ChoicePills<MealRelation>(
             options: MealRelation.values,
             selected: {meal},

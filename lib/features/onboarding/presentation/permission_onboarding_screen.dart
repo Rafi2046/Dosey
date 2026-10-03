@@ -102,13 +102,13 @@ class _BottomBar extends StatelessWidget {
                 : const Padding(
                     padding: EdgeInsets.only(bottom: AppSpacing.md),
                     child: Text(
-                      AppStrings.onboardingEssentialHint,
+                      OnboardingStrings.onboardingEssentialHint,
                       style: AppTextStyles.caption,
                     ),
                   ),
           ),
           PillButton(
-            label: AppStrings.onboardingContinue,
+            label: OnboardingStrings.onboardingContinue,
             showRingChevron: true,
             onPressed: canContinue ? onContinue : null,
           ),

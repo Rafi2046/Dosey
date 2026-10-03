@@ -31,7 +31,7 @@ class ExpenseSummaryWidget extends StatelessWidget {
         children: [
           const _Label(
             icon: Icons.account_balance_wallet_rounded,
-            text: AppStrings.spentThisMonth,
+            text: DashboardStrings.spentThisMonth,
           ),
           AppSpacing.gapSm,
           FittedBox(
@@ -42,7 +42,7 @@ class ExpenseSummaryWidget extends StatelessWidget {
           const Divider(height: AppSpacing.xxl, color: AppColors.outlineOnDark),
           const _Label(
             icon: Icons.medication_rounded,
-            text: AppStrings.projectedMonthly,
+            text: ExpenseStrings.projectedMonthly,
           ),
           AppSpacing.gapSm,
           Row(
@@ -57,7 +57,7 @@ class ExpenseSummaryWidget extends StatelessWidget {
               ),
               AppSpacing.gapSm,
               Text(
-                AppStrings.perDay(Money.format(projectedDailyMinor)),
+                ExpenseStrings.perDay(Money.format(projectedDailyMinor)),
                 style: AppTextStyles.caption,
               ),
             ],

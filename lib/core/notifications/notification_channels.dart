@@ -22,7 +22,7 @@ abstract final class NotificationChannels {
   static final List<NotificationChannelGroup> groups = [
     NotificationChannelGroup(
       channelGroupKey: AppConstants.channelGroupKey,
-      channelGroupName: AppStrings.channelGroupName,
+      channelGroupName: NotificationStrings.channelGroupName,
     ),
   ];
 
@@ -30,26 +30,26 @@ abstract final class NotificationChannels {
   static const List<(String, String, String, Color)> _alarmSpecs = [
     (
       AppConstants.channelMedicine,
-      AppStrings.channelMedicineName,
-      AppStrings.channelMedicineDesc,
+      NotificationStrings.channelMedicineName,
+      NotificationStrings.channelMedicineDesc,
       AppColors.medicine,
     ),
     (
       AppConstants.channelAppointment,
-      AppStrings.channelAppointmentName,
-      AppStrings.channelAppointmentDesc,
+      NotificationStrings.channelAppointmentName,
+      NotificationStrings.channelAppointmentDesc,
       AppColors.appointment,
     ),
     (
       AppConstants.channelVaccine,
-      AppStrings.channelVaccineName,
-      AppStrings.channelVaccineDesc,
+      NotificationStrings.channelVaccineName,
+      NotificationStrings.channelVaccineDesc,
       AppColors.vaccine,
     ),
     (
       AppConstants.channelMedicalTest,
-      AppStrings.channelTestName,
-      AppStrings.channelTestDesc,
+      NotificationStrings.channelTestName,
+      NotificationStrings.channelTestDesc,
       AppColors.medicalTest,
     ),
   ];
@@ -60,8 +60,8 @@ abstract final class NotificationChannels {
     NotificationChannel(
       channelGroupKey: AppConstants.channelGroupKey,
       channelKey: AppConstants.channelGentle,
-      channelName: AppStrings.channelGentleName,
-      channelDescription: AppStrings.channelGentleDesc,
+      channelName: NotificationStrings.channelGentleName,
+      channelDescription: NotificationStrings.channelGentleDesc,
       importance: NotificationImportance.High,
       defaultRingtoneType: DefaultRingtoneType.Notification,
       defaultColor: AppColors.accent,
@@ -74,7 +74,7 @@ abstract final class NotificationChannels {
   /// USAGE_ALARM audio (see AlarmChannels.kt).
   static Map<String, Object> get nativeAlarmChannelArgs => {
     'groupKey': AppConstants.channelGroupKey,
-    'groupName': AppStrings.channelGroupName,
+    'groupName': NotificationStrings.channelGroupName,
     'keep': [for (final c in all) c.channelKey!],
     'channels': [
       for (final (key, name, description, color) in _alarmSpecs)

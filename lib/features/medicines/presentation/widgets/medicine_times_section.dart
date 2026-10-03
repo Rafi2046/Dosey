@@ -45,7 +45,7 @@ class MedicineTimesSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LabeledField(
-          label: AppStrings.medicineTime,
+          label: MedicineStrings.medicineTime,
           child: Wrap(
             spacing: AppSpacing.sm,
             runSpacing: AppSpacing.sm,
@@ -72,7 +72,7 @@ class MedicineTimesSection extends ConsumerWidget {
         ),
         if (weekdayLabels.isNotEmpty)
           LabeledField(
-            label: AppStrings.daysInWeek,
+            label: MedicineStrings.daysInWeek,
             child: Wrap(
               spacing: AppSpacing.sm,
               runSpacing: AppSpacing.sm,

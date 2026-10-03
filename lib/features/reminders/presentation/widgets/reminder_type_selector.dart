@@ -19,7 +19,7 @@ class ReminderTypeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LabeledField(
-      label: AppStrings.reminderType,
+      label: ReminderStrings.reminderType,
       child: ChoicePills<ReminderType>(
         options: ReminderType.values,
         selected: {value},

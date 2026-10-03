@@ -73,9 +73,6 @@ class MedicinesRepository {
         }
       });
 
-  Future<void> adjustStock(int id, double delta) =>
-      _db.adjustMedicineStock(id, delta);
-
   /// Records a purchase: adds [quantity] to stock (starting stock tracking if
   /// it wasn't tracked) and logs the cost as a medicine expense, atomically.
   Future<void> refill({

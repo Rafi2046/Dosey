@@ -36,14 +36,14 @@ class _MedicineTypeScreenState extends State<MedicineTypeScreen> {
                       CircleIconButton.back(context),
                       AppSpacing.gapMd,
                       const Text(
-                        AppStrings.addMedicine,
+                        MedicineStrings.addMedicine,
                         style: AppTextStyles.subtitle,
                       ),
                     ],
                   ),
                   AppSpacing.gapXl,
                   const Text(
-                    AppStrings.chooseMedicineType,
+                    MedicineStrings.chooseMedicineType,
                     style: AppTextStyles.display,
                   ),
                   AppSpacing.gapXl,

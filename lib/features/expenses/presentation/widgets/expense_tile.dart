@@ -27,7 +27,7 @@ class ExpenseTile extends StatelessWidget {
       ),
       title: Text(expense.title, style: AppTextStyles.subtitle),
       subtitle: Text(
-        '${c.label}${AppStrings.notifDoseSeparator}'
+        '${c.label}${NotificationStrings.notifDoseSeparator}'
         '${AppDateFormat.shortDate(expense.spentOn)}',
         style: AppTextStyles.caption,
       ),

@@ -1,4 +1,4 @@
-import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/constants.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/utils/enum_labels.dart';
@@ -18,15 +18,15 @@ abstract final class ReminderText {
     }
     final location = d.reminder.location;
     if (location != null && location.isNotEmpty) {
-      parts.add('${AppStrings.notifAtLocation}$location');
+      parts.add('${NotificationStrings.notifAtLocation}$location');
     }
     final doctor = d.doctor;
     if (doctor != null && medicine == null) {
-      parts.add('${AppStrings.notifWithDoctor}${doctor.name}');
+      parts.add('${NotificationStrings.notifWithDoctor}${doctor.name}');
     }
     final description = d.reminder.description;
     if (parts.isEmpty) return description ?? d.reminder.type.label;
-    final summary = parts.join(AppStrings.notifDoseSeparator);
+    final summary = parts.join(NotificationStrings.notifDoseSeparator);
     return description == null || description.isEmpty
         ? summary
         : '$summary\n$description';
@@ -41,12 +41,12 @@ abstract final class ReminderText {
   /// "Mon, 5 Oct · 08:00 am" for one-off reminders.
   static String schedule(Reminder r) {
     final time = AppDateFormat.time(r.startAt);
-    final sep = AppStrings.notifDoseSeparator;
+    final sep = NotificationStrings.notifDoseSeparator;
     return switch (r.repeatRule) {
       RepeatRule.once => AppDateFormat.dateTime(r.startAt),
-      RepeatRule.daily => '${AppStrings.repeatDaily}$sep$time',
+      RepeatRule.daily => '${ReminderStrings.repeatDaily}$sep$time',
       RepeatRule.everyNDays =>
-        '${AppStrings.everyNDays(r.repeatInterval ?? 1)}$sep$time',
+        '${ReminderStrings.everyNDays(r.repeatInterval ?? 1)}$sep$time',
       RepeatRule.weekly => '${weekdays(r.weekdaysMask ?? 0)}$sep$time',
     };
   }
@@ -55,18 +55,18 @@ abstract final class ReminderText {
   /// "Every 3 days", or the date for one-off reminders.
   static String frequency(Reminder r) => switch (r.repeatRule) {
     RepeatRule.once => AppDateFormat.shortDate(r.startAt),
-    RepeatRule.daily => AppStrings.everyDay,
-    RepeatRule.everyNDays => AppStrings.everyNDays(r.repeatInterval ?? 1),
+    RepeatRule.daily => MedicineStrings.everyDay,
+    RepeatRule.everyNDays => ReminderStrings.everyNDays(r.repeatInterval ?? 1),
     RepeatRule.weekly => weekdays(r.weekdaysMask ?? 0),
   };
 
   /// "Mon, Wed, Fri" — or "Every day" when all seven are set.
   static String weekdays(int mask) {
     const all = 127;
-    if (mask == all) return AppStrings.everyDay;
+    if (mask == all) return MedicineStrings.everyDay;
     return [
-      for (var i = 0; i < AppStrings.weekdaysShort.length; i++)
-        if (mask & (1 << i) != 0) AppStrings.weekdaysShort[i],
+      for (var i = 0; i < ReminderStrings.weekdaysShort.length; i++)
+        if (mask & (1 << i) != 0) ReminderStrings.weekdaysShort[i],
     ].join(', ');
   }
 
@@ -74,10 +74,10 @@ abstract final class ReminderText {
   static String slotLabel(Reminder r, DateTime at) {
     final hour = at.hour;
     final slot = switch (hour) {
-      >= 5 && < 12 => AppStrings.morning,
-      >= 12 && < 17 => AppStrings.afternoon,
-      >= 17 && < 21 => AppStrings.evening,
-      _ => AppStrings.bedtime,
+      >= 5 && < 12 => DashboardStrings.morning,
+      >= 12 && < 17 => DashboardStrings.afternoon,
+      >= 17 && < 21 => DashboardStrings.evening,
+      _ => DashboardStrings.bedtime,
     };
     return '$slot ${r.type.label}';
   }
@@ -85,6 +85,6 @@ abstract final class ReminderText {
   /// "45 min", "2 h 10 min" until [target] (clamped at zero).
   static String until(DateTime target, DateTime now) {
     final minutes = target.difference(now).inMinutes.clamp(0, 1 << 30);
-    return AppStrings.inHoursMinutes(minutes ~/ 60, minutes % 60);
+    return DashboardStrings.inHoursMinutes(minutes ~/ 60, minutes % 60);
   }
 }

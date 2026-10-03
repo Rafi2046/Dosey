@@ -33,7 +33,7 @@ class RemindersScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          const ScreenHeader(title: AppStrings.remindersTitle),
+          const ScreenHeader(title: ReminderStrings.remindersTitle),
           FilterPills<ReminderType>(
             options: ReminderType.values,
             selected: filter,
@@ -45,8 +45,8 @@ class RemindersScreen extends ConsumerWidget {
             value: reminders,
             data: (list) => list.isEmpty
                 ? EmptyState(
-                    title: AppStrings.noReminders,
-                    actionLabel: AppStrings.addReminder,
+                    title: ReminderStrings.noReminders,
+                    actionLabel: ReminderStrings.addReminder,
                     onAction: () => _openForm(context),
                   )
                 : Column(

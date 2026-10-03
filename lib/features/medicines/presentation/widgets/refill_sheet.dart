@@ -64,7 +64,7 @@ class _RefillSheetState extends ConsumerState<_RefillSheet> {
         );
     if (!mounted) return;
     Navigator.pop(context);
-    showAppSnack(context, AppStrings.refillSaved);
+    showAppSnack(context, MedicineStrings.refillSaved);
   }
 
   @override
@@ -79,23 +79,26 @@ class _RefillSheetState extends ConsumerState<_RefillSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppStrings.refillTitle, style: AppTextStyles.titleOnLight),
+            Text(
+              MedicineStrings.refillTitle,
+              style: AppTextStyles.titleOnLight,
+            ),
             Text(widget.medicine.name, style: AppTextStyles.bodyOnLight),
             AppSpacing.gapXl,
             AppTextField.decimal(
-              label: AppStrings.refillQuantity,
+              label: MedicineStrings.refillQuantity,
               controller: _quantity,
               hint: widget.medicine.doseUnit,
               validator: (v) => (double.tryParse(v ?? '') ?? 0) > 0
                   ? null
-                  : AppStrings.invalidNumber,
+                  : ErrorStrings.invalidNumber,
             ),
             AppTextField.decimal(
-              label: AppStrings.refillTotal,
+              label: MedicineStrings.refillTotal,
               controller: _total,
               prefixText: AppConstants.currencySymbol,
               validator: (v) => Money.parse(v ?? '') == null
-                  ? AppStrings.invalidAmount
+                  ? ErrorStrings.invalidAmount
                   : null,
             ),
             PillButton(

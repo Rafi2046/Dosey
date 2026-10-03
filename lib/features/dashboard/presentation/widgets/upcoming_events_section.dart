@@ -27,7 +27,7 @@ class UpcomingEventsSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SectionHeader(
-          title: AppStrings.upcoming,
+          title: DashboardStrings.upcoming,
           actionLabel: AppStrings.seeAll,
           onAction: onSeeAll,
         ),

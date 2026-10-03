@@ -30,13 +30,13 @@ class MedicinesScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          const ScreenHeader(title: AppStrings.medicinesTitle),
+          const ScreenHeader(title: MedicineStrings.medicinesTitle),
           ChoicePills<bool>(
             options: const [false, true],
             onDark: true,
             selected: {showStopped},
             labelOf: (stopped) =>
-                stopped ? AppStrings.stopped : AppStrings.active,
+                stopped ? MedicineStrings.stopped : AppStrings.active,
             onChanged: (s) =>
                 ref.read(showStoppedMedicinesProvider.notifier).set(s.single),
           ),
@@ -49,9 +49,9 @@ class MedicinesScreen extends ConsumerWidget {
                   .toList();
               if (list.isEmpty) {
                 return EmptyState(
-                  title: AppStrings.noMedicines,
+                  title: MedicineStrings.noMedicines,
                   image: AppImages.medCapsule,
-                  actionLabel: showStopped ? null : AppStrings.addMedicine,
+                  actionLabel: showStopped ? null : MedicineStrings.addMedicine,
                   onAction: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (_) => const MedicineTypeScreen(),

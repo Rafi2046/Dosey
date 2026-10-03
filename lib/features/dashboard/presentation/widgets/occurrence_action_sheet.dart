@@ -79,15 +79,15 @@ class _OccurrenceSheet extends ConsumerWidget {
             AppSpacing.gapXl,
             PillButton(
               label: isMedicine
-                  ? AppStrings.alarmMarkTaken
-                  : AppStrings.alarmDone,
+                  ? AlarmStrings.alarmMarkTaken
+                  : AlarmStrings.alarmDone,
               tone: PillButtonTone.moss,
               trailingIcon: Icons.check_rounded,
               onPressed: () => _act(context, ref, AlarmAction.taken),
             ),
             AppSpacing.gapMd,
             PillButton(
-              label: AppStrings.skipDose,
+              label: DashboardStrings.skipDose,
               tone: PillButtonTone.cream,
               trailingIcon: Icons.redo_rounded,
               onPressed: () => _act(context, ref, AlarmAction.skip),

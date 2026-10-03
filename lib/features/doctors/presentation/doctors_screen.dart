@@ -22,14 +22,14 @@ class DoctorsScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          const ScreenHeader(title: AppStrings.doctorsTitle),
+          const ScreenHeader(title: DoctorStrings.doctorsTitle),
           AsyncValueView(
             value: doctors,
             data: (list) => list.isEmpty
                 ? EmptyState(
-                    title: AppStrings.noDoctors,
+                    title: DoctorStrings.noDoctors,
                     image: AppImages.medOther,
-                    actionLabel: AppStrings.addDoctor,
+                    actionLabel: DoctorStrings.addDoctor,
                     onAction: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (_) => const DoctorFormScreen(),

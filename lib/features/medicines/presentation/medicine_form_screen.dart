@@ -152,7 +152,9 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
   @override
   Widget build(BuildContext context) {
     return CreamScaffold(
-      title: _isEdit ? AppStrings.editMedicine : AppStrings.addMedicine,
+      title: _isEdit
+          ? MedicineStrings.editMedicine
+          : MedicineStrings.addMedicine,
       bottomBar: PillButton(
         label: _isEdit ? AppStrings.saveChanges : AppStrings.save,
         showRingChevron: true,
@@ -165,7 +167,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
           padding: AppSpacing.screenPadding,
           children: [
             LabeledField(
-              label: AppStrings.medicineForm,
+              label: MedicineStrings.medicineForm,
               child: ChoicePills<MedicineForm>(
                 options: MedicineForm.values,
                 selected: {_form},
@@ -174,20 +176,20 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
               ),
             ),
             AppTextField(
-              label: AppStrings.medicineName,
+              label: MedicineStrings.medicineName,
               controller: _name,
               textCapitalization: TextCapitalization.words,
               validator: AppTextField.required,
             ),
             AppTextField(
-              label: AppStrings.medicineStrength,
+              label: MedicineStrings.medicineStrength,
               controller: _strength,
               hint: AppStrings.optional,
             ),
             AppTextField(
-              label: AppStrings.medicineDescription,
+              label: MedicineStrings.medicineDescription,
               controller: _notes,
-              hint: AppStrings.medicineDescriptionHint,
+              hint: MedicineStrings.medicineDescriptionHint,
               maxLines: 3,
             ),
             DoseSection(
@@ -202,7 +204,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
                 onChanged: (t) => setState(() => _times = t),
               ),
             DoctorPickerField(
-              label: AppStrings.medicineDoctor,
+              label: MedicineStrings.medicineDoctor,
               doctorId: _doctorId,
               onChanged: (id) => setState(() => _doctorId = id),
             ),
@@ -216,7 +218,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
               refillAt: _refillAt,
             ),
             PickerField(
-              label: AppStrings.medicineStartDate,
+              label: MedicineStrings.medicineStartDate,
               value: AppDateFormat.date(_startDate),
               icon: Icons.event_rounded,
               onTap: () async {
@@ -225,7 +227,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
               },
             ),
             PickerField(
-              label: AppStrings.medicineEndDate,
+              label: MedicineStrings.medicineEndDate,
               value: _endDate == null ? null : AppDateFormat.date(_endDate!),
               placeholder: AppStrings.ongoing,
               icon: Icons.event_busy_rounded,

@@ -76,13 +76,6 @@ class RemindersRepository {
 
   Future<ReminderWithDetails?> getDetails(int id) => watchById(id).first;
 
-  /// Every reminder that should currently have an alarm (scheduler resync).
-  Future<List<Reminder>> getSchedulable() =>
-      (_db.select(_db.reminders)..where(
-            (r) => r.isEnabled.equals(true) & r.nextTriggerAt.isNotNull(),
-          ))
-          .get();
-
   /// Reminders currently ringing (awaiting Taken/Skip/Snooze), oldest first.
   Stream<List<ReminderWithDetails>> watchRinging() => _watch(
     _joined()

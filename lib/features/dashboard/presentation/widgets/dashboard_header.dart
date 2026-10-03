@@ -15,9 +15,9 @@ class DashboardHeader extends StatelessWidget {
   final VoidCallback onBellTap;
 
   String get _greeting => switch (now.hour) {
-    < 12 => AppStrings.goodMorning,
-    < 17 => AppStrings.goodAfternoon,
-    _ => AppStrings.goodEvening,
+    < 12 => DashboardStrings.goodMorning,
+    < 17 => DashboardStrings.goodAfternoon,
+    _ => DashboardStrings.goodEvening,
   };
 
   @override

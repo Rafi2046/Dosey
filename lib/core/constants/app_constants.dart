@@ -1,7 +1,6 @@
 /// Non-visual app configuration (currency, storage, notifications, alarms).
 abstract final class AppConstants {
   // ── Currency (BDT) ────────────────────────────────────────────────────────
-  static const String currencyCode = 'BDT';
   static const String currencySymbol = '৳';
 
   /// en_IN gives lakh/crore grouping (1,00,000), which Bangladesh also uses.

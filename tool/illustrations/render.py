@@ -228,7 +228,37 @@ def logo(size=512):
     save(img, 'logo.png', size)
 
 
+# ── Launcher icon & splash sources (assets/branding, not bundled) ────────────
+SAGE = (104, 113, 99)
+BRANDING = 'assets/branding'
+
+
+def _capsule_mark(size, scale):
+    """Transparent canvas with the cream/orange capsule at [scale] of width."""
+    img = canvas(size)
+    S = size * SS
+    capsule(img, S // 2, S // 2, int(S * scale), int(S * scale * 0.38), 35,
+            CREAM, ORANGE, WHITE, ORANGE_LIGHT)
+    return img
+
+
+def branding():
+    os.makedirs(BRANDING, exist_ok=True)
+    # Full-bleed icon (iOS forbids transparency; launchers apply the mask).
+    icon = Image.new('RGBA', (1024 * SS, 1024 * SS), SAGE + (255,))
+    icon.alpha_composite(_capsule_mark(1024, 0.62))
+    icon.resize((1024, 1024), Image.LANCZOS).convert('RGB').save(f'{BRANDING}/app_icon.png')
+    # Adaptive foreground: keep within the 66% safe zone.
+    _capsule_mark(1024, 0.48).resize((1024, 1024), Image.LANCZOS).save(
+        f'{BRANDING}/app_icon_foreground.png')
+    # Splash: Android 12 shows a 1152px image masked to a 768px circle.
+    _capsule_mark(1152, 0.42).resize((1152, 1152), Image.LANCZOS).save(
+        f'{BRANDING}/splash_logo.png')
+    print('wrote branding assets')
+
+
 if __name__ == '__main__':
+    branding()
     alarm_clock()
     tablet()
     capsule_art()

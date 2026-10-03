@@ -38,7 +38,7 @@ class ExpensesScreen extends ConsumerWidget {
       child: ListView(
         padding: AppSpacing.screenPadding.add(AppSpacing.listBottomPadding),
         children: [
-          const ScreenHeader(title: AppStrings.expensesTitle),
+          const ScreenHeader(title: ExpenseStrings.expensesTitle),
           MonthSwitcher(
             month: month,
             onPrevious: monthNotifier.previous,
@@ -51,16 +51,16 @@ class ExpensesScreen extends ConsumerWidget {
             projectedDailyMinor: projection.value?.dailyMinor ?? 0,
           ),
           if (categories.isNotEmpty) ...[
-            const SectionHeader(title: AppStrings.byCategory),
+            const SectionHeader(title: ExpenseStrings.byCategory),
             CategoryBreakdown(totals: categories),
           ],
-          const SectionHeader(title: AppStrings.medicineCosts),
+          const SectionHeader(title: ExpenseStrings.medicineCosts),
           AsyncValueView(
             value: projection,
             data: (p) => MedicineCostBreakdown(projection: p),
           ),
           SectionHeader(
-            title: AppStrings.expenses,
+            title: ExpenseStrings.expenses,
             actionLabel: AppStrings.add,
             onAction: () => _openForm(context),
           ),
@@ -68,7 +68,7 @@ class ExpensesScreen extends ConsumerWidget {
             value: expenses,
             data: (list) => list.isEmpty
                 ? const EmptyState(
-                    title: AppStrings.noExpenses,
+                    title: ExpenseStrings.noExpenses,
                     image: AppImages.medTablet,
                   )
                 : Column(

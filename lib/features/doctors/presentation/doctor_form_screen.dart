@@ -85,7 +85,7 @@ class _DoctorFormScreenState extends ConsumerState<DoctorFormScreen> {
   @override
   Widget build(BuildContext context) {
     return CreamScaffold(
-      title: _d == null ? AppStrings.addDoctor : AppStrings.editDoctor,
+      title: _d == null ? DoctorStrings.addDoctor : DoctorStrings.editDoctor,
       bottomBar: PillButton(
         label: _d == null ? AppStrings.save : AppStrings.saveChanges,
         showRingChevron: true,
@@ -98,48 +98,48 @@ class _DoctorFormScreenState extends ConsumerState<DoctorFormScreen> {
           padding: AppSpacing.screenPadding,
           children: [
             AppTextField(
-              label: AppStrings.doctorName,
+              label: DoctorStrings.doctorName,
               controller: _name,
               textCapitalization: TextCapitalization.words,
               validator: AppTextField.required,
             ),
             AppTextField(
-              label: AppStrings.doctorSpecialty,
+              label: DoctorStrings.doctorSpecialty,
               controller: _specialty,
               textCapitalization: TextCapitalization.words,
             ),
             AppTextField(
-              label: AppStrings.doctorPhone,
+              label: DoctorStrings.doctorPhone,
               controller: _phone,
               keyboardType: TextInputType.phone,
             ),
             AppTextField(
-              label: AppStrings.doctorEmail,
+              label: DoctorStrings.doctorEmail,
               controller: _email,
               keyboardType: TextInputType.emailAddress,
               textCapitalization: TextCapitalization.none,
             ),
             AppTextField(
-              label: AppStrings.doctorClinic,
+              label: DoctorStrings.doctorClinic,
               controller: _clinic,
               textCapitalization: TextCapitalization.words,
             ),
             AppTextField(
-              label: AppStrings.doctorAddress,
+              label: DoctorStrings.doctorAddress,
               controller: _address,
               maxLines: 2,
             ),
             AppTextField.decimal(
-              label: AppStrings.doctorFee,
+              label: DoctorStrings.doctorFee,
               controller: _fee,
               prefixText: AppConstants.currencySymbol,
               validator: (v) =>
                   (v == null || v.trim().isEmpty || Money.parse(v) != null)
                   ? null
-                  : AppStrings.invalidAmount,
+                  : ErrorStrings.invalidAmount,
             ),
             AppTextField(
-              label: AppStrings.doctorNotes,
+              label: DoctorStrings.doctorNotes,
               controller: _notes,
               maxLines: 3,
             ),

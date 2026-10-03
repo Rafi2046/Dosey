@@ -27,8 +27,8 @@ class TodayReminderStack extends ConsumerWidget {
       data: (items) {
         if (items.isEmpty) {
           return EmptyState(
-            title: AppStrings.nothingScheduled,
-            actionLabel: AppStrings.addReminder,
+            title: DashboardStrings.nothingScheduled,
+            actionLabel: ReminderStrings.addReminder,
             onAction: onAddReminder,
           );
         }

@@ -229,25 +229,30 @@ void main() {
   ) async {
     await pumpApp(tester);
 
-    expect(find.text(AppStrings.dashboardTitle), findsOneWidget);
+    expect(find.text(DashboardStrings.dashboardTitle), findsOneWidget);
     // 10:15 → 13:00 Vitamin D is next.
     expect(
-      find.text(AppStrings.nextTypeIn(AppStrings.typeMedicine, '2 h 45 min')),
+      find.text(
+        DashboardStrings.nextTypeIn(ReminderStrings.typeMedicine, '2 h 45 min'),
+      ),
       findsOneWidget,
     );
     expect(await scrollTo(tester, 'Insulin'), findsOneWidget);
-    expect(await scrollTo(tester, AppStrings.runningLow), findsOneWidget);
+    expect(await scrollTo(tester, DashboardStrings.runningLow), findsOneWidget);
     expect(await scrollTo(tester, 'Diabetes follow-up'), findsOneWidget);
-    expect(await scrollTo(tester, AppStrings.spentThisMonth), findsOneWidget);
+    expect(
+      await scrollTo(tester, DashboardStrings.spentThisMonth),
+      findsOneWidget,
+    );
 
     // Mark the 08:00 dose taken from the stack (scroll back to the top).
     await tester.drag(
-      find.text(AppStrings.spentThisMonth),
+      find.text(DashboardStrings.spentThisMonth),
       const Offset(0, 3000),
     );
     await settle(tester);
     await tapText(tester, 'Metformin');
-    await tapText(tester, AppStrings.alarmMarkTaken);
+    await tapText(tester, AlarmStrings.alarmMarkTaken);
     final log = await dbRun(tester, () => db.select(db.reminderLogs).get());
     expect(log.single.status, ReminderLogStatus.taken);
     await unmount(tester);
@@ -261,7 +266,7 @@ void main() {
 
     await openTab(tester, HomeTab.medicines);
     expect(find.text('Metformin 500 mg'), findsOneWidget);
-    expect(find.text(AppStrings.lowStock), findsOneWidget);
+    expect(find.text(MedicineStrings.lowStock), findsOneWidget);
 
     await openTab(tester, HomeTab.doctors);
     expect(find.text('Dr. Kamal Hossain'), findsOneWidget);
@@ -270,7 +275,7 @@ void main() {
     expect(find.text('Endocrinology prescription'), findsOneWidget);
 
     await openTab(tester, HomeTab.expenses);
-    expect(await scrollTo(tester, AppStrings.byCategory), findsOneWidget);
+    expect(await scrollTo(tester, ExpenseStrings.byCategory), findsOneWidget);
     expect(await scrollTo(tester, 'HbA1c test'), findsOneWidget);
     await unmount(tester);
   });
@@ -280,14 +285,14 @@ void main() {
 
     await openTab(tester, HomeTab.medicines);
     await tapText(tester, 'Insulin 500 mg');
-    expect(find.text(AppStrings.medicineTime), findsOneWidget);
-    expect(find.text(AppStrings.changeSetting), findsOneWidget);
+    expect(find.text(MedicineStrings.medicineTime), findsOneWidget);
+    expect(find.text(MedicineStrings.changeSetting), findsOneWidget);
     await back(tester);
 
     await openTab(tester, HomeTab.doctors);
     await tapText(tester, 'Dr. Farhana Rahman');
     expect(
-      await scrollTo(tester, AppStrings.doctorAppointments),
+      await scrollTo(tester, DoctorStrings.doctorAppointments),
       findsOneWidget,
     );
     expect(
@@ -298,7 +303,7 @@ void main() {
 
     await openTab(tester, HomeTab.records);
     await tapText(tester, 'Endocrinology prescription');
-    expect(find.text(AppStrings.addPages), findsOneWidget);
+    expect(find.text(RecordStrings.addPages), findsOneWidget);
     await back(tester);
     await unmount(tester);
   });
@@ -307,10 +312,10 @@ void main() {
     await pumpApp(tester);
 
     for (final label in [
-      AppStrings.addReminder,
-      AppStrings.addDoctor,
-      AppStrings.addRecord,
-      AppStrings.addExpense,
+      ReminderStrings.addReminder,
+      DoctorStrings.addDoctor,
+      RecordStrings.addRecord,
+      ExpenseStrings.addExpense,
     ]) {
       await tester.tap(find.byTooltip(AppStrings.add));
       await settle(tester);
@@ -322,9 +327,9 @@ void main() {
     // Medicine is two steps: type grid → form.
     await tester.tap(find.byTooltip(AppStrings.add));
     await settle(tester);
-    await tapText(tester, AppStrings.addMedicine);
-    expect(find.text(AppStrings.chooseMedicineType), findsOneWidget);
-    await tapText(tester, AppStrings.formCapsule);
+    await tapText(tester, MedicineStrings.addMedicine);
+    expect(find.text(MedicineStrings.chooseMedicineType), findsOneWidget);
+    await tapText(tester, MedicineStrings.formCapsule);
     await tapText(tester, AppStrings.next);
     expect(find.byType(Form), findsOneWidget);
     await unmount(tester);
@@ -336,7 +341,7 @@ void main() {
     await pumpApp(tester);
     await tester.tap(find.byTooltip(AppStrings.add));
     await settle(tester);
-    await tapText(tester, AppStrings.addMedicine);
+    await tapText(tester, MedicineStrings.addMedicine);
     await tapText(tester, AppStrings.next);
 
     await tester.enterText(

@@ -6,17 +6,17 @@ import '../../../../core/notifications/permission_service.dart';
 /// Presentation details for each [AppPermission].
 extension PermissionMeta on AppPermission {
   String get title => switch (this) {
-    AppPermission.notifications => AppStrings.permNotificationsTitle,
-    AppPermission.exactAlarms => AppStrings.permExactAlarmsTitle,
-    AppPermission.fullScreen => AppStrings.permFullScreenTitle,
-    AppPermission.dnd => AppStrings.permDndTitle,
+    AppPermission.notifications => OnboardingStrings.permNotificationsTitle,
+    AppPermission.exactAlarms => OnboardingStrings.permExactAlarmsTitle,
+    AppPermission.fullScreen => OnboardingStrings.permFullScreenTitle,
+    AppPermission.dnd => OnboardingStrings.permDndTitle,
   };
 
   String get description => switch (this) {
-    AppPermission.notifications => AppStrings.permNotificationsBody,
-    AppPermission.exactAlarms => AppStrings.permExactAlarmsBody,
-    AppPermission.fullScreen => AppStrings.permFullScreenBody,
-    AppPermission.dnd => AppStrings.permDndBody,
+    AppPermission.notifications => OnboardingStrings.permNotificationsBody,
+    AppPermission.exactAlarms => OnboardingStrings.permExactAlarmsBody,
+    AppPermission.fullScreen => OnboardingStrings.permFullScreenBody,
+    AppPermission.dnd => OnboardingStrings.permDndBody,
   };
 
   IconData get icon => switch (this) {
@@ -26,5 +26,6 @@ extension PermissionMeta on AppPermission {
     AppPermission.dnd => Icons.do_not_disturb_off_rounded,
   };
 
-  String get badge => isRequired ? AppStrings.required : AppStrings.recommended;
+  String get badge =>
+      isRequired ? OnboardingStrings.required : OnboardingStrings.recommended;
 }

@@ -13,7 +13,6 @@ abstract final class AppSpacing {
   static const double xxxl = 48;
 
   // ── Radii (the design uses generous, pillowy corners) ─────────────────────
-  static const double radiusSm = 12;
   static const double radiusMd = 20;
   static const double radiusLg = 28;
   static const double radiusXl = 36;
@@ -23,20 +22,16 @@ abstract final class AppSpacing {
   static const double iconSm = 16;
   static const double iconMd = 22;
   static const double iconLg = 28;
-  static const double iconXl = 40;
 
   // ── Component sizes ───────────────────────────────────────────────────────
   static const double buttonHeight = 58;
-  static const double buttonHeightSm = 44;
   static const double circleButton = 44;
   static const double ctaIconRing = 40;
   static const double ctaIconRingWidth = 64;
   static const double chipHeight = 40;
-  static const double permissionIcon = 48;
   static const double heroIllustration = 240;
   static const double alarmIllustration = 200;
   static const double logo = 96;
-  static const double avatarSm = 36;
   static const double avatarMd = 48;
   static const double avatarLg = 72;
   static const double emptyIllustration = 140;

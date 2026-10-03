@@ -25,7 +25,7 @@ class PickedPagesStrip extends StatelessWidget {
   Widget build(BuildContext context) {
     final radius = BorderRadius.circular(AppSpacing.radiusMd);
     return LabeledField(
-      label: AppStrings.recordPages,
+      label: RecordStrings.recordPages,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

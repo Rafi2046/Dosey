@@ -1,0 +1,18 @@
+# Native launch screen. Regenerate with:  dart run flutter_native_splash:create
+# Source art: tool/illustrations/render.py → assets/branding/.
+# Colors mirror lib/core/constants/app_colors.dart (YAML can't import Dart).
+
+flutter_native_splash:
+  # AppColors.sage — the same background the first Flutter frame paints, so
+  # there's no flash between the native splash and the app.
+  color: "#687163"
+  image: "assets/branding/splash_logo.png"
+
+  # Android 12+ uses its own splash API: a centred icon, masked to a circle.
+  android_12:
+    color: "#687163"
+    image: "assets/branding/splash_logo.png"
+
+  android: true
+  ios: true
+  web: false

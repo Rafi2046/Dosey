@@ -51,7 +51,10 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
         await repo.deletePage(pages[_page.clamp(0, pages.length - 1)]);
         setState(() => _page = 0);
       case _MenuAction.delete:
-        if (!await confirmDelete(context, body: AppStrings.deleteRecordBody)) {
+        if (!await confirmDelete(
+          context,
+          body: RecordStrings.deleteRecordBody,
+        )) {
           return;
         }
         if (mounted) Navigator.pop(context);
@@ -73,7 +76,7 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
     final record = value.value;
 
     return CreamScaffold(
-      title: record?.title ?? AppStrings.records,
+      title: record?.title ?? RecordStrings.records,
       actions: [
         if (record != null)
           PopupMenuButton<_MenuAction>(
@@ -87,7 +90,7 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
               if (pages.length > 1)
                 const PopupMenuItem(
                   value: _MenuAction.deletePage,
-                  child: Text(AppStrings.deletePage),
+                  child: Text(RecordStrings.deletePage),
                 ),
               const PopupMenuItem(
                 value: _MenuAction.delete,
@@ -97,7 +100,7 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
           ),
       ],
       bottomBar: PillButton(
-        label: AppStrings.addPages,
+        label: RecordStrings.addPages,
         tone: PillButtonTone.moss,
         trailingIcon: Icons.add_a_photo_rounded,
         onPressed: _addPages,
@@ -115,18 +118,18 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
                   ),
                   AppSpacing.gapXl,
                   InfoBlock(
-                    label: AppStrings.recordType,
+                    label: RecordStrings.recordType,
                     value: record.type.label,
                   ),
                   InfoBlock(
-                    label: AppStrings.recordDate,
+                    label: RecordStrings.recordDate,
                     value: AppDateFormat.date(record.recordDate),
                   ),
                   if (record.doctorId != null)
                     _DoctorBlock(doctorId: record.doctorId!),
                   if (record.notes != null)
                     InfoBlock(
-                      label: AppStrings.recordNotes,
+                      label: RecordStrings.recordNotes,
                       value: record.notes!,
                     ),
                 ],
@@ -145,6 +148,6 @@ class _DoctorBlock extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final doctor = ref.watch(doctorByIdProvider(doctorId)).value;
     if (doctor == null) return const SizedBox.shrink();
-    return InfoBlock(label: AppStrings.recordDoctor, value: doctor.name);
+    return InfoBlock(label: RecordStrings.recordDoctor, value: doctor.name);
   }
 }

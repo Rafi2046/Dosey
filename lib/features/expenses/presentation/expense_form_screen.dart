@@ -81,7 +81,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
   }
 
   Future<void> _delete() async {
-    if (!await confirmDelete(context, body: AppStrings.deleteExpenseBody)) {
+    if (!await confirmDelete(context, body: ExpenseStrings.deleteExpenseBody)) {
       return;
     }
     await ref.read(expensesRepositoryProvider).delete(_e!.id);
@@ -91,7 +91,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
   @override
   Widget build(BuildContext context) {
     return CreamScaffold(
-      title: _e == null ? AppStrings.addExpense : AppStrings.edit,
+      title: _e == null ? ExpenseStrings.addExpense : AppStrings.edit,
       actions: [
         if (_e != null)
           IconButton(
@@ -113,21 +113,21 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
           padding: AppSpacing.screenPadding,
           children: [
             AppTextField.decimal(
-              label: AppStrings.expenseAmount,
+              label: ExpenseStrings.expenseAmount,
               controller: _amount,
               prefixText: AppConstants.currencySymbol,
               validator: (v) => (Money.parse(v ?? '') ?? 0) > 0
                   ? null
-                  : AppStrings.invalidAmount,
+                  : ErrorStrings.invalidAmount,
             ),
             AppTextField(
-              label: AppStrings.expenseTitle,
+              label: ExpenseStrings.expenseTitle,
               controller: _title,
-              hint: AppStrings.expenseTitleHint,
+              hint: ExpenseStrings.expenseTitleHint,
               validator: AppTextField.required,
             ),
             LabeledField(
-              label: AppStrings.expenseCategory,
+              label: ExpenseStrings.expenseCategory,
               child: ChoicePills<ExpenseCategory>(
                 options: ExpenseCategory.values,
                 selected: {_category},
@@ -137,7 +137,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
               ),
             ),
             PickerField(
-              label: AppStrings.expenseDate,
+              label: ExpenseStrings.expenseDate,
               value: AppDateFormat.date(_date),
               icon: Icons.event_rounded,
               onTap: () async {
@@ -147,22 +147,22 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
             ),
             if (_category == ExpenseCategory.medicine)
               MedicinePickerField(
-                label: AppStrings.expenseMedicine,
+                label: ExpenseStrings.expenseMedicine,
                 medicineId: _medicineId,
                 onChanged: (id) => setState(() => _medicineId = id),
               ),
             DoctorPickerField(
-              label: AppStrings.expenseDoctor,
+              label: ExpenseStrings.expenseDoctor,
               doctorId: _doctorId,
               onChanged: (id) => setState(() => _doctorId = id),
             ),
             AppTextField.decimal(
-              label: AppStrings.expenseQuantity,
+              label: ExpenseStrings.expenseQuantity,
               controller: _quantity,
               hint: AppStrings.optional,
             ),
             AppTextField(
-              label: AppStrings.expenseNotes,
+              label: ExpenseStrings.expenseNotes,
               controller: _notes,
               maxLines: 3,
             ),

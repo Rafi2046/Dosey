@@ -20,12 +20,12 @@ class StockPriceSection extends StatelessWidget {
   static String? _optionalAmount(String? v) =>
       (v == null || v.trim().isEmpty || Money.parse(v) != null)
       ? null
-      : AppStrings.invalidAmount;
+      : ErrorStrings.invalidAmount;
 
   static String? _optionalNumber(String? v) =>
       (v == null || v.trim().isEmpty || (double.tryParse(v) ?? -1) >= 0)
       ? null
-      : AppStrings.invalidNumber;
+      : ErrorStrings.invalidNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class StockPriceSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppTextField.decimal(
-          label: AppStrings.medicineUnitPrice,
+          label: MedicineStrings.medicineUnitPrice,
           controller: unitPrice,
           prefixText: AppConstants.currencySymbol,
           validator: _optionalAmount,
@@ -43,7 +43,7 @@ class StockPriceSection extends StatelessWidget {
           children: [
             Expanded(
               child: AppTextField.decimal(
-                label: AppStrings.medicineStock,
+                label: MedicineStrings.medicineStock,
                 controller: stock,
                 hint: AppStrings.optional,
                 validator: _optionalNumber,
@@ -52,7 +52,7 @@ class StockPriceSection extends StatelessWidget {
             AppSpacing.gapMd,
             Expanded(
               child: AppTextField.decimal(
-                label: AppStrings.medicineRefillAt,
+                label: MedicineStrings.medicineRefillAt,
                 controller: refillAt,
                 hint: AppStrings.optional,
                 validator: _optionalNumber,

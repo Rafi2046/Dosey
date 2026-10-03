@@ -31,7 +31,7 @@ class DebugTestAlarmButton extends ConsumerWidget {
         .read(medicinesRepositoryProvider)
         .create(
           MedicinesCompanion.insert(
-            name: AppStrings.debugTestAlarmTitle,
+            name: DebugStrings.debugTestAlarmTitle,
             startDate: now,
             mealRelation: const Value(MealRelation.afterMeal),
           ),
@@ -41,21 +41,21 @@ class DebugTestAlarmButton extends ConsumerWidget {
         .create(
           RemindersCompanion.insert(
             type: ReminderType.medicine,
-            title: AppStrings.debugTestAlarmTitle,
-            description: const Value(AppStrings.debugTestAlarmBody),
+            title: DebugStrings.debugTestAlarmTitle,
+            description: const Value(DebugStrings.debugTestAlarmBody),
             startAt: at,
             medicineId: Value(medicineId),
           ),
         );
     messenger.showSnackBar(
-      const SnackBar(content: Text(AppStrings.debugTestAlarmScheduled)),
+      const SnackBar(content: Text(DebugStrings.debugTestAlarmScheduled)),
     );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PillButton(
-      label: AppStrings.debugTestAlarm,
+      label: DebugStrings.debugTestAlarm,
       tone: PillButtonTone.cream,
       trailingIcon: Icons.alarm_add_rounded,
       onPressed: () => _schedule(ref, ScaffoldMessenger.of(context)),

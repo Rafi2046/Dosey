@@ -32,7 +32,7 @@ class MedicineCard extends StatelessWidget {
     final caption = AppTextStyles.caption.copyWith(color: muted);
     final dose =
         '${ReminderText.formatAmount(m.doseAmount)} ${m.doseUnit}'
-        '${AppStrings.notifDoseSeparator}${m.mealRelation.label}';
+        '${NotificationStrings.notifDoseSeparator}${m.mealRelation.label}';
 
     return SurfaceCard(
       color: color,
@@ -64,12 +64,12 @@ class MedicineCard extends StatelessWidget {
                   children: [
                     if (!m.isActive)
                       const StatusChip(
-                        label: AppStrings.stopped,
+                        label: MedicineStrings.stopped,
                         icon: Icons.pause_rounded,
                       ),
                     if (item.isLowStock)
                       StatusChip(
-                        label: AppStrings.lowStock,
+                        label: MedicineStrings.lowStock,
                         icon: Icons.warning_amber_rounded,
                         background: AppColors.accent,
                         foreground: AppColors.textOnAccent,
@@ -77,7 +77,7 @@ class MedicineCard extends StatelessWidget {
                     else if (m.stockQuantity != null)
                       _chip(
                         light,
-                        AppStrings.unitsLeft(
+                        DashboardStrings.unitsLeft(
                           ReminderText.formatAmount(m.stockQuantity!),
                         ),
                         Icons.inventory_2_rounded,
@@ -85,7 +85,7 @@ class MedicineCard extends StatelessWidget {
                     if ((monthlyCostMinor ?? 0) > 0)
                       _chip(
                         light,
-                        '${Money.format(monthlyCostMinor!)} ${AppStrings.perMonth}',
+                        '${Money.format(monthlyCostMinor!)} ${DashboardStrings.perMonth}',
                         Icons.payments_rounded,
                       ),
                   ],

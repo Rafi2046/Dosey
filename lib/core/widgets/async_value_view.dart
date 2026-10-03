@@ -23,7 +23,7 @@ class AsyncValueView<T> extends StatelessWidget {
       error: (_, _) => const Padding(
         padding: EdgeInsets.all(AppSpacing.xl),
         child: Text(
-          AppStrings.genericError,
+          ErrorStrings.genericError,
           style: AppTextStyles.bodyMuted,
           textAlign: TextAlign.center,
         ),

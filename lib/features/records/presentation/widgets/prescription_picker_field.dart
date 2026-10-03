@@ -27,7 +27,7 @@ class PrescriptionPickerField extends ConsumerWidget {
     final selected = records.where((r) => r.id == recordId).firstOrNull;
 
     return PickerField(
-      label: AppStrings.prescription,
+      label: MedicineStrings.prescription,
       value: selected?.title,
       placeholder: AppStrings.optional,
       icon: Icons.description_rounded,
@@ -35,7 +35,7 @@ class PrescriptionPickerField extends ConsumerWidget {
       onTap: () async {
         final result = await showSelectionSheet(
           context: context,
-          title: AppStrings.prescription,
+          title: MedicineStrings.prescription,
           items: records,
           labelOf: (r) => r.title,
           subtitleOf: (r) => AppDateFormat.date(r.recordDate),

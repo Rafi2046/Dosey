@@ -29,7 +29,7 @@ class DoctorCard extends StatelessWidget {
     final subtitle = [
       ?d.specialty,
       ?d.clinic,
-    ].join(AppStrings.notifDoseSeparator);
+    ].join(NotificationStrings.notifDoseSeparator);
 
     return SurfaceCard(
       color: color,
@@ -56,7 +56,9 @@ class DoctorCard extends StatelessWidget {
                   ),
                 AppSpacing.gapSm,
                 StatusChip(
-                  label: AppStrings.activeMedicines(item.activeMedicineCount),
+                  label: DoctorStrings.activeMedicines(
+                    item.activeMedicineCount,
+                  ),
                   icon: Icons.medication_rounded,
                   background: light ? AppColors.moss : AppColors.creamLight,
                   foreground: light ? AppColors.textOnDark : AppColors.ink,

@@ -15,7 +15,7 @@ class DebugDemoDataButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PillButton(
-      label: AppStrings.debugLoadDemo,
+      label: DebugStrings.debugLoadDemo,
       tone: PillButtonTone.cream,
       trailingIcon: Icons.dataset_rounded,
       onPressed: () async {
@@ -27,7 +27,7 @@ class DebugDemoDataButton extends ConsumerWidget {
           ref.read(recordsRepositoryProvider),
         );
         messenger.showSnackBar(
-          const SnackBar(content: Text(AppStrings.debugDemoLoaded)),
+          const SnackBar(content: Text(DebugStrings.debugDemoLoaded)),
         );
       },
     );

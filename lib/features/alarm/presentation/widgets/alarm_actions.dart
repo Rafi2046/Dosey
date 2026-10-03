@@ -27,7 +27,9 @@ class AlarmActions extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         PillButton(
-          label: isMedicine ? AppStrings.alarmMarkTaken : AppStrings.alarmDone,
+          label: isMedicine
+              ? AlarmStrings.alarmMarkTaken
+              : AlarmStrings.alarmDone,
           tone: PillButtonTone.moss,
           trailingIcon: Icons.check_rounded,
           onPressed: busy ? null : () => onAction(AlarmAction.taken),
@@ -35,14 +37,14 @@ class AlarmActions extends StatelessWidget {
         AppSpacing.gapMd,
         PillButton(
           label:
-              '${AppStrings.alarmSnooze} $snoozeMinutes ${AppStrings.minutesShort}',
+              '${AlarmStrings.alarmSnooze} $snoozeMinutes ${AlarmStrings.minutesShort}',
           trailingIcon: Icons.snooze_rounded,
           onPressed: busy ? null : () => onAction(AlarmAction.snooze),
         ),
         if (isMedicine)
           TextButton(
             onPressed: busy ? null : () => onAction(AlarmAction.skip),
-            child: const Text(AppStrings.alarmSkip),
+            child: const Text(AlarmStrings.alarmSkip),
           ),
       ],
     );

@@ -21,7 +21,7 @@ class LowStockSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SectionHeader(title: AppStrings.runningLow),
+        const SectionHeader(title: DashboardStrings.runningLow),
         for (final item in items) ...[
           SurfaceCard(
             color: AppColors.cream,
@@ -46,7 +46,7 @@ class LowStockSection extends ConsumerWidget {
                   ),
                 ),
                 StatusChip(
-                  label: AppStrings.unitsLeft(
+                  label: DashboardStrings.unitsLeft(
                     ReminderText.formatAmount(item.medicine.stockQuantity!),
                   ),
                   background: AppColors.accent,

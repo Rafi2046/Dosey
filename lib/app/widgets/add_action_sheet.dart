@@ -23,15 +23,23 @@ class _AddActionSheet extends StatelessWidget {
   const _AddActionSheet();
 
   static final List<(IconData, String, Widget Function())> _actions = [
-    (Icons.alarm_add_rounded, AppStrings.addReminder, ReminderFormScreen.new),
-    (Icons.medication_rounded, AppStrings.addMedicine, MedicineTypeScreen.new),
+    (
+      Icons.alarm_add_rounded,
+      ReminderStrings.addReminder,
+      ReminderFormScreen.new,
+    ),
+    (
+      Icons.medication_rounded,
+      MedicineStrings.addMedicine,
+      MedicineTypeScreen.new,
+    ),
     (
       Icons.person_add_alt_1_rounded,
-      AppStrings.addDoctor,
+      DoctorStrings.addDoctor,
       DoctorFormScreen.new,
     ),
-    (Icons.add_a_photo_rounded, AppStrings.addRecord, RecordFormScreen.new),
-    (Icons.payments_rounded, AppStrings.addExpense, ExpenseFormScreen.new),
+    (Icons.add_a_photo_rounded, RecordStrings.addRecord, RecordFormScreen.new),
+    (Icons.payments_rounded, ExpenseStrings.addExpense, ExpenseFormScreen.new),
   ];
 
   @override

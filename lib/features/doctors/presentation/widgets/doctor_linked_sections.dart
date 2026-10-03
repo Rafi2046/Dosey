@@ -38,14 +38,14 @@ class DoctorLinkedSections extends ConsumerWidget {
       children: [
         if (medicines.isNotEmpty) ...[
           const SectionHeader(
-            title: AppStrings.prescribedMedicines,
+            title: DoctorStrings.prescribedMedicines,
             onLight: true,
           ),
           for (final m in medicines)
             LinkTile(
               icon: Icons.medication_rounded,
               title: m.medicine.name,
-              subtitle: m.medicine.isActive ? null : AppStrings.stopped,
+              subtitle: m.medicine.isActive ? null : MedicineStrings.stopped,
               onTap: () => _push(
                 context,
                 MedicineDetailScreen(medicineId: m.medicine.id),
@@ -54,7 +54,7 @@ class DoctorLinkedSections extends ConsumerWidget {
         ],
         if (reminders.isNotEmpty) ...[
           const SectionHeader(
-            title: AppStrings.doctorAppointments,
+            title: DoctorStrings.doctorAppointments,
             onLight: true,
           ),
           for (final d in reminders)
@@ -67,7 +67,10 @@ class DoctorLinkedSections extends ConsumerWidget {
             ),
         ],
         if (records.isNotEmpty) ...[
-          const SectionHeader(title: AppStrings.doctorRecords, onLight: true),
+          const SectionHeader(
+            title: DoctorStrings.doctorRecords,
+            onLight: true,
+          ),
           for (final r in records)
             LinkTile(
               icon: r.record.type.icon,

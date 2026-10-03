@@ -72,7 +72,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   }
 
   static Set<int> _maskToSet(int? mask) => {
-    for (var i = 0; i < AppStrings.weekdaysShort.length; i++)
+    for (var i = 0; i < ReminderStrings.weekdaysShort.length; i++)
       if ((mask ?? 0) & (1 << i) != 0) i,
   };
 
@@ -80,12 +80,12 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
 
   String? get _medicineError =>
       _submitted && _type == ReminderType.medicine && _medicineId == null
-      ? AppStrings.selectMedicineError
+      ? ReminderStrings.selectMedicineError
       : null;
 
   String? get _weekdayError =>
       _submitted && _repeat == RepeatRule.weekly && _weekdays.isEmpty
-      ? AppStrings.selectWeekdaysError
+      ? ReminderStrings.selectWeekdaysError
       : null;
 
   @override
@@ -144,7 +144,10 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   }
 
   Future<void> _delete() async {
-    if (!await confirmDelete(context, body: AppStrings.deleteReminderBody)) {
+    if (!await confirmDelete(
+      context,
+      body: ReminderStrings.deleteReminderBody,
+    )) {
       return;
     }
     await ref.read(remindersRepositoryProvider).delete(widget.existing!.id);
@@ -158,7 +161,9 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   Widget build(BuildContext context) {
     final isMedicine = _type == ReminderType.medicine;
     return CreamScaffold(
-      title: _isEdit ? AppStrings.editReminder : AppStrings.addReminder,
+      title: _isEdit
+          ? ReminderStrings.editReminder
+          : ReminderStrings.addReminder,
       actions: [
         if (_isEdit)
           IconButton(
@@ -185,20 +190,20 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
             ),
             if (isMedicine)
               MedicinePickerField(
-                label: AppStrings.reminderMedicine,
+                label: ReminderStrings.reminderMedicine,
                 medicineId: _medicineId,
                 allowNone: false,
                 errorText: _medicineError,
                 onChanged: _onMedicineChanged,
               ),
             AppTextField(
-              label: AppStrings.reminderTitle,
+              label: ReminderStrings.reminderTitle,
               controller: _title,
-              hint: AppStrings.reminderTitleHint,
+              hint: ReminderStrings.reminderTitleHint,
               validator: AppTextField.required,
             ),
             PickerField(
-              label: AppStrings.reminderWhen,
+              label: ReminderStrings.reminderWhen,
               value: AppDateFormat.dateTime(_startAt),
               icon: Icons.schedule_rounded,
               onTap: () async {
@@ -221,32 +226,32 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
               onEndChanged: (d) => setState(() => _endAt = d),
             ),
             DoctorPickerField(
-              label: AppStrings.reminderDoctor,
+              label: ReminderStrings.reminderDoctor,
               doctorId: _doctorId,
               onChanged: (id) => setState(() => _doctorId = id),
             ),
             if (!isMedicine)
               AppTextField(
-                label: AppStrings.reminderLocation,
+                label: ReminderStrings.reminderLocation,
                 controller: _location,
               ),
             AppTextField(
-              label: AppStrings.reminderNotes,
+              label: ReminderStrings.reminderNotes,
               controller: _notes,
               maxLines: 3,
             ),
             SwitchRow(
-              title: AppStrings.reminderCritical,
-              subtitle: AppStrings.reminderCriticalHint,
+              title: ReminderStrings.reminderCritical,
+              subtitle: ReminderStrings.reminderCriticalHint,
               value: _critical,
               onChanged: (v) => setState(() => _critical = v),
             ),
             LabeledField(
-              label: AppStrings.reminderSnooze,
+              label: ReminderStrings.reminderSnooze,
               child: ChoicePills<int>(
                 options: AppConstants.snoozeOptions,
                 selected: {_snooze},
-                labelOf: (m) => '$m ${AppStrings.minutesShort}',
+                labelOf: (m) => '$m ${AlarmStrings.minutesShort}',
                 onChanged: (s) => setState(() => _snooze = s.single),
               ),
             ),

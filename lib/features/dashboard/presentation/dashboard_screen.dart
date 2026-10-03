@@ -39,7 +39,7 @@ class DashboardScreen extends ConsumerWidget {
           const Padding(
             padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
             child: Text(
-              AppStrings.dashboardTitle,
+              DashboardStrings.dashboardTitle,
               style: AppTextStyles.display,
             ),
           ),
@@ -53,7 +53,7 @@ class DashboardScreen extends ConsumerWidget {
           const LowStockSection(),
           UpcomingEventsSection(onSeeAll: onOpenReminders),
           SectionHeader(
-            title: AppStrings.medicineCost,
+            title: DashboardStrings.medicineCost,
             actionLabel: AppStrings.seeAll,
             onAction: onOpenExpenses,
           ),

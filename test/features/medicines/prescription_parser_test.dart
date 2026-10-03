@@ -46,7 +46,7 @@ void main() {
     expect(ambrox.form, MedicineForm.syrup);
     expect(ambrox.strength, '15mg/5ml');
     expect(hours(ambrox), [8, 14, 21]);
-    expect(amounts(ambrox), [2, 2, 2]); // "2 tsf" at each time
+    expect(amounts(ambrox), [10, 10, 10]); // "2 tsf" = 10 ml each time
     expect(ambrox.dosePattern, 'TDS');
 
     final montair = meds[3];

@@ -259,13 +259,19 @@ abstract final class PrescriptionParser {
   // ── Amount, meal, duration ────────────────────────────────────────────────
 
   static final _amountRe = RegExp(
-    r'(?<![\d.])(\d+(?:\.\d+)?|½)\s*(?:tablets?|tabs?|capsules?|caps?|ml|'
+    r'(?<![\d.])(\d+(?:\.\d+)?|½)\s*(tablets?|tabs?|capsules?|caps?|ml|'
     r'drops?|puffs?|spoons?|tsf)\b',
   );
 
+  /// Teaspoon doses ("2 tsf") are converted to ml, the syrup unit.
+  static const double _mlPerTeaspoon = 5;
+
   static double? _amount(String text) {
     final m = _amountRe.firstMatch(text);
-    return m == null ? null : _number(m.group(1)!);
+    if (m == null) return null;
+    final n = _number(m.group(1)!);
+    final spoon = m.group(2)!.startsWith('spoon') || m.group(2) == 'tsf';
+    return spoon ? n * _mlPerTeaspoon : n;
   }
 
   static final _before = RegExp(

@@ -15,13 +15,13 @@ import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/labeled_field.dart';
 import '../../../core/widgets/picker_field.dart';
 import '../../../core/widgets/pill_button.dart';
-import '../../../core/widgets/selection_sheet.dart';
 import '../../doctors/presentation/widgets/doctor_picker_field.dart';
 import '../../records/presentation/widgets/prescription_picker_field.dart';
 import '../../reminders/domain/reminder_text.dart';
 import '../domain/dose_time.dart';
 import '../domain/scanned_medicine.dart';
 import '../providers/medicines_providers.dart';
+import 'bulk/bulk_add_screen.dart';
 import 'widgets/dose_section.dart';
 import 'widgets/reminder_times_editor.dart';
 import 'widgets/scan_prescription_card.dart';
@@ -126,29 +126,19 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
     if (found.isEmpty) {
       return showAppSnack(context, MedicineStrings.scanNothingFound);
     }
-    final pick = found.length == 1
-        ? found.single
-        : (await showSelectionSheet<ScannedMedicine>(
-            context: context,
-            title: MedicineStrings.scanPickTitle,
-            items: found,
-            icon: Icons.medication_rounded,
-            labelOf: (m) => [m.name, ?m.strength].join(' '),
-            subtitleOf: (m) => _scanSummary(context, m),
-          ))?.value;
-    if (pick == null || !mounted) return;
-    _applyScan(pick);
-    showAppSnack(context, MedicineStrings.scanFilled);
-  }
-
-  static String? _scanSummary(BuildContext context, ScannedMedicine m) {
-    final parts = [
-      ?m.dosePattern,
-      for (final d in m.doses)
-        '${d.time.format(context).toLowerCase()} '
-            '(${ReminderText.formatAmount(d.amount)})',
-    ];
-    return parts.isEmpty ? null : parts.join(' · ');
+    if (found.length == 1) {
+      _applyScan(found.single);
+      return showAppSnack(context, MedicineStrings.scanFilled);
+    }
+    // Several medicines: review and save them all together.
+    final scanned = found;
+    final saved = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) =>
+            BulkAddScreen(scanned: scanned, initialDoctorId: _doctorId),
+      ),
+    );
+    if (saved == true && mounted) Navigator.pop(context);
   }
 
   void _applyScan(ScannedMedicine s) {

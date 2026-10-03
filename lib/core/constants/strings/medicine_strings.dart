@@ -71,11 +71,24 @@ abstract final class MedicineStrings {
   static const String scanSubtitle =
       'Auto-fill name, dose and times from a photo';
   static const String scanReading = 'Reading prescription…';
-  static const String scanPickTitle = 'Which medicine are you adding?';
   static const String scanNothingFound =
       'No medicines found. Try a clearer, well-lit photo or fill in manually.';
   static const String scanFailed =
       "Couldn't read that image. Please try again.";
+  static const String bulkTitle = 'Review medicines';
+  static const String bulkHint =
+      'Found on your prescription. Check each medicine, fix anything that '
+      'looks wrong, remove extras, then save them all at once.';
+  static const String bulkAddAnother = 'Add another medicine';
+  static const String bulkRemove = 'Remove medicine';
+  static const String bulkEmpty = 'No medicines left. Add one or go back.';
+  static String bulkSaveAll(int n) =>
+      n == 1 ? 'Save 1 medicine' : 'Save $n medicines';
+  static String bulkSaved(int n) =>
+      n == 1 ? 'Added 1 medicine' : 'Added $n medicines';
+  static String bulkAsWritten(String pattern) => 'Prescription says: $pattern';
+  static const String bulkNoTimes =
+      'No times set: this medicine will not ring.';
   static const String scanFilled =
       'Filled from prescription. Please check every field before saving.';
 }

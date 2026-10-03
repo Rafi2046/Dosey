@@ -167,6 +167,60 @@ void main() {
     await unmount(tester);
   });
 
+  testWidgets('medicines ringing together share one screen; '
+      '"All taken" logs them all', (tester) async {
+    usePhoneSize(tester);
+    permissions.grantedSet.addAll(AppPermission.values);
+    await tester.pumpWidget(app());
+    await settle(tester);
+
+    final at = DateTime(2026, 10, 3, 23);
+    await dbRun(tester, () async {
+      for (final name in ['Zulfidin', 'Calbo D']) {
+        final med = await db
+            .into(db.medicines)
+            .insert(
+              MedicinesCompanion.insert(
+                name: name,
+                startDate: DateTime(2026),
+                stockQuantity: const Value(10),
+              ),
+            );
+        final id = await db
+            .into(db.reminders)
+            .insert(
+              RemindersCompanion.insert(
+                type: ReminderType.medicine,
+                title: name,
+                startAt: at,
+                medicineId: Value(med),
+              ),
+            );
+        await RemindersRepository(db).setRinging(id, at);
+      }
+    });
+    await settle(tester);
+
+    // One screen listing both, not two screens in a row.
+    expect(find.byType(AlarmRingScreen), findsOneWidget);
+    expect(find.text(en.alarmGroupCount(2)), findsOneWidget);
+    expect(find.text('Zulfidin'), findsOneWidget);
+    expect(find.text('Calbo D'), findsOneWidget);
+
+    await tester.tap(find.text(en.alarmMarkAllTaken));
+    await settle(tester);
+
+    expect(find.byType(AlarmRingScreen), findsNothing);
+    final logs = await dbRun(tester, () => db.select(db.reminderLogs).get());
+    expect(logs.map((l) => l.status), [
+      ReminderLogStatus.taken,
+      ReminderLogStatus.taken,
+    ]);
+    final stock = await dbRun(tester, () => db.select(db.medicines).get());
+    expect(stock.map((m) => m.stockQuantity), [9, 9]);
+    await unmount(tester);
+  });
+
   testWidgets('ringing reminder opens the alarm screen; Taken closes it', (
     tester,
   ) async {

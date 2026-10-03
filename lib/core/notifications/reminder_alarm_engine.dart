@@ -37,7 +37,8 @@ class ReminderAlarmEngine {
       AppConstants.snoozeIdOffset + leaderId;
 
   /// The id a group's alarm, notification and snooze are filed under.
-  static int leaderOf(Iterable<int> reminderIds) => reminderIds.reduce(math.min);
+  static int leaderOf(Iterable<int> reminderIds) =>
+      reminderIds.reduce(math.min);
 
   static Map<String, dynamic> _params(
     DateTime at,
@@ -135,10 +136,7 @@ class ReminderAlarmEngine {
         now;
 
     final ids = isSnooze
-        ? await _stillSnoozed(
-            idsFromParams(params) ?? [leaderId],
-            scheduledFor,
-          )
+        ? await _stillSnoozed(idsFromParams(params) ?? [leaderId], scheduledFor)
         : await _dueTogether(leaderId, scheduledFor);
     if (ids.isEmpty) return;
 
@@ -228,7 +226,7 @@ class ReminderAlarmEngine {
     final stockBefore = <int, StockStatus>{
       if (action == AlarmAction.taken)
         for (final id in reminderIds)
-          if (await _reminders.stockStatusFor(id) case final s?) id: s,
+          id: ?await _reminders.stockStatusFor(id),
     };
     await _reminders.logActions(
       reminderIds: reminderIds,
@@ -248,9 +246,7 @@ class ReminderAlarmEngine {
       await _scheduler.cancel(snoozeId);
       return;
     }
-    final group = [
-      for (final id in reminderIds) ?await _reminders.getById(id),
-    ];
+    final group = [for (final id in reminderIds) ?await _reminders.getById(id)];
     final minutes = group.isEmpty
         ? AppConstants.defaultSnoozeMinutes
         : group.map((r) => r.snoozeMinutes).reduce(math.min);

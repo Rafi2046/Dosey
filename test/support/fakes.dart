@@ -29,11 +29,22 @@ class FakeAlarmScheduler implements AlarmScheduler {
 }
 
 class FakeNotificationPresenter implements NotificationPresenter {
+  /// Reminder id → occurrence, for every reminder in a shown notification.
   final Map<int, DateTime> showing = {};
 
+  /// The reminder ids of each notification posted, in order.
+  final List<List<int>> posted = [];
+
   @override
-  Future<void> showAlarm(ReminderWithDetails d, DateTime scheduledFor) async =>
+  Future<void> showAlarm(
+    List<ReminderWithDetails> group,
+    DateTime scheduledFor,
+  ) async {
+    posted.add([for (final d in group) d.reminder.id]);
+    for (final d in group) {
       showing[d.reminder.id] = scheduledFor;
+    }
+  }
 
   @override
   Future<void> dismiss(int reminderId) async => showing.remove(reminderId);

@@ -7,19 +7,21 @@ import '../../../core/notifications/reminder_alarm_engine.dart';
 import '../../reminders/domain/reminder_with_details.dart';
 import 'widgets/alarm_actions.dart';
 import 'widgets/alarm_details_card.dart';
+import 'widgets/alarm_group_card.dart';
 import 'widgets/shaking_alarm_clock.dart';
 
-/// Full-screen alarm shown over the lock screen when a reminder rings.
+/// Full-screen alarm shown over the lock screen when a reminder rings: one
+/// reminder, or every medicine due at that minute (acted on together).
 /// Closing is driven by `ringingFor` being cleared (see AlarmHost), so a
 /// notification-button action elsewhere also dismisses this screen.
 class AlarmRingScreen extends ConsumerStatefulWidget {
   const AlarmRingScreen({
     super.key,
-    required this.details,
+    required this.group,
     required this.scheduledFor,
   });
 
-  final ReminderWithDetails details;
+  final List<ReminderWithDetails> group;
   final DateTime scheduledFor;
 
   @override
@@ -35,7 +37,7 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen> {
       await ref
           .read(alarmEngineProvider)
           .handleAction(
-            reminderId: widget.details.reminder.id,
+            reminderIds: [for (final d in widget.group) d.reminder.id],
             scheduledFor: widget.scheduledFor,
             action: action,
           );
@@ -46,7 +48,12 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final reminder = widget.details.reminder;
+    final group = widget.group;
+    final reminder = group.first.reminder;
+    // Shortest snooze of the group, so nobody's dose is pushed too late.
+    final snooze = group
+        .map((d) => d.reminder.snoozeMinutes)
+        .reduce((a, b) => a < b ? a : b);
     return PopScope(
       // Must be answered explicitly; back gesture doesn't silence the alarm.
       canPop: false,
@@ -59,14 +66,21 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen> {
                 const Spacer(),
                 const ShakingAlarmClock(),
                 AppSpacing.gapXl,
-                AlarmDetailsCard(
-                  details: widget.details,
-                  scheduledFor: widget.scheduledFor,
-                ),
+                if (group.length == 1)
+                  AlarmDetailsCard(
+                    details: group.single,
+                    scheduledFor: widget.scheduledFor,
+                  )
+                else
+                  AlarmGroupCard(
+                    group: group,
+                    scheduledFor: widget.scheduledFor,
+                  ),
                 const Spacer(),
                 AlarmActions(
                   type: reminder.type,
-                  snoozeMinutes: reminder.snoozeMinutes,
+                  snoozeMinutes: snooze,
+                  grouped: group.length > 1,
                   busy: _busy,
                   onAction: _act,
                 ),

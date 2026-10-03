@@ -14,7 +14,6 @@ import 'package:dosey/core/widgets/labeled_field.dart';
 import 'package:dosey/core/widgets/screen_header.dart';
 import 'package:dosey/core/widgets/skeleton.dart';
 import 'package:dosey/core/widgets/pill_button.dart';
-import 'package:dosey/core/database/enums.dart';
 import 'package:dosey/core/utils/enum_labels.dart';
 import 'package:dosey/core/widgets/filter_pills.dart';
 import 'package:dosey/core/widgets/empty_state.dart';

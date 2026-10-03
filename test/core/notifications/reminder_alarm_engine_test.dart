@@ -60,11 +60,12 @@ void main() {
 
   test('sync arms enabled reminders and cancels disabled ones', () async {
     final r = await addDaily();
-    await engine.sync(r);
+    await engine.syncAll();
     expect(scheduler.alarms[r.id]!.at, DateTime(2026, 10, 3, 8));
     expect(scheduler.alarms[r.id]!.critical, isTrue);
 
-    await engine.sync(await repo.setEnabled(r.id, enabled: false, now: now));
+    await repo.setEnabled(r.id, enabled: false, now: now);
+    await engine.syncAll();
     expect(scheduler.alarms, isEmpty);
   });
 
@@ -100,7 +101,7 @@ void main() {
     await engine.onAlarmFired(r.id, paramsFor(at));
 
     await engine.handleAction(
-      reminderId: r.id,
+      reminderIds: [r.id],
       scheduledFor: at,
       action: AlarmAction.taken,
     );
@@ -118,7 +119,7 @@ void main() {
     now = at;
     await engine.onAlarmFired(r.id, paramsFor(at));
     await engine.handleAction(
-      reminderId: r.id,
+      reminderIds: [r.id],
       scheduledFor: at,
       action: AlarmAction.snooze,
     );
@@ -146,7 +147,7 @@ void main() {
 
   test('non-critical reminders schedule non-alarm-clock alarms', () async {
     final r = await addDaily(critical: false);
-    await engine.sync(r);
+    await engine.syncAll();
     expect(scheduler.alarms[r.id]!.critical, isFalse);
   });
 
@@ -174,7 +175,7 @@ void main() {
       now: now,
     );
     Future<void> take(int day) => engine.handleAction(
-      reminderId: r.id,
+      reminderIds: [r.id],
       scheduledFor: DateTime(2026, 10, day, 8),
       action: AlarmAction.taken,
     );
@@ -183,5 +184,137 @@ void main() {
     expect(notifier.lowStock, [('Zulfidin', 3)]);
     await take(4); // 6 → 4: already low, no second notification.
     expect(notifier.lowStock, hasLength(1));
+  });
+
+  group('medicines due at the same minute', () {
+    Future<(Reminder, Reminder)> addPair() async =>
+        (await addDaily(hour: 23), await addDaily(hour: 23));
+    final at = DateTime(2026, 10, 3, 23);
+
+    test('share ONE OS alarm, filed under the lowest id', () async {
+      final (a, b) = await addPair();
+      await engine.syncAll();
+
+      expect(scheduler.alarms.keys, [a.id]);
+      final alarm = scheduler.alarms[a.id]!;
+      expect(alarm.at, at);
+      expect(ReminderAlarmEngine.idsFromParams(alarm.params), [a.id, b.id]);
+    });
+
+    test(
+      'a different time or a non-medicine reminder rings on its own',
+      () async {
+        final (a, b) = await addPair();
+        final other = await addDaily(hour: 8);
+        final visit = await repo.create(
+          RemindersCompanion.insert(
+            type: ReminderType.appointment,
+            title: 'Dr. Kamal',
+            startAt: DateTime(2026, 10, 3, 23),
+          ),
+          now: now,
+        );
+        await engine.syncAll();
+        expect(
+          scheduler.alarms.keys,
+          unorderedEquals([a.id, other.id, visit.id]),
+        );
+        expect(scheduler.alarms.containsKey(b.id), isFalse);
+
+        // Moving one medicine off the shared time splits the group.
+        await repo.update(
+          b.id,
+          RemindersCompanion(startAt: Value(DateTime(2026, 10, 1, 22))),
+          now: now,
+        );
+        await engine.syncAll();
+        expect(scheduler.alarms[b.id]!.at, DateTime(2026, 10, 3, 22));
+        expect(
+          ReminderAlarmEngine.idsFromParams(scheduler.alarms[a.id]!.params),
+          [a.id],
+        );
+      },
+    );
+
+    test(
+      'firing rings them all in one notification and arms tomorrow',
+      () async {
+        final (a, b) = await addPair();
+        await engine.syncAll();
+        now = at.add(const Duration(seconds: 2));
+
+        await engine.onAlarmFired(a.id, scheduler.alarms[a.id]!.params);
+
+        expect(notifier.posted, [
+          [a.id, b.id],
+        ]);
+        for (final id in [a.id, b.id]) {
+          final r = (await repo.getById(id))!;
+          expect(r.ringingFor, at);
+          expect(r.nextTriggerAt, at.add(const Duration(days: 1)));
+        }
+        // Still one alarm for the group, now for tomorrow.
+        expect(scheduler.alarms.keys, [a.id]);
+        expect(scheduler.alarms[a.id]!.at, at.add(const Duration(days: 1)));
+      },
+    );
+
+    test('"Taken" logs every medicine and deducts each one\'s stock', () async {
+      final (a, b) = await addPair();
+      await engine.syncAll();
+      now = at;
+      await engine.onAlarmFired(a.id, scheduler.alarms[a.id]!.params);
+
+      await engine.handleAction(
+        reminderIds: [a.id, b.id],
+        scheduledFor: at,
+        action: AlarmAction.taken,
+      );
+
+      final logs = await db.select(db.reminderLogs).get();
+      expect(
+        {for (final l in logs) l.reminderId: l.status},
+        {a.id: ReminderLogStatus.taken, b.id: ReminderLogStatus.taken},
+      );
+      expect(logs.map((l) => l.scheduledFor).toSet(), {at});
+      for (final m in await db.select(db.medicines).get()) {
+        expect(m.stockQuantity, 9, reason: m.name);
+      }
+      expect(notifier.showing, isEmpty);
+      expect((await repo.getById(a.id))!.ringingFor, isNull);
+      expect((await repo.getById(b.id))!.ringingFor, isNull);
+    });
+
+    test('snooze re-rings the group, minus anything taken meanwhile', () async {
+      final (a, b) = await addPair();
+      await engine.syncAll();
+      now = at;
+      await engine.onAlarmFired(a.id, scheduler.alarms[a.id]!.params);
+      await engine.handleAction(
+        reminderIds: [a.id, b.id],
+        scheduledFor: at,
+        action: AlarmAction.snooze,
+      );
+      final snoozeId = ReminderAlarmEngine.snoozeAlarmId(a.id);
+      expect(scheduler.alarms.keys, containsAll([a.id, snoozeId]));
+      expect(
+        scheduler.alarms.containsKey(ReminderAlarmEngine.snoozeAlarmId(b.id)),
+        isFalse,
+      );
+
+      // B taken from its Home card before the snooze ends.
+      await engine.handleAction(
+        reminderIds: [b.id],
+        scheduledFor: at,
+        action: AlarmAction.taken,
+      );
+      notifier.posted.clear();
+      now = scheduler.alarms[snoozeId]!.at;
+      await engine.onAlarmFired(snoozeId, scheduler.alarms[snoozeId]!.params);
+
+      expect(notifier.posted, [
+        [a.id],
+      ]);
+    });
   });
 }

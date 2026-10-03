@@ -97,7 +97,8 @@ class RemindersRepository {
   ) async => {
     for (final l
         in await (_db.select(_db.reminderLogs)..where(
-              (l) => l.reminderId.isIn(ids) & l.scheduledFor.equals(scheduledFor),
+              (l) =>
+                  l.reminderId.isIn(ids) & l.scheduledFor.equals(scheduledFor),
             ))
             .get())
       l.reminderId: l.status,

@@ -131,7 +131,8 @@ abstract final class NotificationPayload {
   ) => {
     AppConstants.payloadReminderIds: reminderIds.join(','),
     // Kept so the format stays readable by older code paths.
-    AppConstants.payloadReminderId: '${ReminderAlarmEngine.leaderOf(reminderIds)}',
+    AppConstants.payloadReminderId:
+        '${ReminderAlarmEngine.leaderOf(reminderIds)}',
     AppConstants.payloadScheduledFor: scheduledFor.toIso8601String(),
   };
 
@@ -147,7 +148,9 @@ abstract final class NotificationPayload {
     ];
     // Notifications posted before grouping only carry one id.
     if (ids.isEmpty) {
-      final single = int.tryParse(payload?[AppConstants.payloadReminderId] ?? '');
+      final single = int.tryParse(
+        payload?[AppConstants.payloadReminderId] ?? '',
+      );
       if (single != null) ids.add(single);
     }
     return ids.isEmpty || at == null ? null : (ids, at);

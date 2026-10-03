@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/database/enums.dart';
 import '../core/notifications/native_bridge.dart';
 import '../features/alarm/presentation/alarm_ring_screen.dart';
 import '../features/reminders/domain/reminder_with_details.dart';
@@ -22,17 +24,36 @@ class AlarmHost extends ConsumerStatefulWidget {
 
 class _AlarmHostState extends ConsumerState<AlarmHost> {
   Route<void>? _route;
-  (int, DateTime)? _showing;
+  (List<int>, DateTime)? _showing;
+
+  /// The oldest ringing occurrence: every medicine ringing for that same
+  /// time together, or a single other reminder.
+  static List<ReminderWithDetails> _firstGroup(
+    List<ReminderWithDetails> ringing,
+  ) {
+    final first = ringing.firstOrNull;
+    if (first == null) return const [];
+    if (first.reminder.type != ReminderType.medicine) return [first];
+    return [
+      for (final d in ringing)
+        if (d.reminder.type == ReminderType.medicine &&
+            d.reminder.ringingFor == first.reminder.ringingFor)
+          d,
+    ];
+  }
 
   void _onRinging(List<ReminderWithDetails> ringing) {
-    final first = ringing.firstOrNull;
-    final key = first == null
+    final group = _firstGroup(ringing);
+    final key = group.isEmpty
         ? null
-        : (first.reminder.id, first.reminder.ringingFor!);
-    if (key == _showing) return;
+        : (
+            [for (final d in group) d.reminder.id],
+            group.first.reminder.ringingFor!,
+          );
+    if (_sameKey(key, _showing)) return;
 
     _removeRoute();
-    if (first == null) {
+    if (key == null) {
       NativeBridge.setShowOverLockScreen(false);
       return;
     }
@@ -41,10 +62,13 @@ class _AlarmHostState extends ConsumerState<AlarmHost> {
     _showing = key;
     _route = MaterialPageRoute<void>(
       fullscreenDialog: true,
-      builder: (_) => AlarmRingScreen(details: first, scheduledFor: key!.$2),
+      builder: (_) => AlarmRingScreen(group: group, scheduledFor: key.$2),
     );
     navigator.push(_route!);
   }
+
+  static bool _sameKey((List<int>, DateTime)? a, (List<int>, DateTime)? b) =>
+      a == null || b == null ? a == b : a.$2 == b.$2 && listEquals(a.$1, b.$1);
 
   void _removeRoute() {
     final route = _route;

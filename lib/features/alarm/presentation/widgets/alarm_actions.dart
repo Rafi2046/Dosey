@@ -14,12 +14,16 @@ class AlarmActions extends StatelessWidget {
     required this.snoozeMinutes,
     required this.busy,
     required this.onAction,
+    this.grouped = false,
   });
 
   final ReminderType type;
   final int snoozeMinutes;
   final bool busy;
   final ValueChanged<AlarmAction> onAction;
+
+  /// Several medicines at once: "All taken".
+  final bool grouped;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,9 @@ class AlarmActions extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         PillButton(
-          label: isMedicine
+          label: grouped
+              ? context.l10n.alarmMarkAllTaken
+              : isMedicine
               ? context.l10n.alarmMarkTaken
               : context.l10n.alarmDone,
           tone: PillButtonTone.moss,

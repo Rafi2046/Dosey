@@ -832,4 +832,38 @@ void main() {
     expect(med.refillThreshold, isNull);
     await unmount(tester);
   });
+
+  testWidgets('a wrong time can be deleted straight from its Home card', (
+    tester,
+  ) async {
+    final scheduler = FakeAlarmScheduler();
+    await pumpApp(tester, scheduler: scheduler);
+    // Metformin has several times; the first card is its 08:00 dose.
+    final metformin = (await dbRun(
+      tester,
+      () => (db.select(
+        db.reminders,
+      )..where((r) => r.title.equals('Metformin'))).get(),
+    )).firstWhere((r) => r.startAt.hour == 8);
+    final before = await dbRun(tester, () => db.select(db.reminders).get());
+    expect(scheduler.alarms, contains(metformin.id));
+
+    await tapText(tester, 'Metformin');
+    await tapText(tester, en.deleteThisTime);
+    expect(
+      find.text(en.deleteThisTimeBody('08:00 am', 'Metformin')),
+      findsOneWidget,
+    );
+    await tester.tap(find.text(en.delete));
+    await settle(tester);
+
+    final after = await dbRun(tester, () => db.select(db.reminders).get());
+    expect(after, hasLength(before.length - 1));
+    expect(after.map((r) => r.id), isNot(contains(metformin.id)));
+    expect(scheduler.alarms, isNot(contains(metformin.id)));
+    // Only that time: the medicine itself is still there.
+    final meds = await dbRun(tester, () => db.select(db.medicines).get());
+    expect(meds.map((m) => m.name), contains('Metformin'));
+    await unmount(tester);
+  });
 }

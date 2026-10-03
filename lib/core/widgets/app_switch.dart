@@ -9,7 +9,7 @@ class AppSwitch extends StatelessWidget {
     super.key,
     required this.value,
     required this.onChanged,
-    this.alignment = Alignment.centerRight,
+    this.alignment = Alignment.center,
   });
 
   final bool value;
@@ -21,10 +21,7 @@ class AppSwitch extends StatelessWidget {
     return Transform.scale(
       scale: AppSpacing.switchScale,
       alignment: alignment,
-      child: Switch(
-        value: value,
-        onChanged: onChanged,
-      ),
+      child: Switch(value: value, onChanged: onChanged),
     );
   }
 }

@@ -1475,4 +1475,15 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get editThisTime => 'Edit this time';
+
+  @override
+  String get deleteThisTime => 'Delete this time';
+
+  @override
+  String deleteThisTimeBody(String time, String name) {
+    return 'The $time reminder for $name will be deleted. Its other times stay.';
+  }
 }

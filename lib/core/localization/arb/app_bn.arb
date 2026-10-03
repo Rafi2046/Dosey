@@ -409,5 +409,8 @@
   "refillAlertDays": "{count, plural, other{শেষ হওয়ার {count} দিন আগে}}",
   "refillAlertUnits": "বর্তমান ডোজে এটি প্রায় {amount} {unit}।",
   "lowStockTitle": "{name} শেষ হয়ে আসছে",
-  "lowStockBody": "{count, plural, =0{আজই শেষ হয়ে যাবে। এখনই কিনে নিন।} other{আর প্রায় {count} দিনের মতো আছে। এখনই কিনে নিন।}}"
+  "lowStockBody": "{count, plural, =0{আজই শেষ হয়ে যাবে। এখনই কিনে নিন।} other{আর প্রায় {count} দিনের মতো আছে। এখনই কিনে নিন।}}",
+  "editThisTime": "সময় বদলান",
+  "deleteThisTime": "এই সময়টি মুছুন",
+  "deleteThisTimeBody": "{name}-এর {time}-এর রিমাইন্ডারটি মুছে যাবে। অন্য সময়গুলো থাকবে।"
 }

@@ -1461,4 +1461,15 @@ class AppLocalizationsBn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get editThisTime => 'সময় বদলান';
+
+  @override
+  String get deleteThisTime => 'এই সময়টি মুছুন';
+
+  @override
+  String deleteThisTimeBody(String time, String name) {
+    return '$name-এর $time-এর রিমাইন্ডারটি মুছে যাবে। অন্য সময়গুলো থাকবে।';
+  }
 }

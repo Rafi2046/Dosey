@@ -9,12 +9,16 @@ import '../../../../core/utils/date_format.dart';
 import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/widgets/pill_button.dart';
 import '../../../../core/widgets/status_chip.dart';
+import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../reminders/domain/reminder_text.dart';
+import '../../../reminders/presentation/reminder_form_screen.dart';
+import '../../../reminders/providers/reminders_providers.dart';
 import '../../../reminders/domain/scheduled_occurrence.dart';
 import '../../../../core/localization/l10n.dart';
 
 /// Quick "Medicine Taken" / "Skip" for one of today's occurrences — the same
-/// engine path as the alarm screen, so stock and history stay consistent.
+/// engine path as the alarm screen, so stock and history stay consistent —
+/// plus "Edit this time" / "Delete this time" to fix a wrong entry here.
 Future<void> showOccurrenceActions(
   BuildContext context,
   ScheduledOccurrence occurrence,
@@ -40,6 +44,32 @@ class _OccurrenceSheet extends ConsumerWidget {
           scheduledFor: occurrence.at,
           action: action,
         );
+    if (context.mounted) Navigator.pop(context);
+  }
+
+  void _edit(BuildContext context) {
+    final navigator = Navigator.of(context);
+    navigator.pop();
+    navigator.push(
+      MaterialPageRoute<void>(
+        builder: (_) =>
+            ReminderFormScreen(existing: occurrence.details.reminder),
+      ),
+    );
+  }
+
+  /// Removes this one reminder time (its alarm first), after confirming.
+  Future<void> _delete(BuildContext context, WidgetRef ref) async {
+    final r = occurrence.details.reminder;
+    final l10n = context.l10n;
+    if (!await confirmDelete(
+      context,
+      body: l10n.deleteThisTimeBody(AppDateFormat.time(r.startAt), r.title),
+    )) {
+      return;
+    }
+    await ref.read(alarmEngineProvider).cancel(r.id);
+    await ref.read(remindersRepositoryProvider).delete(r.id);
     if (context.mounted) Navigator.pop(context);
   }
 
@@ -92,6 +122,31 @@ class _OccurrenceSheet extends ConsumerWidget {
               tone: PillButtonTone.cream,
               trailingIcon: Icons.redo_rounded,
               onPressed: () => _act(context, ref, AlarmAction.skip),
+            ),
+            AppSpacing.gapSm,
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    icon: const Icon(Icons.edit_rounded),
+                    label: Text(context.l10n.editThisTime),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.inkMuted,
+                    ),
+                    onPressed: () => _edit(context),
+                  ),
+                ),
+                Expanded(
+                  child: TextButton.icon(
+                    icon: const Icon(Icons.delete_outline_rounded),
+                    label: Text(context.l10n.deleteThisTime),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.error,
+                    ),
+                    onPressed: () => _delete(context, ref),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

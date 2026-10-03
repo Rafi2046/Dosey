@@ -2557,6 +2557,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{It runs out today. Time to buy more.} =1{About 1 day left. Time to buy more.} other{About {count} days left. Time to buy more.}}'**
   String lowStockBody(int count);
+
+  /// No description provided for @editThisTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit this time'**
+  String get editThisTime;
+
+  /// No description provided for @deleteThisTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this time'**
+  String get deleteThisTime;
+
+  /// No description provided for @deleteThisTimeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The {time} reminder for {name} will be deleted. Its other times stay.'**
+  String deleteThisTimeBody(String time, String name);
 }
 
 class _AppLocalizationsDelegate

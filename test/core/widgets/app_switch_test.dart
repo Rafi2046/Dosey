@@ -22,17 +22,21 @@ void main() {
       ),
     );
 
-    // Verify scale is 0.68
+    // Verify scale constant is 0.68
     expect(AppSpacing.switchScale, 0.68);
-    final transform = tester.widget<Transform>(find.byType(Transform));
-    expect(transform.transform.getMaxScaleOnAxis(), closeTo(0.68, 0.001));
+    final transform = tester.widget<Transform>(find.descendant(
+      of: find.byType(AppSwitch),
+      matching: find.byType(Transform),
+    ).first);
+    expect(transform.transform.entry(0, 0), closeTo(0.68, 0.001));
+    expect(transform.transform.entry(1, 1), closeTo(0.68, 0.001));
 
     // Verify toggling works
-    await tester.tap(find.byType(AppSwitch));
+    await tester.tap(find.byType(Switch));
     await tester.pumpAndSettle();
     expect(value, true);
 
-    await tester.tap(find.byType(AppSwitch));
+    await tester.tap(find.byType(Switch));
     await tester.pumpAndSettle();
     expect(value, false);
   });
@@ -60,8 +64,9 @@ void main() {
     final transform = tester.widget<Transform>(find.descendant(
       of: find.byType(AppSwitch),
       matching: find.byType(Transform),
-    ));
-    expect(transform.transform.getMaxScaleOnAxis(), closeTo(0.68, 0.001));
+    ).first);
+    expect(transform.transform.entry(0, 0), closeTo(0.68, 0.001));
+    expect(transform.transform.entry(1, 1), closeTo(0.68, 0.001));
 
     // Tapping on the row toggles the switch
     await tester.tap(find.text('Ring as an alarm'));

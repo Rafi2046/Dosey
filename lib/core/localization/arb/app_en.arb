@@ -646,5 +646,18 @@
         "format": "decimalPattern"
       }
     }
+  },
+  "editThisTime": "Edit this time",
+  "deleteThisTime": "Delete this time",
+  "deleteThisTimeBody": "The {time} reminder for {name} will be deleted. Its other times stay.",
+  "@deleteThisTimeBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

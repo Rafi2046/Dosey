@@ -22,6 +22,11 @@ enum AppPermission {
   const AppPermission({required this.isRequired});
 
   final bool isRequired;
+
+  /// The ones that exist on this platform: iOS has no settings-page
+  /// equivalents, so only the notification prompt applies there.
+  static List<AppPermission> get onThisPlatform =>
+      Platform.isIOS ? const [notifications] : values;
 }
 
 /// Notifications go through awesome_notifications' runtime prompt. The rest

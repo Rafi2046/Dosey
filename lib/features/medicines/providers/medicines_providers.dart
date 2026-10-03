@@ -1,9 +1,12 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/database_provider.dart';
 import '../../reminders/providers/reminders_providers.dart';
 import '../data/medicine_schedule_service.dart';
 import '../data/medicines_repository.dart';
+import '../data/prescription_scanner_service.dart';
+import '../../records/presentation/widgets/image_source_sheet.dart';
 import '../domain/medicine_with_doctor.dart';
 
 final medicinesRepositoryProvider = Provider<MedicinesRepository>(
@@ -54,3 +57,11 @@ class ShowStoppedMedicines extends Notifier<bool> {
 
   void set(bool value) => state = value;
 }
+
+final prescriptionScannerProvider = Provider<PrescriptionScannerService>(
+  (ref) => PrescriptionScannerService(),
+);
+
+/// Camera/gallery picker for prescription scans (overridable in tests).
+final prescriptionImagePickerProvider =
+    Provider<Future<String?> Function(BuildContext)>((ref) => pickSingleImage);

@@ -58,7 +58,7 @@ class _PermissionOnboardingScreenState
                   const OnboardingHero(),
                   AppSpacing.gapXl,
                   for (final (i, permission)
-                      in AppPermission.values.indexed) ...[
+                      in AppPermission.onThisPlatform.indexed) ...[
                     PermissionTile(
                       permission: permission,
                       granted: granted.contains(permission),

@@ -62,4 +62,17 @@ abstract final class MedicineStrings {
   static const String deleteMedicineBody =
       'Its reminders and dose history will be deleted too.';
   static const String everyDay = 'Every day';
+
+  // ── Prescription scan ─────────────────────────────────────────────────────
+  static const String scanTitle = 'Scan prescription';
+  static const String scanSubtitle =
+      'Auto-fill name, dose and times from a photo';
+  static const String scanReading = 'Reading prescription…';
+  static const String scanPickTitle = 'Which medicine are you adding?';
+  static const String scanNothingFound =
+      'No medicines found. Try a clearer, well-lit photo or fill in manually.';
+  static const String scanFailed =
+      "Couldn't read that image. Please try again.";
+  static const String scanFilled =
+      'Filled from prescription. Please check every field before saving.';
 }

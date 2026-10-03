@@ -15,12 +15,15 @@ import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/labeled_field.dart';
 import '../../../core/widgets/picker_field.dart';
 import '../../../core/widgets/pill_button.dart';
+import '../../../core/widgets/selection_sheet.dart';
 import '../../doctors/presentation/widgets/doctor_picker_field.dart';
 import '../../records/presentation/widgets/prescription_picker_field.dart';
 import '../../reminders/domain/reminder_text.dart';
+import '../domain/scanned_medicine.dart';
 import '../providers/medicines_providers.dart';
 import 'widgets/dose_section.dart';
 import 'widgets/reminder_times_editor.dart';
+import 'widgets/scan_prescription_card.dart';
 import 'widgets/stock_price_section.dart';
 
 /// Step 2 of "Add Medicine", or editing an existing medicine. Reminder times
@@ -75,6 +78,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
   late DateTime? _endDate = _m?.endDate;
   List<TimeOfDay> _times = const [];
   bool _saving = false;
+  bool _scanning = false;
 
   static String? _formatOptional(double? v) =>
       v == null ? null : ReminderText.formatAmount(v);
@@ -103,6 +107,66 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
     // Keep the unit in sync unless the user typed a custom one.
     if (_doseUnit.text == _form.defaultUnit) _doseUnit.text = form.defaultUnit;
     setState(() => _form = form);
+  }
+
+  /// Photo → OCR → suggestions. The chosen one only pre-fills the fields;
+  /// nothing is saved until the user reviews and taps Save.
+  Future<void> _scan() async {
+    final path = await ref.read(prescriptionImagePickerProvider)(context);
+    if (path == null || !mounted) return;
+    setState(() => _scanning = true);
+    List<ScannedMedicine>? found;
+    try {
+      found = await ref.read(prescriptionScannerProvider).scan(path);
+    } on Exception {
+      found = null;
+    }
+    if (!mounted) return;
+    setState(() => _scanning = false);
+    if (found == null) {
+      return showAppSnack(context, MedicineStrings.scanFailed);
+    }
+    if (found.isEmpty) {
+      return showAppSnack(context, MedicineStrings.scanNothingFound);
+    }
+    final pick = found.length == 1
+        ? found.single
+        : (await showSelectionSheet<ScannedMedicine>(
+            context: context,
+            title: MedicineStrings.scanPickTitle,
+            items: found,
+            icon: Icons.medication_rounded,
+            labelOf: (m) => [m.name, ?m.strength].join(' '),
+            subtitleOf: (m) => _scanSummary(context, m),
+          ))?.value;
+    if (pick == null || !mounted) return;
+    _applyScan(pick);
+    showAppSnack(context, MedicineStrings.scanFilled);
+  }
+
+  static String? _scanSummary(BuildContext context, ScannedMedicine m) {
+    final parts = [
+      ?m.dosePattern,
+      for (final t in m.times) t.format(context).toLowerCase(),
+    ];
+    return parts.isEmpty ? null : parts.join(' · ');
+  }
+
+  void _applyScan(ScannedMedicine s) {
+    if (s.form case final form?) _onFormChanged(form);
+    _name.text = s.name;
+    if (s.strength case final v?) _strength.text = v;
+    if (s.doseAmount case final v?) {
+      _doseAmount.text = ReminderText.formatAmount(v);
+    }
+    setState(() {
+      if (s.meal case final m?) _meal = m;
+      if (s.times.isNotEmpty) _times = s.times;
+      // An N-day course ends on its Nth day.
+      if (s.durationDays case final d?) {
+        _endDate = DateUtils.dateOnly(_startDate).add(Duration(days: d - 1));
+      }
+    });
   }
 
   MedicinesCompanion _companion() => MedicinesCompanion(
@@ -166,6 +230,8 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
         child: ListView(
           padding: AppSpacing.screenPadding,
           children: [
+            if (!_isEdit)
+              ScanPrescriptionCard(scanning: _scanning, onTap: _scan),
             LabeledField(
               label: MedicineStrings.medicineForm,
               child: ChoicePills<MedicineForm>(

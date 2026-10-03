@@ -1,5 +1,7 @@
 import 'package:dosey/core/notifications/alarm_ports.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
+import 'package:dosey/features/medicines/data/prescription_scanner_service.dart';
+import 'package:dosey/features/medicines/domain/scanned_medicine.dart';
 import 'package:dosey/features/reminders/domain/reminder_with_details.dart';
 
 class ScheduledAlarm {
@@ -49,5 +51,17 @@ class FakePermissionService implements PermissionService {
   Future<void> request(AppPermission permission) async {
     requested.add(permission);
     grantedSet.add(permission);
+  }
+}
+
+class FakePrescriptionScanner implements PrescriptionScannerService {
+  FakePrescriptionScanner(this.result);
+  final List<ScannedMedicine> result;
+  final List<String> scannedPaths = [];
+
+  @override
+  Future<List<ScannedMedicine>> scan(String imagePath) async {
+    scannedPaths.add(imagePath);
+    return result;
   }
 }

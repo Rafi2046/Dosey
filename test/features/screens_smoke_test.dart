@@ -7,12 +7,15 @@ import 'package:dosey/core/constants/constants.dart';
 import 'package:dosey/core/database/app_database.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/core/storage/file_storage_service.dart';
+import 'package:dosey/features/medicines/domain/scanned_medicine.dart';
+import 'package:dosey/features/medicines/providers/medicines_providers.dart';
 import 'package:dosey/features/records/data/records_repository.dart';
 import 'package:dosey/features/reminders/data/reminders_repository.dart';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 
 import '../support/fakes.dart';
@@ -170,16 +173,22 @@ void main() {
   setUp(() => db = AppDatabase(NativeDatabase.memory()));
   tearDown(() => db.close());
 
-  Future<void> pumpApp(WidgetTester tester) async {
+  Future<void> pumpApp(
+    WidgetTester tester, {
+    List<Override> overrides = const [],
+  }) async {
     usePhoneSize(tester);
     await tester.runAsync(() => _seed(db, now));
     await tester.pumpWidget(
       ProviderScope(
-        overrides: testOverrides(
-          db: db,
-          now: now,
-          permissions: FakePermissionService(AppPermission.values.toSet()),
-        ),
+        overrides: [
+          ...testOverrides(
+            db: db,
+            now: now,
+            permissions: FakePermissionService(AppPermission.values.toSet()),
+          ),
+          ...overrides,
+        ],
         child: const DoseyApp(),
       ),
     );
@@ -356,6 +365,73 @@ void main() {
           (db.select(db.medicines)..where((m) => m.name.equals('Napa'))).get(),
     );
     expect(meds, hasLength(1));
+    await unmount(tester);
+  });
+
+  testWidgets('scanning a prescription pre-fills an editable form', (
+    tester,
+  ) async {
+    final scanner = FakePrescriptionScanner([
+      const ScannedMedicine(
+        name: 'Napa Extra',
+        strength: '500mg',
+        form: MedicineForm.tablet,
+        doseAmount: 1,
+        times: [TimeOfDay(hour: 8, minute: 0), TimeOfDay(hour: 21, minute: 0)],
+        meal: MealRelation.afterMeal,
+        durationDays: 7,
+        dosePattern: '1+0+1',
+      ),
+      const ScannedMedicine(name: 'Seclo', strength: '20mg'),
+    ]);
+    await pumpApp(
+      tester,
+      overrides: [
+        prescriptionScannerProvider.overrideWithValue(scanner),
+        prescriptionImagePickerProvider.overrideWithValue(
+          (_) async => '/tmp/rx.jpg',
+        ),
+      ],
+    );
+    await tester.tap(find.byTooltip(AppStrings.add));
+    await settle(tester);
+    await tapText(tester, MedicineStrings.addMedicine);
+    await tapText(tester, AppStrings.next);
+
+    await tapText(tester, MedicineStrings.scanTitle);
+    expect(scanner.scannedPaths, ['/tmp/rx.jpg']);
+    // Two medicines found: the user picks which one this form is for.
+    await tapText(tester, 'Napa Extra 500mg');
+
+    expect(find.widgetWithText(TextFormField, 'Napa Extra'), findsOneWidget);
+    expect(find.widgetWithText(TextFormField, '500mg'), findsOneWidget);
+    expect(find.text('8:00 am'), findsOneWidget);
+    expect(find.text('9:00 pm'), findsOneWidget);
+
+    // Everything stays editable before saving.
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Napa Extra'),
+      'Napa',
+    );
+    await tapText(tester, '8:00 am'); // removes that time
+    await tapText(tester, AppStrings.save);
+
+    final med = await dbRun(
+      tester,
+      () => (db.select(
+        db.medicines,
+      )..where((m) => m.name.equals('Napa'))).getSingle(),
+    );
+    expect(med.strength, '500mg');
+    expect(med.mealRelation, MealRelation.afterMeal);
+    expect(med.endDate, DateTime(2026, 10, 9));
+    final reminders = await dbRun(
+      tester,
+      () => (db.select(
+        db.reminders,
+      )..where((r) => r.medicineId.equals(med.id))).get(),
+    );
+    expect([for (final r in reminders) r.startAt.hour], [21]);
     await unmount(tester);
   });
 }

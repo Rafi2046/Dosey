@@ -19,6 +19,16 @@ abstract final class AppConstants {
 
   // ── Expense projections ───────────────────────────────────────────────────
   static const int daysPerMonth = 30;
+  static const int daysPerWeek = 7;
+
+  // ── Prescription scan: clock times for dose slots (1+0+1, BD, night…) ─────
+  static const int doseMorningHour = 8;
+  static const int doseNoonHour = 14;
+  static const int doseEveningHour = 18;
+  static const int doseNightHour = 21;
+
+  /// First dose of "every N hours" schedules.
+  static const int doseIntervalStartHour = 8;
 
   // ── Storage ───────────────────────────────────────────────────────────────
   static const String databaseName = 'dosey';

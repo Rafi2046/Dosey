@@ -43,6 +43,7 @@ dependencies:
   drift: ^2.34.0
   drift_flutter: ^0.3.1
   url_launcher: ^6.3.3
+  google_mlkit_text_recognition: ^0.16.0
 
 dev_dependencies:
   flutter_test:

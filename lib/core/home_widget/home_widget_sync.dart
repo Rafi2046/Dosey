@@ -20,6 +20,7 @@ class WidgetSlot {
     required this.at,
     required this.title,
     required this.lines,
+    required this.summary,
   });
 
   final DateTime at;
@@ -29,6 +30,10 @@ class WidgetSlot {
 
   /// "2 tablets · After meal", or one "Name · dose" line per medicine.
   final List<String> lines;
+
+  /// One line for compact widget sizes: the dose for one medicine, the
+  /// names ("Metformin, Calbo D") when several are due together.
+  final String summary;
 }
 
 /// Feeds the native home screen widget (NextDoseWidget.kt on Android,
@@ -106,15 +111,15 @@ class HomeWidgetSync {
     };
     if (group.length == 1) {
       final d = group.single;
+      final line = [
+        dose(d),
+        if (d.medicine case final m?) m.mealRelation.label(l),
+      ].where((s) => s.isNotEmpty).join(l.notifDoseSeparator);
       return WidgetSlot(
         at: at,
         title: d.reminder.title,
-        lines: [
-          [
-            dose(d),
-            if (d.medicine case final m?) m.mealRelation.label(l),
-          ].where((s) => s.isNotEmpty).join(l.notifDoseSeparator),
-        ],
+        lines: [line],
+        summary: line,
       );
     }
     return WidgetSlot(
@@ -124,6 +129,7 @@ class HomeWidgetSync {
         for (final d in group)
           '${d.reminder.title}${l.notifDoseSeparator}${dose(d)}',
       ],
+      summary: [for (final d in group) d.reminder.title].join(', '),
     );
   }
 
@@ -145,6 +151,7 @@ class HomeWidgetSync {
               'date': AppDateFormat.shortDate(s.at),
               'title': s.title,
               'lines': s.lines,
+              'summary': s.summary,
             },
         ],
       });

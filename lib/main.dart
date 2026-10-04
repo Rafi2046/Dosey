@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -17,6 +18,10 @@ import 'features/settings/providers/settings_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Portrait only (also set natively: AndroidManifest / Info.plist).
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   // Hospital/clinic search data (assets/data) is OpenStreetMap's; credit it
   // in Settings › Open-source licences as the ODbL requires.
   LicenseRegistry.addLicense(

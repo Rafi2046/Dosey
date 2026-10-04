@@ -51,11 +51,12 @@ class NextDoseWidget : HomeWidgetProvider() {
                 // Android 12+: the launcher picks the layout for the size.
                 RemoteViews(
                     mapOf(
-                        SizeF(110f, 110f) to build(R.layout.next_dose_widget_small),
-                        // Slim bar only when it's short; taller wide sizes
-                        // keep the card.
-                        SizeF(220f, 50f) to build(R.layout.next_dose_widget_wide),
-                        SizeF(220f, 110f) to build(R.layout.next_dose_widget_small),
+                        // Short: one row. Short and wide: the bar with
+                        // the dose. Tall enough (~2 rows): the card.
+                        SizeF(100f, 40f) to build(R.layout.next_dose_widget_mini),
+                        SizeF(220f, 40f) to build(R.layout.next_dose_widget_wide),
+                        SizeF(100f, CARD_MIN_HEIGHT) to build(R.layout.next_dose_widget_small),
+                        SizeF(220f, CARD_MIN_HEIGHT) to build(R.layout.next_dose_widget_small),
                     ),
                 )
             } else {
@@ -63,8 +64,11 @@ class NextDoseWidget : HomeWidgetProvider() {
                 val width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
                 val height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
                 build(
-                    if (width >= 220 && height < 110) R.layout.next_dose_widget_wide
-                    else R.layout.next_dose_widget_small,
+                    when {
+                        height >= CARD_MIN_HEIGHT.toInt() -> R.layout.next_dose_widget_small
+                        width >= 220 -> R.layout.next_dose_widget_wide
+                        else -> R.layout.next_dose_widget_mini
+                    },
                 )
             }
             appWidgetManager.updateAppWidget(id, views)
@@ -105,14 +109,20 @@ class NextDoseWidget : HomeWidgetProvider() {
                 labels?.optString("empty") ?: context.getString(R.string.widget_open_app),
             )
             views.setTextViewText(R.id.widget_lines, "")
+            views.setTextViewText(R.id.widget_summary, "")
             views.setTextViewText(R.id.widget_day, "")
             return
         }
         val at = slot.getLong("at")
+        val due = at <= now
         views.setTextViewText(
             R.id.widget_header,
-            labels?.optString(if (at <= now) "due" else "next") ?: "",
+            labels?.optString(if (due) "due" else "next") ?: "",
         )
+        // "Due now" in Dosey orange so it stands out.
+        views.setTextColor(R.id.widget_header, if (due) ACCENT else MUTED)
+        // One line for compact layouts (names when several are due).
+        views.setTextViewText(R.id.widget_summary, slot.optString("summary"))
         views.setViewVisibility(R.id.widget_time, View.VISIBLE)
         views.setTextViewText(R.id.widget_time, slot.optString("time"))
         views.setTextViewText(R.id.widget_title, slot.optString("title"))
@@ -173,5 +183,10 @@ class NextDoseWidget : HomeWidgetProvider() {
         private const val DUE_WINDOW_MS = 2 * 60 * 60 * 1000L
 
         private const val REDRAW_REQUEST = 7301
+        private const val ACCENT = 0xFFFD572F.toInt()
+        private const val MUTED = 0xFFC6C9BC.toInt()
+
+        /** Below this height (dp) the card's lines would be cut off. */
+        private const val CARD_MIN_HEIGHT = 125f
     }
 }

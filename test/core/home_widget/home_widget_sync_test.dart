@@ -62,10 +62,12 @@ void main() {
     expect(slots.first.at, DateTime(2026, 10, 4, 21));
     expect(slots.first.title, en.alarmGroupCount(2));
     expect(slots.first.lines, ['Metformin · 2 tablets', 'Calbo D · 1 tablet']);
+    expect(slots.first.summary, 'Metformin, Calbo D');
     // Then tomorrow 08:00 on its own, with dose and meal.
     expect(slots[1].at, DateTime(2026, 10, 5, 8));
     expect(slots[1].title, 'Napa');
     expect(slots[1].lines, ['1 tablet · After meal']);
+    expect(slots[1].summary, '1 tablet · After meal');
   });
 
   test('a taken or skipped dose drops off; a snoozed one stays', () async {

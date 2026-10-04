@@ -19,6 +19,9 @@ struct WidgetData: Decodable {
     let at: Double  // ms since epoch
     let time, date, title: String
     let lines: [String]
+    /// One line for the small size (older data may lack it).
+    let summary: String?
+    var short: String { summary ?? lines.first ?? "" }
     var date_: Date { Date(timeIntervalSince1970: at / 1000) }
   }
   let labels: Labels
@@ -106,6 +109,8 @@ struct DoseyWidgetView: View {
     return slot.date
   }
 
+  private func isDue(_ slot: WidgetData.Slot) -> Bool { slot.date_ <= entry.date }
+
   private func header(_ slot: WidgetData.Slot, _ data: WidgetData) -> String {
     slot.date_ <= entry.date ? data.labels.due : data.labels.next
   }
@@ -133,14 +138,15 @@ struct DoseyWidgetView: View {
       }
       Spacer(minLength: 0)
       Text(header(slot, data))
-        .font(.caption2).foregroundColor(.textMuted).lineLimit(1)
+        .font(.caption2.weight(isDue(slot) ? .bold : .regular))
+        .foregroundColor(isDue(slot) ? .accent : .textMuted).lineLimit(1)
       Text(slot.time)
         .font(.system(size: 24, weight: .semibold, design: .rounded))
         .foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.7)
       Text(slot.title)
         .font(.system(.subheadline, design: .serif).weight(.bold))
         .foregroundColor(.textOnDark).lineLimit(1)
-      Text(slot.lines.first ?? "")
+      Text(slot.short)
         .font(.caption).foregroundColor(.textMuted).lineLimit(1)
     }
   }
@@ -151,7 +157,8 @@ struct DoseyWidgetView: View {
       PillBadge(size: 44)
       VStack(alignment: .leading, spacing: 2) {
         Text(header(slot, data))
-          .font(.caption2).foregroundColor(.textMuted).lineLimit(1)
+          .font(.caption2.weight(isDue(slot) ? .bold : .regular))
+          .foregroundColor(isDue(slot) ? .accent : .textMuted).lineLimit(1)
         Text(slot.title)
           .font(.system(.headline, design: .serif).weight(.bold))
           .foregroundColor(.textOnDark).lineLimit(1)
@@ -159,7 +166,7 @@ struct DoseyWidgetView: View {
           .font(.caption).foregroundColor(.textMuted).lineLimit(3)
       }
       Spacer(minLength: 4)
-      VStack(alignment: .trailing, spacing: 4) {
+      VStack(alignment: .center, spacing: 4) {
         Text(slot.time)
           .font(.system(.subheadline, design: .rounded).weight(.semibold))
           .foregroundColor(.white)

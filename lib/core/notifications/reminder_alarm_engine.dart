@@ -5,6 +5,7 @@ import '../../features/reminders/data/reminders_repository.dart';
 import '../../features/reminders/domain/reminder_schedule.dart';
 import '../../features/reminders/domain/reminder_with_details.dart';
 import '../constants/app_constants.dart';
+import '../home_widget/home_widget_sync.dart';
 import '../database/app_database.dart';
 import 'alarm_ports.dart';
 
@@ -30,15 +31,20 @@ class ReminderAlarmEngine {
     required RemindersRepository reminders,
     required AlarmScheduler scheduler,
     required NotificationPresenter notifier,
+    HomeWidgetSync? homeWidget,
     DateTime Function()? clock,
   }) : _reminders = reminders,
        _scheduler = scheduler,
        _notifier = notifier,
+       _homeWidget = homeWidget,
        _clock = clock ?? DateTime.now;
 
   final RemindersRepository _reminders;
   final AlarmScheduler _scheduler;
   final NotificationPresenter _notifier;
+
+  /// Home screen widget, redrawn whenever what's next may have changed.
+  final HomeWidgetSync? _homeWidget;
   final DateTime Function() _clock;
 
   static int snoozeAlarmId(int leaderId) =>
@@ -72,6 +78,11 @@ class ReminderAlarmEngine {
   /// medicines due at the same minute (under its leader's id), one per other
   /// reminder, and none for disabled reminders or non-leader group members.
   Future<void> syncAll() async {
+    await _syncAlarms();
+    await _homeWidget?.refresh();
+  }
+
+  Future<void> _syncAlarms() async {
     final all = await _reminders.getAll();
     if (_scheduler case final BookAheadScheduler ahead) {
       return ahead.replaceBookings(planBookings(all, _clock()));
@@ -322,6 +333,9 @@ class ReminderAlarmEngine {
     for (final MapEntry(key: id, value: before) in stockBefore.entries) {
       await _warnIfNowLow(id, before);
     }
+
+    // Taken/skipped doses drop off the widget; snoozed ones stay.
+    await _homeWidget?.refresh();
 
     final snoozeId = snoozeAlarmId(leaderOf(reminderIds));
     if (action != AlarmAction.snooze) {

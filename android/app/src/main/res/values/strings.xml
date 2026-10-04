@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Home screen widget (shown in the launcher's widget picker). -->
+    <string name="widget_name">Next medicine</string>
+    <string name="widget_description">Your next dose: medicine, time and amount.</string>
+    <string name="widget_open_app">Open Dosey to load your medicines</string>
+</resources>

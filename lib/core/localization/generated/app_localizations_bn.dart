@@ -1970,4 +1970,25 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get onboardingEssentialHintIos => 'নোটিফিকেশন চালু রাখা আবশ্যক।';
+
+  @override
+  String get widgetNext => 'পরবর্তী ওষুধ';
+
+  @override
+  String get widgetDue => 'এখন খাওয়ার সময়';
+
+  @override
+  String get widgetEmpty => 'সামনে কোনো ওষুধ নেই';
+
+  @override
+  String get widgetToday => 'আজ';
+
+  @override
+  String get widgetTomorrow => 'আগামীকাল';
+
+  @override
+  String get widgetName => 'পরবর্তী ওষুধ';
+
+  @override
+  String get widgetDescription => 'আপনার পরবর্তী ডোজ: ওষুধ, সময় ও পরিমাণ।';
 }

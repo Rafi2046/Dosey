@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
-  NOT wired into the build yet. Signing fails if the provisioning profile
-  lacks this entitlement, so enable it only after Apple approves the request
+  NOT wired into the build. Signing fails if the provisioning profile lacks
+  this entitlement, so add it only after Apple approves the request
   (https://developer.apple.com/contact/request/notifications-critical-alerts-entitlement/):
-    Xcode › Runner target › Build Settings › Code Signing Entitlements
-      = Runner/CriticalAlerts.entitlements
-  The Dart side already asks for the permission and marks alarm channels
-  criticalAlerts: true, so nothing else needs changing.
+  copy the key below into Runner/Runner.entitlements (which the Runner target
+  already uses, for the widget's App Group). The Dart side already asks for
+  the permission and marks alarm notifications critical.
 -->
 <plist version="1.0">
 <dict>

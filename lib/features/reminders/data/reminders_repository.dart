@@ -104,6 +104,18 @@ class RemindersRepository {
       l.reminderId: l.status,
   };
 
+  /// Enabled reminders with their medicine/doctor, once.
+  Future<List<ReminderWithDetails>> getEnabledDetails() => watchEnabled().first;
+
+  /// Logs for occurrences scheduled in [start, end), once.
+  Future<List<ReminderLog>> logsBetween(DateTime start, DateTime end) =>
+      (_db.select(_db.reminderLogs)..where(
+            (l) =>
+                l.scheduledFor.isBiggerOrEqualValue(start) &
+                l.scheduledFor.isSmallerThanValue(end),
+          ))
+          .get();
+
   /// Reminders currently ringing (awaiting Taken/Skip/Snooze), oldest first.
   Stream<List<ReminderWithDetails>> watchRinging() => _watch(
     _joined()

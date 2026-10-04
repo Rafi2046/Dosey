@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import '../../features/reminders/data/reminders_repository.dart';
 import '../../features/settings/data/settings_repository.dart';
 import '../database/app_database.dart';
+import '../home_widget/home_widget_sync.dart';
 import '../localization/l10n.dart';
 import 'alarm_ports.dart';
 import 'android_alarm_scheduler.dart';
@@ -39,6 +40,7 @@ abstract final class AlarmRuntime {
       reminders: reminders,
       scheduler: schedulerFor(reminders),
       notifier: AwesomeNotificationPresenter(),
+      homeWidget: HomeWidgetSync(reminders),
     );
   }
 

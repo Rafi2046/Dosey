@@ -93,6 +93,18 @@ abstract final class AppConstants {
   static const String payloadReminderIds = 'reminderIds';
   static const String alarmParamReminderIds = 'reminderIds';
 
+  // ── Home screen widget ───────────────────────────────────────────────────
+  /// Shared-storage key holding the widget's JSON (see HomeWidgetSync).
+  static const String widgetDataKey = 'dosey_next_dose';
+
+  /// Native widget class names (NextDoseWidget.kt / DoseyWidget.swift).
+  static const String widgetAndroidName = 'NextDoseWidget';
+  static const String widgetIosKind = 'DoseyWidget';
+
+  /// iOS App Group shared by the app and the widget extension. Must follow
+  /// the bundle id: change both together.
+  static const String appGroupId = 'group.com.example.dosey';
+
   /// Blood pressure unit (the same in every language).
   static const String bpUnit = 'mmHg';
 

@@ -1992,4 +1992,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingEssentialHintIos => 'Notifications are required.';
+
+  @override
+  String get widgetNext => 'Next medicine';
+
+  @override
+  String get widgetDue => 'Due now';
+
+  @override
+  String get widgetEmpty => 'No medicines coming up';
+
+  @override
+  String get widgetToday => 'Today';
+
+  @override
+  String get widgetTomorrow => 'Tomorrow';
+
+  @override
+  String get widgetName => 'Next medicine';
+
+  @override
+  String get widgetDescription => 'Your next dose: medicine, time and amount.';
 }

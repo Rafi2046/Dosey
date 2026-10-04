@@ -905,5 +905,12 @@
       }
     }
   },
-  "onboardingEssentialHintIos": "Notifications are required."
+  "onboardingEssentialHintIos": "Notifications are required.",
+  "widgetNext": "Next medicine",
+  "widgetDue": "Due now",
+  "widgetEmpty": "No medicines coming up",
+  "widgetToday": "Today",
+  "widgetTomorrow": "Tomorrow",
+  "widgetName": "Next medicine",
+  "widgetDescription": "Your next dose: medicine, time and amount."
 }

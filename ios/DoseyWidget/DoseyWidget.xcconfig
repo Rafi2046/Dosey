@@ -1,0 +1,4 @@
+// Only Flutter's version numbers (FLUTTER_BUILD_NAME / _NUMBER): the
+// widget must not inherit Runner's CocoaPods settings, since an app
+// extension can't link the app's plugin frameworks.
+#include "../Flutter/Generated.xcconfig"

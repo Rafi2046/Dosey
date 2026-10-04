@@ -3337,6 +3337,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notifications are required.'**
   String get onboardingEssentialHintIos;
+
+  /// No description provided for @widgetNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next medicine'**
+  String get widgetNext;
+
+  /// No description provided for @widgetDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Due now'**
+  String get widgetDue;
+
+  /// No description provided for @widgetEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No medicines coming up'**
+  String get widgetEmpty;
+
+  /// No description provided for @widgetToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get widgetToday;
+
+  /// No description provided for @widgetTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get widgetTomorrow;
+
+  /// No description provided for @widgetName.
+  ///
+  /// In en, this message translates to:
+  /// **'Next medicine'**
+  String get widgetName;
+
+  /// No description provided for @widgetDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your next dose: medicine, time and amount.'**
+  String get widgetDescription;
 }
 
 class _AppLocalizationsDelegate

@@ -6,7 +6,6 @@ import '../../../core/database/app_database.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../core/utils/clock_providers.dart';
 import '../../../core/widgets/async_value_view.dart';
-import '../../../core/widgets/back_arrow_button.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../../../core/widgets/screen_header.dart';
@@ -59,20 +58,12 @@ class BloodSugarScreen extends ConsumerWidget {
               centerLast: list?.isEmpty ?? false,
               onRefresh: () async => ref.invalidate(bloodSugarReadingsProvider),
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: AppSpacing.md),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: BackArrowButton(),
-                  ),
-                ),
                 ScreenHeader(
                   title: l10n.sugarTitle,
                   // Empty: the empty state below already says so.
                   subtitle: list == null || list.isEmpty
                       ? null
                       : l10n.sugarCount(list.length),
-                  padding: const EdgeInsets.only(bottom: AppSpacing.xl),
                 ),
                 AsyncValueView(
                   value: readings,

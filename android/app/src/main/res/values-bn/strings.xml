@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_name">পরবর্তী ওষুধ</string>
+    <string name="widget_description">আপনার পরবর্তী ডোজ: ওষুধ, সময় ও পরিমাণ।</string>
+    <string name="widget_open_app">ওষুধ দেখাতে Dosey খুলুন</string>
+</resources>

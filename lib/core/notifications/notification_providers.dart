@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../features/reminders/providers/reminders_providers.dart';
+import '../home_widget/home_widget_sync.dart';
 import 'alarm_runtime.dart';
 import 'awesome_notification_presenter.dart';
 import 'permission_service.dart';
@@ -16,8 +17,14 @@ final alarmEngineProvider = Provider<ReminderAlarmEngine>((ref) {
     reminders: reminders,
     scheduler: AlarmRuntime.schedulerFor(reminders),
     notifier: AwesomeNotificationPresenter(),
+    homeWidget: ref.watch(homeWidgetSyncProvider),
   );
 });
+
+/// Home screen widget feed (see HomeWidgetSync).
+final homeWidgetSyncProvider = Provider<HomeWidgetSync>(
+  (ref) => HomeWidgetSync(ref.watch(remindersRepositoryProvider)),
+);
 
 /// While the UI is alive, mirrors every reminder change (create, edit,
 /// enable/disable, delete) into OS alarms. Keep it alive by watching it from

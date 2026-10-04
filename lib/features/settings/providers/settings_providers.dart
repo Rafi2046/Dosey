@@ -1,3 +1,5 @@
+import 'dart:ui' show PlatformDispatcher;
+
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -32,6 +34,12 @@ class LanguageController extends Notifier<String?> {
   Future<void> choose(String? code) async {
     state = code;
     await ref.read(settingsRepositoryProvider).set(AppLocale.settingKey, code);
+    // The widget's text is written in the app language: rewrite it (the
+    // UI applies the new locale on its next build, which is too late here).
+    AppLocale.apply(
+      AppLocale.resolve(code, PlatformDispatcher.instance.locale),
+    );
+    await ref.read(homeWidgetSyncProvider).refresh();
   }
 }
 

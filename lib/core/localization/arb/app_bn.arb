@@ -539,5 +539,12 @@
   "sugarCount": "{count, plural, =0{এখনো কোনো রিডিং নেই} other{{count}টি রিডিং}}",
   "sugarMgDl": "≈ {value} mg/dL",
   "decimalRange": "{min} থেকে {max} এর মধ্যে একটি মান লিখুন",
-  "onboardingEssentialHintIos": "নোটিফিকেশন চালু রাখা আবশ্যক।"
+  "onboardingEssentialHintIos": "নোটিফিকেশন চালু রাখা আবশ্যক।",
+  "widgetNext": "পরবর্তী ওষুধ",
+  "widgetDue": "এখন খাওয়ার সময়",
+  "widgetEmpty": "সামনে কোনো ওষুধ নেই",
+  "widgetToday": "আজ",
+  "widgetTomorrow": "আগামীকাল",
+  "widgetName": "পরবর্তী ওষুধ",
+  "widgetDescription": "আপনার পরবর্তী ডোজ: ওষুধ, সময় ও পরিমাণ।"
 }

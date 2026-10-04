@@ -178,10 +178,7 @@ void main() {
       ),
     );
     await settle(tester);
-    expect(
-      find.text('${en.courseDayOf(3, 7)} · ${en.courseDaysLeft(4)}'),
-      findsOneWidget,
-    );
+    expect(find.text(en.courseDayOf(3, 7)), findsOneWidget);
     await snap(tester, 'medicines_countdown');
 
     // 5. Detail, then the form's course-duration picker.

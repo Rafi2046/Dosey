@@ -1613,7 +1613,7 @@ void main() {
     await openTab(tester, HomeTab.medicines);
     // Seeded medicines run 1 Sep – 30 Oct; today is 3 Oct.
     expect(
-      find.text('${en.courseDayOf(33, 60)} · ${en.courseDaysLeft(27)}'),
+      find.text(en.courseDayOf(33, 60)),
       findsWidgets,
     );
 

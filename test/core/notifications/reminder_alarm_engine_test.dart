@@ -506,10 +506,12 @@ void main() {
       () async {
         final r = await addEdited(DateTime(2026, 10, 3));
         final at = DateTime(2026, 10, 3, 8);
+        // Snoozed at 08:00; rang again (and was ignored) at 08:10.
         await repo.logAction(
           reminderId: r.id,
           scheduledFor: at,
           status: ReminderLogStatus.snoozed,
+          actedAt: DateTime(2026, 10, 3, 8, 10),
         );
         now = DateTime(2026, 10, 3, 12);
         await engine.sweepMissed();
@@ -557,6 +559,60 @@ void main() {
       // A later sweep leaves the answered dose alone.
       await engine.sweepMissed();
       expect((await logged())[at], ReminderLogStatus.takenLate);
+    });
+
+    test('"remind me in 2 h" rings then, and is only missed 2 h after '
+        'that', () async {
+      final r = await addEdited(DateTime(2026, 10, 3));
+      final at = DateTime(2026, 10, 3, 8);
+      now = DateTime(2026, 10, 3, 8, 5);
+      await engine.onAlarmFired(r.id, paramsFor(at));
+      await engine.handleAction(
+        reminderIds: [r.id],
+        scheduledFor: at,
+        action: AlarmAction.snooze,
+        snoozeFor: const Duration(hours: 2),
+      );
+      final snoozeId = ReminderAlarmEngine.snoozeAlarmId(r.id);
+      expect(scheduler.alarms[snoozeId]!.at, DateTime(2026, 10, 3, 10, 5));
+
+      // 10:01: past 2 h since 08:00, but the reminder hasn't rung yet.
+      now = DateTime(2026, 10, 3, 10, 1);
+      await engine.sweepMissed();
+      expect((await logged())[at], ReminderLogStatus.snoozed);
+
+      // 10:05: the snooze rings (not swallowed as a late alarm).
+      now = DateTime(2026, 10, 3, 10, 5);
+      await engine.onAlarmFired(snoozeId, scheduler.alarms[snoozeId]!.params);
+      expect((await repo.getById(r.id))!.ringingFor, at);
+      expect(notifier.showing[r.id], at);
+
+      // Unanswered 2 h after it rang: missed, and it stops ringing.
+      now = DateTime(2026, 10, 3, 12, 6);
+      await engine.sweepMissed();
+      expect((await logged())[at], ReminderLogStatus.missed);
+      expect((await repo.getById(r.id))!.ringingFor, isNull);
+    });
+
+    test('skipped, then taken after all: taken late, stock deducted', () async {
+      final r = await addEdited(DateTime(2026, 10, 3));
+      final at = DateTime(2026, 10, 3, 8);
+      now = at;
+      await engine.handleAction(
+        reminderIds: [r.id],
+        scheduledFor: at,
+        action: AlarmAction.skip,
+      );
+      expect((await db.select(db.medicines).getSingle()).stockQuantity, 10);
+
+      now = DateTime(2026, 10, 3, 13);
+      await engine.handleAction(
+        reminderIds: [r.id],
+        scheduledFor: at,
+        action: AlarmAction.takenLate,
+      );
+      expect((await logged())[at], ReminderLogStatus.takenLate);
+      expect((await db.select(db.medicines).getSingle()).stockQuantity, 9);
     });
   });
 }

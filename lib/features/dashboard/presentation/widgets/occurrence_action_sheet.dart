@@ -11,7 +11,6 @@ import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/widgets/pill_button.dart';
 import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
-import '../../../reminders/domain/missed_doses.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/presentation/reminder_form_screen.dart';
 import '../../../reminders/providers/reminders_providers.dart';
@@ -41,10 +40,11 @@ class _OccurrenceSheet extends ConsumerWidget {
   ) async {
     final status = occurrence.status;
     final now = ref.read(minuteTickerProvider).value ?? DateTime.now();
-    // "Taken" on a dose that already counts as missed is a late dose.
-    final missed =
+    // "Taken" well after the dose's time (it was missed, skipped and then
+    // taken after all, or just answered late) is a late dose.
+    final late =
         status == ReminderLogStatus.missed ||
-        (MissedDoses.isOpen(status) &&
+        (!(status?.isTaken ?? false) &&
             now.difference(occurrence.at) > AppConstants.missedThreshold);
     await ref
         .read(alarmEngineProvider)
@@ -52,7 +52,7 @@ class _OccurrenceSheet extends ConsumerWidget {
           // Just this card's medicine, even if it rang with others.
           reminderIds: [occurrence.details.reminder.id],
           scheduledFor: occurrence.at,
-          action: action == AlarmAction.taken && missed
+          action: action == AlarmAction.taken && late
               ? AlarmAction.takenLate
               : action,
         );

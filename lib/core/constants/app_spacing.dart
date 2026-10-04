@@ -114,6 +114,7 @@ abstract final class AppSpacing {
   static const double emptyIllustrationOpacity = 0.9;
   static const double sheetInitialSize = 0.6;
   static const double sheetMaxSize = 0.9;
+  static const double moreSheetHeightFactor = 0.65;
 
   // ── Text ──────────────────────────────────────────────────────────────────
   static const double fontXs = 11;

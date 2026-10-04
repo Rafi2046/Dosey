@@ -31,90 +31,94 @@ Future<void> showMoreSheet(
       (HomeTab.records, l10n.moreRecordsHint, AppColors.tileMint),
       (HomeTab.expenses, l10n.moreExpensesHint, AppColors.accent),
     ];
-    return SafeArea(
-      // Scrolls on short screens rather than overflowing.
-      child: SingleChildScrollView(
-        padding: AppSpacing.screenPadding.copyWith(bottom: AppSpacing.lg),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ScreenHeader(
-              title: l10n.moreSheetHeader,
-              subtitle: l10n.moreSheetSubtitle,
-              onLight: true,
-              padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-            ),
-            for (final (tab, hint, color) in items)
-              _MoreTile(
-                icon: tab.icon,
-                color: color,
-                title: tab.label(l10n),
-                subtitle: hint,
-                selected: tab == current,
-                onTap: () => open(tab),
+    return FractionallySizedBox(
+      heightFactor: AppSpacing.moreSheetHeightFactor,
+      child: SafeArea(
+        top: false,
+        // Scrolls on short screens rather than overflowing.
+        child: SingleChildScrollView(
+          padding: AppSpacing.screenPadding.copyWith(bottom: AppSpacing.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ScreenHeader(
+                title: l10n.moreSheetHeader,
+                subtitle: l10n.moreSheetSubtitle,
+                onLight: true,
+                padding: const EdgeInsets.only(bottom: AppSpacing.lg),
               ),
-            _MoreTile(
-              icon: Icons.history_rounded,
-              color: AppColors.tileMint,
-              title: l10n.historyLink,
-              subtitle: l10n.moreHistoryHint,
-              selected: false,
-              onTap: () {
-                Navigator.pop(sheetContext);
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const DoseHistoryScreen(),
-                  ),
-                );
-              },
-            ),
-            _MoreTile(
-              icon: Icons.monitor_heart_rounded,
-              color: AppColors.tileMoss,
-              title: l10n.bpShortTitle,
-              subtitle: l10n.moreBpHint,
-              selected: false,
-              onTap: () {
-                Navigator.pop(sheetContext);
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const BloodPressureScreen(),
-                  ),
-                );
-              },
-            ),
-            _MoreTile(
-              icon: Icons.bloodtype_rounded,
-              color: AppColors.error,
-              title: l10n.sugarShortTitle,
-              subtitle: l10n.moreSugarHint,
-              selected: false,
-              onTap: () {
-                Navigator.pop(sheetContext);
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const BloodSugarScreen(),
-                  ),
-                );
-              },
-            ),
-            _MoreTile(
-              icon: Icons.settings_rounded,
-              color: AppColors.tileStone,
-              title: l10n.settingsTitle,
-              subtitle: l10n.moreSettingsHint,
-              selected: false,
-              onTap: () {
-                Navigator.pop(sheetContext);
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const SettingsScreen(),
-                  ),
-                );
-              },
-            ),
-          ],
+              for (final (tab, hint, color) in items)
+                _MoreTile(
+                  icon: tab.icon,
+                  color: color,
+                  title: tab.label(l10n),
+                  subtitle: hint,
+                  selected: tab == current,
+                  onTap: () => open(tab),
+                ),
+              _MoreTile(
+                icon: Icons.history_rounded,
+                color: AppColors.tileMint,
+                title: l10n.historyLink,
+                subtitle: l10n.moreHistoryHint,
+                selected: false,
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const DoseHistoryScreen(),
+                    ),
+                  );
+                },
+              ),
+              _MoreTile(
+                icon: Icons.monitor_heart_rounded,
+                color: AppColors.tileMoss,
+                title: l10n.bpShortTitle,
+                subtitle: l10n.moreBpHint,
+                selected: false,
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const BloodPressureScreen(),
+                    ),
+                  );
+                },
+              ),
+              _MoreTile(
+                icon: Icons.bloodtype_rounded,
+                color: AppColors.error,
+                title: l10n.sugarShortTitle,
+                subtitle: l10n.moreSugarHint,
+                selected: false,
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const BloodSugarScreen(),
+                    ),
+                  );
+                },
+              ),
+              _MoreTile(
+                icon: Icons.settings_rounded,
+                color: AppColors.tileStone,
+                title: l10n.settingsTitle,
+                subtitle: l10n.moreSettingsHint,
+                selected: false,
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const SettingsScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

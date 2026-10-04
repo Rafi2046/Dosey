@@ -58,24 +58,46 @@ class AlarmActions extends StatelessWidget {
           onPressed: busy ? null : () => onAction(AlarmAction.snooze),
         ),
         AppSpacing.gapSm,
-        Wrap(
-          alignment: WrapAlignment.center,
-          spacing: AppSpacing.sm,
+        // Equal halves, each with an icon, so the two links line up
+        // (one alone is centred).
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (onRemindLater case final remindLater?)
-              TextButton.icon(
-                icon: const Icon(Icons.schedule_rounded),
-                onPressed: busy ? null : remindLater,
-                label: Text(context.l10n.remindLater),
+              Expanded(
+                child: _Link(
+                  icon: Icons.schedule_rounded,
+                  label: context.l10n.remindLater,
+                  onPressed: busy ? null : remindLater,
+                ),
               ),
             if (isMedicine)
-              TextButton(
-                onPressed: busy ? null : () => onAction(AlarmAction.skip),
-                child: Text(context.l10n.alarmSkip),
+              Expanded(
+                child: _Link(
+                  icon: Icons.redo_rounded,
+                  label: context.l10n.alarmSkip,
+                  onPressed: busy ? null : () => onAction(AlarmAction.skip),
+                ),
               ),
           ],
         ),
       ],
     );
   }
+}
+
+/// Secondary action under the pills: icon + label, centred in its half.
+class _Link extends StatelessWidget {
+  const _Link({required this.icon, required this.label, this.onPressed});
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) => TextButton.icon(
+    icon: Icon(icon, size: AppSpacing.iconSm),
+    label: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
+    onPressed: onPressed,
+  );
 }

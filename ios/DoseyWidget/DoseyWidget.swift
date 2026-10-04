@@ -68,10 +68,27 @@ struct DoseProvider: TimelineProvider {
 }
 
 private extension Color {
-  static let sage = Color(red: 0x68 / 255, green: 0x71 / 255, blue: 0x63 / 255)
+  static let sageLight = Color(red: 0x73 / 255, green: 0x7D / 255, blue: 0x6D / 255)
+  static let sageDark = Color(red: 0x4B / 255, green: 0x54 / 255, blue: 0x49 / 255)
   static let accent = Color(red: 0xFD / 255, green: 0x57 / 255, blue: 0x2F / 255)
+  static let cream = Color(red: 0xE6 / 255, green: 0xE3 / 255, blue: 0xD3 / 255)
   static let textOnDark = Color(red: 0xEE / 255, green: 0xEB / 255, blue: 0xDD / 255)
   static let textMuted = Color(red: 0xC6 / 255, green: 0xC9 / 255, blue: 0xBC / 255)
+}
+
+private let cardGradient = LinearGradient(
+  colors: [.sageLight, .sageDark], startPoint: .topLeading, endPoint: .bottomTrailing)
+
+/// Cream circle with the orange medicine icon (as on Android).
+private struct PillBadge: View {
+  let size: CGFloat
+  var body: some View {
+    Image(systemName: "cross.case.fill")
+      .font(.system(size: size * 0.46, weight: .semibold))
+      .foregroundColor(.accent)
+      .frame(width: size, height: size)
+      .background(Circle().fill(Color.cream))
+  }
 }
 
 struct DoseyWidgetView: View {
@@ -89,64 +106,92 @@ struct DoseyWidgetView: View {
     return slot.date
   }
 
+  private func header(_ slot: WidgetData.Slot, _ data: WidgetData) -> String {
+    slot.date_ <= entry.date ? data.labels.due : data.labels.next
+  }
+
   var body: some View {
-    let data = entry.data
-    let slot = data?.current(at: entry.date)
-    VStack(alignment: .leading, spacing: 4) {
-      HStack(alignment: .center) {
-        Text(
-          slot.map { $0.date_ <= entry.date ? data!.labels.due : data!.labels.next }
-            ?? data?.labels.next ?? "Next medicine"
-        )
-        .font(.caption.weight(.semibold))
-        .foregroundColor(.textMuted)
-        .lineLimit(1)
-        Spacer(minLength: 4)
-        if let slot {
-          Text(slot.time)
-            .font(.caption.weight(.bold))
-            .foregroundColor(.white)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 3)
-            .background(Capsule().fill(Color.accent))
-            .lineLimit(1)
-        }
-      }
-      if let slot, let data {
-        Text(slot.title)
-          .font(.system(.title3, design: .serif).weight(.bold))
-          .foregroundColor(.textOnDark)
-          .lineLimit(1)
-          .minimumScaleFactor(0.7)
-        Text(slot.lines.joined(separator: "\n"))
-          .font(.footnote)
-          .foregroundColor(.textOnDark)
-          .lineLimit(family == .systemSmall ? 2 : 3)
-        Spacer(minLength: 0)
-        Text(dayLabel(slot, data.labels))
-          .font(.caption)
-          .foregroundColor(.textMuted)
-          .lineLimit(1)
+    Group {
+      if let data = entry.data, let slot = data.current(at: entry.date) {
+        if family == .systemSmall { small(slot, data) } else { medium(slot, data) }
       } else {
-        Spacer(minLength: 0)
-        Text(data?.labels.empty ?? "Open Dosey to load your medicines")
-          .font(.subheadline.weight(.semibold))
-          .foregroundColor(.textOnDark)
-        Spacer(minLength: 0)
+        empty
       }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-    .widgetBackground(Color.sage)
+    .widgetBackground(cardGradient)
+  }
+
+  /// 2×2: icon + day, then the time big, then what to take.
+  private func small(_ slot: WidgetData.Slot, _ data: WidgetData) -> some View {
+    VStack(alignment: .leading, spacing: 2) {
+      HStack {
+        PillBadge(size: 28)
+        Spacer(minLength: 4)
+        Text(dayLabel(slot, data.labels))
+          .font(.caption2).foregroundColor(.textMuted).lineLimit(1)
+      }
+      Spacer(minLength: 0)
+      Text(header(slot, data))
+        .font(.caption2).foregroundColor(.textMuted).lineLimit(1)
+      Text(slot.time)
+        .font(.system(size: 24, weight: .semibold, design: .rounded))
+        .foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.7)
+      Text(slot.title)
+        .font(.system(.subheadline, design: .serif).weight(.bold))
+        .foregroundColor(.textOnDark).lineLimit(1)
+      Text(slot.lines.first ?? "")
+        .font(.caption).foregroundColor(.textMuted).lineLimit(1)
+    }
+  }
+
+  /// Wide: icon | what to take | time chip + day.
+  private func medium(_ slot: WidgetData.Slot, _ data: WidgetData) -> some View {
+    HStack(alignment: .center, spacing: 12) {
+      PillBadge(size: 44)
+      VStack(alignment: .leading, spacing: 2) {
+        Text(header(slot, data))
+          .font(.caption2).foregroundColor(.textMuted).lineLimit(1)
+        Text(slot.title)
+          .font(.system(.headline, design: .serif).weight(.bold))
+          .foregroundColor(.textOnDark).lineLimit(1)
+        Text(slot.lines.joined(separator: "\n"))
+          .font(.caption).foregroundColor(.textMuted).lineLimit(3)
+      }
+      Spacer(minLength: 4)
+      VStack(alignment: .trailing, spacing: 4) {
+        Text(slot.time)
+          .font(.system(.subheadline, design: .rounded).weight(.semibold))
+          .foregroundColor(.white)
+          .padding(.horizontal, 10).padding(.vertical, 4)
+          .background(Capsule().fill(Color.accent))
+          .lineLimit(1)
+        Text(dayLabel(slot, data.labels))
+          .font(.caption2).foregroundColor(.textMuted).lineLimit(1)
+      }
+    }
+    .frame(maxHeight: .infinity)
+  }
+
+  private var empty: some View {
+    VStack(alignment: .leading, spacing: 6) {
+      PillBadge(size: 28)
+      Spacer(minLength: 0)
+      Text(entry.data?.labels.next ?? "Next medicine")
+        .font(.caption2).foregroundColor(.textMuted)
+      Text(entry.data?.labels.empty ?? "Open Dosey to load your medicines")
+        .font(.subheadline.weight(.semibold)).foregroundColor(.textOnDark)
+    }
   }
 }
 
 private extension View {
   /// iOS 17 wants the background declared for StandBy / tinted modes.
-  @ViewBuilder func widgetBackground(_ color: Color) -> some View {
+  @ViewBuilder func widgetBackground<S: ShapeStyle>(_ style: S) -> some View {
     if #available(iOS 17.0, *) {
-      containerBackground(color, for: .widget)
+      containerBackground(style, for: .widget)
     } else {
-      padding().background(color)
+      padding().background(Rectangle().fill(style))
     }
   }
 }

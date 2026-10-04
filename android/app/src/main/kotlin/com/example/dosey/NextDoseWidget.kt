@@ -7,6 +7,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
+import android.os.Bundle
+import android.util.SizeF
 import android.view.View
 import android.widget.RemoteViews
 import es.antonborri.home_widget.HomeWidgetLaunchIntent
@@ -41,43 +44,84 @@ class NextDoseWidget : HomeWidgetProvider() {
         val labels = data?.optJSONObject("labels")
 
         for (id in appWidgetIds) {
-            val views = RemoteViews(context.packageName, R.layout.next_dose_widget)
-            views.setOnClickPendingIntent(
-                R.id.widget_root,
-                HomeWidgetLaunchIntent.getActivity(context, MainActivity::class.java),
-            )
-            if (slot == null) {
-                views.setTextViewText(
-                    R.id.widget_header,
-                    labels?.optString("next") ?: context.getString(R.string.widget_name),
+            fun build(layout: Int) = RemoteViews(context.packageName, layout).also {
+                fill(context, it, slot, labels, now)
+            }
+            val views = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                // Android 12+: the launcher picks the layout for the size.
+                RemoteViews(
+                    mapOf(
+                        SizeF(110f, 110f) to build(R.layout.next_dose_widget_small),
+                        // Slim bar only when it's short; taller wide sizes
+                        // keep the card.
+                        SizeF(220f, 50f) to build(R.layout.next_dose_widget_wide),
+                        SizeF(220f, 110f) to build(R.layout.next_dose_widget_small),
+                    ),
                 )
-                views.setViewVisibility(R.id.widget_time, View.GONE)
-                views.setTextViewText(
-                    R.id.widget_title,
-                    labels?.optString("empty") ?: context.getString(R.string.widget_open_app),
-                )
-                views.setTextViewText(R.id.widget_lines, "")
-                views.setTextViewText(R.id.widget_day, "")
             } else {
-                val at = slot.getLong("at")
-                val due = at <= now
-                views.setTextViewText(
-                    R.id.widget_header,
-                    labels?.optString(if (due) "due" else "next") ?: "",
+                val options = appWidgetManager.getAppWidgetOptions(id)
+                val width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+                val height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+                build(
+                    if (width >= 220 && height < 110) R.layout.next_dose_widget_wide
+                    else R.layout.next_dose_widget_small,
                 )
-                views.setViewVisibility(R.id.widget_time, View.VISIBLE)
-                views.setTextViewText(R.id.widget_time, slot.optString("time"))
-                views.setTextViewText(R.id.widget_title, slot.optString("title"))
-                val lines = slot.optJSONArray("lines")
-                views.setTextViewText(
-                    R.id.widget_lines,
-                    (0 until (lines?.length() ?: 0)).joinToString("\n") { lines!!.getString(it) },
-                )
-                views.setTextViewText(R.id.widget_day, dayLabel(at, slot, labels))
             }
             appWidgetManager.updateAppWidget(id, views)
         }
         scheduleNextRedraw(context, slot, now)
+    }
+
+    /** Before Android 12: redraw with the right layout after a resize. */
+    override fun onAppWidgetOptionsChanged(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        newOptions: Bundle,
+    ) {
+        onUpdate(context, appWidgetManager, intArrayOf(appWidgetId))
+    }
+
+    /** Both layouts share view ids, so one filler serves them. */
+    private fun fill(
+        context: Context,
+        views: RemoteViews,
+        slot: JSONObject?,
+        labels: JSONObject?,
+        now: Long,
+    ) {
+        views.setOnClickPendingIntent(
+            R.id.widget_root,
+            HomeWidgetLaunchIntent.getActivity(context, MainActivity::class.java),
+        )
+        if (slot == null) {
+            views.setTextViewText(
+                R.id.widget_header,
+                labels?.optString("next") ?: context.getString(R.string.widget_name),
+            )
+            views.setViewVisibility(R.id.widget_time, View.GONE)
+            views.setTextViewText(
+                R.id.widget_title,
+                labels?.optString("empty") ?: context.getString(R.string.widget_open_app),
+            )
+            views.setTextViewText(R.id.widget_lines, "")
+            views.setTextViewText(R.id.widget_day, "")
+            return
+        }
+        val at = slot.getLong("at")
+        views.setTextViewText(
+            R.id.widget_header,
+            labels?.optString(if (at <= now) "due" else "next") ?: "",
+        )
+        views.setViewVisibility(R.id.widget_time, View.VISIBLE)
+        views.setTextViewText(R.id.widget_time, slot.optString("time"))
+        views.setTextViewText(R.id.widget_title, slot.optString("title"))
+        val lines = slot.optJSONArray("lines")
+        views.setTextViewText(
+            R.id.widget_lines,
+            (0 until (lines?.length() ?: 0)).joinToString("\n") { lines!!.getString(it) },
+        )
+        views.setTextViewText(R.id.widget_day, dayLabel(at, slot, labels))
     }
 
     /** "Today", "Tomorrow", or the date the app wrote. */

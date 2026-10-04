@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 3×2 by default, resizable. The app pushes updates whenever the
-     schedule or a dose changes; the 30 min period is only a fallback. -->
+<!-- 2×2 by default; can be stretched to a slim wide bar (4×1) or larger.
+     The app pushes updates whenever the schedule or a dose changes; the
+     30 min period is only a fallback. -->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/widget_description"
-    android:initialLayout="@layout/next_dose_widget"
-    android:minWidth="180dp"
+    android:initialLayout="@layout/next_dose_widget_small"
+    android:minWidth="110dp"
     android:minHeight="110dp"
-    android:previewLayout="@layout/next_dose_widget"
+    android:minResizeWidth="110dp"
+    android:minResizeHeight="50dp"
+    android:previewLayout="@layout/next_dose_widget_small"
     android:resizeMode="horizontal|vertical"
-    android:targetCellWidth="3"
+    android:targetCellWidth="2"
     android:targetCellHeight="2"
     android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen" />

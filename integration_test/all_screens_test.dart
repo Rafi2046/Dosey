@@ -8,6 +8,8 @@
 // Uses an in-memory database and fake alarms, so it never touches the data
 // or alarms of an installed copy of Dosey.
 
+import 'dart:io';
+
 import 'package:dosey/app/app.dart';
 import 'package:dosey/app/widgets/app_nav_bar.dart';
 import 'package:dosey/core/database/app_database.dart';
@@ -228,6 +230,7 @@ void main() {
           AppSettingsCompanion.insert(key: onboardingDoneKey, value: '1'),
         );
     await pumpDosey(tester, db);
+    if (Platform.isAndroid) await binding.convertFlutterSurfaceToImage();
 
     await snap(tester, 'home');
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -900));
@@ -347,6 +350,8 @@ void main() {
     final db = AppDatabase(NativeDatabase.memory());
     addTearDown(db.close);
     await pumpDosey(tester, db, granted: false);
+    // Android can only screenshot the Flutter view as an image.
+    if (Platform.isAndroid) await binding.convertFlutterSurfaceToImage();
     await snap(tester, 'onboarding_welcome');
     await tapText(tester, en.onboardingContinue);
     await snap(tester, 'onboarding_name');

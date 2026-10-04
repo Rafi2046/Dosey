@@ -21,8 +21,9 @@ class FeatureRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+      // Icon centred on its title + explanation, however many lines they wrap
+      // to (top-aligned, it hung off the title line).
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: AppSpacing.featureIcon,

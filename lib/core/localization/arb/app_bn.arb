@@ -349,7 +349,7 @@
   "privacyStoredTitle": "Dosey কী সংরক্ষণ করে",
   "privacyStoredBody": "ওষুধ, রিমাইন্ডার, ডোজের ইতিহাস, ডাক্তার, খরচ এবং রেকর্ডে যোগ করা ছবি। এগুলো শুধু এই ডিভাইসে অ্যাপের নিজস্ব সুরক্ষিত জায়গায় সংরক্ষিত থাকে।",
   "privacyScanTitle": "প্রেসক্রিপশন স্ক্যান",
-  "privacyScanBody": "লেখা চেনার কাজটি Google ML Kit দিয়ে আপনার ফোনেই হয়, ছবি কোথাও আপলোড হয় না। Google-এর ML Kit শর্তাবলি অনুযায়ী ML Kit সীমিত ডায়াগনস্টিক তথ্য Google-কে পাঠাতে পারে।",
+  "privacyScanBody": "লেখা চেনার কাজ আপনার ফোনেই হয় — অ্যান্ড্রয়েডে Google ML Kit, আইফোনে Apple-এর নিজস্ব টেক্সট রিকগনিশন — এবং ছবি কোথাও আপলোড হয় না। অ্যান্ড্রয়েডে ML Kit, Google-এর ML Kit শর্ত অনুযায়ী সীমিত ডায়াগনস্টিক তথ্য Google-কে পাঠাতে পারে।",
   "privacyPermissionsTitle": "অনুমতি",
   "privacyPermissionsBody": "নোটিফিকেশন ও অ্যালার্মের অনুমতি শুধু রিমাইন্ডার বাজানোর জন্য। ক্যামেরা ও ছবির গ্যালারি শুধু তখনই ব্যবহার হয় যখন আপনি ছবি যোগ করেন।",
   "privacySharingTitle": "তথ্য শেয়ার",
@@ -538,5 +538,6 @@
   "sugarNoteHint": "যেমন: হাঁটার পর, মাথা ঘুরছিল",
   "sugarCount": "{count, plural, =0{এখনো কোনো রিডিং নেই} other{{count}টি রিডিং}}",
   "sugarMgDl": "≈ {value} mg/dL",
-  "decimalRange": "{min} থেকে {max} এর মধ্যে একটি মান লিখুন"
+  "decimalRange": "{min} থেকে {max} এর মধ্যে একটি মান লিখুন",
+  "onboardingEssentialHintIos": "নোটিফিকেশন চালু রাখা আবশ্যক।"
 }

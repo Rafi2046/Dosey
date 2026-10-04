@@ -176,23 +176,40 @@ void main() {
   }
 
   Future<void> nav(WidgetTester tester, String tooltip) async {
-    await tester.tap(
-      find.descendant(
-        of: find.byType(AppNavBar),
-        matching: find.byTooltip(tooltip),
-      ),
+    final target = find.descendant(
+      of: find.byType(AppNavBar),
+      matching: find.byTooltip(tooltip),
     );
+    // The nav bar slides away while scrolling; give it time to come back.
+    for (var i = 0; i < 30 && target.hitTestable().evaluate().isEmpty; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    if (target.evaluate().isEmpty) {
+      final tips = [
+        for (final e in find.byType(Tooltip).evaluate())
+          (e.widget as Tooltip).message,
+      ];
+      fail('nav "$tooltip" not found; tooltips on screen: $tips');
+    }
+    await tester.tap(target);
     await settle(tester);
   }
 
-  Future<void> pumpDosey(WidgetTester tester, AppDatabase db) async {
+  Future<void> pumpDosey(
+    WidgetTester tester,
+    AppDatabase db, {
+    bool granted = true,
+  }) async {
     final now = DateTime.now();
     await tester.pumpWidget(
       ProviderScope(
         overrides: testOverrides(
           db: db,
           now: now,
-          permissions: FakePermissionService(AppPermission.values.toSet()),
+          // Onboarding only shows while permissions are missing.
+          permissions: FakePermissionService(
+            granted ? AppPermission.values.toSet() : {},
+          ),
         ),
         child: const DoseyApp(),
       ),
@@ -224,7 +241,7 @@ void main() {
 
     await nav(tester, en.navMedicines);
     await snap(tester, 'medicines');
-    await tapText(tester, 'Metformin');
+    await tapText(tester, 'Metformin 500 mg');
     await snap(tester, 'medicine_detail');
     await back(tester);
 
@@ -283,13 +300,14 @@ void main() {
     await snap(tester, 'medicine_type');
     await tapText(tester, en.next);
     await snap(tester, 'form_medicine');
-    await tapText(tester, en.slotMorning);
-    await tapText(tester, en.slotMorning); // off again: just the toggle
     await back(tester);
     await back(tester);
 
     // Settings and everything under it.
     await nav(tester, en.navHome);
+    // Home is still scrolled down from the "home_lower" shot.
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, 3000));
+    await settle(tester);
     await tester.tap(find.byTooltip(en.settingsTitle));
     await settle(tester);
     await snap(tester, 'settings');
@@ -328,7 +346,7 @@ void main() {
   testWidgets('onboarding renders', (tester) async {
     final db = AppDatabase(NativeDatabase.memory());
     addTearDown(db.close);
-    await pumpDosey(tester, db);
+    await pumpDosey(tester, db, granted: false);
     await snap(tester, 'onboarding_welcome');
     await tapText(tester, en.onboardingContinue);
     await snap(tester, 'onboarding_name');

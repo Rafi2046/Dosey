@@ -1204,7 +1204,7 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get privacyScanBody =>
-      'লেখা চেনার কাজটি Google ML Kit দিয়ে আপনার ফোনেই হয়, ছবি কোথাও আপলোড হয় না। Google-এর ML Kit শর্তাবলি অনুযায়ী ML Kit সীমিত ডায়াগনস্টিক তথ্য Google-কে পাঠাতে পারে।';
+      'লেখা চেনার কাজ আপনার ফোনেই হয় — অ্যান্ড্রয়েডে Google ML Kit, আইফোনে Apple-এর নিজস্ব টেক্সট রিকগনিশন — এবং ছবি কোথাও আপলোড হয় না। অ্যান্ড্রয়েডে ML Kit, Google-এর ML Kit শর্ত অনুযায়ী সীমিত ডায়াগনস্টিক তথ্য Google-কে পাঠাতে পারে।';
 
   @override
   String get privacyPermissionsTitle => 'অনুমতি';
@@ -1967,4 +1967,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String decimalRange(String min, String max) {
     return '$min থেকে $max এর মধ্যে একটি মান লিখুন';
   }
+
+  @override
+  String get onboardingEssentialHintIos => 'নোটিফিকেশন চালু রাখা আবশ্যক।';
 }

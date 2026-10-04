@@ -2195,7 +2195,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacyScanBody.
   ///
   /// In en, this message translates to:
-  /// **'Text recognition runs on your phone using Google ML Kit, and the photo is not uploaded. ML Kit may send limited diagnostic information to Google, as described in Google\'s ML Kit terms.'**
+  /// **'Text recognition runs on your phone — Google ML Kit on Android, Apple\'s built-in text recognition on iPhone — and the photo is not uploaded. On Android, ML Kit may send limited diagnostic information to Google, as described in Google\'s ML Kit terms.'**
   String get privacyScanBody;
 
   /// No description provided for @privacyPermissionsTitle.
@@ -3331,6 +3331,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter a value from {min} to {max}'**
   String decimalRange(String min, String max);
+
+  /// No description provided for @onboardingEssentialHintIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are required.'**
+  String get onboardingEssentialHintIos;
 }
 
 class _AppLocalizationsDelegate

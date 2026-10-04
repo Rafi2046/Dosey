@@ -1212,7 +1212,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacyScanBody =>
-      'Text recognition runs on your phone using Google ML Kit, and the photo is not uploaded. ML Kit may send limited diagnostic information to Google, as described in Google\'s ML Kit terms.';
+      'Text recognition runs on your phone — Google ML Kit on Android, Apple\'s built-in text recognition on iPhone — and the photo is not uploaded. On Android, ML Kit may send limited diagnostic information to Google, as described in Google\'s ML Kit terms.';
 
   @override
   String get privacyPermissionsTitle => 'Permissions';
@@ -1989,4 +1989,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String decimalRange(String min, String max) {
     return 'Enter a value from $min to $max';
   }
+
+  @override
+  String get onboardingEssentialHintIos => 'Notifications are required.';
 }

@@ -53,16 +53,19 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
         id: id,
         channelKey: NotificationChannels.keyFor(r.type, critical: critical),
         title: grouped ? l10n.alarmGroupNotifTitle(group.length) : r.title,
-        // Several medicines: one line each, with that time's dose. The body
-        // is rendered as HTML (a plain "\n" shows as a space), so lines are
-        // joined with <br> and the text escaped.
+        // Several medicines: one line each, with that time's dose. Android
+        // renders the body as HTML (a plain "\n" shows as a space), so lines
+        // are joined with <br> and escaped; iOS shows plain text, where
+        // "\n" is the line break and tags would be stripped.
         body: grouped
             ? [
                 for (final d in group)
-                  _html.convert(
-                    '${d.reminder.title} — ${ReminderText.body(l10n, d)}',
-                  ),
-              ].join('<br>')
+                  Platform.isIOS
+                      ? '${d.reminder.title} — ${ReminderText.body(l10n, d)}'
+                      : _html.convert(
+                          '${d.reminder.title} — ${ReminderText.body(l10n, d)}',
+                        ),
+              ].join(Platform.isIOS ? '\n' : '<br>')
             : ReminderText.body(l10n, group.first),
         notificationLayout: grouped
             ? NotificationLayout.BigText

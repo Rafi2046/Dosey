@@ -509,7 +509,7 @@
   "privacyStoredTitle": "What Dosey stores",
   "privacyStoredBody": "Medicines, reminders, dose history, doctors, expenses and the photos you add to records. They are saved in the app's private storage on this device only.",
   "privacyScanTitle": "Prescription scanning",
-  "privacyScanBody": "Text recognition runs on your phone using Google ML Kit, and the photo is not uploaded. ML Kit may send limited diagnostic information to Google, as described in Google's ML Kit terms.",
+  "privacyScanBody": "Text recognition runs on your phone — Google ML Kit on Android, Apple's built-in text recognition on iPhone — and the photo is not uploaded. On Android, ML Kit may send limited diagnostic information to Google, as described in Google's ML Kit terms.",
   "privacyPermissionsTitle": "Permissions",
   "privacyPermissionsBody": "Notifications and alarm permissions are used only to ring your reminders. The camera and photo library are used only when you add a picture.",
   "privacySharingTitle": "Sharing",
@@ -904,5 +904,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "onboardingEssentialHintIos": "Notifications are required."
 }

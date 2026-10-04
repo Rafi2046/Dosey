@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -143,7 +145,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                 bottom: AppSpacing.md,
                               ),
                               child: Text(
-                                l10n.onboardingEssentialHint,
+                                // iOS has no exact-alarm setting to grant.
+                                Platform.isIOS
+                                    ? l10n.onboardingEssentialHintIos
+                                    : l10n.onboardingEssentialHint,
                                 style: AppTextStyles.caption,
                                 textAlign: TextAlign.center,
                               ),

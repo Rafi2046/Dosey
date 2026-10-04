@@ -246,12 +246,21 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
     if (_isEdit) {
-      await ref.read(medicinesRepositoryProvider).update(_m!.id, _companion());
-      if (_endDate != _m!.endDate) {
-        await ref
-            .read(medicineScheduleServiceProvider)
-            .syncEndDate(_m!.id, _endDate);
-      }
+      final m = _m!;
+      final name = _name.text.trim();
+      await ref.read(medicinesRepositoryProvider).update(m.id, _companion());
+      // Reminders carry their own copy of the name and dates.
+      await ref
+          .read(medicineScheduleServiceProvider)
+          .syncSchedule(
+            m.id,
+            name: name != m.name ? name : null,
+            startDate: DateUtils.isSameDay(_startDate, m.startDate)
+                ? null
+                : _startDate,
+            endDateChanged: _endDate != m.endDate,
+            endDate: _endDate,
+          );
     } else {
       await ref
           .read(medicineScheduleServiceProvider)

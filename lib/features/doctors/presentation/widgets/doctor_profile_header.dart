@@ -127,8 +127,9 @@ class DoctorProfileCard extends StatelessWidget {
   }
 
   Widget _buildDetailRow(_InfoItem item) {
+    // Icon and arrow centred on the label + value (top-aligned, the arrow
+    // sat level with the label instead).
     final content = Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           width: AppSpacing.settingsIcon,

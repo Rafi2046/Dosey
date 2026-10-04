@@ -41,8 +41,9 @@ void main() {
     final fractionallySizedBoxFinder = find.byType(FractionallySizedBox);
     expect(fractionallySizedBoxFinder, findsOneWidget);
 
-    final fractionallySizedBox =
-        tester.widget<FractionallySizedBox>(fractionallySizedBoxFinder);
+    final fractionallySizedBox = tester.widget<FractionallySizedBox>(
+      fractionallySizedBoxFinder,
+    );
     expect(
       fractionallySizedBox.heightFactor,
       equals(AppSpacing.moreSheetHeightFactor),
@@ -52,7 +53,8 @@ void main() {
     final bottomSheetFinder = find.byType(BottomSheet);
     expect(bottomSheetFinder, findsOneWidget);
     final sheetSize = tester.getSize(bottomSheetFinder);
-    final screenHeight = tester.view.physicalSize.height / tester.view.devicePixelRatio;
+    final screenHeight =
+        tester.view.physicalSize.height / tester.view.devicePixelRatio;
 
     // Total bottom sheet height should be around 65% of the screen height.
     expect(sheetSize.height / screenHeight, closeTo(0.65, 0.05));

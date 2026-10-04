@@ -52,9 +52,12 @@ class ReminderTile extends StatelessWidget {
                   children: [
                     Icon(r.type.icon, size: AppSpacing.iconSm, color: muted),
                     AppSpacing.gapXs,
-                    Text(
-                      r.type.label(context.l10n),
-                      style: AppTextStyles.overline.copyWith(color: muted),
+                    Flexible(
+                      child: Text(
+                        r.type.label(context.l10n),
+                        style: AppTextStyles.overline.copyWith(color: muted),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),

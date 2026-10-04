@@ -63,7 +63,11 @@ class SettingsTile extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (trailing != null) ...[AppSpacing.gapSm, trailing!],
+                // May shrink (a chip's label ellipsizes) with large text.
+                if (trailing != null) ...[
+                  AppSpacing.gapSm,
+                  Flexible(child: trailing!),
+                ],
                 if (onTap != null && trailing == null)
                   Icon(Icons.chevron_right_rounded, color: AppColors.inkMuted),
               ],

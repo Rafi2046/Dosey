@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
+import 'back_arrow_button.dart';
 
 /// Tab page header: a small eyebrow over a one-line serif
 /// title, an optional summary line below and an optional action.
@@ -38,66 +39,82 @@ class ScreenHeader extends StatelessWidget {
         : null;
 
     final muted = onLight ? AppColors.inkMuted : AppColors.textOnDarkMuted;
-    return Padding(
-      padding: padding,
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (eyebrow != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                    child: Row(
-                      children: [
-                        // Accent tick marking the section, like a tab label.
-                        Container(
-                          width: AppSpacing.headerTickWidth,
-                          height: AppSpacing.headerTickHeight,
-                          decoration: BoxDecoration(
-                            color: AppColors.accent,
-                            borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusPill,
-                            ),
+    // A page pushed over the tabs (blood pressure, history…) gets a back
+    // arrow: iOS has no system back button. Tabs and sheets don't.
+    final route = ModalRoute.of(context);
+    final showBack = route is PageRoute && route.canPop;
+    final header = Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (eyebrow != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                  child: Row(
+                    children: [
+                      // Accent tick marking the section, like a tab label.
+                      Container(
+                        width: AppSpacing.headerTickWidth,
+                        height: AppSpacing.headerTickHeight,
+                        decoration: BoxDecoration(
+                          color: AppColors.accent,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusPill,
                           ),
                         ),
-                        AppSpacing.gapSm,
-                        Text(
-                          eyebrow.toUpperCase(),
-                          style: AppTextStyles.overline.copyWith(
-                            fontSize: AppSpacing.fontSm,
-                            color: muted,
-                          ),
+                      ),
+                      AppSpacing.gapSm,
+                      Text(
+                        eyebrow.toUpperCase(),
+                        style: AppTextStyles.overline.copyWith(
+                          fontSize: AppSpacing.fontSm,
+                          color: muted,
                         ),
-                      ],
-                    ),
-                  ),
-                // One line, shrinking for long words or big fonts.
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    lines.last,
-                    style: onLight
-                        ? AppTextStyles.headlineOnLight
-                        : AppTextStyles.headline,
-                    maxLines: 1,
+                      ),
+                    ],
                   ),
                 ),
-                if (subtitle != null)
-                  Text(
-                    subtitle!,
-                    style: AppTextStyles.caption.copyWith(color: muted),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-              ],
-            ),
+              // One line, shrinking for long words or big fonts.
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  lines.last,
+                  style: onLight
+                      ? AppTextStyles.headlineOnLight
+                      : AppTextStyles.headline,
+                  maxLines: 1,
+                ),
+              ),
+              if (subtitle != null)
+                Text(
+                  subtitle!,
+                  style: AppTextStyles.caption.copyWith(color: muted),
+                  overflow: TextOverflow.ellipsis,
+                ),
+            ],
           ),
-          if (trailing != null) ...[AppSpacing.gapMd, trailing!],
-        ],
-      ),
+        ),
+        if (trailing != null) ...[AppSpacing.gapMd, trailing!],
+      ],
+    );
+    return Padding(
+      padding: padding,
+      child: showBack
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BackArrowButton(
+                  color: onLight ? AppColors.ink : AppColors.textOnDark,
+                ),
+                AppSpacing.gapSm,
+                header,
+              ],
+            )
+          : header,
     );
   }
 }

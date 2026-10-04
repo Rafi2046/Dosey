@@ -64,8 +64,11 @@ void main() {
   testWidgets('missed doses and course countdown', (tester) async {
     final db = AppDatabase(NativeDatabase.memory());
     addTearDown(db.close);
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
+    // A fixed noon (the app's clock is overridden), so the run doesn't
+    // depend on the time of day: at 1 am "3 h ago" would be yesterday.
+    final wall = DateTime.now();
+    final today = DateTime(wall.year, wall.month, wall.day);
+    final now = today.add(const Duration(hours: 12));
     // A daily dose 3 h ago, set up yesterday and never answered: missed
     // yesterday and today.
     final missedAt = now.subtract(const Duration(hours: 3));

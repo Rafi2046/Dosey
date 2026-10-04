@@ -104,21 +104,49 @@ class MedicineScheduleService {
     ),
   );
 
-  /// Applies a changed medicine end date to all of its reminders.
-  Future<void> syncEndDate(int medicineId, DateTime? endDate) =>
-      _db.transaction(() async {
-        // A plain read: a stream query (watch…first) runs outside the
-        // transaction and would wait on it forever.
-        final reminders = await (_db.select(
-          _db.reminders,
-        )..where((r) => r.medicineId.equals(medicineId))).get();
-        for (final r in reminders) {
-          await _reminders.update(
-            r.id,
-            RemindersCompanion(endAt: Value(endOfDay(endDate))),
-          );
-        }
-      });
+  /// Applies an edited medicine to all of its reminders: a new [name]
+  /// becomes their title (shown on alarms and Home), a new [startDate]
+  /// moves their first day (each keeps its time of day) and [endDate] their
+  /// last. Pass only what changed; a rename leaves the schedule alone.
+  Future<void> syncSchedule(
+    int medicineId, {
+    String? name,
+    DateTime? startDate,
+    bool endDateChanged = false,
+    DateTime? endDate,
+  }) => _db.transaction(() async {
+    // A plain read: a stream query (watch…first) runs outside the
+    // transaction and would wait on it forever.
+    final reminders = await (_db.select(
+      _db.reminders,
+    )..where((r) => r.medicineId.equals(medicineId))).get();
+    for (final r in reminders) {
+      if (name != null) {
+        await (_db.update(_db.reminders)..where((x) => x.id.equals(r.id)))
+            .write(RemindersCompanion(title: Value(name)));
+      }
+      if (startDate == null && !endDateChanged) continue;
+      await _reminders.update(
+        r.id,
+        RemindersCompanion(
+          startAt: startDate == null
+              ? const Value.absent()
+              : Value(
+                  DateTime(
+                    startDate.year,
+                    startDate.month,
+                    startDate.day,
+                    r.startAt.hour,
+                    r.startAt.minute,
+                  ),
+                ),
+          endAt: endDateChanged
+              ? Value(endOfDay(endDate))
+              : const Value.absent(),
+        ),
+      );
+    }
+  });
 
   /// Medicine end dates are inclusive: doses on that day still ring.
   static DateTime? endOfDay(DateTime? day) =>

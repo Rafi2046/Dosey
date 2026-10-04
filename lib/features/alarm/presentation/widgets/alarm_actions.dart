@@ -58,26 +58,25 @@ class AlarmActions extends StatelessWidget {
           onPressed: busy ? null : () => onAction(AlarmAction.snooze),
         ),
         AppSpacing.gapSm,
-        // Equal halves, each with an icon, so the two links line up
-        // (one alone is centred).
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        // Each link at its own width, side by side and centred; if both
+        // don't fit (longer English labels), they wrap onto two centred
+        // lines rather than being cut off.
+        Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: AppSpacing.lg,
           children: [
             if (onRemindLater case final remindLater?)
-              Expanded(
-                child: _Link(
-                  icon: Icons.schedule_rounded,
-                  label: context.l10n.remindLater,
-                  onPressed: busy ? null : remindLater,
-                ),
+              _Link(
+                icon: Icons.schedule_rounded,
+                label: context.l10n.remindLater,
+                onPressed: busy ? null : remindLater,
               ),
             if (isMedicine)
-              Expanded(
-                child: _Link(
-                  icon: Icons.redo_rounded,
-                  label: context.l10n.alarmSkip,
-                  onPressed: busy ? null : () => onAction(AlarmAction.skip),
-                ),
+              _Link(
+                icon: Icons.redo_rounded,
+                label: context.l10n.alarmSkip,
+                onPressed: busy ? null : () => onAction(AlarmAction.skip),
               ),
           ],
         ),
@@ -86,7 +85,7 @@ class AlarmActions extends StatelessWidget {
   }
 }
 
-/// Secondary action under the pills: icon + label, centred in its half.
+/// Secondary action under the pills: small icon + label.
 class _Link extends StatelessWidget {
   const _Link({required this.icon, required this.label, this.onPressed});
 
@@ -97,7 +96,7 @@ class _Link extends StatelessWidget {
   @override
   Widget build(BuildContext context) => TextButton.icon(
     icon: Icon(icon, size: AppSpacing.iconSm),
-    label: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
+    label: Text(label),
     onPressed: onPressed,
   );
 }

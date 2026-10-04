@@ -51,9 +51,12 @@ class _MedicineTypeScreenState extends State<MedicineTypeScreen> {
                     children: [
                       const BackArrowButton(),
                       AppSpacing.gapSm,
-                      Text(
-                        context.l10n.addMedicine,
-                        style: AppTextStyles.subtitle,
+                      Expanded(
+                        child: Text(
+                          context.l10n.addMedicine,
+                          style: AppTextStyles.subtitle,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

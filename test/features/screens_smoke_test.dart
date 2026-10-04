@@ -10,6 +10,7 @@ import 'package:dosey/core/storage/file_storage_service.dart';
 import 'package:dosey/core/widgets/amount_stepper.dart';
 import 'package:dosey/core/widgets/app_text_field.dart';
 import 'package:dosey/core/widgets/async_value_view.dart';
+import 'package:dosey/core/widgets/back_arrow_button.dart';
 import 'package:dosey/core/widgets/labeled_field.dart';
 import 'package:dosey/core/widgets/screen_header.dart';
 import 'package:dosey/core/widgets/skeleton.dart';
@@ -28,6 +29,14 @@ import 'package:dosey/features/doctors/providers/doctors_providers.dart';
 import 'package:dosey/features/medicines/providers/medicines_providers.dart';
 import 'package:dosey/features/records/data/records_repository.dart';
 import 'package:dosey/features/reminders/data/reminders_repository.dart';
+import 'package:dosey/features/blood_pressure/presentation/blood_pressure_screen.dart';
+import 'package:dosey/features/blood_sugar/presentation/blood_sugar_screen.dart';
+import 'package:dosey/features/medicines/presentation/medicine_detail_screen.dart';
+import 'package:dosey/features/medicines/presentation/medicine_type_screen.dart';
+import 'package:dosey/features/reminders/presentation/dose_history_screen.dart';
+import 'package:dosey/features/reminders/presentation/reminder_form_screen.dart';
+import 'package:dosey/features/settings/presentation/settings_screen.dart';
+import 'package:dosey/features/settings/providers/settings_providers.dart';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -1612,10 +1621,7 @@ void main() {
     await pumpApp(tester);
     await openTab(tester, HomeTab.medicines);
     // Seeded medicines run 1 Sep – 30 Oct; today is 3 Oct.
-    expect(
-      find.text(en.courseDayOf(33, 60)),
-      findsWidgets,
-    );
+    expect(find.text(en.courseDayOf(33, 60)), findsWidgets);
 
     // Shorten Insulin's course to 7 days: 1–7 Sep, so it's already over.
     await tapText(tester, 'Insulin 500 mg');
@@ -1645,4 +1651,58 @@ void main() {
     expect(reminders.single.nextTriggerAt, isNull);
     await unmount(tester);
   });
+
+  for (final (code, scale) in [('bn', 1.6), ('en', 1.6), ('bn', 1.0)]) {
+    testWidgets('every main screen fits on a phone ($code, text x$scale)', (
+      tester,
+    ) async {
+      tester.platformDispatcher.textScaleFactorTestValue = scale;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      final l = lookupAppLocalizations(Locale(code));
+      await pumpApp(
+        tester,
+        overrides: [
+          languageProvider.overrideWith(() => LanguageController(code)),
+        ],
+      );
+      // Any RenderFlex overflow on the way fails the test.
+      Future<void> tab(HomeTab t) async {
+        final inBar = AppNavBar.primary.contains(t);
+        await tester.tap(
+          find.descendant(
+            of: find.byType(AppNavBar),
+            matching: find.byTooltip(inBar ? t.label(l) : l.navMore),
+          ),
+        );
+        await settle(tester);
+        if (!inBar) {
+          await tester.tap(find.text(t.label(l)).last);
+          await settle(tester);
+        }
+      }
+
+      Future<void> push(Widget page) async {
+        final navigator = Navigator.of(tester.element(find.byType(AppNavBar)));
+        navigator.push(MaterialPageRoute<void>(builder: (_) => page));
+        await settle(tester);
+        // Every pushed page offers a back arrow (iOS has no system one).
+        expect(find.byType(BackArrowButton), findsWidgets);
+        navigator.pop();
+        await settle(tester);
+      }
+
+      for (final t in HomeTab.values) {
+        await tab(t);
+      }
+      await tab(HomeTab.dashboard);
+      await push(const BloodPressureScreen());
+      await push(const BloodSugarScreen());
+      await push(const DoseHistoryScreen());
+      await push(const SettingsScreen());
+      await push(const MedicineDetailScreen(medicineId: 1));
+      await push(const MedicineTypeScreen());
+      await push(const ReminderFormScreen());
+      await unmount(tester);
+    });
+  }
 }

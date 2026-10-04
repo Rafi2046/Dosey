@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../../core/database/app_database.dart';
+import '../../reminders/domain/reminder_schedule.dart';
 import '../domain/medicine_with_doctor.dart';
 
 class MedicinesRepository {
@@ -57,17 +58,36 @@ class MedicinesRepository {
         changes.copyWith(updatedAt: Value(DateTime.now())),
       );
 
-  /// Deactivating also disables the medicine's reminders.
-  Future<void> setActive(int id, {required bool active}) =>
+  /// Deactivating also disables the medicine's reminders; resuming
+  /// re-enables them and works out each one's next alarm. Resuming counts
+  /// as an edit ([Reminders.updatedAt]), so doses due while it was stopped
+  /// aren't reported as missed.
+  Future<void> setActive(int id, {required bool active, DateTime? now}) =>
       _db.transaction(() async {
         await update(id, MedicinesCompanion(isActive: Value(active)));
+        final reminders = _db.update(_db.reminders)
+          ..where((r) => r.medicineId.equals(id));
         if (!active) {
-          await (_db.update(
-            _db.reminders,
-          )..where((r) => r.medicineId.equals(id))).write(
+          await reminders.write(
             const RemindersCompanion(
               isEnabled: Value(false),
               nextTriggerAt: Value(null),
+            ),
+          );
+          return;
+        }
+        final at = now ?? DateTime.now();
+        for (final r in await (_db.select(
+          _db.reminders,
+        )..where((r) => r.medicineId.equals(id))).get()) {
+          final enabled = r.copyWith(isEnabled: true);
+          await (_db.update(
+            _db.reminders,
+          )..where((x) => x.id.equals(r.id))).write(
+            RemindersCompanion(
+              isEnabled: const Value(true),
+              updatedAt: Value(at),
+              nextTriggerAt: Value(ReminderSchedule.nextFor(enabled, at)),
             ),
           );
         }

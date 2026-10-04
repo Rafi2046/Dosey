@@ -912,5 +912,70 @@
   "widgetToday": "Today",
   "widgetTomorrow": "Tomorrow",
   "widgetName": "Next medicine",
-  "widgetDescription": "Your next dose: medicine, time and amount."
+  "widgetDescription": "Your next dose: medicine, time and amount.",
+  "takenLate": "Taken late",
+  "markAllTakenLate": "Mark all as taken late",
+  "missedDosesTitle": "Missed doses",
+  "missedDosesCount": "{count, plural, =1{1 missed dose} other{{count} missed doses}}",
+  "@missedDosesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "missedDosesHint": "Took it after all? Tap to mark it taken late.",
+  "missedDosesBody": "Took a dose later than planned? Mark it here so your history and stock stay accurate.",
+  "todayAt": "Today · {time}",
+  "@todayAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "yesterdayAt": "Yesterday · {time}",
+  "@yesterdayAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "courseDuration": "Course duration",
+  "courseMonth": "1 month",
+  "courseCustom": "Custom",
+  "courseDayOf": "Day {day} of {total}",
+  "@courseDayOf": {
+    "placeholders": {
+      "day": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "total": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "courseDaysLeft": "{count, plural, =0{Last day} =1{1 day left} other{{count} days left}}",
+  "@courseDaysLeft": {
+    "description": "Days remaining in a medicine course after today",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "courseComplete": "Course complete",
+  "courseStarts": "Starts {date}",
+  "@courseStarts": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

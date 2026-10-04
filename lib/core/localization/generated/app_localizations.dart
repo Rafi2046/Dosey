@@ -3379,6 +3379,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your next dose: medicine, time and amount.'**
   String get widgetDescription;
+
+  /// No description provided for @takenLate.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken late'**
+  String get takenLate;
+
+  /// No description provided for @markAllTakenLate.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as taken late'**
+  String get markAllTakenLate;
+
+  /// No description provided for @missedDosesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Missed doses'**
+  String get missedDosesTitle;
+
+  /// No description provided for @missedDosesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 missed dose} other{{count} missed doses}}'**
+  String missedDosesCount(int count);
+
+  /// No description provided for @missedDosesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Took it after all? Tap to mark it taken late.'**
+  String get missedDosesHint;
+
+  /// No description provided for @missedDosesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Took a dose later than planned? Mark it here so your history and stock stay accurate.'**
+  String get missedDosesBody;
+
+  /// No description provided for @todayAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Today · {time}'**
+  String todayAt(String time);
+
+  /// No description provided for @yesterdayAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday · {time}'**
+  String yesterdayAt(String time);
+
+  /// No description provided for @courseDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Course duration'**
+  String get courseDuration;
+
+  /// No description provided for @courseMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'1 month'**
+  String get courseMonth;
+
+  /// No description provided for @courseCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get courseCustom;
+
+  /// No description provided for @courseDayOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day} of {total}'**
+  String courseDayOf(int day, int total);
+
+  /// Days remaining in a medicine course after today
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Last day} =1{1 day left} other{{count} days left}}'**
+  String courseDaysLeft(int count);
+
+  /// No description provided for @courseComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Course complete'**
+  String get courseComplete;
+
+  /// No description provided for @courseStarts.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts {date}'**
+  String courseStarts(String date);
 }
 
 class _AppLocalizationsDelegate

@@ -2013,4 +2013,91 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get widgetDescription => 'Your next dose: medicine, time and amount.';
+
+  @override
+  String get takenLate => 'Taken late';
+
+  @override
+  String get markAllTakenLate => 'Mark all as taken late';
+
+  @override
+  String get missedDosesTitle => 'Missed doses';
+
+  @override
+  String missedDosesCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString missed doses',
+      one: '1 missed dose',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get missedDosesHint => 'Took it after all? Tap to mark it taken late.';
+
+  @override
+  String get missedDosesBody =>
+      'Took a dose later than planned? Mark it here so your history and stock stay accurate.';
+
+  @override
+  String todayAt(String time) {
+    return 'Today · $time';
+  }
+
+  @override
+  String yesterdayAt(String time) {
+    return 'Yesterday · $time';
+  }
+
+  @override
+  String get courseDuration => 'Course duration';
+
+  @override
+  String get courseMonth => '1 month';
+
+  @override
+  String get courseCustom => 'Custom';
+
+  @override
+  String courseDayOf(int day, int total) {
+    final intl.NumberFormat dayNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String dayString = dayNumberFormat.format(day);
+    final intl.NumberFormat totalNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String totalString = totalNumberFormat.format(total);
+
+    return 'Day $dayString of $totalString';
+  }
+
+  @override
+  String courseDaysLeft(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString days left',
+      one: '1 day left',
+      zero: 'Last day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get courseComplete => 'Course complete';
+
+  @override
+  String courseStarts(String date) {
+    return 'Starts $date';
+  }
 }

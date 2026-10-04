@@ -21,6 +21,7 @@ import '../../doctors/presentation/widgets/doctor_picker_field.dart';
 import '../../doctors/providers/doctors_providers.dart';
 import '../../records/presentation/widgets/prescription_picker_field.dart';
 import '../../reminders/domain/reminder_text.dart';
+import '../domain/course_progress.dart';
 import '../domain/dose_time.dart';
 import '../domain/scanned_medicine.dart';
 import '../providers/medicines_providers.dart';
@@ -172,8 +173,50 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
       if (s.doses.isNotEmpty) _doses = s.doses;
       // An N-day course ends on its Nth day.
       if (s.durationDays case final d?) {
-        _endDate = DateUtils.dateOnly(_startDate).add(Duration(days: d - 1));
+        _endDate = CourseLength.endDate(_startDate, d);
       }
+    });
+  }
+
+  /// The course-duration pill matching the current dates.
+  int get _courseOption {
+    final end = _endDate;
+    if (end == null) return CourseLength.ongoing;
+    final days = CourseLength.days(_startDate, end);
+    return CourseLength.presets.contains(days) ? days : CourseLength.custom;
+  }
+
+  String _courseLabel(int option) => switch (option) {
+    CourseLength.ongoing => context.l10n.ongoing,
+    CourseLength.custom => context.l10n.courseCustom,
+    CourseLength.month => context.l10n.courseMonth,
+    final days => context.l10n.daysCount(days),
+  };
+
+  /// A preset sets the end date from the start date; Custom asks for one.
+  Future<void> _onCourseChanged(int option) async {
+    if (option == CourseLength.custom) return _pickEndDate();
+    setState(
+      () => _endDate = option == CourseLength.ongoing
+          ? null
+          : CourseLength.endDate(_startDate, option),
+    );
+  }
+
+  Future<void> _pickEndDate() async {
+    final d = await AppPickers.date(context, initial: _endDate ?? _startDate);
+    if (d != null) setState(() => _endDate = d);
+  }
+
+  /// Moving the start keeps the course length (a 7-day course stays 7 days).
+  Future<void> _pickStartDate() async {
+    final d = await AppPickers.date(context, initial: _startDate);
+    if (d == null) return;
+    setState(() {
+      if (_endDate case final end?) {
+        _endDate = CourseLength.endDate(d, CourseLength.days(_startDate, end));
+      }
+      _startDate = d;
     });
   }
 
@@ -322,21 +365,30 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
               label: context.l10n.medicineStartDate,
               value: AppDateFormat.date(_startDate),
               icon: Icons.event_rounded,
-              onTap: () async {
-                final d = await AppPickers.date(context, initial: _startDate);
-                if (d != null) setState(() => _startDate = d);
-              },
+              onTap: _pickStartDate,
             ),
+            LabeledField(
+              label: context.l10n.courseDuration,
+              child: ChoicePills<int>(
+                columns: 4,
+                options: const [
+                  ...CourseLength.presets,
+                  CourseLength.ongoing,
+                  CourseLength.custom,
+                ],
+                selected: {_courseOption},
+                labelOf: _courseLabel,
+                onChanged: (s) => _onCourseChanged(s.single),
+              ),
+            ),
+            // Follows the duration above; picking a date here is "Custom".
             PickerField(
               label: context.l10n.medicineEndDate,
               value: _endDate == null ? null : AppDateFormat.date(_endDate!),
               placeholder: context.l10n.ongoing,
               icon: Icons.event_busy_rounded,
               onClear: () => setState(() => _endDate = null),
-              onTap: () async {
-                final d = await AppPickers.date(context, initial: _endDate);
-                if (d != null) setState(() => _endDate = d);
-              },
+              onTap: _pickEndDate,
             ),
           ],
         ),

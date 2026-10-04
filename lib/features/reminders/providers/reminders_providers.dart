@@ -1,9 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/constants/app_constants.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/utils/clock_providers.dart';
 import '../data/reminders_repository.dart';
+import '../domain/missed_doses.dart';
 import '../domain/reminder_schedule.dart';
 import '../domain/reminder_with_details.dart';
 import '../domain/scheduled_occurrence.dart';
@@ -63,6 +65,47 @@ final todayScheduleProvider = FutureProvider<List<ScheduledOccurrence>>((
           status: statusByKey[(details.reminder.id, at)],
         ),
   ]..sort((a, b) => a.at.compareTo(b.at));
+});
+
+final _logsBetweenProvider = StreamProvider.autoDispose
+    .family<List<ReminderLog>, (DateTime, DateTime)>(
+      (ref, range) => ref
+          .watch(remindersRepositoryProvider)
+          .watchLogsBetween(range.$1, range.$2),
+    );
+
+/// Medicine doses from today and the previous
+/// [AppConstants.missedDosesShownDays] that were missed and not since marked
+/// as taken late, oldest first. Includes doses the background sweep hasn't
+/// logged yet (status null), so Home is right the minute one becomes missed.
+final missedDosesProvider = FutureProvider<List<ScheduledOccurrence>>((
+  ref,
+) async {
+  final day = await ref.watch(currentDayProvider.future);
+  final now = await ref.watch(minuteTickerProvider.future);
+  final reminders = await ref.watch(enabledRemindersProvider.future);
+  final from = DateTime(
+    day.year,
+    day.month,
+    day.day - AppConstants.missedDosesShownDays,
+  );
+  final until = DateTime(day.year, day.month, day.day + 1);
+  final logs = await ref.watch(_logsBetweenProvider((from, until)).future);
+
+  final details = {for (final d in reminders) d.reminder.id: d};
+  return [
+    for (final missed in MissedDoses.find(
+      [for (final d in reminders) d.reminder],
+      logs,
+      from: from,
+      now: now,
+    ))
+      ScheduledOccurrence(
+        details: details[missed.reminder.id]!,
+        at: missed.at,
+        status: missed.logged ? ReminderLogStatus.missed : null,
+      ),
+  ];
 });
 
 /// Type filter on the reminders screen (null = all).

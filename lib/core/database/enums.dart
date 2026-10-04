@@ -30,7 +30,27 @@ enum RepeatRule {
   everyNDays,
 }
 
-enum ReminderLogStatus { taken, skipped, snoozed, missed }
+enum ReminderLogStatus {
+  taken,
+  skipped,
+  snoozed,
+
+  /// Nobody acted within `AppConstants.missedThreshold`, or the alarm was
+  /// dismissed without an answer.
+  missed,
+
+  /// A missed dose the user later reported taking.
+  takenLate,
+}
+
+extension ReminderLogStatusOutcome on ReminderLogStatus {
+  /// The dose was actually swallowed (on time or late): stock is deducted.
+  bool get isTaken =>
+      this == ReminderLogStatus.taken || this == ReminderLogStatus.takenLate;
+
+  /// The user gave a final answer (a snooze or a miss can still change).
+  bool get isAnswered => isTaken || this == ReminderLogStatus.skipped;
+}
 
 enum RecordType { prescription, testReport, vaccineCertificate, invoice, other }
 

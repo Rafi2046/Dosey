@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/utils/clock_providers.dart';
 import '../../../core/utils/enum_labels.dart';
 import '../../../core/utils/money.dart';
 import '../../../core/widgets/async_value_view.dart';
@@ -16,9 +17,11 @@ import '../../doctors/presentation/doctor_detail_screen.dart';
 import '../../expenses/providers/expenses_providers.dart';
 import '../../reminders/domain/reminder_text.dart';
 import '../../reminders/providers/reminders_providers.dart';
+import '../domain/course_progress.dart';
 import '../domain/medicine_with_doctor.dart';
 import '../providers/medicines_providers.dart';
 import 'medicine_form_screen.dart';
+import 'widgets/course_progress_pill.dart';
 import 'widgets/medicine_times_section.dart';
 import 'widgets/refill_sheet.dart';
 import '../../../core/localization/l10n.dart';
@@ -143,7 +146,7 @@ class _DetailBody extends ConsumerWidget {
     final end = m.endDate;
     final duration = end == null
         ? context.l10n.ongoing
-        : context.l10n.daysCount(end.difference(m.startDate).inDays + 1);
+        : context.l10n.daysCount(CourseLength.days(m.startDate, end));
     final monthly = ref
         .watch(medicineCostProjectionProvider)
         .value
@@ -165,9 +168,20 @@ class _DetailBody extends ConsumerWidget {
           InfoBlock(label: context.l10n.medicineDescription, value: m.notes!),
         LabeledField(
           label: context.l10n.timeDuration,
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: _chip(duration, icon: Icons.date_range_rounded),
+          child: Wrap(
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.sm,
+            children: [
+              _chip(duration, icon: Icons.date_range_rounded),
+              if (end != null)
+                CourseProgressPill(
+                  medicine: m,
+                  today:
+                      ref.watch(currentDayProvider).value ??
+                      DateUtils.dateOnly(DateTime.now()),
+                  onLight: true,
+                ),
+            ],
           ),
         ),
         MedicineTimesSection(medicine: m),

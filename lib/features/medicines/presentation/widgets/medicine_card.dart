@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/utils/clock_providers.dart';
 import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/utils/money.dart';
 import '../../../../core/widgets/status_chip.dart';
@@ -11,11 +12,12 @@ import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/providers/reminders_providers.dart';
 import '../../domain/medicine_with_doctor.dart';
 import '../../providers/medicines_providers.dart';
+import 'course_progress_pill.dart';
 import '../../../../core/localization/l10n.dart';
 import '../../../../core/utils/numbers.dart';
 
-/// Medicine summary: illustration, name/strength, dose, doctor, stock and
-/// projected monthly cost.
+/// Medicine summary: illustration, name/strength, dose, doctor, course
+/// countdown, stock and projected monthly cost.
 class MedicineCard extends ConsumerWidget {
   const MedicineCard({
     super.key,
@@ -46,9 +48,15 @@ class MedicineCard extends ConsumerWidget {
         '${ReminderText.doseSummary(context.l10n, reminders, m.doseUnit)}'
         '${context.l10n.notifDoseSeparator}${m.mealRelation.label(context.l10n)}';
 
+    final today =
+        ref.watch(currentDayProvider).value ??
+        DateUtils.dateOnly(DateTime.now());
+
     final chips = <Widget>[
       if (!m.isActive)
         StatusChip(label: context.l10n.stopped, icon: Icons.pause_rounded),
+      if (m.endDate != null)
+        CourseProgressPill(medicine: m, today: today, onLight: light),
       if (stock.isLow)
         StatusChip(
           label: context.l10n.lowStock,

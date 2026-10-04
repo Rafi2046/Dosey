@@ -17,11 +17,12 @@ import 'widgets/blood_pressure_section.dart';
 import 'widgets/blood_sugar_section.dart';
 import 'widgets/dashboard_header.dart';
 import 'widgets/low_stock_section.dart';
+import 'widgets/missed_doses_card.dart';
 import 'widgets/today_reminder_stack.dart';
 import 'widgets/upcoming_events_section.dart';
 import '../../../core/localization/l10n.dart';
 
-/// Home: today's stacked reminders, cost summary, low stock and upcoming
+/// Home: missed doses, today's stacked reminders, cost summary, low stock and upcoming
 /// appointments. Tab switching is delegated to the shell via callbacks.
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({
@@ -44,6 +45,7 @@ class DashboardScreen extends ConsumerWidget {
       refreshFrom: 2,
       onRefresh: () async {
         ref.invalidate(todayScheduleProvider);
+        ref.invalidate(missedDosesProvider);
         ref.invalidate(lowStockMedicinesProvider);
         ref.invalidate(remindersProvider);
         ref.invalidate(currentMonthExpenseTotalProvider);
@@ -64,6 +66,7 @@ class DashboardScreen extends ConsumerWidget {
             style: AppTextStyles.display,
           ),
         ),
+        const MissedDosesCard(),
         TodayReminderStack(
           onAddReminder: () => Navigator.of(context).push(
             MaterialPageRoute<void>(builder: (_) => const ReminderFormScreen()),

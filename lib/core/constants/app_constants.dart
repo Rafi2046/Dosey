@@ -138,6 +138,13 @@ abstract final class AppConstants {
   /// logged as missed instead of ringing.
   static const Duration missedThreshold = Duration(hours: 2);
 
+  /// How far back unanswered doses are swept into the log as missed.
+  static const Duration missedSweepWindow = Duration(days: 7);
+
+  /// Missed doses from today and this many days before are shown on Home,
+  /// to be marked as taken late.
+  static const int missedDosesShownDays = 1;
+
   /// Vibration pattern for alarm channels (ms: wait, buzz, wait, buzz...).
   static const List<int> alarmVibrationPattern = [0, 800, 400, 800, 400, 800];
 

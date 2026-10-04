@@ -421,4 +421,142 @@ void main() {
       expect(notifier.showing.containsKey(slotId), isFalse);
     });
   });
+
+  group('missed doses', () {
+    /// Daily 08:00 dose, last edited at [editedAt] (inferred misses start
+    /// there).
+    Future<Reminder> addEdited(DateTime editedAt) async {
+      final med = await db
+          .into(db.medicines)
+          .insert(
+            MedicinesCompanion.insert(
+              name: 'Napa',
+              startDate: DateTime(2026),
+              stockQuantity: const Value(10),
+            ),
+          );
+      return repo.create(
+        RemindersCompanion.insert(
+          type: ReminderType.medicine,
+          title: 'Napa',
+          startAt: DateTime(2026, 10, 1, 8),
+          medicineId: Value(med),
+          repeatRule: const Value(RepeatRule.daily),
+          updatedAt: Value(editedAt),
+        ),
+        now: now,
+      );
+    }
+
+    Future<Map<DateTime, ReminderLogStatus>> logged() async => {
+      for (final l in await db.select(db.reminderLogs).get())
+        l.scheduledFor: l.status,
+    };
+
+    test('the sweep logs doses left unanswered past the threshold', () async {
+      final r = await addEdited(DateTime(2026, 10, 1));
+      await repo.logAction(
+        reminderId: r.id,
+        scheduledFor: DateTime(2026, 10, 2, 8),
+        status: ReminderLogStatus.taken,
+      );
+      // Today's 08:00 dose is 1.5 h old: still open, not missed yet.
+      now = DateTime(2026, 10, 3, 9, 30);
+      await engine.sweepMissed();
+      expect(await logged(), {
+        DateTime(2026, 10, 1, 8): ReminderLogStatus.missed,
+        DateTime(2026, 10, 2, 8): ReminderLogStatus.taken,
+      });
+
+      now = DateTime(2026, 10, 3, 10, 1);
+      await engine.sweepMissed();
+      expect(
+        (await logged())[DateTime(2026, 10, 3, 8)],
+        ReminderLogStatus.missed,
+      );
+    });
+
+    test('the sweep stops a dose that rang unanswered for too long', () async {
+      final r = await addEdited(DateTime(2026, 10, 3));
+      final at = DateTime(2026, 10, 3, 8);
+      now = at;
+      await engine.onAlarmFired(r.id, paramsFor(at));
+      expect(notifier.showing[r.id], at);
+
+      now = DateTime(2026, 10, 3, 11);
+      await engine.resyncAll();
+
+      expect((await logged())[at], ReminderLogStatus.missed);
+      expect((await repo.getById(r.id))!.ringingFor, isNull);
+      expect(notifier.showing, isEmpty);
+    });
+
+    test(
+      'doses before a reminder was added or edited are not missed',
+      () async {
+        await addEdited(DateTime(2026, 10, 3, 9));
+        now = DateTime(2026, 10, 3, 23);
+        await engine.sweepMissed();
+        expect(await logged(), isEmpty);
+      },
+    );
+
+    test(
+      'a snoozed dose still unanswered past the threshold is missed',
+      () async {
+        final r = await addEdited(DateTime(2026, 10, 3));
+        final at = DateTime(2026, 10, 3, 8);
+        await repo.logAction(
+          reminderId: r.id,
+          scheduledFor: at,
+          status: ReminderLogStatus.snoozed,
+        );
+        now = DateTime(2026, 10, 3, 12);
+        await engine.sweepMissed();
+        expect((await logged())[at], ReminderLogStatus.missed);
+      },
+    );
+
+    test('dismissing an unanswered notification logs the dose as missed, '
+        'but never overrides an answer', () async {
+      final r = await addEdited(DateTime(2026, 10, 3));
+      final at = DateTime(2026, 10, 3, 8);
+      now = at;
+      await engine.onAlarmFired(r.id, paramsFor(at));
+
+      await engine.onDismissed([r.id], at);
+      expect((await logged())[at], ReminderLogStatus.missed);
+      expect((await repo.getById(r.id))!.ringingFor, isNull);
+
+      final tomorrow = DateTime(2026, 10, 4, 8);
+      await repo.logAction(
+        reminderId: r.id,
+        scheduledFor: tomorrow,
+        status: ReminderLogStatus.taken,
+      );
+      await engine.onDismissed([r.id], tomorrow);
+      expect((await logged())[tomorrow], ReminderLogStatus.taken);
+    });
+
+    test('taken late replaces the miss and deducts stock once', () async {
+      final r = await addEdited(DateTime(2026, 10, 3));
+      final at = DateTime(2026, 10, 3, 8);
+      now = DateTime(2026, 10, 3, 12);
+      await engine.sweepMissed();
+
+      for (var i = 0; i < 2; i++) {
+        await engine.handleAction(
+          reminderIds: [r.id],
+          scheduledFor: at,
+          action: AlarmAction.takenLate,
+        );
+      }
+      expect((await logged())[at], ReminderLogStatus.takenLate);
+      expect((await db.select(db.medicines).getSingle()).stockQuantity, 9);
+
+      // A later sweep leaves the answered dose alone.
+      await engine.sweepMissed();
+      expect((await logged())[at], ReminderLogStatus.takenLate);
+    });
+  });
 }

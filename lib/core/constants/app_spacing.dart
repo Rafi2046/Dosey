@@ -79,6 +79,9 @@ abstract final class AppSpacing {
   static const double pageStripHeight = 120;
   static const double pageStripThumbWidth = 92;
   static const double barHeight = 10;
+
+  /// Stroke of the small course-progress ring on medicine pills.
+  static const double progressRingStroke = 2.5;
   static const double amountFont = 44;
   static const double navBarHeight = 72;
   static const double navAddButton = 56;

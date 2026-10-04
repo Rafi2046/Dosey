@@ -546,5 +546,20 @@
   "widgetToday": "আজ",
   "widgetTomorrow": "আগামীকাল",
   "widgetName": "পরবর্তী ওষুধ",
-  "widgetDescription": "আপনার পরবর্তী ডোজ: ওষুধ, সময় ও পরিমাণ।"
+  "widgetDescription": "আপনার পরবর্তী ডোজ: ওষুধ, সময় ও পরিমাণ।",
+  "takenLate": "দেরিতে নেওয়া",
+  "markAllTakenLate": "সবগুলো দেরিতে নেওয়া হিসেবে চিহ্নিত করুন",
+  "missedDosesTitle": "মিস হওয়া ডোজ",
+  "missedDosesCount": "{count, plural, other{{count}টি ডোজ মিস হয়েছে}}",
+  "missedDosesHint": "পরে খেয়েছেন? দেরিতে নেওয়া হিসেবে চিহ্নিত করতে ট্যাপ করুন।",
+  "missedDosesBody": "নির্ধারিত সময়ের পরে খেয়ে থাকলে এখানে চিহ্নিত করুন, যাতে ইতিহাস ও স্টক ঠিক থাকে।",
+  "todayAt": "আজ · {time}",
+  "yesterdayAt": "গতকাল · {time}",
+  "courseDuration": "কোর্সের মেয়াদ",
+  "courseMonth": "১ মাস",
+  "courseCustom": "নিজে বাছুন",
+  "courseDayOf": "দিন {day}/{total}",
+  "courseDaysLeft": "{count, plural, =0{আজ শেষ দিন} other{আর {count} দিন বাকি}}",
+  "courseComplete": "কোর্স শেষ",
+  "courseStarts": "শুরু {date}"
 }

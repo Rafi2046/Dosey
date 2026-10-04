@@ -1991,4 +1991,90 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get widgetDescription => 'আপনার পরবর্তী ডোজ: ওষুধ, সময় ও পরিমাণ।';
+
+  @override
+  String get takenLate => 'দেরিতে নেওয়া';
+
+  @override
+  String get markAllTakenLate => 'সবগুলো দেরিতে নেওয়া হিসেবে চিহ্নিত করুন';
+
+  @override
+  String get missedDosesTitle => 'মিস হওয়া ডোজ';
+
+  @override
+  String missedDosesCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countStringটি ডোজ মিস হয়েছে',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get missedDosesHint =>
+      'পরে খেয়েছেন? দেরিতে নেওয়া হিসেবে চিহ্নিত করতে ট্যাপ করুন।';
+
+  @override
+  String get missedDosesBody =>
+      'নির্ধারিত সময়ের পরে খেয়ে থাকলে এখানে চিহ্নিত করুন, যাতে ইতিহাস ও স্টক ঠিক থাকে।';
+
+  @override
+  String todayAt(String time) {
+    return 'আজ · $time';
+  }
+
+  @override
+  String yesterdayAt(String time) {
+    return 'গতকাল · $time';
+  }
+
+  @override
+  String get courseDuration => 'কোর্সের মেয়াদ';
+
+  @override
+  String get courseMonth => '১ মাস';
+
+  @override
+  String get courseCustom => 'নিজে বাছুন';
+
+  @override
+  String courseDayOf(int day, int total) {
+    final intl.NumberFormat dayNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String dayString = dayNumberFormat.format(day);
+    final intl.NumberFormat totalNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String totalString = totalNumberFormat.format(total);
+
+    return 'দিন $dayString/$totalString';
+  }
+
+  @override
+  String courseDaysLeft(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'আর $countString দিন বাকি',
+      zero: 'আজ শেষ দিন',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get courseComplete => 'কোর্স শেষ';
+
+  @override
+  String courseStarts(String date) {
+    return 'শুরু $date';
+  }
 }

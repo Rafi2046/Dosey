@@ -64,3 +64,16 @@ Future<void> onNotificationDisplayed(ReceivedNotification shown) async {
   final engine = await AlarmRuntime.engine();
   await engine.ringFromNotification(reminderIds, scheduledFor);
 }
+
+/// A reminder notification was swiped away without Taken / Skip / Snooze:
+/// its doses count as missed. (Critical alarms are locked and can't be
+/// swiped; this covers gentle reminders. Dismissing from code, as after an
+/// answer, doesn't trigger it.)
+@pragma('vm:entry-point')
+Future<void> onNotificationDismissed(ReceivedAction received) async {
+  final occurrence = NotificationPayload.decode(received.payload);
+  if (occurrence == null) return;
+  final (reminderIds, scheduledFor) = occurrence;
+  final engine = await AlarmRuntime.engine();
+  await engine.onDismissed(reminderIds, scheduledFor);
+}

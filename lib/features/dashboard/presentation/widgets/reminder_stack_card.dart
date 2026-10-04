@@ -6,6 +6,7 @@ import '../../../../core/utils/date_format.dart';
 import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
+import '../../../medicines/presentation/widgets/course_progress_pill.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/domain/scheduled_occurrence.dart';
 import '../../../../core/localization/l10n.dart';
@@ -31,7 +32,7 @@ class ReminderStackCard extends StatelessWidget {
   final double bottomInset;
   final VoidCallback onTap;
 
-  bool get _isMissed =>
+  bool get _isOverdue =>
       occurrence.status == null && occurrence.at.isBefore(now);
 
   /// Pill colors follow the design: moss by default, cream for the next
@@ -43,12 +44,22 @@ class ReminderStackCard extends StatelessWidget {
       AppColors.textOnDark,
       Icons.check_rounded,
     ),
+    ReminderLogStatus.takenLate => (
+      AppColors.moss,
+      AppColors.textOnDark,
+      Icons.history_rounded,
+    ),
     ReminderLogStatus.skipped => (
       AppColors.moss,
       AppColors.textOnDark,
       Icons.redo_rounded,
     ),
-    _ when _isMissed => (AppColors.accent, AppColors.textOnAccent, null),
+    ReminderLogStatus.missed => (
+      AppColors.accent,
+      AppColors.textOnAccent,
+      Icons.priority_high_rounded,
+    ),
+    _ when _isOverdue => (AppColors.accent, AppColors.textOnAccent, null),
     _ when isNext => (AppColors.creamLight, AppColors.ink, null),
     _ => (AppColors.moss, AppColors.textOnDark, null),
   };
@@ -65,6 +76,7 @@ class ReminderStackCard extends StatelessWidget {
           )
         : ReminderText.slotLabel(context.l10n, r, occurrence.at);
     final (pillBg, pillFg, pillIcon) = _pillStyle();
+    final medicine = occurrence.details.medicine;
 
     return SurfaceCard(
       color: color,
@@ -111,6 +123,14 @@ class ReminderStackCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.caption.copyWith(color: muted),
                 ),
+                if (medicine != null && medicine.endDate != null) ...[
+                  AppSpacing.gapMd,
+                  CourseProgressPill(
+                    medicine: medicine,
+                    today: DateUtils.dateOnly(now),
+                    onLight: light,
+                  ),
+                ],
               ],
             ),
           ),

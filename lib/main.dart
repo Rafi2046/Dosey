@@ -19,9 +19,7 @@ import 'features/settings/providers/settings_providers.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Portrait only (also set natively: AndroidManifest / Info.plist).
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // Hospital/clinic search data (assets/data) is OpenStreetMap's; credit it
   // in Settings › Open-source licences as the ODbL requires.
   LicenseRegistry.addLicense(

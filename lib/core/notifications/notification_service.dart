@@ -41,6 +41,7 @@ abstract final class NotificationService {
     await AwesomeNotifications().setListeners(
       onActionReceivedMethod: onNotificationAction,
       onNotificationDisplayedMethod: onNotificationDisplayed,
+      onDismissActionReceivedMethod: onNotificationDismissed,
     );
     if (Platform.isIOS) {
       // Launched by tapping a notification while the app wasn't running:

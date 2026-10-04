@@ -14,6 +14,7 @@ import 'package:dosey/core/widgets/labeled_field.dart';
 import 'package:dosey/core/widgets/screen_header.dart';
 import 'package:dosey/core/widgets/skeleton.dart';
 import 'package:dosey/core/widgets/pill_button.dart';
+import 'package:dosey/core/utils/date_format.dart';
 import 'package:dosey/core/utils/enum_labels.dart';
 import 'package:dosey/core/widgets/filter_pills.dart';
 import 'package:dosey/core/widgets/empty_state.dart';
@@ -285,12 +286,13 @@ void main() {
     expect(await scrollTo(tester, en.spentThisMonth), findsOneWidget);
 
     // Mark the 08:00 dose taken from the stack (scroll back to the top).
+    // At 10:15 it's past the missed threshold, so it's a late dose.
     await tester.drag(find.text(en.spentThisMonth), const Offset(0, 3000));
     await settle(tester);
     await tapText(tester, 'Metformin');
     await tapText(tester, en.alarmMarkTaken);
     final log = await dbRun(tester, () => db.select(db.reminderLogs).get());
-    expect(log.single.status, ReminderLogStatus.taken);
+    expect(log.single.status, ReminderLogStatus.takenLate);
     await unmount(tester);
   });
 
@@ -1542,6 +1544,105 @@ void main() {
 
     expect(find.text(en.scanNothingFound), findsOneWidget);
     expect(find.text(en.bulkTitle), findsNothing);
+    await unmount(tester);
+  });
+
+  testWidgets('missed doses warn on Home and can be marked as taken late', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    expect(find.text(en.missedDosesCount(2)), findsNothing);
+
+    // Daily 07:00 since yesterday, nobody answered: yesterday's and today's
+    // (3 h ago) doses are both missed.
+    final reminder = await dbRun(tester, () async {
+      final med = await db
+          .into(db.medicines)
+          .insert(
+            MedicinesCompanion.insert(
+              name: 'Amoxicillin',
+              startDate: DateTime(2026, 10, 2),
+              endDate: Value(DateTime(2026, 10, 8)),
+              stockQuantity: const Value(20),
+            ),
+          );
+      return RemindersRepository(db).create(
+        RemindersCompanion.insert(
+          type: ReminderType.medicine,
+          title: 'Amoxicillin',
+          startAt: DateTime(2026, 10, 2, 7),
+          medicineId: Value(med),
+          repeatRule: const Value(RepeatRule.daily),
+          updatedAt: Value(DateTime(2026, 10, 2)),
+        ),
+        now: now,
+      );
+    });
+    await settle(tester);
+
+    await tester.tap(find.text(en.missedDosesCount(2)));
+    await settle(tester);
+    expect(find.text(en.missedDosesTitle), findsOneWidget);
+    expect(find.text(en.takenLate), findsNWidgets(2));
+
+    await tester.tap(find.text(en.markAllTakenLate));
+    await settle(tester);
+
+    final logs = await dbRun(tester, () => db.select(db.reminderLogs).get());
+    expect(logs.map((l) => (l.reminderId, l.scheduledFor, l.status)), {
+      (reminder.id, DateTime(2026, 10, 2, 7), ReminderLogStatus.takenLate),
+      (reminder.id, DateTime(2026, 10, 3, 7), ReminderLogStatus.takenLate),
+    });
+    // Both doses come out of stock; the sheet and the warning are gone.
+    final med = await dbRun(
+      tester,
+      () => (db.select(
+        db.medicines,
+      )..where((m) => m.name.equals('Amoxicillin'))).getSingle(),
+    );
+    expect(med.stockQuantity, 18);
+    expect(find.text(en.missedDosesTitle), findsNothing);
+    expect(find.text(en.missedDosesCount(2)), findsNothing);
+    await unmount(tester);
+  });
+
+  testWidgets('course duration sets the end date and counts down', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await openTab(tester, HomeTab.medicines);
+    // Seeded medicines run 1 Sep – 30 Oct; today is 3 Oct.
+    expect(
+      find.text('${en.courseDayOf(33, 60)} · ${en.courseDaysLeft(27)}'),
+      findsWidgets,
+    );
+
+    // Shorten Insulin's course to 7 days: 1–7 Sep, so it's already over.
+    await tapText(tester, 'Insulin 500 mg');
+    await tester.tap(find.text(en.changeSetting));
+    await settle(tester);
+    await tapText(tester, en.daysCount(7));
+    expect(find.text(AppDateFormat.date(DateTime(2026, 9, 7))), findsOneWidget);
+    await tester.tap(find.text(en.saveChanges));
+    await settle(tester);
+
+    expect(await scrollTo(tester, en.courseComplete), findsOneWidget);
+    final insulin = await dbRun(
+      tester,
+      () => (db.select(
+        db.medicines,
+      )..where((m) => m.name.equals('Insulin'))).getSingle(),
+    );
+    expect(insulin.endDate, DateTime(2026, 9, 7));
+    // The course is over, so its reminder has no next alarm.
+    final reminders = await dbRun(
+      tester,
+      () => (db.select(
+        db.reminders,
+      )..where((r) => r.medicineId.equals(insulin.id))).get(),
+    );
+    expect(reminders.single.endAt, DateTime(2026, 9, 7, 23, 59));
+    expect(reminders.single.nextTriggerAt, isNull);
     await unmount(tester);
   });
 }

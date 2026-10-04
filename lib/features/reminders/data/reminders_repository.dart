@@ -172,7 +172,8 @@ class RemindersRepository {
       (_db.delete(_db.reminders)..where((r) => r.id.equals(id))).go();
 
   /// Records the user's action for one occurrence. Marking a medicine dose
-  /// as taken deducts its dose from stock (only once per occurrence).
+  /// as taken (or taken late) deducts its dose from stock (only once per
+  /// occurrence).
   Future<void> logAction({
     required int reminderId,
     required DateTime scheduledFor,
@@ -208,8 +209,8 @@ class RemindersRepository {
           ),
         );
 
-    final wasTaken = previous?.status == ReminderLogStatus.taken;
-    final isTaken = status == ReminderLogStatus.taken;
+    final wasTaken = previous?.status.isTaken ?? false;
+    final isTaken = status.isTaken;
     if (wasTaken != isTaken) {
       await _adjustStockForDose(reminderId, restore: wasTaken);
     }

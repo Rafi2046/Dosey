@@ -139,5 +139,6 @@ extension ReminderLogStatusX on ReminderLogStatus {
     ReminderLogStatus.skipped => l.skipped,
     ReminderLogStatus.snoozed => l.snoozed,
     ReminderLogStatus.missed => l.missed,
+    ReminderLogStatus.takenLate => l.takenLate,
   };
 }

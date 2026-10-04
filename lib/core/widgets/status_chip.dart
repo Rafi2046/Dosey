@@ -10,6 +10,7 @@ class StatusChip extends StatelessWidget {
     this.background,
     this.foreground,
     this.icon,
+    this.leading,
     this.onTap,
   });
 
@@ -19,6 +20,9 @@ class StatusChip extends StatelessWidget {
   final Color? background;
   final Color? foreground;
   final IconData? icon;
+
+  /// Shown before the label instead of [icon] (e.g. a progress ring).
+  final Widget? leading;
   final VoidCallback? onTap;
 
   @override
@@ -36,7 +40,10 @@ class StatusChip extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (icon != null) ...[
+              if (leading case final leading?) ...[
+                leading,
+                AppSpacing.gapXs,
+              ] else if (icon != null) ...[
                 Icon(icon, size: AppSpacing.iconSm, color: foreground),
                 AppSpacing.gapXs,
               ],

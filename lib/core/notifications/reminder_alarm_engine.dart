@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import '../../features/medicines/domain/stock_status.dart';
 import '../../features/reminders/data/reminders_repository.dart';
+import '../../features/reminders/domain/missed_doses.dart';
 import '../../features/reminders/domain/reminder_schedule.dart';
 import '../../features/reminders/domain/reminder_with_details.dart';
 import '../constants/app_constants.dart';
@@ -9,7 +10,14 @@ import '../home_widget/home_widget_sync.dart';
 import '../database/app_database.dart';
 import 'alarm_ports.dart';
 
-enum AlarmAction { taken, skip, snooze }
+enum AlarmAction {
+  taken,
+  skip,
+  snooze,
+
+  /// A missed dose the user took after all (from the dashboard).
+  takenLate,
+}
 
 /// Core alarm logic, shared by the UI isolate, alarm callbacks and
 /// notification-action handlers. The database is the source of truth; OS
@@ -188,7 +196,62 @@ class ReminderAlarmEngine {
     for (final r in await _reminders.getAll()) {
       await _reminders.refreshNextTrigger(r.id, now: now);
     }
+    await sweepMissed();
     await syncAll();
+  }
+
+  // ── Missed doses ──────────────────────────────────────────────────────────
+
+  /// Logs every medicine dose of the last [AppConstants.missedSweepWindow]
+  /// that nobody answered within [AppConstants.missedThreshold] as missed,
+  /// and stops any of them still ringing. Runs on app start, after reboot
+  /// and whenever an alarm fires, so history fills in even if the app is
+  /// rarely opened.
+  Future<void> sweepMissed() async {
+    final now = _clock();
+    final from = now.subtract(AppConstants.missedSweepWindow);
+    final reminders = await _reminders.getAll();
+    final overdue = MissedDoses.find(
+      reminders,
+      await _reminders.logsBetween(from, now),
+      from: from,
+      now: now,
+    ).where((d) => !d.logged);
+    final byTime = <DateTime, List<Reminder>>{};
+    for (final d in overdue) {
+      (byTime[d.at] ??= []).add(d.reminder);
+    }
+    for (final MapEntry(key: at, value: group) in byTime.entries) {
+      await _markMissed(group, at);
+    }
+  }
+
+  /// The user swiped away a dose's notification without answering it:
+  /// still-open medicine doses of that occurrence are logged as missed.
+  Future<void> onDismissed(List<int> reminderIds, DateTime scheduledFor) async {
+    final statuses = await _reminders.statusesFor(reminderIds, scheduledFor);
+    final open = <Reminder>[];
+    for (final id in reminderIds) {
+      if (!MissedDoses.isOpen(statuses[id])) continue;
+      final r = await _reminders.getById(id);
+      if (r != null && r.type == ReminderType.medicine) open.add(r);
+    }
+    if (open.isEmpty) return;
+    await _markMissed(open, scheduledFor);
+    await _scheduler.cancel(snoozeAlarmId(leaderOf(reminderIds)));
+    await _homeWidget?.refresh();
+  }
+
+  Future<void> _markMissed(List<Reminder> group, DateTime at) async {
+    await _reminders.logActions(
+      reminderIds: [for (final r in group) r.id],
+      scheduledFor: at,
+      status: ReminderLogStatus.missed,
+    );
+    for (final r in group.where((r) => r.ringingFor == at)) {
+      await _reminders.setRinging(r.id, null);
+      await _notifier.dismiss(r.id);
+    }
   }
 
   // ── Alarm fired (background isolate) ──────────────────────────────────────
@@ -220,6 +283,8 @@ class ReminderAlarmEngine {
       }
       await syncAll();
     }
+    // Earlier doses left unanswered (e.g. alarm ignored hours ago).
+    await sweepMissed();
 
     if (now.difference(scheduledFor) > AppConstants.missedThreshold) {
       await _reminders.logActions(
@@ -274,11 +339,7 @@ class ReminderAlarmEngine {
     final statuses = await _reminders.statusesFor(ids, at);
     final result = <int>[];
     for (final id in ids) {
-      final status = statuses[id];
-      if (status == ReminderLogStatus.taken ||
-          status == ReminderLogStatus.skipped) {
-        continue;
-      }
+      if (statuses[id]?.isAnswered ?? false) continue;
       if ((await _reminders.getById(id))?.isEnabled ?? false) result.add(id);
     }
     return result;
@@ -313,9 +374,10 @@ class ReminderAlarmEngine {
       AlarmAction.taken => ReminderLogStatus.taken,
       AlarmAction.skip => ReminderLogStatus.skipped,
       AlarmAction.snooze => ReminderLogStatus.snoozed,
+      AlarmAction.takenLate => ReminderLogStatus.takenLate,
     };
     final stockBefore = <int, StockStatus>{
-      if (action == AlarmAction.taken)
+      if (status.isTaken)
         for (final id in reminderIds) id: ?await _reminders.stockStatusFor(id),
     };
     await _reminders.logActions(

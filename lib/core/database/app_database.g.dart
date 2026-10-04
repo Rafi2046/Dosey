@@ -5613,6 +5613,411 @@ class BloodPressureReadingsCompanion
   }
 }
 
+class $BloodSugarReadingsTable extends BloodSugarReadings
+    with TableInfo<$BloodSugarReadingsTable, BloodSugarReading> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BloodSugarReadingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _mmolMeta = const VerificationMeta('mmol');
+  @override
+  late final GeneratedColumn<double> mmol = GeneratedColumn<double>(
+    'mmol',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<SugarContext, String> context =
+      GeneratedColumn<String>(
+        'context',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<SugarContext>($BloodSugarReadingsTable.$convertercontext);
+  static const VerificationMeta _measuredAtMeta = const VerificationMeta(
+    'measuredAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> measuredAt = GeneratedColumn<DateTime>(
+    'measured_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+    'note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    mmol,
+    context,
+    measuredAt,
+    note,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'blood_sugar_readings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BloodSugarReading> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('mmol')) {
+      context.handle(
+        _mmolMeta,
+        mmol.isAcceptableOrUnknown(data['mmol']!, _mmolMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_mmolMeta);
+    }
+    if (data.containsKey('measured_at')) {
+      context.handle(
+        _measuredAtMeta,
+        measuredAt.isAcceptableOrUnknown(data['measured_at']!, _measuredAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_measuredAtMeta);
+    }
+    if (data.containsKey('note')) {
+      context.handle(
+        _noteMeta,
+        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BloodSugarReading map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BloodSugarReading(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      mmol: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}mmol'],
+      )!,
+      context: $BloodSugarReadingsTable.$convertercontext.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}context'],
+        )!,
+      ),
+      measuredAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}measured_at'],
+      )!,
+      note: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $BloodSugarReadingsTable createAlias(String alias) {
+    return $BloodSugarReadingsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<SugarContext, String, String> $convertercontext =
+      const EnumNameConverter<SugarContext>(SugarContext.values);
+}
+
+class BloodSugarReading extends DataClass
+    implements Insertable<BloodSugarReading> {
+  final int id;
+
+  /// mmol/L (what glucometers and labs in Bangladesh show).
+  final double mmol;
+
+  /// When it was taken relative to food; decides what's "in range".
+  final SugarContext context;
+  final DateTime measuredAt;
+  final String? note;
+  final DateTime createdAt;
+  const BloodSugarReading({
+    required this.id,
+    required this.mmol,
+    required this.context,
+    required this.measuredAt,
+    this.note,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['mmol'] = Variable<double>(mmol);
+    {
+      map['context'] = Variable<String>(
+        $BloodSugarReadingsTable.$convertercontext.toSql(context),
+      );
+    }
+    map['measured_at'] = Variable<DateTime>(measuredAt);
+    if (!nullToAbsent || note != null) {
+      map['note'] = Variable<String>(note);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  BloodSugarReadingsCompanion toCompanion(bool nullToAbsent) {
+    return BloodSugarReadingsCompanion(
+      id: Value(id),
+      mmol: Value(mmol),
+      context: Value(context),
+      measuredAt: Value(measuredAt),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory BloodSugarReading.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BloodSugarReading(
+      id: serializer.fromJson<int>(json['id']),
+      mmol: serializer.fromJson<double>(json['mmol']),
+      context: $BloodSugarReadingsTable.$convertercontext.fromJson(
+        serializer.fromJson<String>(json['context']),
+      ),
+      measuredAt: serializer.fromJson<DateTime>(json['measuredAt']),
+      note: serializer.fromJson<String?>(json['note']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'mmol': serializer.toJson<double>(mmol),
+      'context': serializer.toJson<String>(
+        $BloodSugarReadingsTable.$convertercontext.toJson(context),
+      ),
+      'measuredAt': serializer.toJson<DateTime>(measuredAt),
+      'note': serializer.toJson<String?>(note),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  BloodSugarReading copyWith({
+    int? id,
+    double? mmol,
+    SugarContext? context,
+    DateTime? measuredAt,
+    Value<String?> note = const Value.absent(),
+    DateTime? createdAt,
+  }) => BloodSugarReading(
+    id: id ?? this.id,
+    mmol: mmol ?? this.mmol,
+    context: context ?? this.context,
+    measuredAt: measuredAt ?? this.measuredAt,
+    note: note.present ? note.value : this.note,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  BloodSugarReading copyWithCompanion(BloodSugarReadingsCompanion data) {
+    return BloodSugarReading(
+      id: data.id.present ? data.id.value : this.id,
+      mmol: data.mmol.present ? data.mmol.value : this.mmol,
+      context: data.context.present ? data.context.value : this.context,
+      measuredAt: data.measuredAt.present
+          ? data.measuredAt.value
+          : this.measuredAt,
+      note: data.note.present ? data.note.value : this.note,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BloodSugarReading(')
+          ..write('id: $id, ')
+          ..write('mmol: $mmol, ')
+          ..write('context: $context, ')
+          ..write('measuredAt: $measuredAt, ')
+          ..write('note: $note, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, mmol, context, measuredAt, note, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BloodSugarReading &&
+          other.id == this.id &&
+          other.mmol == this.mmol &&
+          other.context == this.context &&
+          other.measuredAt == this.measuredAt &&
+          other.note == this.note &&
+          other.createdAt == this.createdAt);
+}
+
+class BloodSugarReadingsCompanion extends UpdateCompanion<BloodSugarReading> {
+  final Value<int> id;
+  final Value<double> mmol;
+  final Value<SugarContext> context;
+  final Value<DateTime> measuredAt;
+  final Value<String?> note;
+  final Value<DateTime> createdAt;
+  const BloodSugarReadingsCompanion({
+    this.id = const Value.absent(),
+    this.mmol = const Value.absent(),
+    this.context = const Value.absent(),
+    this.measuredAt = const Value.absent(),
+    this.note = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  BloodSugarReadingsCompanion.insert({
+    this.id = const Value.absent(),
+    required double mmol,
+    required SugarContext context,
+    required DateTime measuredAt,
+    this.note = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  }) : mmol = Value(mmol),
+       context = Value(context),
+       measuredAt = Value(measuredAt);
+  static Insertable<BloodSugarReading> custom({
+    Expression<int>? id,
+    Expression<double>? mmol,
+    Expression<String>? context,
+    Expression<DateTime>? measuredAt,
+    Expression<String>? note,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (mmol != null) 'mmol': mmol,
+      if (context != null) 'context': context,
+      if (measuredAt != null) 'measured_at': measuredAt,
+      if (note != null) 'note': note,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  BloodSugarReadingsCompanion copyWith({
+    Value<int>? id,
+    Value<double>? mmol,
+    Value<SugarContext>? context,
+    Value<DateTime>? measuredAt,
+    Value<String?>? note,
+    Value<DateTime>? createdAt,
+  }) {
+    return BloodSugarReadingsCompanion(
+      id: id ?? this.id,
+      mmol: mmol ?? this.mmol,
+      context: context ?? this.context,
+      measuredAt: measuredAt ?? this.measuredAt,
+      note: note ?? this.note,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (mmol.present) {
+      map['mmol'] = Variable<double>(mmol.value);
+    }
+    if (context.present) {
+      map['context'] = Variable<String>(
+        $BloodSugarReadingsTable.$convertercontext.toSql(context.value),
+      );
+    }
+    if (measuredAt.present) {
+      map['measured_at'] = Variable<DateTime>(measuredAt.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BloodSugarReadingsCompanion(')
+          ..write('id: $id, ')
+          ..write('mmol: $mmol, ')
+          ..write('context: $context, ')
+          ..write('measuredAt: $measuredAt, ')
+          ..write('note: $note, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -5627,6 +6032,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $AppSettingsTable appSettings = $AppSettingsTable(this);
   late final $BloodPressureReadingsTable bloodPressureReadings =
       $BloodPressureReadingsTable(this);
+  late final $BloodSugarReadingsTable bloodSugarReadings =
+      $BloodSugarReadingsTable(this);
   late final Index idxMedicinesDoctor = Index(
     'idx_medicines_doctor',
     'CREATE INDEX idx_medicines_doctor ON medicines (doctor_id)',
@@ -5679,6 +6086,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'idx_bp_measured_at',
     'CREATE INDEX idx_bp_measured_at ON blood_pressure_readings (measured_at)',
   );
+  late final Index idxSugarMeasuredAt = Index(
+    'idx_sugar_measured_at',
+    'CREATE INDEX idx_sugar_measured_at ON blood_sugar_readings (measured_at)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -5693,6 +6104,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     expenses,
     appSettings,
     bloodPressureReadings,
+    bloodSugarReadings,
     idxMedicinesDoctor,
     idxMedicinesActive,
     idxRemindersNext,
@@ -5706,6 +6118,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     idxExpensesMedicine,
     idxExpensesDoctor,
     idxBpMeasuredAt,
+    idxSugarMeasuredAt,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -10523,6 +10936,235 @@ typedef $$BloodPressureReadingsTableProcessedTableManager =
       BloodPressureReading,
       PrefetchHooks Function()
     >;
+typedef $$BloodSugarReadingsTableCreateCompanionBuilder =
+    BloodSugarReadingsCompanion Function({
+      Value<int> id,
+      required double mmol,
+      required SugarContext context,
+      required DateTime measuredAt,
+      Value<String?> note,
+      Value<DateTime> createdAt,
+    });
+typedef $$BloodSugarReadingsTableUpdateCompanionBuilder =
+    BloodSugarReadingsCompanion Function({
+      Value<int> id,
+      Value<double> mmol,
+      Value<SugarContext> context,
+      Value<DateTime> measuredAt,
+      Value<String?> note,
+      Value<DateTime> createdAt,
+    });
+
+class $$BloodSugarReadingsTableFilterComposer
+    extends Composer<_$AppDatabase, $BloodSugarReadingsTable> {
+  $$BloodSugarReadingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get mmol => $composableBuilder(
+    column: $table.mmol,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SugarContext, SugarContext, String>
+  get context => $composableBuilder(
+    column: $table.context,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<DateTime> get measuredAt => $composableBuilder(
+    column: $table.measuredAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$BloodSugarReadingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $BloodSugarReadingsTable> {
+  $$BloodSugarReadingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get mmol => $composableBuilder(
+    column: $table.mmol,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get context => $composableBuilder(
+    column: $table.context,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get measuredAt => $composableBuilder(
+    column: $table.measuredAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$BloodSugarReadingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BloodSugarReadingsTable> {
+  $$BloodSugarReadingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<double> get mmol =>
+      $composableBuilder(column: $table.mmol, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<SugarContext, String> get context =>
+      $composableBuilder(column: $table.context, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get measuredAt => $composableBuilder(
+    column: $table.measuredAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$BloodSugarReadingsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $BloodSugarReadingsTable,
+          BloodSugarReading,
+          $$BloodSugarReadingsTableFilterComposer,
+          $$BloodSugarReadingsTableOrderingComposer,
+          $$BloodSugarReadingsTableAnnotationComposer,
+          $$BloodSugarReadingsTableCreateCompanionBuilder,
+          $$BloodSugarReadingsTableUpdateCompanionBuilder,
+          (
+            BloodSugarReading,
+            BaseReferences<
+              _$AppDatabase,
+              $BloodSugarReadingsTable,
+              BloodSugarReading
+            >,
+          ),
+          BloodSugarReading,
+          PrefetchHooks Function()
+        > {
+  $$BloodSugarReadingsTableTableManager(
+    _$AppDatabase db,
+    $BloodSugarReadingsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BloodSugarReadingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BloodSugarReadingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BloodSugarReadingsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<double> mmol = const Value.absent(),
+                Value<SugarContext> context = const Value.absent(),
+                Value<DateTime> measuredAt = const Value.absent(),
+                Value<String?> note = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => BloodSugarReadingsCompanion(
+                id: id,
+                mmol: mmol,
+                context: context,
+                measuredAt: measuredAt,
+                note: note,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required double mmol,
+                required SugarContext context,
+                required DateTime measuredAt,
+                Value<String?> note = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => BloodSugarReadingsCompanion.insert(
+                id: id,
+                mmol: mmol,
+                context: context,
+                measuredAt: measuredAt,
+                note: note,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$BloodSugarReadingsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $BloodSugarReadingsTable,
+      BloodSugarReading,
+      $$BloodSugarReadingsTableFilterComposer,
+      $$BloodSugarReadingsTableOrderingComposer,
+      $$BloodSugarReadingsTableAnnotationComposer,
+      $$BloodSugarReadingsTableCreateCompanionBuilder,
+      $$BloodSugarReadingsTableUpdateCompanionBuilder,
+      (
+        BloodSugarReading,
+        BaseReferences<
+          _$AppDatabase,
+          $BloodSugarReadingsTable,
+          BloodSugarReading
+        >,
+      ),
+      BloodSugarReading,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -10545,4 +11187,6 @@ class $AppDatabaseManager {
       $$AppSettingsTableTableManager(_db, _db.appSettings);
   $$BloodPressureReadingsTableTableManager get bloodPressureReadings =>
       $$BloodPressureReadingsTableTableManager(_db, _db.bloodPressureReadings);
+  $$BloodSugarReadingsTableTableManager get bloodSugarReadings =>
+      $$BloodSugarReadingsTableTableManager(_db, _db.bloodSugarReadings);
 }

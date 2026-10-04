@@ -15,6 +15,27 @@ final _v3Schema = File(
 final _v4Schema = File(
   'test/core/database/fixtures/schema_v4.sql',
 ).readAsStringSync();
+final _v5Schema = File(
+  'test/core/database/fixtures/schema_v5.sql',
+).readAsStringSync();
+
+/// A v5 database (blood pressure log) with real data, before blood sugar.
+AppDatabase _openV5() => AppDatabase(
+  NativeDatabase.memory(
+    setup: (raw) {
+      raw.execute(_v5Schema);
+      raw.execute('PRAGMA user_version = 5');
+      raw.execute('''
+        INSERT INTO medicines (id, name, form, dose_unit, meal_relation,
+            unit_price_minor, stock_quantity, start_date)
+        VALUES (1, 'Metformin', 'tablet', 'tablet', 'afterMeal', 300, 60, 0);
+        INSERT INTO blood_pressure_readings (systolic, diastolic, measured_at)
+        VALUES (128, 84, 1000);
+        INSERT INTO app_settings (key, value) VALUES ('user_name', 'Rafi');
+      ''');
+    },
+  ),
+);
 
 /// A v4 database (stock planning) with real data, before blood pressure.
 AppDatabase _openV4() => AppDatabase(
@@ -196,6 +217,55 @@ void main() {
       expect(await _schema(migrated), await _schema(fresh));
     },
   );
+
+  test('v5 → v6 adds the blood sugar log, keeping every row', () async {
+    final db = _openV5();
+    addTearDown(db.close);
+    expect((await db.select(db.medicines).getSingle()).stockQuantity, 60);
+    expect(
+      (await db.select(db.bloodPressureReadings).getSingle()).systolic,
+      128,
+    );
+    expect((await db.select(db.appSettings).getSingle()).value, 'Rafi');
+    await db
+        .into(db.bloodSugarReadings)
+        .insert(
+          BloodSugarReadingsCompanion.insert(
+            mmol: 6.4,
+            context: SugarContext.fasting,
+            measuredAt: DateTime(2026, 10, 4, 7),
+          ),
+        );
+    expect(await db.select(db.bloodSugarReadings).get(), hasLength(1));
+  });
+
+  test(
+    'a v5 database migrates to the same schema as a fresh install',
+    () async {
+      final migrated = _openV5();
+      final fresh = AppDatabase(NativeDatabase.memory());
+      addTearDown(migrated.close);
+      addTearDown(fresh.close);
+      expect(await _schema(migrated), await _schema(fresh));
+    },
+  );
+
+  test('blood sugar values outside 1–35 mmol/L are refused', () async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+    Future<int> add(double v) => db
+        .into(db.bloodSugarReadings)
+        .insert(
+          BloodSugarReadingsCompanion.insert(
+            mmol: v,
+            context: SugarContext.random,
+            measuredAt: DateTime(2026),
+          ),
+        );
+    await expectLater(add(0.5), throwsA(anything));
+    await expectLater(add(60), throwsA(anything));
+    expect(await add(6.5), greaterThan(0));
+  });
 
   test('blood pressure values outside human ranges are refused', () async {
     final db = AppDatabase(NativeDatabase.memory());

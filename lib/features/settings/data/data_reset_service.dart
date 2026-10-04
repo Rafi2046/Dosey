@@ -26,6 +26,7 @@ class DataResetService {
         _db.reminderLogs,
         _db.reminders,
         _db.bloodPressureReadings,
+        _db.bloodSugarReadings,
         _db.expenses,
         _db.recordAttachments,
         _db.records,

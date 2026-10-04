@@ -1,29 +1,25 @@
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:flutter/services.dart';
 
 import '../domain/prescription_parser.dart';
 import '../domain/prescription_header_parser.dart';
 import '../domain/scanned_doctor.dart';
 
-/// On-device OCR (ML Kit, Latin script, no network), then the doctor from
-/// the header ([PrescriptionHeaderParser]) and the medicines
-/// ([PrescriptionParser]).
+/// On-device OCR, no network: Google ML Kit on Android (TextScanner.kt),
+/// Apple Vision on iOS (AppDelegate.swift). Then the doctor from the header
+/// ([PrescriptionHeaderParser]) and the medicines ([PrescriptionParser]).
 class PrescriptionScannerService {
+  static const _channel = MethodChannel('dosey/ocr');
+
+  /// The image's text, line by line in reading order.
+  Future<List<String>> recognizeLines(String imagePath) async =>
+      await _channel.invokeListMethod<String>('recognizeText', imagePath) ??
+      const [];
+
   Future<ScannedPrescription> scan(String imagePath) async {
-    final recognizer = TextRecognizer(script: TextRecognitionScript.latin);
-    try {
-      final text = await recognizer.processImage(
-        InputImage.fromFilePath(imagePath),
-      );
-      final lines = [
-        for (final block in text.blocks)
-          for (final line in block.lines) line.text,
-      ];
-      return ScannedPrescription(
-        doctor: PrescriptionHeaderParser.parse(lines),
-        medicines: PrescriptionParser.parse(lines),
-      );
-    } finally {
-      await recognizer.close();
-    }
+    final lines = await recognizeLines(imagePath);
+    return ScannedPrescription(
+      doctor: PrescriptionHeaderParser.parse(lines),
+      medicines: PrescriptionParser.parse(lines),
+    );
   }
 }

@@ -108,6 +108,9 @@ class FakePrescriptionScanner implements PrescriptionScannerService {
   final List<String> scannedPaths = [];
 
   @override
+  Future<List<String>> recognizeLines(String imagePath) async => const [];
+
+  @override
   Future<ScannedPrescription> scan(String imagePath) async {
     scannedPaths.add(imagePath);
     return ScannedPrescription(doctor: doctor, medicines: result);

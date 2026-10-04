@@ -1323,14 +1323,14 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get deleteAllDataHint =>
-      'ওষুধ, রিমাইন্ডার, রেকর্ড, ছবি, খরচ ও রক্তচাপ';
+      'ওষুধ, রিমাইন্ডার, রেকর্ড, ছবি, খরচ ও স্বাস্থ্য লগ';
 
   @override
   String get deleteAllTitle => 'আপনার সব তথ্য মুছে ফেলবেন?';
 
   @override
   String get deleteAllBody =>
-      'এই ফোনের সব ওষুধ, রিমাইন্ডার, ডোজের ইতিহাস, ডাক্তার, রেকর্ড, ছবি, খরচ ও রক্তচাপের রিডিং মুছে যাবে এবং সব অ্যালার্ম বন্ধ হয়ে যাবে। আপনার ভাষা ও থিম ঠিক থাকবে।';
+      'এই ফোনের সব ওষুধ, রিমাইন্ডার, ডোজের ইতিহাস, ডাক্তার, রেকর্ড, ছবি, খরচ এবং রক্তচাপ ও রক্তের সুগারের রিডিং মুছে যাবে এবং সব অ্যালার্ম বন্ধ হয়ে যাবে। আপনার ভাষা ও থিম ঠিক থাকবে।';
 
   @override
   String get deleteAllConfirmTitle => 'আপনি কি নিশ্চিত?';
@@ -1620,7 +1620,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get moreSheetHeader => 'মেনু\nআরও';
 
   @override
-  String get moreSheetSubtitle => 'ডাক্তার, রেকর্ড, খরচ, রক্তচাপ ও সেটিংস';
+  String get moreSheetSubtitle => 'ডাক্তার, রেকর্ড, খরচ, স্বাস্থ্য লগ ও সেটিংস';
 
   @override
   String get unitTabletPlural => 'ট্যাবলেট';
@@ -1861,4 +1861,110 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get openSettings => 'সেটিংস খুলুন';
+
+  @override
+  String get sugarTitle => 'আপনার\nরক্তের সুগার';
+
+  @override
+  String get sugarShortTitle => 'রক্তের সুগার';
+
+  @override
+  String get moreSugarHint => 'গ্লুকোজ মাপা লিখে রাখুন, ট্রেন্ড দেখুন';
+
+  @override
+  String get sugarAdd => 'রিডিং যোগ করুন';
+
+  @override
+  String get sugarEditTitle => 'রিডিং এডিট করুন';
+
+  @override
+  String get sugarEmpty => 'এখনো কোনো রিডিং নেই';
+
+  @override
+  String get sugarEmptyHint =>
+      'প্রতিবার গ্লুকোমিটারে মাপার পর লিখে রাখুন — সুগার কেমন বদলাচ্ছে দেখতে পাবেন।';
+
+  @override
+  String get sugarValueLabel => 'রক্তের সুগার (mmol/L)';
+
+  @override
+  String get sugarWhen => 'কখন মেপেছেন?';
+
+  @override
+  String get sugarFasting => 'খালি পেটে';
+
+  @override
+  String get sugarBeforeMeal => 'খাবারের আগে';
+
+  @override
+  String get sugarAfterMeal => 'খাবারের ২ ঘণ্টা পর';
+
+  @override
+  String get sugarRandom => 'যেকোনো সময়';
+
+  @override
+  String get sugarBedtime => 'ঘুমের আগে';
+
+  @override
+  String get sugarVeryLow => 'অনেক কম';
+
+  @override
+  String get sugarLow => 'কম';
+
+  @override
+  String get sugarInRange => 'স্বাভাবিক';
+
+  @override
+  String get sugarHigh => 'বেশি';
+
+  @override
+  String get sugarVeryHigh => 'অনেক বেশি';
+
+  @override
+  String get sugarVeryLowHint =>
+      'অনেক কম। এখনই ১৫ গ্রাম দ্রুত চিনি (গ্লুকোজ, জুস বা মিষ্টি) খান এবং ১৫ মিনিট পর আবার মাপুন। কম থাকলে বা খারাপ লাগলে দ্রুত চিকিৎসা নিন।';
+
+  @override
+  String get sugarDisclaimer =>
+      'সীমাগুলো প্রাপ্তবয়স্কদের জন্য American Diabetes Association-এর নির্দেশিকা অনুযায়ী। আপনার ডাক্তার আপনার জন্য আলাদা লক্ষ্য ঠিক করতে পারেন।';
+
+  @override
+  String get sugarLatest => 'সর্বশেষ রিডিং';
+
+  @override
+  String get sugarAverage7 => '৭ দিনের গড়';
+
+  @override
+  String get sugarSaved => 'রিডিং সেভ হয়েছে';
+
+  @override
+  String get sugarDeleteBody => 'এই রিডিংটি মুছে যাবে।';
+
+  @override
+  String get sugarNoteHint => 'যেমন: হাঁটার পর, মাথা ঘুরছিল';
+
+  @override
+  String sugarCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countStringটি রিডিং',
+      zero: 'এখনো কোনো রিডিং নেই',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String sugarMgDl(String value) {
+    return '≈ $value mg/dL';
+  }
+
+  @override
+  String decimalRange(String min, String max) {
+    return '$min থেকে $max এর মধ্যে একটি মান লিখুন';
+  }
 }

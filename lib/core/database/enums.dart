@@ -35,3 +35,6 @@ enum ReminderLogStatus { taken, skipped, snoozed, missed }
 enum RecordType { prescription, testReport, vaccineCertificate, invoice, other }
 
 enum ExpenseCategory { medicine, consultation, test, vaccine, other }
+
+/// When a blood sugar reading was taken.
+enum SugarContext { fasting, beforeMeal, afterMeal, random, bedtime }

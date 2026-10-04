@@ -636,6 +636,54 @@ void main() {
     await unmount(tester);
   });
 
+  testWidgets('blood sugar: log a reading, its timing sets the category', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AppNavBar),
+        matching: find.byTooltip(en.navMore),
+      ),
+    );
+    await settle(tester);
+    await tapText(tester, en.sugarShortTitle);
+    expect(find.text(en.sugarEmpty), findsOneWidget);
+
+    await tester.tap(find.text(en.sugarAdd));
+    await settle(tester);
+    await tester.enterText(find.byType(TextFormField).first, '7.5');
+    await settle(tester);
+    // 7.5 is in range at random times but high when fasting.
+    await tapText(tester, en.sugarRandom);
+    expect(find.text(en.sugarInRange), findsOneWidget);
+    await tapText(tester, en.sugarFasting);
+    expect(find.text(en.sugarVeryHigh), findsOneWidget);
+    expect(find.text(en.sugarMgDl('135')), findsOneWidget);
+    await tester.tap(find.text(en.save));
+    await settle(tester);
+
+    final saved = await dbRun(
+      tester,
+      () => db.select(db.bloodSugarReadings).getSingle(),
+    );
+    expect((saved.mmol, saved.context), (7.5, SugarContext.fasting));
+    expect(find.text(en.sugarLatest), findsOneWidget);
+    expect(find.text(en.sugarCount(1)), findsOneWidget);
+
+    await tester.tap(find.text('7.5 mmol/L').last);
+    await settle(tester);
+    await tester.tap(find.byTooltip(en.delete));
+    await settle(tester);
+    await tester.tap(find.text(en.delete).last);
+    await settle(tester);
+    expect(
+      await dbRun(tester, () => db.select(db.bloodSugarReadings).get()),
+      isEmpty,
+    );
+    await unmount(tester);
+  });
+
   testWidgets('an empty list centres its empty state in the space left', (
     tester,
   ) async {

@@ -5,6 +5,7 @@ import '../../core/localization/l10n.dart';
 import '../../core/widgets/screen_header.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../features/blood_pressure/presentation/blood_pressure_screen.dart';
+import '../../features/blood_sugar/presentation/blood_sugar_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../home_tab.dart';
 
@@ -30,7 +31,8 @@ Future<void> showMoreSheet(
       (HomeTab.expenses, l10n.moreExpensesHint, AppColors.accent),
     ];
     return SafeArea(
-      child: Padding(
+      // Scrolls on short screens rather than overflowing.
+      child: SingleChildScrollView(
         padding: AppSpacing.screenPadding.copyWith(bottom: AppSpacing.lg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -62,6 +64,21 @@ Future<void> showMoreSheet(
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(
                     builder: (_) => const BloodPressureScreen(),
+                  ),
+                );
+              },
+            ),
+            _MoreTile(
+              icon: Icons.bloodtype_rounded,
+              color: AppColors.error,
+              title: l10n.sugarShortTitle,
+              subtitle: l10n.moreSugarHint,
+              selected: false,
+              onTap: () {
+                Navigator.pop(sheetContext);
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const BloodSugarScreen(),
                   ),
                 );
               },

@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import '../constants/app_constants.dart';
 import 'enums.dart';
 import 'tables/blood_pressure_table.dart';
+import 'tables/blood_sugar_table.dart';
 import 'tables/doctors_table.dart';
 import 'tables/expenses_table.dart';
 import 'tables/medicines_table.dart';
@@ -27,13 +28,14 @@ part 'app_database.g.dart';
     Expenses,
     AppSettings,
     BloodPressureReadings,
+    BloodSugarReadings,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -50,6 +52,11 @@ class AppDatabase extends _$AppDatabase {
       if (from < 5) {
         await m.createTable(bloodPressureReadings);
         await m.createIndex(idxBpMeasuredAt);
+      }
+      // v6: blood sugar log (a new table; nothing else changes).
+      if (from < 6) {
+        await m.createTable(bloodSugarReadings);
+        await m.createIndex(idxSugarMeasuredAt);
       }
     },
     beforeOpen: (details) async {

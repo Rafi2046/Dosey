@@ -2375,7 +2375,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteAllDataHint.
   ///
   /// In en, this message translates to:
-  /// **'Medicines, reminders, records, photos, expenses and blood pressure'**
+  /// **'Medicines, reminders, records, photos, expenses and health logs'**
   String get deleteAllDataHint;
 
   /// No description provided for @deleteAllTitle.
@@ -2387,7 +2387,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteAllBody.
   ///
   /// In en, this message translates to:
-  /// **'Every medicine, reminder, dose history, doctor, record, photo, expense and blood pressure reading on this phone will be deleted, and all alarms will stop. Your language and theme are kept.'**
+  /// **'Every medicine, reminder, dose history, doctor, record, photo, expense and blood pressure and blood sugar reading on this phone will be deleted, and all alarms will stop. Your language and theme are kept.'**
   String get deleteAllBody;
 
   /// No description provided for @deleteAllConfirmTitle.
@@ -2771,7 +2771,7 @@ abstract class AppLocalizations {
   /// No description provided for @moreSheetSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Doctors, records, expenses, blood pressure and settings'**
+  /// **'Doctors, records, expenses, health logs and settings'**
   String get moreSheetSubtitle;
 
   /// No description provided for @unitTabletPlural.
@@ -3157,6 +3157,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open settings'**
   String get openSettings;
+
+  /// No description provided for @sugarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your\nBlood sugar'**
+  String get sugarTitle;
+
+  /// No description provided for @sugarShortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blood sugar'**
+  String get sugarShortTitle;
+
+  /// No description provided for @moreSugarHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Log glucose checks and see your trend'**
+  String get moreSugarHint;
+
+  /// No description provided for @sugarAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add reading'**
+  String get sugarAdd;
+
+  /// No description provided for @sugarEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit reading'**
+  String get sugarEditTitle;
+
+  /// No description provided for @sugarEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No readings yet'**
+  String get sugarEmpty;
+
+  /// No description provided for @sugarEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write down each glucometer check to see how your sugar changes over time.'**
+  String get sugarEmptyHint;
+
+  /// No description provided for @sugarValueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Blood sugar (mmol/L)'**
+  String get sugarValueLabel;
+
+  /// No description provided for @sugarWhen.
+  ///
+  /// In en, this message translates to:
+  /// **'When was it taken?'**
+  String get sugarWhen;
+
+  /// No description provided for @sugarFasting.
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting'**
+  String get sugarFasting;
+
+  /// No description provided for @sugarBeforeMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Before meal'**
+  String get sugarBeforeMeal;
+
+  /// No description provided for @sugarAfterMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'2 h after meal'**
+  String get sugarAfterMeal;
+
+  /// No description provided for @sugarRandom.
+  ///
+  /// In en, this message translates to:
+  /// **'Random'**
+  String get sugarRandom;
+
+  /// No description provided for @sugarBedtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Bedtime'**
+  String get sugarBedtime;
+
+  /// No description provided for @sugarVeryLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Very low'**
+  String get sugarVeryLow;
+
+  /// No description provided for @sugarLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get sugarLow;
+
+  /// No description provided for @sugarInRange.
+  ///
+  /// In en, this message translates to:
+  /// **'In range'**
+  String get sugarInRange;
+
+  /// No description provided for @sugarHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get sugarHigh;
+
+  /// No description provided for @sugarVeryHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Very high'**
+  String get sugarVeryHigh;
+
+  /// No description provided for @sugarVeryLowHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Very low. Take 15 g of fast sugar (glucose, juice or sweets) now and check again in 15 minutes. Get help if it stays low or you feel unwell.'**
+  String get sugarVeryLowHint;
+
+  /// No description provided for @sugarDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Ranges follow the American Diabetes Association guide for adults. Your doctor may set different targets for you.'**
+  String get sugarDisclaimer;
+
+  /// No description provided for @sugarLatest.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest reading'**
+  String get sugarLatest;
+
+  /// No description provided for @sugarAverage7.
+  ///
+  /// In en, this message translates to:
+  /// **'7-day average'**
+  String get sugarAverage7;
+
+  /// No description provided for @sugarSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading saved'**
+  String get sugarSaved;
+
+  /// No description provided for @sugarDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This reading will be deleted.'**
+  String get sugarDeleteBody;
+
+  /// No description provided for @sugarNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. after a walk, felt dizzy'**
+  String get sugarNoteHint;
+
+  /// No description provided for @sugarCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No readings yet} =1{1 reading} other{{count} readings}}'**
+  String sugarCount(int count);
+
+  /// No description provided for @sugarMgDl.
+  ///
+  /// In en, this message translates to:
+  /// **'≈ {value} mg/dL'**
+  String sugarMgDl(String value);
+
+  /// No description provided for @decimalRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a value from {min} to {max}'**
+  String decimalRange(String min, String max);
 }
 
 class _AppLocalizationsDelegate

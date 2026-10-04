@@ -1332,14 +1332,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAllDataHint =>
-      'Medicines, reminders, records, photos, expenses and blood pressure';
+      'Medicines, reminders, records, photos, expenses and health logs';
 
   @override
   String get deleteAllTitle => 'Delete all your data?';
 
   @override
   String get deleteAllBody =>
-      'Every medicine, reminder, dose history, doctor, record, photo, expense and blood pressure reading on this phone will be deleted, and all alarms will stop. Your language and theme are kept.';
+      'Every medicine, reminder, dose history, doctor, record, photo, expense and blood pressure and blood sugar reading on this phone will be deleted, and all alarms will stop. Your language and theme are kept.';
 
   @override
   String get deleteAllConfirmTitle => 'Are you sure?';
@@ -1637,7 +1637,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get moreSheetSubtitle =>
-      'Doctors, records, expenses, blood pressure and settings';
+      'Doctors, records, expenses, health logs and settings';
 
   @override
   String get unitTabletPlural => 'tablets';
@@ -1882,4 +1882,111 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openSettings => 'Open settings';
+
+  @override
+  String get sugarTitle => 'Your\nBlood sugar';
+
+  @override
+  String get sugarShortTitle => 'Blood sugar';
+
+  @override
+  String get moreSugarHint => 'Log glucose checks and see your trend';
+
+  @override
+  String get sugarAdd => 'Add reading';
+
+  @override
+  String get sugarEditTitle => 'Edit reading';
+
+  @override
+  String get sugarEmpty => 'No readings yet';
+
+  @override
+  String get sugarEmptyHint =>
+      'Write down each glucometer check to see how your sugar changes over time.';
+
+  @override
+  String get sugarValueLabel => 'Blood sugar (mmol/L)';
+
+  @override
+  String get sugarWhen => 'When was it taken?';
+
+  @override
+  String get sugarFasting => 'Fasting';
+
+  @override
+  String get sugarBeforeMeal => 'Before meal';
+
+  @override
+  String get sugarAfterMeal => '2 h after meal';
+
+  @override
+  String get sugarRandom => 'Random';
+
+  @override
+  String get sugarBedtime => 'Bedtime';
+
+  @override
+  String get sugarVeryLow => 'Very low';
+
+  @override
+  String get sugarLow => 'Low';
+
+  @override
+  String get sugarInRange => 'In range';
+
+  @override
+  String get sugarHigh => 'High';
+
+  @override
+  String get sugarVeryHigh => 'Very high';
+
+  @override
+  String get sugarVeryLowHint =>
+      'Very low. Take 15 g of fast sugar (glucose, juice or sweets) now and check again in 15 minutes. Get help if it stays low or you feel unwell.';
+
+  @override
+  String get sugarDisclaimer =>
+      'Ranges follow the American Diabetes Association guide for adults. Your doctor may set different targets for you.';
+
+  @override
+  String get sugarLatest => 'Latest reading';
+
+  @override
+  String get sugarAverage7 => '7-day average';
+
+  @override
+  String get sugarSaved => 'Reading saved';
+
+  @override
+  String get sugarDeleteBody => 'This reading will be deleted.';
+
+  @override
+  String get sugarNoteHint => 'e.g. after a walk, felt dizzy';
+
+  @override
+  String sugarCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString readings',
+      one: '1 reading',
+      zero: 'No readings yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String sugarMgDl(String value) {
+    return '≈ $value mg/dL';
+  }
+
+  @override
+  String decimalRange(String min, String max) {
+    return 'Enter a value from $min to $max';
+  }
 }

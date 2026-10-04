@@ -568,9 +568,9 @@
   },
   "settingsYourData": "Your data",
   "deleteAllData": "Delete all data",
-  "deleteAllDataHint": "Medicines, reminders, records, photos, expenses and blood pressure",
+  "deleteAllDataHint": "Medicines, reminders, records, photos, expenses and health logs",
   "deleteAllTitle": "Delete all your data?",
-  "deleteAllBody": "Every medicine, reminder, dose history, doctor, record, photo, expense and blood pressure reading on this phone will be deleted, and all alarms will stop. Your language and theme are kept.",
+  "deleteAllBody": "Every medicine, reminder, dose history, doctor, record, photo, expense and blood pressure and blood sugar reading on this phone will be deleted, and all alarms will stop. Your language and theme are kept.",
   "deleteAllConfirmTitle": "Are you sure?",
   "deleteAllConfirmBody": "This can't be undone. Dosey keeps no backup or cloud copy of your data.",
   "deleteEverything": "Delete everything",
@@ -724,7 +724,7 @@
   },
   "addSheetHeader": "Quick\nAdd",
   "moreSheetHeader": "Menu\nMore",
-  "moreSheetSubtitle": "Doctors, records, expenses, blood pressure and settings",
+  "moreSheetSubtitle": "Doctors, records, expenses, health logs and settings",
   "unitTabletPlural": "tablets",
   "unitCapsulePlural": "capsules",
   "unitMlPlural": "ml",
@@ -850,5 +850,59 @@
   "iosSoundOff": "Sounds are off for Dosey notifications. Turn on Sounds in Settings to hear your reminders.",
   "iosCriticalOn": "Rings even in silent mode and Focus",
   "iosCriticalOff": "In silent mode or Focus, your iPhone mutes reminders. Keep the ringer on so you hear them.",
-  "openSettings": "Open settings"
+  "openSettings": "Open settings",
+  "sugarTitle": "Your\nBlood sugar",
+  "sugarShortTitle": "Blood sugar",
+  "moreSugarHint": "Log glucose checks and see your trend",
+  "sugarAdd": "Add reading",
+  "sugarEditTitle": "Edit reading",
+  "sugarEmpty": "No readings yet",
+  "sugarEmptyHint": "Write down each glucometer check to see how your sugar changes over time.",
+  "sugarValueLabel": "Blood sugar (mmol/L)",
+  "sugarWhen": "When was it taken?",
+  "sugarFasting": "Fasting",
+  "sugarBeforeMeal": "Before meal",
+  "sugarAfterMeal": "2 h after meal",
+  "sugarRandom": "Random",
+  "sugarBedtime": "Bedtime",
+  "sugarVeryLow": "Very low",
+  "sugarLow": "Low",
+  "sugarInRange": "In range",
+  "sugarHigh": "High",
+  "sugarVeryHigh": "Very high",
+  "sugarVeryLowHint": "Very low. Take 15 g of fast sugar (glucose, juice or sweets) now and check again in 15 minutes. Get help if it stays low or you feel unwell.",
+  "sugarDisclaimer": "Ranges follow the American Diabetes Association guide for adults. Your doctor may set different targets for you.",
+  "sugarLatest": "Latest reading",
+  "sugarAverage7": "7-day average",
+  "sugarSaved": "Reading saved",
+  "sugarDeleteBody": "This reading will be deleted.",
+  "sugarNoteHint": "e.g. after a walk, felt dizzy",
+  "sugarCount": "{count, plural, =0{No readings yet} =1{1 reading} other{{count} readings}}",
+  "@sugarCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "sugarMgDl": "≈ {value} mg/dL",
+  "@sugarMgDl": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "decimalRange": "Enter a value from {min} to {max}",
+  "@decimalRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  }
 }

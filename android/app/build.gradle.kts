@@ -61,3 +61,8 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // Prescription OCR (TextScanner.kt), Latin script only.
+    implementation("com.google.mlkit:text-recognition:16.0.1")
+}

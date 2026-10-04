@@ -977,5 +977,48 @@
         "type": "String"
       }
     }
+  },
+  "alarmPreviousMissed": "Previous dose missed",
+  "historyTitle": "Dose\nHistory",
+  "historyLink": "Dose history",
+  "moreHistoryHint": "Every dose: taken, skipped or missed",
+  "historyLastDays": "{count, plural, other{Last {count} days}}",
+  "@historyLastDays": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "historyAdherence": "Doses taken",
+  "historyAdherenceHint": "{taken} of {total} doses taken, on time or late",
+  "@historyAdherenceHint": {
+    "placeholders": {
+      "taken": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "total": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "historyEmpty": "No doses yet",
+  "historyEmptyHint": "Doses show up here once their time has passed.",
+  "historyToday": "Today",
+  "historyYesterday": "Yesterday",
+  "historyMarkLateBody": "Took this dose later? It will count as taken late and come out of your stock.",
+  "remindLater": "Remind me later",
+  "remindLaterTitle": "When should I remind you?",
+  "remindLaterHint": "Can't take it right now? It will ring again then. Nothing counts as missed until after that.",
+  "remindLaterIn": "In {duration}",
+  "@remindLaterIn": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
   }
 }

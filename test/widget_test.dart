@@ -310,4 +310,92 @@ void main() {
     expect(find.text(en.selectMedicineError), findsNothing);
     await unmount(tester);
   });
+
+  testWidgets('the alarm card shows the course day and an earlier missed '
+      'dose, and stays stable when a second medicine joins it', (tester) async {
+    usePhoneSize(tester);
+    permissions.grantedSet.addAll(AppPermission.values);
+    await tester.pumpWidget(app());
+    await settle(tester);
+
+    // 09:30 now. Napa: day 3 of 7, daily 09:30, and daily 06:00 since
+    // yesterday, never answered (missed today). Seclo: added just now.
+    final at = DateTime(2026, 10, 3, 9, 30);
+    final (napaId, secloId) = await dbRun(tester, () async {
+      final repo = RemindersRepository(db);
+      Future<int> add(
+        String name,
+        String time,
+        DateTime? end,
+        DateTime edited,
+      ) async {
+        final med = await db
+            .into(db.medicines)
+            .insert(
+              MedicinesCompanion.insert(
+                name: name,
+                startDate: DateTime(2026, 10, 1),
+                endDate: Value(end),
+              ),
+            );
+        final [h, m] = [for (final p in time.split(':')) int.parse(p)];
+        final r = await repo.create(
+          RemindersCompanion.insert(
+            type: ReminderType.medicine,
+            title: name,
+            startAt: DateTime(2026, 10, 1, h, m),
+            medicineId: Value(med),
+            repeatRule: const Value(RepeatRule.daily),
+            updatedAt: Value(edited),
+          ),
+          now: now,
+        );
+        return r.id;
+      }
+
+      final napa = await add(
+        'Napa',
+        '09:30',
+        DateTime(2026, 10, 7),
+        DateTime(2026, 10, 3),
+      );
+      await db
+          .into(db.reminders)
+          .insert(
+            RemindersCompanion.insert(
+              type: ReminderType.medicine,
+              title: 'Napa',
+              startAt: DateTime(2026, 10, 1, 6),
+              medicineId: Value((await repo.getById(napa))!.medicineId!),
+              repeatRule: const Value(RepeatRule.daily),
+              updatedAt: Value(DateTime(2026, 10, 3)),
+            ),
+          );
+      final seclo = await add(
+        'Seclo',
+        '09:30',
+        null,
+        DateTime(2026, 10, 3, 9, 29),
+      );
+      return (napa, seclo);
+    });
+    await settle(tester);
+
+    await dbRun(tester, () => RemindersRepository(db).setRinging(napaId, at));
+    await settle(tester);
+    expect(find.byType(AlarmRingScreen), findsOneWidget);
+    expect(find.text(en.alarmPreviousMissed), findsOneWidget);
+    expect(
+      find.text('${en.courseDayOf(3, 7)} · ${en.courseDaysLeft(4)}'),
+      findsOneWidget,
+    );
+
+    // Seclo rings at the same minute: one grouped card, Napa's chips only.
+    await dbRun(tester, () => RemindersRepository(db).setRinging(secloId, at));
+    await settle(tester);
+    expect(find.text(en.alarmGroupCount(2)), findsOneWidget);
+    expect(find.text(en.alarmPreviousMissed), findsOneWidget);
+    expect(find.text(en.courseDayOf(3, 7)), findsOneWidget);
+    await unmount(tester);
+  });
 }

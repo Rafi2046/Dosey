@@ -2100,4 +2100,77 @@ class AppLocalizationsEn extends AppLocalizations {
   String courseStarts(String date) {
     return 'Starts $date';
   }
+
+  @override
+  String get alarmPreviousMissed => 'Previous dose missed';
+
+  @override
+  String get historyTitle => 'Dose\nHistory';
+
+  @override
+  String get historyLink => 'Dose history';
+
+  @override
+  String get moreHistoryHint => 'Every dose: taken, skipped or missed';
+
+  @override
+  String historyLastDays(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Last $countString days',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get historyAdherence => 'Doses taken';
+
+  @override
+  String historyAdherenceHint(int taken, int total) {
+    final intl.NumberFormat takenNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String takenString = takenNumberFormat.format(taken);
+    final intl.NumberFormat totalNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String totalString = totalNumberFormat.format(total);
+
+    return '$takenString of $totalString doses taken, on time or late';
+  }
+
+  @override
+  String get historyEmpty => 'No doses yet';
+
+  @override
+  String get historyEmptyHint =>
+      'Doses show up here once their time has passed.';
+
+  @override
+  String get historyToday => 'Today';
+
+  @override
+  String get historyYesterday => 'Yesterday';
+
+  @override
+  String get historyMarkLateBody =>
+      'Took this dose later? It will count as taken late and come out of your stock.';
+
+  @override
+  String get remindLater => 'Remind me later';
+
+  @override
+  String get remindLaterTitle => 'When should I remind you?';
+
+  @override
+  String get remindLaterHint =>
+      'Can\'t take it right now? It will ring again then. Nothing counts as missed until after that.';
+
+  @override
+  String remindLaterIn(String duration) {
+    return 'In $duration';
+  }
 }

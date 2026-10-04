@@ -12,6 +12,7 @@ import '../../../../core/widgets/sheet_title.dart';
 import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../../reminders/domain/reminder_text.dart';
+import '../../../reminders/presentation/dose_history_screen.dart';
 import '../../../reminders/domain/scheduled_occurrence.dart';
 import '../../../reminders/providers/reminders_providers.dart';
 import '../../../../core/localization/l10n.dart';
@@ -176,6 +177,23 @@ class _MissedDosesSheetState extends ConsumerState<_MissedDosesSheet> {
                   onPressed: () => _markTakenLate(doses),
                 ),
               ],
+              AppSpacing.gapSm,
+              TextButton.icon(
+                icon: const Icon(Icons.history_rounded),
+                label: Text(context.l10n.historyLink),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.inkMuted,
+                ),
+                onPressed: () {
+                  final navigator = Navigator.of(context);
+                  navigator.pop();
+                  navigator.push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const DoseHistoryScreen(),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),

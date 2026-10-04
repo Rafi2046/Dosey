@@ -5,6 +5,7 @@ import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/utils/clock_providers.dart';
 import '../data/reminders_repository.dart';
+import '../domain/dose_history.dart';
 import '../domain/missed_doses.dart';
 import '../domain/reminder_schedule.dart';
 import '../domain/reminder_with_details.dart';
@@ -107,6 +108,48 @@ final missedDosesProvider = FutureProvider<List<ScheduledOccurrence>>((
       ),
   ];
 });
+
+/// Medicine doses of the last `days` days (today included), newest first;
+/// only one medicine's when `medicineId` is given.
+final doseHistoryProvider = FutureProvider.autoDispose
+    .family<DoseHistory, ({int days, int? medicineId})>((ref, query) async {
+      final day = await ref.watch(currentDayProvider.future);
+      final now = await ref.watch(minuteTickerProvider.future);
+      final reminders = await ref.watch(remindersProvider.future);
+      final from = DateTime(day.year, day.month, day.day - query.days + 1);
+      final until = DateTime(day.year, day.month, day.day + 1);
+      final logs = await ref.watch(_logsBetweenProvider((from, until)).future);
+      return DoseHistory.build(
+        reminders,
+        logs,
+        from: from,
+        now: now,
+        medicineId: query.medicineId,
+      );
+    });
+
+/// Medicines with a dose missed before [at] (since the day before), for the
+/// alarm ringing at [at]. Read once when the alarm opens rather than kept
+/// live: it can't change while the alarm rings, and a live chain of
+/// providers here broke the alarm screen when a second medicine joined it.
+final medicinesMissedBeforeProvider = FutureProvider.autoDispose
+    .family<Set<int>, DateTime>((ref, at) async {
+      final repo = ref.watch(remindersRepositoryProvider);
+      final from = DateTime(
+        at.year,
+        at.month,
+        at.day - AppConstants.missedDosesShownDays,
+      );
+      return {
+        for (final d in MissedDoses.find(
+          await repo.getAll(),
+          await repo.logsBetween(from, at),
+          from: from,
+          now: at,
+        ))
+          ?d.reminder.medicineId,
+      };
+    });
 
 /// Type filter on the reminders screen (null = all).
 final reminderTypeFilterProvider =

@@ -561,5 +561,21 @@
   "courseDayOf": "দিন {day}/{total}",
   "courseDaysLeft": "{count, plural, =0{আজ শেষ দিন} other{আর {count} দিন বাকি}}",
   "courseComplete": "কোর্স শেষ",
-  "courseStarts": "শুরু {date}"
+  "courseStarts": "শুরু {date}",
+  "alarmPreviousMissed": "আগের ডোজ মিস হয়েছে",
+  "historyTitle": "ডোজের\nইতিহাস",
+  "historyLink": "ডোজের ইতিহাস",
+  "moreHistoryHint": "প্রতিটি ডোজ: নেওয়া, বাদ বা মিস",
+  "historyLastDays": "{count, plural, other{শেষ {count} দিন}}",
+  "historyAdherence": "ডোজ নেওয়া হয়েছে",
+  "historyAdherenceHint": "{total}টির মধ্যে {taken}টি ডোজ নেওয়া হয়েছে, সময়মতো বা দেরিতে",
+  "historyEmpty": "এখনো কোনো ডোজ নেই",
+  "historyEmptyHint": "সময় পার হলে ডোজগুলো এখানে দেখা যাবে।",
+  "historyToday": "আজ",
+  "historyYesterday": "গতকাল",
+  "historyMarkLateBody": "ডোজটি পরে খেয়েছেন? এটি দেরিতে নেওয়া হিসেবে গণ্য হবে এবং স্টক থেকে কমবে।",
+  "remindLater": "পরে মনে করাও",
+  "remindLaterTitle": "কখন আবার মনে করাবো?",
+  "remindLaterHint": "এখন খেতে পারছেন না? তখন আবার বাজবে। তার আগে এটা মিস হিসেবে গণ্য হবে না।",
+  "remindLaterIn": "{duration} পরে"
 }

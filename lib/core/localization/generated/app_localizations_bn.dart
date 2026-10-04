@@ -2077,4 +2077,76 @@ class AppLocalizationsBn extends AppLocalizations {
   String courseStarts(String date) {
     return 'শুরু $date';
   }
+
+  @override
+  String get alarmPreviousMissed => 'আগের ডোজ মিস হয়েছে';
+
+  @override
+  String get historyTitle => 'ডোজের\nইতিহাস';
+
+  @override
+  String get historyLink => 'ডোজের ইতিহাস';
+
+  @override
+  String get moreHistoryHint => 'প্রতিটি ডোজ: নেওয়া, বাদ বা মিস';
+
+  @override
+  String historyLastDays(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'শেষ $countString দিন',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get historyAdherence => 'ডোজ নেওয়া হয়েছে';
+
+  @override
+  String historyAdherenceHint(int taken, int total) {
+    final intl.NumberFormat takenNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String takenString = takenNumberFormat.format(taken);
+    final intl.NumberFormat totalNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String totalString = totalNumberFormat.format(total);
+
+    return '$totalStringটির মধ্যে $takenStringটি ডোজ নেওয়া হয়েছে, সময়মতো বা দেরিতে';
+  }
+
+  @override
+  String get historyEmpty => 'এখনো কোনো ডোজ নেই';
+
+  @override
+  String get historyEmptyHint => 'সময় পার হলে ডোজগুলো এখানে দেখা যাবে।';
+
+  @override
+  String get historyToday => 'আজ';
+
+  @override
+  String get historyYesterday => 'গতকাল';
+
+  @override
+  String get historyMarkLateBody =>
+      'ডোজটি পরে খেয়েছেন? এটি দেরিতে নেওয়া হিসেবে গণ্য হবে এবং স্টক থেকে কমবে।';
+
+  @override
+  String get remindLater => 'পরে মনে করাও';
+
+  @override
+  String get remindLaterTitle => 'কখন আবার মনে করাবো?';
+
+  @override
+  String get remindLaterHint =>
+      'এখন খেতে পারছেন না? তখন আবার বাজবে। তার আগে এটা মিস হিসেবে গণ্য হবে না।';
+
+  @override
+  String remindLaterIn(String duration) {
+    return '$duration পরে';
+  }
 }

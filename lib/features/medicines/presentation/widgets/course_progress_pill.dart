@@ -16,6 +16,7 @@ class CourseProgressPill extends StatelessWidget {
     required this.today,
     required this.onLight,
     this.compact = false,
+    this.muted = false,
   });
 
   final Medicine medicine;
@@ -27,13 +28,20 @@ class CourseProgressPill extends StatelessWidget {
   /// Narrow spots (Home cards): "Day 3 of 7" alone, or "Last day".
   final bool compact;
 
+  /// Quiet sand chip on cream (alarm card, detail page) instead of a
+  /// filled one.
+  final bool muted;
+
   @override
   Widget build(BuildContext context) {
     final progress = CourseProgress.of(medicine, today);
     if (progress == null) return const SizedBox.shrink();
     final l = context.l10n;
-    final background = onLight ? AppColors.moss : AppColors.creamLight;
-    final foreground = onLight ? AppColors.textOnDark : AppColors.ink;
+    final (background, foreground) = muted
+        ? (AppColors.sand, AppColors.ink)
+        : onLight
+        ? (AppColors.moss, AppColors.textOnDark)
+        : (AppColors.creamLight, AppColors.ink);
 
     if (progress.isComplete) {
       return StatusChip(

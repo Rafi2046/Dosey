@@ -6,6 +6,7 @@ import '../../core/widgets/screen_header.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../features/blood_pressure/presentation/blood_pressure_screen.dart';
 import '../../features/blood_sugar/presentation/blood_sugar_screen.dart';
+import '../../features/reminders/presentation/dose_history_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../home_tab.dart';
 
@@ -53,6 +54,21 @@ Future<void> showMoreSheet(
                 selected: tab == current,
                 onTap: () => open(tab),
               ),
+            _MoreTile(
+              icon: Icons.history_rounded,
+              color: AppColors.tileMint,
+              title: l10n.historyLink,
+              subtitle: l10n.moreHistoryHint,
+              selected: false,
+              onTap: () {
+                Navigator.pop(sheetContext);
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const DoseHistoryScreen(),
+                  ),
+                );
+              },
+            ),
             _MoreTile(
               icon: Icons.monitor_heart_rounded,
               color: AppColors.tileMoss,

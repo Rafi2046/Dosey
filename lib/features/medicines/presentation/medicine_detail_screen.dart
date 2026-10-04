@@ -16,6 +16,7 @@ import '../../../core/widgets/status_chip.dart';
 import '../../doctors/presentation/doctor_detail_screen.dart';
 import '../../expenses/providers/expenses_providers.dart';
 import '../../reminders/domain/reminder_text.dart';
+import '../../reminders/presentation/dose_history_screen.dart';
 import '../../reminders/providers/reminders_providers.dart';
 import '../domain/course_progress.dart';
 import '../domain/medicine_with_doctor.dart';
@@ -181,6 +182,18 @@ class _DetailBody extends ConsumerWidget {
                       DateUtils.dateOnly(DateTime.now()),
                   onLight: true,
                 ),
+              _chip(
+                context.l10n.historyLink,
+                icon: Icons.history_rounded,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => DoseHistoryScreen(
+                      medicineId: m.id,
+                      medicineName: [m.name, ?m.strength].join(' '),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

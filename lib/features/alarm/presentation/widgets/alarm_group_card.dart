@@ -8,9 +8,11 @@ import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/domain/reminder_with_details.dart';
+import 'alarm_dose_context.dart';
 
 /// Cream card for several medicines due at the same minute: how many, the
-/// time, then each medicine with that time's dose.
+/// time, then each medicine with that time's dose, course progress and any
+/// earlier missed dose.
 class AlarmGroupCard extends StatelessWidget {
   const AlarmGroupCard({
     super.key,
@@ -65,6 +67,7 @@ class AlarmGroupCard extends StatelessWidget {
               AppSpacing.gapMd,
             Text(d.reminder.title, style: AppTextStyles.cardTitleOnLight),
             Text(ReminderText.body(l10n, d), style: AppTextStyles.bodyOnLight),
+            AlarmDoseContext(details: d, scheduledFor: scheduledFor),
           ],
         ],
       ),

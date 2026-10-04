@@ -3469,6 +3469,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Starts {date}'**
   String courseStarts(String date);
+
+  /// No description provided for @alarmPreviousMissed.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous dose missed'**
+  String get alarmPreviousMissed;
+
+  /// No description provided for @historyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dose\nHistory'**
+  String get historyTitle;
+
+  /// No description provided for @historyLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Dose history'**
+  String get historyLink;
+
+  /// No description provided for @moreHistoryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Every dose: taken, skipped or missed'**
+  String get moreHistoryHint;
+
+  /// No description provided for @historyLastDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, other{Last {count} days}}'**
+  String historyLastDays(int count);
+
+  /// No description provided for @historyAdherence.
+  ///
+  /// In en, this message translates to:
+  /// **'Doses taken'**
+  String get historyAdherence;
+
+  /// No description provided for @historyAdherenceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'{taken} of {total} doses taken, on time or late'**
+  String historyAdherenceHint(int taken, int total);
+
+  /// No description provided for @historyEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No doses yet'**
+  String get historyEmpty;
+
+  /// No description provided for @historyEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Doses show up here once their time has passed.'**
+  String get historyEmptyHint;
+
+  /// No description provided for @historyToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get historyToday;
+
+  /// No description provided for @historyYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get historyYesterday;
+
+  /// No description provided for @historyMarkLateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Took this dose later? It will count as taken late and come out of your stock.'**
+  String get historyMarkLateBody;
+
+  /// No description provided for @remindLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me later'**
+  String get remindLater;
+
+  /// No description provided for @remindLaterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'When should I remind you?'**
+  String get remindLaterTitle;
+
+  /// No description provided for @remindLaterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t take it right now? It will ring again then. Nothing counts as missed until after that.'**
+  String get remindLaterHint;
+
+  /// No description provided for @remindLaterIn.
+  ///
+  /// In en, this message translates to:
+  /// **'In {duration}'**
+  String remindLaterIn(String duration);
 }
 
 class _AppLocalizationsDelegate

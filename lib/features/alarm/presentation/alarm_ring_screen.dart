@@ -8,6 +8,7 @@ import '../../reminders/domain/reminder_with_details.dart';
 import 'widgets/alarm_actions.dart';
 import 'widgets/alarm_details_card.dart';
 import 'widgets/alarm_group_card.dart';
+import 'widgets/remind_later_sheet.dart';
 import 'widgets/shaking_alarm_clock.dart';
 
 /// Full-screen alarm shown over the lock screen when a reminder rings: one
@@ -31,7 +32,13 @@ class AlarmRingScreen extends ConsumerStatefulWidget {
 class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen> {
   bool _busy = false;
 
-  Future<void> _act(AlarmAction action) async {
+  /// "Remind me later": how long, then snooze for that long.
+  Future<void> _remindLater() async {
+    final wait = await showRemindLaterSheet(context);
+    if (wait != null) await _act(AlarmAction.snooze, snoozeFor: wait);
+  }
+
+  Future<void> _act(AlarmAction action, {Duration? snoozeFor}) async {
     setState(() => _busy = true);
     try {
       await ref
@@ -40,6 +47,7 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen> {
             reminderIds: [for (final d in widget.group) d.reminder.id],
             scheduledFor: widget.scheduledFor,
             action: action,
+            snoozeFor: snoozeFor,
           );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -83,6 +91,7 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen> {
                   grouped: group.length > 1,
                   busy: _busy,
                   onAction: _act,
+                  onRemindLater: _remindLater,
                 ),
                 AppSpacing.gapLg,
               ],

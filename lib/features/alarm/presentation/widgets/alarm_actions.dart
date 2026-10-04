@@ -7,7 +7,9 @@ import '../../../../core/utils/numbers.dart';
 import '../../../../core/widgets/pill_button.dart';
 import '../../../../core/localization/l10n.dart';
 
-/// "Medicine Taken ✓" (moss) and "Snooze" (accent) pills, plus Skip for doses.
+/// "Medicine Taken ✓" (moss) and "Snooze" (accent) pills; below them
+/// "Remind me later" (a longer snooze, for when it can't be taken now) and,
+/// for doses, Skip.
 class AlarmActions extends StatelessWidget {
   const AlarmActions({
     super.key,
@@ -15,6 +17,7 @@ class AlarmActions extends StatelessWidget {
     required this.snoozeMinutes,
     required this.busy,
     required this.onAction,
+    this.onRemindLater,
     this.grouped = false,
   });
 
@@ -22,6 +25,9 @@ class AlarmActions extends StatelessWidget {
   final int snoozeMinutes;
   final bool busy;
   final ValueChanged<AlarmAction> onAction;
+
+  /// Opens the "remind me in…" choice; hidden when null.
+  final VoidCallback? onRemindLater;
 
   /// Several medicines at once: "All taken".
   final bool grouped;
@@ -51,11 +57,24 @@ class AlarmActions extends StatelessWidget {
           trailingIcon: Icons.snooze_rounded,
           onPressed: busy ? null : () => onAction(AlarmAction.snooze),
         ),
-        if (isMedicine)
-          TextButton(
-            onPressed: busy ? null : () => onAction(AlarmAction.skip),
-            child: Text(context.l10n.alarmSkip),
-          ),
+        AppSpacing.gapSm,
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: AppSpacing.sm,
+          children: [
+            if (onRemindLater case final remindLater?)
+              TextButton.icon(
+                icon: const Icon(Icons.schedule_rounded),
+                onPressed: busy ? null : remindLater,
+                label: Text(context.l10n.remindLater),
+              ),
+            if (isMedicine)
+              TextButton(
+                onPressed: busy ? null : () => onAction(AlarmAction.skip),
+                child: Text(context.l10n.alarmSkip),
+              ),
+          ],
+        ),
       ],
     );
   }

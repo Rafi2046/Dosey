@@ -112,6 +112,14 @@ abstract final class AppConstants {
   static const int defaultSnoozeMinutes = 10;
   static const List<int> snoozeOptions = [5, 10, 15, 30];
 
+  /// "Remind me later" on the alarm screen, for a dose that can't be taken
+  /// right now: ring again after this long.
+  static const List<Duration> remindLaterOptions = [
+    Duration(minutes: 30),
+    Duration(hours: 1),
+    Duration(hours: 2),
+  ];
+
   /// Snooze alarms use `snoozeIdOffset + reminderId` (the group's lowest
   /// id) so they never collide with a reminder's own alarm id.
   static const int snoozeIdOffset = 1000000000;

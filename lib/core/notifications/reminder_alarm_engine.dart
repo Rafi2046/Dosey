@@ -286,7 +286,10 @@ class ReminderAlarmEngine {
     // Earlier doses left unanswered (e.g. alarm ignored hours ago).
     await sweepMissed();
 
-    if (now.difference(scheduledFor) > AppConstants.missedThreshold) {
+    // A dose alarm delivered hours late (phone off…) is a miss, not a ring.
+    // Snoozes always ring: the user asked to be reminded then.
+    if (!isSnooze &&
+        now.difference(scheduledFor) > AppConstants.missedThreshold) {
       await _reminders.logActions(
         reminderIds: ids,
         scheduledFor: scheduledFor,
@@ -363,11 +366,14 @@ class ReminderAlarmEngine {
   /// are written in a single transaction.
   /// [notificationId]: the notification acted on, when it isn't filed under
   /// a reminder id (iOS time-slot notifications), so it's removed too.
+  /// [snoozeFor]: how long a snooze lasts ("remind me later"); defaults to
+  /// the group's shortest snooze setting.
   Future<void> handleAction({
     required List<int> reminderIds,
     required DateTime scheduledFor,
     required AlarmAction action,
     int? notificationId,
+    Duration? snoozeFor,
   }) async {
     if (reminderIds.isEmpty) return;
     final status = switch (action) {
@@ -380,10 +386,21 @@ class ReminderAlarmEngine {
       if (status.isTaken)
         for (final id in reminderIds) id: ?await _reminders.stockStatusFor(id),
     };
+    final group = [for (final id in reminderIds) ?await _reminders.getById(id)];
+    final snoozeAt = _clock().add(
+      snoozeFor ??
+          Duration(
+            minutes: group.isEmpty
+                ? AppConstants.defaultSnoozeMinutes
+                : group.map((r) => r.snoozeMinutes).reduce(math.min),
+          ),
+    );
     await _reminders.logActions(
       reminderIds: reminderIds,
       scheduledFor: scheduledFor,
       status: status,
+      // A snooze records when it rings again; missed is counted from there.
+      actedAt: action == AlarmAction.snooze ? snoozeAt : null,
     );
     for (final id in reminderIds) {
       await _reminders.setRinging(id, null);
@@ -404,13 +421,9 @@ class ReminderAlarmEngine {
       await _scheduler.cancel(snoozeId);
       return;
     }
-    final group = [for (final id in reminderIds) ?await _reminders.getById(id)];
-    final minutes = group.isEmpty
-        ? AppConstants.defaultSnoozeMinutes
-        : group.map((r) => r.snoozeMinutes).reduce(math.min);
     await _scheduler.schedule(
       alarmId: snoozeId,
-      at: _clock().add(Duration(minutes: minutes)),
+      at: snoozeAt,
       params: _params(scheduledFor, reminderIds, snooze: true),
       critical: group.isEmpty || group.any((r) => r.isCritical),
     );

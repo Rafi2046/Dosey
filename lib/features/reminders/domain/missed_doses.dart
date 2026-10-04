@@ -23,7 +23,9 @@ abstract final class MissedDoses {
 
   /// Doses of enabled medicine [reminders] scheduled from [from] that count
   /// as missed at [now], oldest first: those logged as missed, plus those
-  /// left open for longer than [AppConstants.missedThreshold].
+  /// left open for longer than [AppConstants.missedThreshold]: after their
+  /// time, or for a snoozed dose after it last rang ("remind me in 2 h"
+  /// mustn't turn into a miss before it even rings).
   ///
   /// A reminder's occurrences before its last edit ([Reminder.updatedAt])
   /// are never inferred as missed: a new medicine, a moved time or a
@@ -38,9 +40,7 @@ abstract final class MissedDoses {
       for (final r in reminders)
         if (r.isEnabled && r.type == ReminderType.medicine) r.id: r,
     };
-    final statuses = {
-      for (final l in logs) (l.reminderId, l.scheduledFor): l.status,
-    };
+    final byKey = {for (final l in logs) (l.reminderId, l.scheduledFor): l};
     final result = <MissedDose>[
       for (final l in logs)
         if (l.status == ReminderLogStatus.missed &&
@@ -57,7 +57,12 @@ abstract final class MissedDoses {
       while (true) {
         final at = ReminderSchedule.nextFor(r, cursor);
         if (at == null || !at.isBefore(cutoff)) break;
-        if (isOpen(statuses[(r.id, at)])) {
+        final log = byKey[(r.id, at)];
+        // A snoozed dose's clock restarts when it rings again ([actedAt]).
+        final lastRang = log?.status == ReminderLogStatus.snoozed
+            ? log!.actedAt ?? at
+            : at;
+        if (isOpen(log?.status) && lastRang.isBefore(cutoff)) {
           result.add(MissedDose(r, at, logged: false));
         }
         cursor = at;

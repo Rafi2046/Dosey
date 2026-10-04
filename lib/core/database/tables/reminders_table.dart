@@ -81,6 +81,9 @@ class ReminderLogs extends Table {
       integer().references(Reminders, #id, onDelete: KeyAction.cascade)();
   DateTimeColumn get scheduledFor => dateTime()();
   TextColumn get status => textEnum<ReminderLogStatus>()();
+
+  /// When the user acted. For [ReminderLogStatus.snoozed]: when the dose
+  /// rings again (it only counts as missed a while after that).
   DateTimeColumn get actedAt => dateTime().nullable()();
 
   @override

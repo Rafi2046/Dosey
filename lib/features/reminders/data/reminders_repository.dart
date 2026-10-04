@@ -218,12 +218,14 @@ class RemindersRepository {
 
   /// [logAction] for several reminders of one occurrence, all or nothing
   /// (a grouped alarm's "Taken" records every medicine together).
+  /// [actedAt] defaults to now; for a snooze it's when the dose rings again.
   Future<void> logActions({
     required List<int> reminderIds,
     required DateTime scheduledFor,
     required ReminderLogStatus status,
+    DateTime? actedAt,
   }) => _db.transaction(() async {
-    final actedAt = DateTime.now();
+    actedAt ??= DateTime.now();
     for (final id in reminderIds) {
       await logAction(
         reminderId: id,

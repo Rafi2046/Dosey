@@ -107,10 +107,14 @@ class MedicineScheduleService {
   /// Applies a changed medicine end date to all of its reminders.
   Future<void> syncEndDate(int medicineId, DateTime? endDate) =>
       _db.transaction(() async {
-        final reminders = await _reminders.watchByMedicine(medicineId).first;
-        for (final d in reminders) {
+        // A plain read: a stream query (watch…first) runs outside the
+        // transaction and would wait on it forever.
+        final reminders = await (_db.select(
+          _db.reminders,
+        )..where((r) => r.medicineId.equals(medicineId))).get();
+        for (final r in reminders) {
           await _reminders.update(
-            d.reminder.id,
+            r.id,
             RemindersCompanion(endAt: Value(endOfDay(endDate))),
           );
         }

@@ -22,8 +22,9 @@ class InitialsAvatar extends StatelessWidget {
           (w) => !RegExp(r'^(dr|prof|retd)$', caseSensitive: false).hasMatch(w),
         )
         .toList();
-    if (words.isEmpty)
+    if (words.isEmpty) {
       return name.isNotEmpty ? name.trim()[0].toUpperCase() : '';
+    }
     return words.take(2).map((w) => w[0].toUpperCase()).join();
   }
 

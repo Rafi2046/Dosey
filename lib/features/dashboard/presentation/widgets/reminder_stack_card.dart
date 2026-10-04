@@ -129,6 +129,7 @@ class ReminderStackCard extends StatelessWidget {
                     medicine: medicine,
                     today: DateUtils.dateOnly(now),
                     onLight: light,
+                    compact: true,
                   ),
                 ],
               ],

@@ -15,6 +15,7 @@ class CourseProgressPill extends StatelessWidget {
     required this.medicine,
     required this.today,
     required this.onLight,
+    this.compact = false,
   });
 
   final Medicine medicine;
@@ -22,6 +23,9 @@ class CourseProgressPill extends StatelessWidget {
 
   /// Sits on a light card (cream): moss pill. Otherwise a cream pill.
   final bool onLight;
+
+  /// Narrow spots (Home cards): "Day 3 of 7" alone, or "Last day".
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +52,13 @@ class CourseProgressPill extends StatelessWidget {
       );
     }
     return StatusChip(
-      label:
+      label: switch ((compact, progress.daysLeft)) {
+        (true, 0) => l.courseDaysLeft(0),
+        (true, _) => l.courseDayOf(progress.day, progress.totalDays),
+        _ =>
           '${l.courseDayOf(progress.day, progress.totalDays)}'
-          '${l.notifDoseSeparator}${l.courseDaysLeft(progress.daysLeft)}',
+              '${l.notifDoseSeparator}${l.courseDaysLeft(progress.daysLeft)}',
+      },
       background: background,
       foreground: foreground,
       leading: SizedBox.square(

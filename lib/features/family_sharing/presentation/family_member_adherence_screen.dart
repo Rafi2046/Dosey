@@ -56,16 +56,27 @@ class _FamilyMemberAdherenceScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Gentle reminder sent to ${widget.share.patientName ?? "Family Member"}\'s phone! 🔔',
+              '🔔 Gentle reminder sent to ${widget.share.patientName ?? "Family Member"}\'s phone!',
             ),
             backgroundColor: AppColors.tileMoss,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            ),
           ),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to send reminder: $e')),
+          SnackBar(
+            content: Text('$e'),
+            backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            ),
+          ),
         );
       }
     } finally {
@@ -90,26 +101,26 @@ class _FamilyMemberAdherenceScreenState
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: AppSpacing.screenPadding.copyWith(
-            top: AppSpacing.sm,
+            top: AppSpacing.xs,
             bottom: AppSpacing.xxl,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Patient Profile Banner
+              // Patient Profile Compact Banner
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.md,
-                  vertical: AppSpacing.sm,
+                  vertical: 10,
                 ),
                 decoration: BoxDecoration(
                   color: AppColors.creamLight,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   border: Border.all(color: AppColors.divider),
                 ),
                 child: Row(
                   children: [
-                    InitialsAvatar(name: patientName, size: 40),
+                    InitialsAvatar(name: patientName, size: 36),
                     AppSpacing.gapSm,
                     Expanded(
                       child: Column(
@@ -118,7 +129,7 @@ class _FamilyMemberAdherenceScreenState
                           Text(
                             patientName,
                             style: AppTextStyles.headlineOnLight.copyWith(
-                              fontSize: AppSpacing.fontMd,
+                              fontSize: 14,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -126,14 +137,14 @@ class _FamilyMemberAdherenceScreenState
                             'Share Code: ${widget.share.shareCode}',
                             style: AppTextStyles.caption.copyWith(
                               color: AppColors.inkMuted,
-                              fontSize: AppSpacing.fontXs,
+                              fontSize: 11,
                             ),
                           ),
                         ],
                       ),
                     ),
                     const StatusChip(
-                      label: 'Live Sync',
+                      label: 'Live',
                       icon: Icons.sync_rounded,
                       background: AppColors.tileMint,
                       foreground: Colors.white,
@@ -170,24 +181,32 @@ class _FamilyMemberAdherenceScreenState
                       AppSpacing.gapMd,
 
                       // Section Title
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.calendar_today_rounded,
-                            size: 16,
-                            color: AppColors.accent,
-                          ),
-                          AppSpacing.gapXs,
-                          Text(
-                            "Today's Medication Schedule",
-                            style: AppTextStyles.subtitleOnLight.copyWith(
-                              fontWeight: FontWeight.w700,
-                              fontSize: AppSpacing.fontSm,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 3,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: AppColors.accent,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 6),
+                            Text(
+                              "TODAY'S SCHEDULE",
+                              style: AppTextStyles.overline.copyWith(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 11.5,
+                                letterSpacing: 0.8,
+                                color: AppColors.inkMuted,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      AppSpacing.gapSm,
+                      const SizedBox(height: 6),
 
                       // Doses List
                       ...doses.asMap().entries.map((entry) {
@@ -220,13 +239,14 @@ class _FamilyMemberAdherenceScreenState
                   padding: const EdgeInsets.all(AppSpacing.lg),
                   decoration: BoxDecoration(
                     color: AppColors.creamLight,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    border: Border.all(color: AppColors.divider),
                   ),
                   child: Column(
                     children: [
                       Icon(
                         Icons.cloud_off_rounded,
-                        size: 36,
+                        size: 32,
                         color: AppColors.inkMuted,
                       ),
                       AppSpacing.gapSm,
@@ -261,10 +281,10 @@ class _FamilyMemberAdherenceScreenState
     required int missed,
   }) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: AppColors.creamLight,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         border: Border.all(color: AppColors.divider),
       ),
       child: Column(
@@ -272,19 +292,6 @@ class _FamilyMemberAdherenceScreenState
         children: [
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.tileMint.withValues(alpha: 0.15),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.trending_up_rounded,
-                  color: AppColors.tileMint,
-                  size: 18,
-                ),
-              ),
-              AppSpacing.gapSm,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,38 +300,54 @@ class _FamilyMemberAdherenceScreenState
                       "Today's Adherence: $adherenceRate%",
                       style: AppTextStyles.bodyOnLight.copyWith(
                         fontWeight: FontWeight.w700,
-                        fontSize: AppSpacing.fontSm,
+                        fontSize: 13.5,
                       ),
                     ),
+                    const SizedBox(height: 2),
                     Text(
                       '$taken of $total doses completed',
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.inkMuted,
-                        fontSize: AppSpacing.fontXs,
+                        fontSize: 11,
                       ),
                     ),
                   ],
                 ),
               ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.tileMint.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+                ),
+                child: Text(
+                  '$adherenceRate%',
+                  style: const TextStyle(
+                    color: AppColors.tileMoss,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
             ],
           ),
-          AppSpacing.gapSm,
+          const SizedBox(height: 10),
           ClipRRect(
             borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
             child: LinearProgressIndicator(
               value: total > 0 ? taken / total : 0,
-              minHeight: 6,
+              minHeight: 5,
               backgroundColor: AppColors.divider,
               valueColor: const AlwaysStoppedAnimation(AppColors.tileMint),
             ),
           ),
-          AppSpacing.gapSm,
+          const SizedBox(height: 10),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildCountPill('Taken', taken, AppColors.tileMint),
-              _buildCountPill('Pending', pending, AppColors.warning),
-              _buildCountPill('Missed', missed, AppColors.error),
+              _buildCountPill('Taken', taken, AppColors.tileMint, AppColors.tileMoss),
+              _buildCountPill('Pending', pending, AppColors.warning, const Color(0xFFC07000)),
+              _buildCountPill('Missed', missed, AppColors.error, AppColors.error),
             ],
           ),
         ],
@@ -332,28 +355,28 @@ class _FamilyMemberAdherenceScreenState
     );
   }
 
-  Widget _buildCountPill(String label, int count, Color color) {
+  Widget _buildCountPill(String label, int count, Color bgTint, Color fgColor) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+        color: bgTint.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 6,
-            height: 6,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            width: 5,
+            height: 5,
+            decoration: BoxDecoration(color: fgColor, shape: BoxShape.circle),
           ),
-          AppSpacing.gapXs,
+          const SizedBox(width: 4),
           Text(
             '$label: $count',
-            style: AppTextStyles.caption.copyWith(
-              color: color,
-              fontWeight: FontWeight.bold,
-              fontSize: AppSpacing.fontXs,
+            style: TextStyle(
+              color: fgColor,
+              fontWeight: FontWeight.w700,
+              fontSize: 11,
             ),
           ),
         ],
@@ -363,7 +386,7 @@ class _FamilyMemberAdherenceScreenState
 
   Widget _buildDoseItem(SharedAdherenceDose dose, Color accentColor) {
     Color statusBg = AppColors.warning.withValues(alpha: 0.12);
-    Color statusFg = AppColors.warning;
+    Color statusFg = const Color(0xFFC07000);
     String statusText = 'Pending';
     IconData statusIcon = Icons.hourglass_top_rounded;
 
@@ -384,9 +407,16 @@ class _FamilyMemberAdherenceScreenState
       statusIcon = Icons.remove_circle_outline_rounded;
     }
 
+    String subtitle = dose.dosage ?? '1 dose';
+    if (dose.mealRelation != null &&
+        dose.mealRelation != 'anytime' &&
+        dose.mealRelation!.isNotEmpty) {
+      subtitle += ' • ${dose.mealRelation}';
+    }
+
     return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.xs),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
       decoration: BoxDecoration(
         color: AppColors.creamLight,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -394,21 +424,21 @@ class _FamilyMemberAdherenceScreenState
       ),
       child: Row(
         children: [
-          // Native clean Dosey medicine illustration
+          // Small, refined, bespoke Dosey medicine illustration
           Container(
-            width: 36,
-            height: 36,
-            padding: const EdgeInsets.all(5),
+            width: 28,
+            height: 28,
+            padding: const EdgeInsets.all(3.5),
             decoration: BoxDecoration(
-              color: accentColor.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(8),
+              color: accentColor.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(6),
             ),
             child: Image.asset(
               _imageForForm(dose.form),
               fit: BoxFit.contain,
             ),
           ),
-          AppSpacing.gapSm,
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -417,14 +447,14 @@ class _FamilyMemberAdherenceScreenState
                   dose.medicineName,
                   style: AppTextStyles.bodyOnLight.copyWith(
                     fontWeight: FontWeight.w600,
-                    fontSize: AppSpacing.fontSm,
+                    fontSize: 13.5,
                   ),
                 ),
                 Text(
-                  dose.dosage ?? '1 Dose',
+                  subtitle,
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.inkMuted,
-                    fontSize: AppSpacing.fontXs,
+                    fontSize: 11,
                   ),
                 ),
               ],
@@ -436,13 +466,13 @@ class _FamilyMemberAdherenceScreenState
               Text(
                 dose.time,
                 style: AppTextStyles.bodyOnLight.copyWith(
-                  fontWeight: FontWeight.w600,
-                  fontSize: AppSpacing.fontSm,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12.5,
                 ),
               ),
               const SizedBox(height: 3),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: statusBg,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
@@ -450,13 +480,13 @@ class _FamilyMemberAdherenceScreenState
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(statusIcon, size: 10, color: statusFg),
+                    Icon(statusIcon, size: 9.5, color: statusFg),
                     const SizedBox(width: 3),
                     Text(
                       statusText,
                       style: TextStyle(
                         color: statusFg,
-                        fontSize: 10.5,
+                        fontSize: 10,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -475,29 +505,31 @@ class _FamilyMemberAdherenceScreenState
       padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
         color: AppColors.creamLight,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         border: Border.all(color: AppColors.divider),
       ),
       child: Column(
         children: [
           Icon(
             Icons.medication_outlined,
-            size: 40,
+            size: 36,
             color: AppColors.inkMuted,
           ),
           AppSpacing.gapMd,
           Text(
             'No Shared Doses Found Today',
             style: AppTextStyles.headlineOnLight.copyWith(
-              fontSize: AppSpacing.fontMd,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
             ),
           ),
           AppSpacing.gapXs,
           Text(
-            'When ${widget.share.patientName ?? "your family member"} opens Dosey or adds reminders on their device, their schedule will appear here automatically.',
+            'When ${widget.share.patientName ?? "your family member"} opens Dosey or logs doses, their schedule will appear here automatically.',
             textAlign: TextAlign.center,
             style: AppTextStyles.caption.copyWith(
               color: AppColors.inkMuted,
+              fontSize: 11.5,
             ),
           ),
         ],
@@ -505,3 +537,4 @@ class _FamilyMemberAdherenceScreenState
     );
   }
 }
+

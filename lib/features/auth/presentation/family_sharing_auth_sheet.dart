@@ -1281,7 +1281,7 @@ class _FamilySharingAuthSheetState
             _SocialAuthButton(
               icon: Icons.apple_rounded,
               label: 'Continue with Apple',
-              isDark: true,
+              isApple: true,
               onPressed: _isLoading ? null : _handleAppleAuth,
             ),
           ],
@@ -1499,18 +1499,47 @@ class _SocialAuthButton extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onPressed,
-    this.isDark = false,
+    this.isApple = false,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
-  final bool isDark;
+  final bool isApple;
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = AppColors.isDark;
+
+    final Color buttonBgColor;
+    final Color textColor;
+    final Color borderColor;
+
+    if (isApple) {
+      if (isDarkMode) {
+        buttonBgColor = Colors.white;
+        textColor = Colors.black;
+        borderColor = Colors.transparent;
+      } else {
+        buttonBgColor = Colors.black;
+        textColor = Colors.white;
+        borderColor = Colors.transparent;
+      }
+    } else {
+      // Google button
+      if (isDarkMode) {
+        buttonBgColor = AppColors.creamLight;
+        textColor = AppColors.ink;
+        borderColor = AppColors.divider;
+      } else {
+        buttonBgColor = Colors.white;
+        textColor = AppColors.ink;
+        borderColor = AppColors.divider;
+      }
+    }
+
     return Material(
-      color: isDark ? Colors.black : Colors.white,
+      color: buttonBgColor,
       shape: const StadiumBorder(),
       clipBehavior: Clip.antiAlias,
       elevation: 0,
@@ -1521,9 +1550,7 @@ class _SocialAuthButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
-            border: Border.all(
-              color: isDark ? Colors.transparent : AppColors.divider,
-            ),
+            border: Border.all(color: borderColor),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -1531,14 +1558,14 @@ class _SocialAuthButton extends StatelessWidget {
               Icon(
                 icon,
                 size: 22,
-                color: isDark ? Colors.white : AppColors.ink,
+                color: textColor,
               ),
               AppSpacing.gapSm,
               Text(
                 label,
                 style: AppTextStyles.bodyOnLight.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.white : AppColors.ink,
+                  color: textColor,
                 ),
               ),
             ],

@@ -1,3 +1,4 @@
+import 'package:dosey/core/constants/constants.dart';
 import 'package:dosey/core/localization/l10n.dart';
 import 'package:dosey/features/auth/data/auth_repository.dart';
 import 'package:dosey/features/auth/presentation/family_sharing_auth_sheet.dart';
@@ -80,6 +81,17 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Reset Password'), findsNothing);
+      expect(find.text('Sign In'), findsWidgets);
+    });
+
+    testWidgets('renders clearly in dark mode', (tester) async {
+      AppColors.apply(AppPalette.dark);
+      addTearDown(() => AppColors.apply(AppPalette.light));
+
+      await tester.pumpWidget(_buildTestApp());
+      await tester.pumpAndSettle();
+
+      expect(find.text('Continue with Google'), findsOneWidget);
       expect(find.text('Sign In'), findsWidgets);
     });
   });

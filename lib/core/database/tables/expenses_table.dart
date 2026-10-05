@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../enums.dart';
+import 'profiles_table.dart';
 import 'doctors_table.dart';
 import 'medicines_table.dart';
 import 'records_table.dart';
@@ -41,6 +42,11 @@ class Expenses extends Table {
   DateTimeColumn get spentOn => dateTime()();
   TextColumn get notes => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  /// Whose this is (see [Profiles]). Last: v8 added it (ALTER TABLE appends).
+  IntColumn get profileId => integer()
+      .withDefault(const Constant(1))
+      .references(Profiles, #id, onDelete: KeyAction.cascade)();
 
   @override
   List<String> get customConstraints => ['CHECK (amount_minor >= 0)'];

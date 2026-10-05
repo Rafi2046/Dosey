@@ -35,6 +35,11 @@ class DataResetService {
       ]) {
         await _db.delete(table).go();
       }
+      // Family profiles go too; the user's own stays, unnamed again.
+      await (_db.delete(_db.profiles)..where((p) => p.id.isNotValue(1))).go();
+      await (_db.update(_db.profiles)..where((p) => p.id.equals(1))).write(
+        const ProfilesCompanion(name: Value('')),
+      );
     });
     await _files.deleteRecordsFolder();
   }

@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 Medicine _medicine({double? stock, int? alertDays, double? threshold}) =>
     Medicine(
+      profileId: 1,
       id: 1,
       name: 'Zulfidin',
       form: MedicineForm.tablet,

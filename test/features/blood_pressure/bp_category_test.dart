@@ -24,6 +24,7 @@ void main() {
     final now = DateTime(2026, 10, 10, 12);
     BloodPressureReading r(int sys, int dia, DateTime at) =>
         BloodPressureReading(
+          profileId: 1,
           id: sys,
           systolic: sys,
           diastolic: dia,

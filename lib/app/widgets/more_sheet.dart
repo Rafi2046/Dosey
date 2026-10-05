@@ -7,6 +7,7 @@ import '../../core/widgets/surface_card.dart';
 import '../../features/blood_pressure/presentation/blood_pressure_screen.dart';
 import '../../features/blood_sugar/presentation/blood_sugar_screen.dart';
 import '../../features/reminders/presentation/dose_history_screen.dart';
+import '../../features/report/presentation/doctor_report_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../home_tab.dart';
 
@@ -68,6 +69,21 @@ Future<void> showMoreSheet(
                   Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (_) => const DoseHistoryScreen(),
+                    ),
+                  );
+                },
+              ),
+              _MoreTile(
+                icon: Icons.summarize_rounded,
+                color: AppColors.tileStone,
+                title: l10n.reportShowDoctor,
+                subtitle: l10n.reportMoreHint,
+                selected: false,
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const DoctorReportScreen(),
                     ),
                   );
                 },

@@ -53,4 +53,15 @@ abstract interface class NotificationPresenter {
 
   /// "Zulfidin is running low: about 3 days left."
   Future<void> showLowStock(Medicine medicine, int daysLeft);
+
+  /// Books a quiet notification at [notifyAt] about [details] happening at
+  /// [eventAt] ("Coming up: Diabetes follow-up"). Rebooking replaces it.
+  Future<void> scheduleHeadsUp(
+    ReminderWithDetails details,
+    DateTime eventAt, {
+    required DateTime notifyAt,
+  });
+
+  /// Drops [reminderId]'s booked heads-up, if any.
+  Future<void> cancelHeadsUp(int reminderId);
 }

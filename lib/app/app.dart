@@ -7,6 +7,7 @@ import '../core/localization/l10n.dart';
 import '../core/notifications/notification_providers.dart';
 import '../core/theme/app_theme.dart';
 import '../features/settings/providers/settings_providers.dart';
+import '../features/lock/presentation/lock_gate.dart';
 import 'alarm_host.dart';
 import 'startup_gate.dart';
 
@@ -65,7 +66,7 @@ class _DoseyAppState extends ConsumerState<DoseyApp> {
         AppLocale.apply(Localizations.localeOf(context));
         return AlarmHost(
           navigatorKey: _navigatorKey,
-          child: child ?? const SizedBox.shrink(),
+          child: LockGate(child: child ?? const SizedBox.shrink()),
         );
       },
       home: const StartupGate(),

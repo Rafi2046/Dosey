@@ -1,8 +1,11 @@
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/database_provider.dart';
 import '../../reminders/providers/reminders_providers.dart';
+import '../../profiles/providers/profiles_providers.dart';
+import '../data/medicine_names.dart';
 import '../data/medicine_schedule_service.dart';
 import '../data/medicines_repository.dart';
 import '../data/prescription_scanner_service.dart';
@@ -12,7 +15,10 @@ import '../domain/medicine_with_doctor.dart';
 import '../domain/stock_status.dart';
 
 final medicinesRepositoryProvider = Provider<MedicinesRepository>(
-  (ref) => MedicinesRepository(ref.watch(appDatabaseProvider)),
+  (ref) => MedicinesRepository(
+    ref.watch(appDatabaseProvider),
+    profileId: ref.watch(activeProfileIdProvider),
+  ),
 );
 
 final medicinesProvider = StreamProvider<List<MedicineWithDoctor>>(
@@ -61,6 +67,14 @@ final medicineByIdProvider = StreamProvider.autoDispose
     .family<MedicineWithDoctor?, int>(
       (ref, id) => ref.watch(medicinesRepositoryProvider).watchById(id),
     );
+
+/// Names to suggest on the medicine form: the user's saved medicines, then
+/// common Bangladeshi brands.
+final medicineNamesProvider = FutureProvider<MedicineNameIndex>((ref) async {
+  final builtIn = await MedicineNameIndex.load(rootBundle);
+  final saved = ref.watch(medicinesProvider).value ?? const [];
+  return builtIn.withSaved([for (final m in saved) m.medicine]);
+});
 
 final medicineScheduleServiceProvider = Provider<MedicineScheduleService>(
   (ref) => MedicineScheduleService(

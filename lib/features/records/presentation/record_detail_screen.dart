@@ -17,6 +17,7 @@ import 'widgets/image_source_sheet.dart';
 import 'widgets/record_page_viewer.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../core/widgets/skeleton.dart';
+import '../../../core/widgets/surface_card.dart';
 
 enum _MenuAction { edit, deletePage, delete }
 
@@ -118,10 +119,39 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
             : ListView(
                 padding: AppSpacing.screenPadding,
                 children: [
-                  RecordPageViewer(
-                    pages: pages,
-                    onPageChanged: (i) => _page = i,
-                  ),
+                  if (pages.isEmpty)
+                    // Nothing to page through: invite adding the first one.
+                    SurfaceCard(
+                      color: AppColors.creamLight,
+                      onTap: _addPages,
+                      child: Column(
+                        children: [
+                          AppSpacing.gapXl,
+                          Icon(
+                            Icons.add_a_photo_rounded,
+                            size: AppSpacing.iconLg,
+                            color: AppColors.inkMuted,
+                          ),
+                          AppSpacing.gapMd,
+                          Text(
+                            context.l10n.recordNoPages,
+                            style: AppTextStyles.cardTitleOnLight,
+                          ),
+                          AppSpacing.gapXs,
+                          Text(
+                            context.l10n.recordNoPagesHint,
+                            style: AppTextStyles.captionOnLight,
+                            textAlign: TextAlign.center,
+                          ),
+                          AppSpacing.gapXl,
+                        ],
+                      ),
+                    )
+                  else
+                    RecordPageViewer(
+                      pages: pages,
+                      onPageChanged: (i) => _page = i,
+                    ),
                   AppSpacing.gapXl,
                   InfoBlock(
                     label: context.l10n.recordType,

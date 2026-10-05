@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dosey/app/app.dart';
@@ -14,9 +15,11 @@ import 'package:dosey/core/widgets/back_arrow_button.dart';
 import 'package:dosey/core/widgets/labeled_field.dart';
 import 'package:dosey/core/widgets/screen_header.dart';
 import 'package:dosey/core/widgets/skeleton.dart';
+import 'package:dosey/core/widgets/suggest_field.dart';
 import 'package:dosey/core/widgets/pill_button.dart';
 import 'package:dosey/core/utils/date_format.dart';
 import 'package:dosey/core/utils/enum_labels.dart';
+import 'package:dosey/core/utils/share_providers.dart';
 import 'package:dosey/core/widgets/filter_pills.dart';
 import 'package:dosey/core/widgets/empty_state.dart';
 import 'package:dosey/features/medicines/domain/dose_time.dart';
@@ -26,6 +29,7 @@ import 'package:dosey/features/medicines/domain/scanned_doctor.dart';
 import 'package:dosey/features/doctors/data/health_facilities.dart';
 import 'package:dosey/features/doctors/domain/specialty.dart';
 import 'package:dosey/features/doctors/providers/doctors_providers.dart';
+import 'package:dosey/features/medicines/data/medicine_names.dart';
 import 'package:dosey/features/medicines/providers/medicines_providers.dart';
 import 'package:dosey/features/records/data/records_repository.dart';
 import 'package:dosey/features/reminders/data/reminders_repository.dart';
@@ -1705,4 +1709,132 @@ void main() {
       await unmount(tester);
     });
   }
+
+  testWidgets('back up to a file, then restore it from Settings', (
+    tester,
+  ) async {
+    File? shared;
+    List<int>? picked;
+    await pumpApp(
+      tester,
+      overrides: [
+        fileSharerProvider.overrideWithValue((file, _) async {
+          shared = file;
+          return true;
+        }),
+        backupPickerProvider.overrideWithValue(() async => picked),
+      ],
+    );
+    await tester.tap(find.byTooltip(en.settingsTitle));
+    await settle(tester);
+    expect(await scrollTo(tester, en.backupTitle), findsOneWidget);
+
+    await tester.tap(find.text(en.backupTitle));
+    await settle(tester, frames: 30);
+    expect(shared, isNotNull);
+    expect(shared!.path, endsWith('.dosey'));
+    expect(find.textContaining(en.backupLast('').trim()), findsOneWidget);
+
+    // Lose a medicine, then restore the backup.
+    await dbRun(
+      tester,
+      () => (db.delete(
+        db.medicines,
+      )..where((m) => m.name.equals('Insulin'))).go(),
+    );
+    picked = shared!.readAsBytesSync();
+    await tapText(tester, en.restoreTitle);
+    expect(find.text(en.restoreConfirmTitle), findsOneWidget);
+    await tester.tap(find.text(en.restoreConfirm));
+    await settle(tester, frames: 40);
+    expect(find.text(en.restoreDone), findsOneWidget);
+    final names = await dbRun(
+      tester,
+      () async => [for (final m in await db.select(db.medicines).get()) m.name],
+    );
+    expect(names, contains('Insulin'));
+    await unmount(tester);
+  });
+
+  testWidgets('the doctor report sums up medicines and readings, and shares '
+      'as an image', (tester) async {
+    File? shared;
+    await pumpApp(
+      tester,
+      overrides: [
+        fileSharerProvider.overrideWithValue((file, _) async {
+          shared = file;
+          return true;
+        }),
+      ],
+    );
+    await openTab(tester, HomeTab.dashboard);
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AppNavBar),
+        matching: find.byTooltip(en.navMore),
+      ),
+    );
+    await settle(tester);
+    await tapText(tester, en.reportShowDoctor);
+
+    expect(find.text(en.reportTitle), findsOneWidget);
+    expect(await scrollTo(tester, en.reportMedicines), findsOneWidget);
+    expect(await scrollTo(tester, 'Metformin 500 mg'), findsOneWidget);
+    expect(await scrollTo(tester, en.reportAdherence(30)), findsOneWidget);
+
+    await tester.runAsync(() async {
+      await tester.tap(find.text(en.reportShare));
+      for (var i = 0; i < 100 && shared == null; i++) {
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        await tester.pump();
+      }
+    });
+    expect(shared, isNotNull);
+    expect(shared!.path, endsWith('.png'));
+    // A real PNG of the page.
+    expect(shared!.readAsBytesSync().sublist(1, 4), 'PNG'.codeUnits);
+    await unmount(tester);
+  });
+
+  testWidgets('typing a medicine name suggests Bangladeshi brands', (
+    tester,
+  ) async {
+    // The real list, read up front (asset loading is real I/O, which
+    // a widget test's fake clock can't wait on).
+    final rows =
+        (jsonDecode(File('assets/data/bd_medicines.json').readAsStringSync())
+                as Map<String, dynamic>)['medicines']
+            as List<dynamic>;
+    final names = MedicineNameIndex([
+      for (final r in rows)
+        MedicineName(
+          name: r[0] as String,
+          generic: r[1] as String,
+          strength: r[2] as String,
+        ),
+    ]);
+    await pumpApp(
+      tester,
+      overrides: [medicineNamesProvider.overrideWith((ref) async => names)],
+    );
+    await tester.tap(find.byTooltip(en.add));
+    await settle(tester);
+    await tapText(tester, en.addMedicine);
+    await tapText(tester, en.next);
+
+    final name = find.descendant(
+      of: find.byWidgetPredicate((w) => w is SuggestField),
+      matching: find.byType(TextFormField),
+    );
+    await tester.enterText(name, 'nap');
+    await settle(tester);
+    expect(find.text('Paracetamol · 500 mg'), findsWidgets);
+    await tester.tap(find.text('Napa').last);
+    await settle(tester);
+
+    expect(find.widgetWithText(TextFormField, 'Napa'), findsOneWidget);
+    expect(find.widgetWithText(TextFormField, '500 mg'), findsOneWidget);
+    await unmount(tester);
+  });
 }

@@ -2149,4 +2149,214 @@ class AppLocalizationsBn extends AppLocalizations {
   String remindLaterIn(String duration) {
     return '$duration পরে';
   }
+
+  @override
+  String get recordNoPages => 'এখনো কোনো পাতা নেই';
+
+  @override
+  String get recordNoPagesHint => 'কাগজটির ছবি যোগ করতে ট্যাপ করুন।';
+
+  @override
+  String headsUpTitle(String title) {
+    return 'সামনে: $title';
+  }
+
+  @override
+  String get headsUpLabel => 'আগেও মনে করাও';
+
+  @override
+  String get headsUpNone => 'না';
+
+  @override
+  String headsUpBefore(String duration) {
+    return '$duration আগে';
+  }
+
+  @override
+  String get backupTitle => 'ডেটা ব্যাকআপ নিন';
+
+  @override
+  String backupLast(String date) {
+    return 'শেষ ব্যাকআপ: $date';
+  }
+
+  @override
+  String get backupNever =>
+      'এখনো ব্যাকআপ নেওয়া হয়নি: সবকিছু একটি ফাইলে রাখুন';
+
+  @override
+  String get backupShareSubject => 'Dosey ব্যাকআপ';
+
+  @override
+  String get backupFailed => 'ব্যাকআপ নেওয়া যায়নি। আবার চেষ্টা করুন।';
+
+  @override
+  String get restoreTitle => 'ব্যাকআপ থেকে ফেরত আনুন';
+
+  @override
+  String get restoreHint => 'এখানকার সবকিছু একটি ব্যাকআপ ফাইল দিয়ে বদলে দিন';
+
+  @override
+  String get restoreConfirmTitle => 'সব ডেটা বদলে দেবেন?';
+
+  @override
+  String get restoreConfirmBody =>
+      'Dosey-তে এখন যা আছে সব এই ব্যাকআপ দিয়ে বদলে যাবে: ওষুধ, রিমাইন্ডার, ইতিহাস, রেকর্ড ও ছবি। এটি আর ফেরানো যাবে না।';
+
+  @override
+  String get restoreConfirm => 'ফেরত আনুন';
+
+  @override
+  String get restoreDone => 'ব্যাকআপ ফেরত আনা হয়েছে';
+
+  @override
+  String get restoreNotABackup => 'এটি Dosey-র ব্যাকআপ ফাইল নয়।';
+
+  @override
+  String get restoreTooNew =>
+      'এই ব্যাকআপটি Dosey-র নতুন সংস্করণের। আগে অ্যাপটি আপডেট করুন।';
+
+  @override
+  String get reportTitle => 'স্বাস্থ্য রিপোর্ট';
+
+  @override
+  String get reportShowDoctor => 'ডাক্তারকে দেখান';
+
+  @override
+  String get reportMoreHint =>
+      'ডাক্তার দেখানোর আগে শেয়ার করার জন্য এক পাতার সারাংশ';
+
+  @override
+  String reportPeriod(String from, String to) {
+    return '$from – $to';
+  }
+
+  @override
+  String reportMadeOn(String date) {
+    return 'Dosey দিয়ে তৈরি, $date। তথ্য রোগীর নিজের লেখা।';
+  }
+
+  @override
+  String get reportMedicines => 'চলমান ওষুধ';
+
+  @override
+  String get reportNoMedicines => 'চলমান কোনো ওষুধ নেই';
+
+  @override
+  String reportAdherence(int days) {
+    final intl.NumberFormat daysNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String daysString = daysNumberFormat.format(days);
+
+    return 'নেওয়া ডোজ, শেষ $daysString দিন';
+  }
+
+  @override
+  String reportAdherenceDetail(int taken, int total, int missed, int skipped) {
+    final intl.NumberFormat takenNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String takenString = takenNumberFormat.format(taken);
+    final intl.NumberFormat totalNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String totalString = totalNumberFormat.format(total);
+    final intl.NumberFormat missedNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String missedString = missedNumberFormat.format(missed);
+    final intl.NumberFormat skippedNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String skippedString = skippedNumberFormat.format(skipped);
+
+    return '$totalStringটির মধ্যে $takenStringটি নেওয়া · $missedStringটি মিস · $skippedStringটি বাদ';
+  }
+
+  @override
+  String reportLatest(String value) {
+    return 'সর্বশেষ: $value';
+  }
+
+  @override
+  String reportAverage(int days, String value) {
+    final intl.NumberFormat daysNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String daysString = daysNumberFormat.format(days);
+
+    return '$daysString দিনের গড়: $value';
+  }
+
+  @override
+  String get reportNoReadings => 'এই সময়ে কোনো রিডিং নেই';
+
+  @override
+  String get reportShare => 'রিপোর্ট শেয়ার করুন';
+
+  @override
+  String get reportShareFailed =>
+      'রিপোর্ট শেয়ার করা যায়নি। আবার চেষ্টা করুন।';
+
+  @override
+  String get appLockTitle => 'অ্যাপ লক';
+
+  @override
+  String get appLockHint => 'Dosey খুলতে আঙুলের ছাপ, ফেস বা ফোনের পিন চাইবে';
+
+  @override
+  String get appLockReason => 'আপনার স্বাস্থ্য তথ্য দেখতে Dosey আনলক করুন';
+
+  @override
+  String get appLockLocked => 'Dosey লক করা আছে';
+
+  @override
+  String get appLockLockedHint => 'আপনার স্বাস্থ্য তথ্য সুরক্ষিত।';
+
+  @override
+  String get appLockUnlock => 'আনলক করুন';
+
+  @override
+  String get appLockUnavailable =>
+      'আগে ফোনে একটি স্ক্রিন লক (পিন, প্যাটার্ন বা আঙুলের ছাপ) চালু করুন।';
+
+  @override
+  String get profileMe => 'আমি';
+
+  @override
+  String get profilesTitle => 'পরিবারের প্রোফাইল';
+
+  @override
+  String get profilesHint => 'যাঁদের দেখাশোনা করেন, তাঁদের ওষুধও রাখুন';
+
+  @override
+  String get profileSwitchTitle => 'কার ওষুধ?';
+
+  @override
+  String get profileAdd => 'পরিবারের সদস্য যোগ করুন';
+
+  @override
+  String get profileNameLabel => 'নাম';
+
+  @override
+  String get profileNameHint => 'যেমন আম্মু';
+
+  @override
+  String get profileRename => 'নাম বদলান';
+
+  @override
+  String get profileDelete => 'প্রোফাইল মুছুন';
+
+  @override
+  String profileDeleteBody(String name) {
+    return '$name-র সব ওষুধ, রিমাইন্ডার, ইতিহাস, রেকর্ড, খরচ ও রিডিং মুছে যাবে। এটি আর ফেরানো যাবে না।';
+  }
+
+  @override
+  String get profileManage => 'প্রোফাইল সাজান';
+
+  @override
+  String get profileYou => 'আপনি';
+
+  @override
+  String notifForProfile(String name, String title) {
+    return '$name: $title';
+  }
 }

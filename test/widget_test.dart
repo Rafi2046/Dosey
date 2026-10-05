@@ -2,7 +2,11 @@ import 'package:dosey/app/app.dart';
 import 'package:dosey/core/database/app_database.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/features/alarm/presentation/alarm_ring_screen.dart';
+import 'package:dosey/app/widgets/app_nav_bar.dart';
+import 'package:dosey/features/lock/providers/app_lock_providers.dart';
+import 'package:dosey/features/profiles/presentation/profile_widgets.dart';
 import 'package:dosey/features/reminders/data/reminders_repository.dart';
+import 'package:dosey/core/widgets/app_switch.dart';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -396,6 +400,266 @@ void main() {
     expect(find.text(en.alarmGroupCount(2)), findsOneWidget);
     expect(find.text(en.alarmPreviousMissed), findsOneWidget);
     expect(find.text(en.courseDayOf(3, 7)), findsOneWidget);
+    await unmount(tester);
+  });
+
+  group('app lock', () {
+    late bool owner;
+    late List<String> asked;
+    late DateTime clock;
+
+    Widget lockedApp() => ProviderScope(
+      overrides: [
+        ...testOverrides(db: db, now: now, permissions: permissions),
+        appLockAuthProvider.overrideWithValue((reason) async {
+          asked.add(reason);
+          return owner;
+        }),
+        appLockClockProvider.overrideWithValue(() => clock),
+      ],
+      child: const DoseyApp(),
+    );
+
+    setUp(() {
+      owner = false;
+      asked = [];
+      clock = DateTime(2026, 10, 3, 9);
+    });
+
+    Future<void> turnOn(WidgetTester tester) => dbRun(
+      tester,
+      () => db
+          .into(db.appSettings)
+          .insert(AppSettingsCompanion.insert(key: appLockKey, value: '1')),
+    );
+
+    testWidgets('locked at start until the owner unlocks; locks again after '
+        'time away', (tester) async {
+      usePhoneSize(tester);
+      permissions.grantedSet.addAll(AppPermission.values);
+      await turnOn(tester);
+      await tester.pumpWidget(lockedApp());
+      await settle(tester);
+
+      // Asked straight away; a failed attempt keeps it locked.
+      expect(find.text(en.appLockLocked), findsOneWidget);
+      expect(asked, [en.appLockReason]);
+      expect(find.text(en.dashboardTitle).hitTestable(), findsNothing);
+
+      owner = true;
+      await tester.tap(find.text(en.appLockUnlock));
+      await settle(tester);
+      expect(find.text(en.appLockLocked), findsNothing);
+      expect(find.text(en.dashboardTitle).hitTestable(), findsOneWidget);
+
+      // A short trip away doesn't lock; a longer one does.
+      void away(Duration d) {
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.inactive,
+        );
+        tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+        tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+        clock = clock.add(d);
+        tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.inactive,
+        );
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.resumed,
+        );
+      }
+
+      owner = false;
+      away(const Duration(seconds: 10));
+      await settle(tester);
+      expect(find.text(en.appLockLocked), findsNothing);
+      away(const Duration(seconds: 31));
+      await settle(tester);
+      expect(find.text(en.appLockLocked), findsOneWidget);
+      await unmount(tester);
+    });
+
+    testWidgets('a ringing alarm shows even while locked', (tester) async {
+      usePhoneSize(tester);
+      permissions.grantedSet.addAll(AppPermission.values);
+      await turnOn(tester);
+      await tester.pumpWidget(lockedApp());
+      await settle(tester);
+      expect(find.text(en.appLockLocked), findsOneWidget);
+
+      final at = DateTime(2026, 10, 3, 9);
+      await dbRun(tester, () async {
+        final med = await db
+            .into(db.medicines)
+            .insert(
+              MedicinesCompanion.insert(
+                name: 'Napa',
+                startDate: DateTime(2026),
+              ),
+            );
+        final id = await db
+            .into(db.reminders)
+            .insert(
+              RemindersCompanion.insert(
+                type: ReminderType.medicine,
+                title: 'Napa',
+                startAt: at,
+                medicineId: Value(med),
+              ),
+            );
+        await RemindersRepository(db).setRinging(id, at);
+      });
+      await settle(tester);
+      expect(find.byType(AlarmRingScreen), findsOneWidget);
+      expect(find.text(en.appLockLocked), findsNothing);
+      await unmount(tester);
+    });
+
+    testWidgets('turning it on in Settings needs the owner first', (
+      tester,
+    ) async {
+      usePhoneSize(tester);
+      permissions.grantedSet.addAll(AppPermission.values);
+      await tester.pumpWidget(lockedApp());
+      await settle(tester);
+      await tester.tap(find.byTooltip(en.settingsTitle));
+      await settle(tester);
+
+      Future<String?> stored() => setting(tester, appLockKey);
+      // Not confirmed: stays off, with a hint.
+      await tester.tap(
+        find.descendant(
+          of: find
+              .ancestor(
+                of: find.text(en.appLockTitle),
+                matching: find.byType(Row),
+              )
+              .first,
+          matching: find.byType(AppSwitch),
+        ),
+      );
+      await settle(tester);
+      expect(await stored(), isNull);
+      expect(find.text(en.appLockUnavailable), findsOneWidget);
+
+      owner = true;
+      await tester.tap(
+        find.descendant(
+          of: find
+              .ancestor(
+                of: find.text(en.appLockTitle),
+                matching: find.byType(Row),
+              )
+              .first,
+          matching: find.byType(AppSwitch),
+        ),
+      );
+      await settle(tester);
+      expect(await stored(), '1');
+      // Just unlocked to switch it on: not locked out right away.
+      expect(find.text(en.appLockLocked), findsNothing);
+      await unmount(tester);
+    });
+  });
+
+  testWidgets('a family member gets their own medicines, and their alarm '
+      'rings (named) whoever is open', (tester) async {
+    usePhoneSize(tester);
+    permissions.grantedSet.addAll(AppPermission.values);
+    await dbRun(
+      tester,
+      () => db
+          .into(db.medicines)
+          .insert(
+            MedicinesCompanion.insert(name: 'Napa', startDate: DateTime(2026)),
+          ),
+    );
+    await tester.pumpWidget(app());
+    await settle(tester);
+    // One profile: no switcher anywhere.
+    expect(find.byType(ProfilePill), findsOneWidget);
+    expect(find.text(en.profileMe), findsNothing);
+
+    // Settings › Family profiles › Add "Ammu".
+    await tester.tap(find.byTooltip(en.settingsTitle));
+    await settle(tester);
+    await tester.tap(find.text(en.profilesTitle));
+    await settle(tester);
+    await tester.tap(find.text(en.profileAdd));
+    await settle(tester);
+    await tester.enterText(find.byType(TextField).last, 'Ammu');
+    await tester.tap(find.text(en.save));
+    await settle(tester);
+    expect(find.text('Ammu'), findsOneWidget);
+    await tester.pageBack();
+    await settle(tester);
+    await tester.pageBack();
+    await settle(tester);
+
+    // Home now shows whose day it is; switch to Ammu.
+    expect(find.text(en.profileMe), findsOneWidget);
+    await tester.tap(find.text(en.profileMe));
+    await settle(tester);
+    expect(find.text(en.profileSwitchTitle), findsOneWidget);
+    await tester.tap(find.text('Ammu').last);
+    await settle(tester);
+    expect(find.text('Ammu'), findsOneWidget);
+
+    // Her medicines tab is empty; mine had Napa.
+    final ids = await dbRun(tester, () async {
+      final ammu = (await (db.select(
+        db.profiles,
+      )..where((p) => p.name.equals('Ammu'))).getSingle()).id;
+      final med = await db
+          .into(db.medicines)
+          .insert(
+            MedicinesCompanion.insert(
+              name: 'Seclo',
+              startDate: DateTime(2026),
+              profileId: Value(ammu),
+            ),
+          );
+      return (ammu, med);
+    });
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AppNavBar),
+        matching: find.byTooltip(en.navMedicines),
+      ),
+    );
+    await settle(tester);
+    expect(find.textContaining('Seclo'), findsOneWidget);
+    expect(find.textContaining('Napa'), findsNothing);
+
+    // Back to me; Ammu's dose rings anyway, labelled with her name.
+    await tester.tap(find.text('Ammu'));
+    await settle(tester);
+    await tester.tap(find.text(en.profileMe).last);
+    await settle(tester);
+    final at = DateTime(2026, 10, 3, 9);
+    await dbRun(tester, () async {
+      final id = await db
+          .into(db.reminders)
+          .insert(
+            RemindersCompanion.insert(
+              type: ReminderType.medicine,
+              title: 'Seclo',
+              startAt: at,
+              medicineId: Value(ids.$2),
+              profileId: Value(ids.$1),
+            ),
+          );
+      await RemindersRepository(db).setRinging(id, at);
+    });
+    await settle(tester);
+    expect(find.byType(AlarmRingScreen), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(AlarmRingScreen),
+        matching: find.text('Ammu'),
+      ),
+      findsOneWidget,
+    );
     await unmount(tester);
   });
 }

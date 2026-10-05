@@ -4,6 +4,7 @@ import '../../../core/constants/app_constants.dart';
 
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
+import '../../profiles/providers/profiles_providers.dart';
 import '../../../core/utils/clock_providers.dart';
 import '../../medicines/providers/medicines_providers.dart';
 import '../../reminders/providers/reminders_providers.dart';
@@ -11,7 +12,10 @@ import '../data/expenses_repository.dart';
 import '../domain/medicine_cost_projection.dart';
 
 final expensesRepositoryProvider = Provider<ExpensesRepository>(
-  (ref) => ExpensesRepository(ref.watch(appDatabaseProvider)),
+  (ref) => ExpensesRepository(
+    ref.watch(appDatabaseProvider),
+    profileId: ref.watch(activeProfileIdProvider),
+  ),
 );
 
 /// First day of the month shown on the expenses screen.

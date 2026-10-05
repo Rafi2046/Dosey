@@ -13,6 +13,7 @@ import 'medicine_detail_screen.dart';
 import 'medicine_type_screen.dart';
 import 'widgets/medicine_card.dart';
 import '../../../core/localization/l10n.dart';
+import '../../profiles/presentation/profile_widgets.dart';
 
 class MedicinesScreen extends ConsumerWidget {
   const MedicinesScreen({super.key});
@@ -38,6 +39,8 @@ class MedicinesScreen extends ConsumerWidget {
       },
       children: [
         ScreenHeader(
+          // Whose list this is (only shown with family profiles).
+          trailing: const ProfilePill(),
           title: context.l10n.medicinesTitle,
           subtitle: switch (medicines.value) {
             final list? => context.l10n.headerMedicinesCount(list.length),

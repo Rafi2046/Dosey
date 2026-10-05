@@ -9,6 +9,7 @@ import 'tables/blood_sugar_table.dart';
 import 'tables/doctors_table.dart';
 import 'tables/expenses_table.dart';
 import 'tables/medicines_table.dart';
+import 'tables/profiles_table.dart';
 import 'tables/records_table.dart';
 import 'tables/reminders_table.dart';
 import 'tables/settings_table.dart';
@@ -19,6 +20,7 @@ part 'app_database.g.dart';
 
 @DriftDatabase(
   tables: [
+    Profiles,
     Doctors,
     Medicines,
     Reminders,
@@ -35,11 +37,14 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-    onCreate: (m) => m.createAll(),
+    onCreate: (m) async {
+      await m.createAll();
+      await _addFirstProfile();
+    },
     onUpgrade: (m, from, to) async {
       // Table rebuilds below drop and recreate tables; with FKs on, dropping
       // medicines would cascade-delete every reminder.
@@ -58,6 +63,12 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(bloodSugarReadings);
         await m.createIndex(idxSugarMeasuredAt);
       }
+      // v7: heads-up before appointments (a new nullable column). Before
+      // v3 the reminders rebuild below already includes it.
+      if (from >= 3 && from < 7) {
+        await m.addColumn(reminders, reminders.remindBeforeMinutes);
+      }
+      if (from < 8) await _addProfiles(m, from);
     },
     beforeOpen: (details) async {
       // SQLite ships with FK enforcement off; cascades depend on it.
@@ -73,7 +84,12 @@ class AppDatabase extends _$AppDatabase {
     await m.alterTable(
       TableMigration(
         reminders,
-        newColumns: [reminders.doseAmount],
+        // Rebuilt with the current definition: later columns arrive too.
+        newColumns: [
+          reminders.doseAmount,
+          reminders.remindBeforeMinutes,
+          reminders.profileId,
+        ],
         columnTransformer: {
           reminders.doseAmount: const CustomExpression<double>(
             '(SELECT dose_amount FROM medicines '
@@ -90,11 +106,36 @@ class AppDatabase extends _$AppDatabase {
           medicines.unitsPerStrip,
           medicines.stripsPerBox,
           medicines.refillAlertDays,
+          medicines.profileId,
         ],
       ),
     );
     await m.createTable(appSettings);
   }
+
+  /// v8: family profiles. Everything so far becomes profile 1's (each
+  /// row's profile_id defaults to 1). Tables that an earlier step in this
+  /// same upgrade rebuilt or created already have the column.
+  Future<void> _addProfiles(Migrator m, int from) async {
+    await m.createTable(profiles);
+    await _addFirstProfile();
+    if (from >= 3) await m.addColumn(reminders, reminders.profileId);
+    if (from >= 4) await m.addColumn(medicines, medicines.profileId);
+    await m.addColumn(records, records.profileId);
+    await m.addColumn(expenses, expenses.profileId);
+    if (from >= 5) {
+      await m.addColumn(bloodPressureReadings, bloodPressureReadings.profileId);
+    }
+    if (from >= 6) {
+      await m.addColumn(bloodSugarReadings, bloodSugarReadings.profileId);
+    }
+  }
+
+  /// Profile 1, named after the user if they gave a name ("" shows as Me).
+  Future<void> _addFirstProfile() => customStatement(
+    "INSERT OR IGNORE INTO profiles (id, name) VALUES (1, COALESCE("
+    "(SELECT value FROM app_settings WHERE key = 'user_name'), ''))",
+  );
 
   /// v4: pack sizes and a days-based refill alert. The table is rebuilt
   /// (not ALTER ADD COLUMN) so the new CHECK constraints apply too; existing
@@ -106,6 +147,7 @@ class AppDatabase extends _$AppDatabase {
         medicines.unitsPerStrip,
         medicines.stripsPerBox,
         medicines.refillAlertDays,
+        medicines.profileId,
       ],
     ),
   );

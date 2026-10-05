@@ -4,13 +4,20 @@ import '../../../core/database/app_database.dart';
 
 /// Ranges are half-open: [start, end).
 class ExpensesRepository {
-  ExpensesRepository(this._db);
+  ExpensesRepository(this._db, {this.profileId});
 
   final AppDatabase _db;
 
+  /// Whose expenses: only this profile's are counted, and new ones are
+  /// theirs. Null = every profile.
+  final int? profileId;
+
   Expression<bool> _inRange(DateTime start, DateTime end) =>
       _db.expenses.spentOn.isBiggerOrEqualValue(start) &
-      _db.expenses.spentOn.isSmallerThanValue(end);
+      _db.expenses.spentOn.isSmallerThanValue(end) &
+      (profileId == null
+          ? const Constant(true)
+          : _db.expenses.profileId.equals(profileId!));
 
   Stream<List<Expense>> watchBetween(DateTime start, DateTime end) =>
       (_db.select(_db.expenses)
@@ -48,8 +55,13 @@ class ExpensesRepository {
     );
   }
 
-  Future<int> create(ExpensesCompanion expense) =>
-      _db.into(_db.expenses).insert(expense);
+  Future<int> create(ExpensesCompanion expense) => _db
+      .into(_db.expenses)
+      .insert(
+        profileId == null || expense.profileId.present
+            ? expense
+            : expense.copyWith(profileId: Value(profileId!)),
+      );
 
   Future<void> update(int id, ExpensesCompanion changes) =>
       (_db.update(_db.expenses)..where((e) => e.id.equals(id))).write(changes);

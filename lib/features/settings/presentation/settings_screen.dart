@@ -1,16 +1,27 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/localization/l10n.dart';
+import '../../../core/notifications/notification_providers.dart';
 import '../../../core/notifications/permission_service.dart';
+import '../../../core/utils/date_format.dart';
+import '../../../core/utils/share_providers.dart';
 import '../../../app/home_tab.dart';
+import '../../../core/widgets/app_switch.dart';
 import '../../../core/widgets/segmented_choice.dart';
+import '../../lock/providers/app_lock_providers.dart';
+import '../../profiles/data/profiles_repository.dart';
+import '../../profiles/presentation/profile_widgets.dart';
+import '../../profiles/providers/profiles_providers.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../onboarding/providers/permissions_provider.dart';
+import '../data/backup_service.dart';
 import '../domain/legal_document.dart';
 import '../providers/settings_providers.dart';
 import 'legal_screen.dart';
@@ -44,6 +55,96 @@ class SettingsScreen extends ConsumerWidget {
     }
   }
 
+  /// Turning App lock on or off needs the phone's owner first, so nobody
+  /// can lock someone out of (or into) their records.
+  static Future<void> _setAppLock(
+    BuildContext context,
+    WidgetRef ref,
+    bool enable,
+  ) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final ok = await ref.read(appLockAuthProvider)(l10n.appLockReason);
+    if (!ok) {
+      if (enable) {
+        messenger.showSnackBar(
+          SnackBar(content: Text(l10n.appLockUnavailable)),
+        );
+      }
+      return;
+    }
+    await ref.read(appLockEnabledProvider.notifier).set(enable);
+    // Just proved who it is: don't lock straight away.
+    ref.read(appLockedProvider.notifier).unlock();
+  }
+
+  /// Builds a backup file and hands it to the share sheet (Drive, Files,
+  /// WhatsApp…), remembering when it was taken.
+  static Future<void> _backUp(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final dir = Directory.systemTemp.createTempSync('dosey_backup');
+      final file = await ref.read(backupServiceProvider).create(dir);
+      final shared = await ref.read(fileSharerProvider)(
+        file,
+        l10n.backupShareSubject,
+      );
+      if (shared) {
+        await ref
+            .read(settingsRepositoryProvider)
+            .set(lastBackupKey, DateTime.now().toIso8601String());
+        ref.invalidate(lastBackupProvider);
+      }
+    } on Object {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.backupFailed)));
+    }
+  }
+
+  /// Picks a backup file, confirms (it replaces everything), restores it and
+  /// re-arms every alarm from the restored reminders.
+  static Future<void> _restore(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final bytes = await ref.read(backupPickerProvider)();
+    if (bytes == null || !context.mounted) return;
+    if (!await confirmDelete(
+      context,
+      title: l10n.restoreConfirmTitle,
+      body: l10n.restoreConfirmBody,
+      confirmLabel: l10n.restoreConfirm,
+    )) {
+      return;
+    }
+    try {
+      await ref
+          .read(backupServiceProvider)
+          .restore(
+            bytes,
+            workDir: Directory.systemTemp.createTempSync('dosey_restore'),
+          );
+    } on RestoreException catch (e) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(switch (e.error) {
+            RestoreError.notABackup => l10n.restoreNotABackup,
+            RestoreError.tooNew => l10n.restoreTooNew,
+          }),
+        ),
+      );
+      return;
+    }
+    await ref.read(alarmEngineProvider).resyncAll();
+    // The backup may not have the profile that was open.
+    await ref
+        .read(activeProfileIdProvider.notifier)
+        .select(ProfilesRepository.mainProfileId);
+    ref
+      ..invalidate(userNameProvider)
+      ..invalidate(lastBackupProvider);
+    messenger.showSnackBar(SnackBar(content: Text(l10n.restoreDone)));
+  }
+
   /// Two confirmations (it can't be undone), then wipe, back to Home.
   static Future<void> _deleteAll(BuildContext context, WidgetRef ref) async {
     final l10n = context.l10n;
@@ -66,6 +167,9 @@ class SettingsScreen extends ConsumerWidget {
     }
     await ref.read(dataResetServiceProvider).deleteAll();
     await ref.read(userNameProvider.notifier).set(null);
+    await ref
+        .read(activeProfileIdProvider.notifier)
+        .select(ProfilesRepository.mainProfileId);
     ref.read(homeTabProvider.notifier).select(HomeTab.dashboard);
     if (!context.mounted) return;
     final messenger = ScaffoldMessenger.of(context);
@@ -110,6 +214,17 @@ class SettingsScreen extends ConsumerWidget {
                   }
                 },
               ),
+              SettingsTile(
+                icon: Icons.family_restroom_rounded,
+                color: AppColors.tileMint,
+                title: l10n.profilesTitle,
+                subtitle: l10n.profilesHint,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const ProfilesScreen(),
+                  ),
+                ),
+              ),
             ],
           ),
           SettingsSection(
@@ -150,6 +265,16 @@ class SettingsScreen extends ConsumerWidget {
                   onChanged: ref.read(themeModeProvider.notifier).choose,
                 ),
               ),
+              SettingsTile(
+                icon: Icons.lock_rounded,
+                color: AppColors.tileMoss,
+                title: l10n.appLockTitle,
+                subtitle: l10n.appLockHint,
+                trailing: AppSwitch(
+                  value: ref.watch(appLockEnabledProvider).value ?? false,
+                  onChanged: (v) => _setAppLock(context, ref, v),
+                ),
+              ),
             ],
           ),
           SettingsSection(
@@ -178,6 +303,23 @@ class SettingsScreen extends ConsumerWidget {
           SettingsSection(
             title: l10n.settingsYourData,
             children: [
+              SettingsTile(
+                icon: Icons.cloud_upload_rounded,
+                color: AppColors.tileMint,
+                title: l10n.backupTitle,
+                subtitle: switch (ref.watch(lastBackupProvider).value) {
+                  final at? => l10n.backupLast(AppDateFormat.date(at)),
+                  null => l10n.backupNever,
+                },
+                onTap: () => _backUp(context, ref),
+              ),
+              SettingsTile(
+                icon: Icons.settings_backup_restore_rounded,
+                color: AppColors.tileOlive,
+                title: l10n.restoreTitle,
+                subtitle: l10n.restoreHint,
+                onTap: () => _restore(context, ref),
+              ),
               SettingsTile(
                 icon: Icons.delete_forever_rounded,
                 color: AppColors.error,

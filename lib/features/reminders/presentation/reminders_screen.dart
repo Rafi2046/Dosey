@@ -13,6 +13,7 @@ import '../providers/reminders_providers.dart';
 import 'reminder_form_screen.dart';
 import 'widgets/reminder_tile.dart';
 import '../../../core/localization/l10n.dart';
+import '../../profiles/presentation/profile_widgets.dart';
 
 class RemindersScreen extends ConsumerWidget {
   const RemindersScreen({super.key});
@@ -38,6 +39,8 @@ class RemindersScreen extends ConsumerWidget {
       },
       children: [
         ScreenHeader(
+          // Whose list this is (only shown with family profiles).
+          trailing: const ProfilePill(),
           title: context.l10n.remindersTitle,
           subtitle: switch (reminders.value) {
             final list? => context.l10n.headerRemindersCount(list.length),

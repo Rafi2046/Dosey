@@ -48,6 +48,10 @@ dependencies:
   package_info_plus: ^10.2.2
   shimmer: ^3.0.0
   home_widget: ^0.10.0
+  archive: ^4.3.0
+  share_plus: ^13.3.1
+  file_picker: ^13.1.0
+  local_auth: ^3.0.2
 
 dev_dependencies:
   flutter_test:

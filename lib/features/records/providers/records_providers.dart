@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
+import '../../profiles/providers/profiles_providers.dart';
 import '../../../core/storage/storage_providers.dart';
 import '../data/records_repository.dart';
 import '../domain/record_summary.dart';
@@ -10,6 +11,7 @@ final recordsRepositoryProvider = Provider<RecordsRepository>(
   (ref) => RecordsRepository(
     ref.watch(appDatabaseProvider),
     ref.watch(fileStorageProvider),
+    profileId: ref.watch(activeProfileIdProvider),
   ),
 );
 

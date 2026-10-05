@@ -3,6 +3,306 @@
 part of 'app_database.dart';
 
 // ignore_for_file: type=lint
+class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProfilesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 60),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _colorIndexMeta = const VerificationMeta(
+    'colorIndex',
+  );
+  @override
+  late final GeneratedColumn<int> colorIndex = GeneratedColumn<int>(
+    'color_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, colorIndex, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'profiles';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Profile> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('color_index')) {
+      context.handle(
+        _colorIndexMeta,
+        colorIndex.isAcceptableOrUnknown(data['color_index']!, _colorIndexMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Profile map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Profile(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      colorIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}color_index'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ProfilesTable createAlias(String alias) {
+    return $ProfilesTable(attachedDatabase, alias);
+  }
+}
+
+class Profile extends DataClass implements Insertable<Profile> {
+  final int id;
+
+  /// Empty for the first profile until named: shown as "Me".
+  final String name;
+
+  /// Index into the card colour cycle, for the avatar.
+  final int colorIndex;
+  final DateTime createdAt;
+  const Profile({
+    required this.id,
+    required this.name,
+    required this.colorIndex,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    map['color_index'] = Variable<int>(colorIndex);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  ProfilesCompanion toCompanion(bool nullToAbsent) {
+    return ProfilesCompanion(
+      id: Value(id),
+      name: Value(name),
+      colorIndex: Value(colorIndex),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory Profile.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Profile(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      colorIndex: serializer.fromJson<int>(json['colorIndex']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'colorIndex': serializer.toJson<int>(colorIndex),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  Profile copyWith({
+    int? id,
+    String? name,
+    int? colorIndex,
+    DateTime? createdAt,
+  }) => Profile(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    colorIndex: colorIndex ?? this.colorIndex,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  Profile copyWithCompanion(ProfilesCompanion data) {
+    return Profile(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      colorIndex: data.colorIndex.present
+          ? data.colorIndex.value
+          : this.colorIndex,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Profile(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('colorIndex: $colorIndex, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, colorIndex, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Profile &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.colorIndex == this.colorIndex &&
+          other.createdAt == this.createdAt);
+}
+
+class ProfilesCompanion extends UpdateCompanion<Profile> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<int> colorIndex;
+  final Value<DateTime> createdAt;
+  const ProfilesCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.colorIndex = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  ProfilesCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    this.colorIndex = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  }) : name = Value(name);
+  static Insertable<Profile> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<int>? colorIndex,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (colorIndex != null) 'color_index': colorIndex,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  ProfilesCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<int>? colorIndex,
+    Value<DateTime>? createdAt,
+  }) {
+    return ProfilesCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      colorIndex: colorIndex ?? this.colorIndex,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (colorIndex.present) {
+      map['color_index'] = Variable<int>(colorIndex.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProfilesCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('colorIndex: $colorIndex, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $DoctorsTable extends Doctors with TableInfo<$DoctorsTable, Doctor> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -796,6 +1096,21 @@ class $RecordsTable extends Records
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
+  static const VerificationMeta _profileIdMeta = const VerificationMeta(
+    'profileId',
+  );
+  @override
+  late final GeneratedColumn<int> profileId = GeneratedColumn<int>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON DELETE CASCADE',
+    ),
+    defaultValue: const Constant(1),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -805,6 +1120,7 @@ class $RecordsTable extends Records
     recordDate,
     notes,
     createdAt,
+    profileId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -855,6 +1171,12 @@ class $RecordsTable extends Records
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     }
+    if (data.containsKey('profile_id')) {
+      context.handle(
+        _profileIdMeta,
+        profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta),
+      );
+    }
     return context;
   }
 
@@ -894,6 +1216,10 @@ class $RecordsTable extends Records
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}profile_id'],
+      )!,
     );
   }
 
@@ -916,6 +1242,9 @@ class MedicalRecord extends DataClass implements Insertable<MedicalRecord> {
   final DateTime recordDate;
   final String? notes;
   final DateTime createdAt;
+
+  /// Whose this is (see [Profiles]). Last: v8 added it (ALTER TABLE appends).
+  final int profileId;
   const MedicalRecord({
     required this.id,
     required this.type,
@@ -924,6 +1253,7 @@ class MedicalRecord extends DataClass implements Insertable<MedicalRecord> {
     required this.recordDate,
     this.notes,
     required this.createdAt,
+    required this.profileId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -941,6 +1271,7 @@ class MedicalRecord extends DataClass implements Insertable<MedicalRecord> {
       map['notes'] = Variable<String>(notes);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['profile_id'] = Variable<int>(profileId);
     return map;
   }
 
@@ -957,6 +1288,7 @@ class MedicalRecord extends DataClass implements Insertable<MedicalRecord> {
           ? const Value.absent()
           : Value(notes),
       createdAt: Value(createdAt),
+      profileId: Value(profileId),
     );
   }
 
@@ -975,6 +1307,7 @@ class MedicalRecord extends DataClass implements Insertable<MedicalRecord> {
       recordDate: serializer.fromJson<DateTime>(json['recordDate']),
       notes: serializer.fromJson<String?>(json['notes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      profileId: serializer.fromJson<int>(json['profileId']),
     );
   }
   @override
@@ -990,6 +1323,7 @@ class MedicalRecord extends DataClass implements Insertable<MedicalRecord> {
       'recordDate': serializer.toJson<DateTime>(recordDate),
       'notes': serializer.toJson<String?>(notes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'profileId': serializer.toJson<int>(profileId),
     };
   }
 
@@ -1001,6 +1335,7 @@ class MedicalRecord extends DataClass implements Insertable<MedicalRecord> {
     DateTime? recordDate,
     Value<String?> notes = const Value.absent(),
     DateTime? createdAt,
+    int? profileId,
   }) => MedicalRecord(
     id: id ?? this.id,
     type: type ?? this.type,
@@ -1009,6 +1344,7 @@ class MedicalRecord extends DataClass implements Insertable<MedicalRecord> {
     recordDate: recordDate ?? this.recordDate,
     notes: notes.present ? notes.value : this.notes,
     createdAt: createdAt ?? this.createdAt,
+    profileId: profileId ?? this.profileId,
   );
   MedicalRecord copyWithCompanion(RecordsCompanion data) {
     return MedicalRecord(
@@ -1021,6 +1357,7 @@ class MedicalRecord extends DataClass implements Insertable<MedicalRecord> {
           : this.recordDate,
       notes: data.notes.present ? data.notes.value : this.notes,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
     );
   }
 
@@ -1033,14 +1370,23 @@ class MedicalRecord extends DataClass implements Insertable<MedicalRecord> {
           ..write('doctorId: $doctorId, ')
           ..write('recordDate: $recordDate, ')
           ..write('notes: $notes, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('profileId: $profileId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, type, title, doctorId, recordDate, notes, createdAt);
+  int get hashCode => Object.hash(
+    id,
+    type,
+    title,
+    doctorId,
+    recordDate,
+    notes,
+    createdAt,
+    profileId,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1051,7 +1397,8 @@ class MedicalRecord extends DataClass implements Insertable<MedicalRecord> {
           other.doctorId == this.doctorId &&
           other.recordDate == this.recordDate &&
           other.notes == this.notes &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.profileId == this.profileId);
 }
 
 class RecordsCompanion extends UpdateCompanion<MedicalRecord> {
@@ -1062,6 +1409,7 @@ class RecordsCompanion extends UpdateCompanion<MedicalRecord> {
   final Value<DateTime> recordDate;
   final Value<String?> notes;
   final Value<DateTime> createdAt;
+  final Value<int> profileId;
   const RecordsCompanion({
     this.id = const Value.absent(),
     this.type = const Value.absent(),
@@ -1070,6 +1418,7 @@ class RecordsCompanion extends UpdateCompanion<MedicalRecord> {
     this.recordDate = const Value.absent(),
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.profileId = const Value.absent(),
   });
   RecordsCompanion.insert({
     this.id = const Value.absent(),
@@ -1079,6 +1428,7 @@ class RecordsCompanion extends UpdateCompanion<MedicalRecord> {
     required DateTime recordDate,
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.profileId = const Value.absent(),
   }) : type = Value(type),
        title = Value(title),
        recordDate = Value(recordDate);
@@ -1090,6 +1440,7 @@ class RecordsCompanion extends UpdateCompanion<MedicalRecord> {
     Expression<DateTime>? recordDate,
     Expression<String>? notes,
     Expression<DateTime>? createdAt,
+    Expression<int>? profileId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1099,6 +1450,7 @@ class RecordsCompanion extends UpdateCompanion<MedicalRecord> {
       if (recordDate != null) 'record_date': recordDate,
       if (notes != null) 'notes': notes,
       if (createdAt != null) 'created_at': createdAt,
+      if (profileId != null) 'profile_id': profileId,
     });
   }
 
@@ -1110,6 +1462,7 @@ class RecordsCompanion extends UpdateCompanion<MedicalRecord> {
     Value<DateTime>? recordDate,
     Value<String?>? notes,
     Value<DateTime>? createdAt,
+    Value<int>? profileId,
   }) {
     return RecordsCompanion(
       id: id ?? this.id,
@@ -1119,6 +1472,7 @@ class RecordsCompanion extends UpdateCompanion<MedicalRecord> {
       recordDate: recordDate ?? this.recordDate,
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
+      profileId: profileId ?? this.profileId,
     );
   }
 
@@ -1148,6 +1502,9 @@ class RecordsCompanion extends UpdateCompanion<MedicalRecord> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (profileId.present) {
+      map['profile_id'] = Variable<int>(profileId.value);
+    }
     return map;
   }
 
@@ -1160,7 +1517,8 @@ class RecordsCompanion extends UpdateCompanion<MedicalRecord> {
           ..write('doctorId: $doctorId, ')
           ..write('recordDate: $recordDate, ')
           ..write('notes: $notes, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('profileId: $profileId')
           ..write(')'))
         .toString();
   }
@@ -1406,6 +1764,21 @@ class $MedicinesTable extends Medicines
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
+  static const VerificationMeta _profileIdMeta = const VerificationMeta(
+    'profileId',
+  );
+  @override
+  late final GeneratedColumn<int> profileId = GeneratedColumn<int>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON DELETE CASCADE',
+    ),
+    defaultValue: const Constant(1),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1428,6 +1801,7 @@ class $MedicinesTable extends Medicines
     notes,
     createdAt,
     updatedAt,
+    profileId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1571,6 +1945,12 @@ class $MedicinesTable extends Medicines
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
     }
+    if (data.containsKey('profile_id')) {
+      context.handle(
+        _profileIdMeta,
+        profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta),
+      );
+    }
     return context;
   }
 
@@ -1664,6 +2044,10 @@ class $MedicinesTable extends Medicines
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}profile_id'],
+      )!,
     );
   }
 
@@ -1720,6 +2104,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
   final String? notes;
   final DateTime createdAt;
   final DateTime updatedAt;
+
+  /// Whose this is (see [Profiles]). Last: v8 added it (ALTER TABLE appends).
+  final int profileId;
   const Medicine({
     required this.id,
     required this.name,
@@ -1741,6 +2128,7 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     this.notes,
     required this.createdAt,
     required this.updatedAt,
+    required this.profileId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1793,6 +2181,7 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['profile_id'] = Variable<int>(profileId);
     return map;
   }
 
@@ -1838,6 +2227,7 @@ class Medicine extends DataClass implements Insertable<Medicine> {
           : Value(notes),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      profileId: Value(profileId),
     );
   }
 
@@ -1871,6 +2261,7 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       notes: serializer.fromJson<String?>(json['notes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      profileId: serializer.fromJson<int>(json['profileId']),
     );
   }
   @override
@@ -1901,6 +2292,7 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       'notes': serializer.toJson<String?>(notes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'profileId': serializer.toJson<int>(profileId),
     };
   }
 
@@ -1925,6 +2317,7 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     Value<String?> notes = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
+    int? profileId,
   }) => Medicine(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -1956,6 +2349,7 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     notes: notes.present ? notes.value : this.notes,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    profileId: profileId ?? this.profileId,
   );
   Medicine copyWithCompanion(MedicinesCompanion data) {
     return Medicine(
@@ -1995,6 +2389,7 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       notes: data.notes.present ? data.notes.value : this.notes,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
     );
   }
 
@@ -2020,13 +2415,14 @@ class Medicine extends DataClass implements Insertable<Medicine> {
           ..write('isActive: $isActive, ')
           ..write('notes: $notes, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('profileId: $profileId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     name,
     strength,
@@ -2047,7 +2443,8 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     notes,
     createdAt,
     updatedAt,
-  );
+    profileId,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2071,7 +2468,8 @@ class Medicine extends DataClass implements Insertable<Medicine> {
           other.isActive == this.isActive &&
           other.notes == this.notes &&
           other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.updatedAt == this.updatedAt &&
+          other.profileId == this.profileId);
 }
 
 class MedicinesCompanion extends UpdateCompanion<Medicine> {
@@ -2095,6 +2493,7 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
   final Value<String?> notes;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<int> profileId;
   const MedicinesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -2116,6 +2515,7 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.profileId = const Value.absent(),
   });
   MedicinesCompanion.insert({
     this.id = const Value.absent(),
@@ -2138,6 +2538,7 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.profileId = const Value.absent(),
   }) : name = Value(name),
        startDate = Value(startDate);
   static Insertable<Medicine> custom({
@@ -2161,6 +2562,7 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     Expression<String>? notes,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<int>? profileId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2183,6 +2585,7 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
       if (notes != null) 'notes': notes,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (profileId != null) 'profile_id': profileId,
     });
   }
 
@@ -2207,6 +2610,7 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     Value<String?>? notes,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
+    Value<int>? profileId,
   }) {
     return MedicinesCompanion(
       id: id ?? this.id,
@@ -2229,6 +2633,7 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      profileId: profileId ?? this.profileId,
     );
   }
 
@@ -2299,6 +2704,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (profileId.present) {
+      map['profile_id'] = Variable<int>(profileId.value);
+    }
     return map;
   }
 
@@ -2324,7 +2732,8 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
           ..write('isActive: $isActive, ')
           ..write('notes: $notes, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('profileId: $profileId')
           ..write(')'))
         .toString();
   }
@@ -2573,6 +2982,31 @@ class $RemindersTable extends Reminders
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
+  static const VerificationMeta _remindBeforeMinutesMeta =
+      const VerificationMeta('remindBeforeMinutes');
+  @override
+  late final GeneratedColumn<int> remindBeforeMinutes = GeneratedColumn<int>(
+    'remind_before_minutes',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _profileIdMeta = const VerificationMeta(
+    'profileId',
+  );
+  @override
+  late final GeneratedColumn<int> profileId = GeneratedColumn<int>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON DELETE CASCADE',
+    ),
+    defaultValue: const Constant(1),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2595,6 +3029,8 @@ class $RemindersTable extends Reminders
     snoozeMinutes,
     createdAt,
     updatedAt,
+    remindBeforeMinutes,
+    profileId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2732,6 +3168,21 @@ class $RemindersTable extends Reminders
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
       );
     }
+    if (data.containsKey('remind_before_minutes')) {
+      context.handle(
+        _remindBeforeMinutesMeta,
+        remindBeforeMinutes.isAcceptableOrUnknown(
+          data['remind_before_minutes']!,
+          _remindBeforeMinutesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('profile_id')) {
+      context.handle(
+        _profileIdMeta,
+        profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta),
+      );
+    }
     return context;
   }
 
@@ -2825,6 +3276,14 @@ class $RemindersTable extends Reminders
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       )!,
+      remindBeforeMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}remind_before_minutes'],
+      ),
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}profile_id'],
+      )!,
     );
   }
 
@@ -2882,6 +3341,14 @@ class Reminder extends DataClass implements Insertable<Reminder> {
   final int snoozeMinutes;
   final DateTime createdAt;
   final DateTime updatedAt;
+
+  /// Appointments, vaccines and tests: also a heads-up notification this
+  /// many minutes before ("tomorrow at 5 pm: …"). Null = none. Last, as
+  /// v7 added it (ALTER TABLE appends columns).
+  final int? remindBeforeMinutes;
+
+  /// Whose this is (see [Profiles]). Last: v8 added it (ALTER TABLE appends).
+  final int profileId;
   const Reminder({
     required this.id,
     required this.type,
@@ -2903,6 +3370,8 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     required this.snoozeMinutes,
     required this.createdAt,
     required this.updatedAt,
+    this.remindBeforeMinutes,
+    required this.profileId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2955,6 +3424,10 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     map['snooze_minutes'] = Variable<int>(snoozeMinutes);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || remindBeforeMinutes != null) {
+      map['remind_before_minutes'] = Variable<int>(remindBeforeMinutes);
+    }
+    map['profile_id'] = Variable<int>(profileId);
     return map;
   }
 
@@ -3000,6 +3473,10 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       snoozeMinutes: Value(snoozeMinutes),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      remindBeforeMinutes: remindBeforeMinutes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remindBeforeMinutes),
+      profileId: Value(profileId),
     );
   }
 
@@ -3033,6 +3510,10 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       snoozeMinutes: serializer.fromJson<int>(json['snoozeMinutes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      remindBeforeMinutes: serializer.fromJson<int?>(
+        json['remindBeforeMinutes'],
+      ),
+      profileId: serializer.fromJson<int>(json['profileId']),
     );
   }
   @override
@@ -3063,6 +3544,8 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       'snoozeMinutes': serializer.toJson<int>(snoozeMinutes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'remindBeforeMinutes': serializer.toJson<int?>(remindBeforeMinutes),
+      'profileId': serializer.toJson<int>(profileId),
     };
   }
 
@@ -3087,6 +3570,8 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     int? snoozeMinutes,
     DateTime? createdAt,
     DateTime? updatedAt,
+    Value<int?> remindBeforeMinutes = const Value.absent(),
+    int? profileId,
   }) => Reminder(
     id: id ?? this.id,
     type: type ?? this.type,
@@ -3112,6 +3597,10 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     snoozeMinutes: snoozeMinutes ?? this.snoozeMinutes,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
+    remindBeforeMinutes: remindBeforeMinutes.present
+        ? remindBeforeMinutes.value
+        : this.remindBeforeMinutes,
+    profileId: profileId ?? this.profileId,
   );
   Reminder copyWithCompanion(RemindersCompanion data) {
     return Reminder(
@@ -3155,6 +3644,10 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           : this.snoozeMinutes,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      remindBeforeMinutes: data.remindBeforeMinutes.present
+          ? data.remindBeforeMinutes.value
+          : this.remindBeforeMinutes,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
     );
   }
 
@@ -3180,13 +3673,15 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           ..write('isEnabled: $isEnabled, ')
           ..write('snoozeMinutes: $snoozeMinutes, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('remindBeforeMinutes: $remindBeforeMinutes, ')
+          ..write('profileId: $profileId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     type,
     title,
@@ -3207,7 +3702,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     snoozeMinutes,
     createdAt,
     updatedAt,
-  );
+    remindBeforeMinutes,
+    profileId,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3231,7 +3728,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           other.isEnabled == this.isEnabled &&
           other.snoozeMinutes == this.snoozeMinutes &&
           other.createdAt == this.createdAt &&
-          other.updatedAt == this.updatedAt);
+          other.updatedAt == this.updatedAt &&
+          other.remindBeforeMinutes == this.remindBeforeMinutes &&
+          other.profileId == this.profileId);
 }
 
 class RemindersCompanion extends UpdateCompanion<Reminder> {
@@ -3255,6 +3754,8 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
   final Value<int> snoozeMinutes;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<int?> remindBeforeMinutes;
+  final Value<int> profileId;
   const RemindersCompanion({
     this.id = const Value.absent(),
     this.type = const Value.absent(),
@@ -3276,6 +3777,8 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     this.snoozeMinutes = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.remindBeforeMinutes = const Value.absent(),
+    this.profileId = const Value.absent(),
   });
   RemindersCompanion.insert({
     this.id = const Value.absent(),
@@ -3298,6 +3801,8 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     this.snoozeMinutes = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.remindBeforeMinutes = const Value.absent(),
+    this.profileId = const Value.absent(),
   }) : type = Value(type),
        title = Value(title),
        startAt = Value(startAt);
@@ -3322,6 +3827,8 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     Expression<int>? snoozeMinutes,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<int>? remindBeforeMinutes,
+    Expression<int>? profileId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3344,6 +3851,9 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
       if (snoozeMinutes != null) 'snooze_minutes': snoozeMinutes,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (remindBeforeMinutes != null)
+        'remind_before_minutes': remindBeforeMinutes,
+      if (profileId != null) 'profile_id': profileId,
     });
   }
 
@@ -3368,6 +3878,8 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     Value<int>? snoozeMinutes,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
+    Value<int?>? remindBeforeMinutes,
+    Value<int>? profileId,
   }) {
     return RemindersCompanion(
       id: id ?? this.id,
@@ -3390,6 +3902,8 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
       snoozeMinutes: snoozeMinutes ?? this.snoozeMinutes,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      remindBeforeMinutes: remindBeforeMinutes ?? this.remindBeforeMinutes,
+      profileId: profileId ?? this.profileId,
     );
   }
 
@@ -3460,6 +3974,12 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (remindBeforeMinutes.present) {
+      map['remind_before_minutes'] = Variable<int>(remindBeforeMinutes.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<int>(profileId.value);
+    }
     return map;
   }
 
@@ -3485,7 +4005,9 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
           ..write('isEnabled: $isEnabled, ')
           ..write('snoozeMinutes: $snoozeMinutes, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('remindBeforeMinutes: $remindBeforeMinutes, ')
+          ..write('profileId: $profileId')
           ..write(')'))
         .toString();
   }
@@ -3657,6 +4179,9 @@ class ReminderLog extends DataClass implements Insertable<ReminderLog> {
   final int reminderId;
   final DateTime scheduledFor;
   final ReminderLogStatus status;
+
+  /// When the user acted. For [ReminderLogStatus.snoozed]: when the dose
+  /// rings again (it only counts as missed a while after that).
   final DateTime? actedAt;
   const ReminderLog({
     required this.id,
@@ -4408,6 +4933,21 @@ class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
+  static const VerificationMeta _profileIdMeta = const VerificationMeta(
+    'profileId',
+  );
+  @override
+  late final GeneratedColumn<int> profileId = GeneratedColumn<int>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON DELETE CASCADE',
+    ),
+    defaultValue: const Constant(1),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -4421,6 +4961,7 @@ class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
     spentOn,
     notes,
     createdAt,
+    profileId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4503,6 +5044,12 @@ class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     }
+    if (data.containsKey('profile_id')) {
+      context.handle(
+        _profileIdMeta,
+        profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta),
+      );
+    }
     return context;
   }
 
@@ -4558,6 +5105,10 @@ class $ExpensesTable extends Expenses with TableInfo<$ExpensesTable, Expense> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}profile_id'],
+      )!,
     );
   }
 
@@ -4588,6 +5139,9 @@ class Expense extends DataClass implements Insertable<Expense> {
   final DateTime spentOn;
   final String? notes;
   final DateTime createdAt;
+
+  /// Whose this is (see [Profiles]). Last: v8 added it (ALTER TABLE appends).
+  final int profileId;
   const Expense({
     required this.id,
     required this.category,
@@ -4600,6 +5154,7 @@ class Expense extends DataClass implements Insertable<Expense> {
     required this.spentOn,
     this.notes,
     required this.createdAt,
+    required this.profileId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4629,6 +5184,7 @@ class Expense extends DataClass implements Insertable<Expense> {
       map['notes'] = Variable<String>(notes);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['profile_id'] = Variable<int>(profileId);
     return map;
   }
 
@@ -4655,6 +5211,7 @@ class Expense extends DataClass implements Insertable<Expense> {
           ? const Value.absent()
           : Value(notes),
       createdAt: Value(createdAt),
+      profileId: Value(profileId),
     );
   }
 
@@ -4677,6 +5234,7 @@ class Expense extends DataClass implements Insertable<Expense> {
       spentOn: serializer.fromJson<DateTime>(json['spentOn']),
       notes: serializer.fromJson<String?>(json['notes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      profileId: serializer.fromJson<int>(json['profileId']),
     );
   }
   @override
@@ -4696,6 +5254,7 @@ class Expense extends DataClass implements Insertable<Expense> {
       'spentOn': serializer.toJson<DateTime>(spentOn),
       'notes': serializer.toJson<String?>(notes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'profileId': serializer.toJson<int>(profileId),
     };
   }
 
@@ -4711,6 +5270,7 @@ class Expense extends DataClass implements Insertable<Expense> {
     DateTime? spentOn,
     Value<String?> notes = const Value.absent(),
     DateTime? createdAt,
+    int? profileId,
   }) => Expense(
     id: id ?? this.id,
     category: category ?? this.category,
@@ -4725,6 +5285,7 @@ class Expense extends DataClass implements Insertable<Expense> {
     spentOn: spentOn ?? this.spentOn,
     notes: notes.present ? notes.value : this.notes,
     createdAt: createdAt ?? this.createdAt,
+    profileId: profileId ?? this.profileId,
   );
   Expense copyWithCompanion(ExpensesCompanion data) {
     return Expense(
@@ -4745,6 +5306,7 @@ class Expense extends DataClass implements Insertable<Expense> {
       spentOn: data.spentOn.present ? data.spentOn.value : this.spentOn,
       notes: data.notes.present ? data.notes.value : this.notes,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
     );
   }
 
@@ -4761,7 +5323,8 @@ class Expense extends DataClass implements Insertable<Expense> {
           ..write('receiptRecordId: $receiptRecordId, ')
           ..write('spentOn: $spentOn, ')
           ..write('notes: $notes, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('profileId: $profileId')
           ..write(')'))
         .toString();
   }
@@ -4779,6 +5342,7 @@ class Expense extends DataClass implements Insertable<Expense> {
     spentOn,
     notes,
     createdAt,
+    profileId,
   );
   @override
   bool operator ==(Object other) =>
@@ -4794,7 +5358,8 @@ class Expense extends DataClass implements Insertable<Expense> {
           other.receiptRecordId == this.receiptRecordId &&
           other.spentOn == this.spentOn &&
           other.notes == this.notes &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.profileId == this.profileId);
 }
 
 class ExpensesCompanion extends UpdateCompanion<Expense> {
@@ -4809,6 +5374,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
   final Value<DateTime> spentOn;
   final Value<String?> notes;
   final Value<DateTime> createdAt;
+  final Value<int> profileId;
   const ExpensesCompanion({
     this.id = const Value.absent(),
     this.category = const Value.absent(),
@@ -4821,6 +5387,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     this.spentOn = const Value.absent(),
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.profileId = const Value.absent(),
   });
   ExpensesCompanion.insert({
     this.id = const Value.absent(),
@@ -4834,6 +5401,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     required DateTime spentOn,
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.profileId = const Value.absent(),
   }) : category = Value(category),
        title = Value(title),
        amountMinor = Value(amountMinor),
@@ -4850,6 +5418,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     Expression<DateTime>? spentOn,
     Expression<String>? notes,
     Expression<DateTime>? createdAt,
+    Expression<int>? profileId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -4863,6 +5432,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
       if (spentOn != null) 'spent_on': spentOn,
       if (notes != null) 'notes': notes,
       if (createdAt != null) 'created_at': createdAt,
+      if (profileId != null) 'profile_id': profileId,
     });
   }
 
@@ -4878,6 +5448,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     Value<DateTime>? spentOn,
     Value<String?>? notes,
     Value<DateTime>? createdAt,
+    Value<int>? profileId,
   }) {
     return ExpensesCompanion(
       id: id ?? this.id,
@@ -4891,6 +5462,7 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
       spentOn: spentOn ?? this.spentOn,
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
+      profileId: profileId ?? this.profileId,
     );
   }
 
@@ -4932,6 +5504,9 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (profileId.present) {
+      map['profile_id'] = Variable<int>(profileId.value);
+    }
     return map;
   }
 
@@ -4948,7 +5523,8 @@ class ExpensesCompanion extends UpdateCompanion<Expense> {
           ..write('receiptRecordId: $receiptRecordId, ')
           ..write('spentOn: $spentOn, ')
           ..write('notes: $notes, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('profileId: $profileId')
           ..write(')'))
         .toString();
   }
@@ -5244,6 +5820,21 @@ class $BloodPressureReadingsTable extends BloodPressureReadings
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
+  static const VerificationMeta _profileIdMeta = const VerificationMeta(
+    'profileId',
+  );
+  @override
+  late final GeneratedColumn<int> profileId = GeneratedColumn<int>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON DELETE CASCADE',
+    ),
+    defaultValue: const Constant(1),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -5253,6 +5844,7 @@ class $BloodPressureReadingsTable extends BloodPressureReadings
     measuredAt,
     note,
     createdAt,
+    profileId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5311,6 +5903,12 @@ class $BloodPressureReadingsTable extends BloodPressureReadings
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     }
+    if (data.containsKey('profile_id')) {
+      context.handle(
+        _profileIdMeta,
+        profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta),
+      );
+    }
     return context;
   }
 
@@ -5348,6 +5946,10 @@ class $BloodPressureReadingsTable extends BloodPressureReadings
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}profile_id'],
+      )!,
     );
   }
 
@@ -5372,6 +5974,9 @@ class BloodPressureReading extends DataClass
   final DateTime measuredAt;
   final String? note;
   final DateTime createdAt;
+
+  /// Whose this is (see [Profiles]). Last: v8 added it (ALTER TABLE appends).
+  final int profileId;
   const BloodPressureReading({
     required this.id,
     required this.systolic,
@@ -5380,6 +5985,7 @@ class BloodPressureReading extends DataClass
     required this.measuredAt,
     this.note,
     required this.createdAt,
+    required this.profileId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5395,6 +6001,7 @@ class BloodPressureReading extends DataClass
       map['note'] = Variable<String>(note);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['profile_id'] = Variable<int>(profileId);
     return map;
   }
 
@@ -5409,6 +6016,7 @@ class BloodPressureReading extends DataClass
       measuredAt: Value(measuredAt),
       note: note == null && nullToAbsent ? const Value.absent() : Value(note),
       createdAt: Value(createdAt),
+      profileId: Value(profileId),
     );
   }
 
@@ -5425,6 +6033,7 @@ class BloodPressureReading extends DataClass
       measuredAt: serializer.fromJson<DateTime>(json['measuredAt']),
       note: serializer.fromJson<String?>(json['note']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      profileId: serializer.fromJson<int>(json['profileId']),
     );
   }
   @override
@@ -5438,6 +6047,7 @@ class BloodPressureReading extends DataClass
       'measuredAt': serializer.toJson<DateTime>(measuredAt),
       'note': serializer.toJson<String?>(note),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'profileId': serializer.toJson<int>(profileId),
     };
   }
 
@@ -5449,6 +6059,7 @@ class BloodPressureReading extends DataClass
     DateTime? measuredAt,
     Value<String?> note = const Value.absent(),
     DateTime? createdAt,
+    int? profileId,
   }) => BloodPressureReading(
     id: id ?? this.id,
     systolic: systolic ?? this.systolic,
@@ -5457,6 +6068,7 @@ class BloodPressureReading extends DataClass
     measuredAt: measuredAt ?? this.measuredAt,
     note: note.present ? note.value : this.note,
     createdAt: createdAt ?? this.createdAt,
+    profileId: profileId ?? this.profileId,
   );
   BloodPressureReading copyWithCompanion(BloodPressureReadingsCompanion data) {
     return BloodPressureReading(
@@ -5469,6 +6081,7 @@ class BloodPressureReading extends DataClass
           : this.measuredAt,
       note: data.note.present ? data.note.value : this.note,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
     );
   }
 
@@ -5481,14 +6094,23 @@ class BloodPressureReading extends DataClass
           ..write('pulse: $pulse, ')
           ..write('measuredAt: $measuredAt, ')
           ..write('note: $note, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('profileId: $profileId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, systolic, diastolic, pulse, measuredAt, note, createdAt);
+  int get hashCode => Object.hash(
+    id,
+    systolic,
+    diastolic,
+    pulse,
+    measuredAt,
+    note,
+    createdAt,
+    profileId,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -5499,7 +6121,8 @@ class BloodPressureReading extends DataClass
           other.pulse == this.pulse &&
           other.measuredAt == this.measuredAt &&
           other.note == this.note &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.profileId == this.profileId);
 }
 
 class BloodPressureReadingsCompanion
@@ -5511,6 +6134,7 @@ class BloodPressureReadingsCompanion
   final Value<DateTime> measuredAt;
   final Value<String?> note;
   final Value<DateTime> createdAt;
+  final Value<int> profileId;
   const BloodPressureReadingsCompanion({
     this.id = const Value.absent(),
     this.systolic = const Value.absent(),
@@ -5519,6 +6143,7 @@ class BloodPressureReadingsCompanion
     this.measuredAt = const Value.absent(),
     this.note = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.profileId = const Value.absent(),
   });
   BloodPressureReadingsCompanion.insert({
     this.id = const Value.absent(),
@@ -5528,6 +6153,7 @@ class BloodPressureReadingsCompanion
     required DateTime measuredAt,
     this.note = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.profileId = const Value.absent(),
   }) : systolic = Value(systolic),
        diastolic = Value(diastolic),
        measuredAt = Value(measuredAt);
@@ -5539,6 +6165,7 @@ class BloodPressureReadingsCompanion
     Expression<DateTime>? measuredAt,
     Expression<String>? note,
     Expression<DateTime>? createdAt,
+    Expression<int>? profileId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -5548,6 +6175,7 @@ class BloodPressureReadingsCompanion
       if (measuredAt != null) 'measured_at': measuredAt,
       if (note != null) 'note': note,
       if (createdAt != null) 'created_at': createdAt,
+      if (profileId != null) 'profile_id': profileId,
     });
   }
 
@@ -5559,6 +6187,7 @@ class BloodPressureReadingsCompanion
     Value<DateTime>? measuredAt,
     Value<String?>? note,
     Value<DateTime>? createdAt,
+    Value<int>? profileId,
   }) {
     return BloodPressureReadingsCompanion(
       id: id ?? this.id,
@@ -5568,6 +6197,7 @@ class BloodPressureReadingsCompanion
       measuredAt: measuredAt ?? this.measuredAt,
       note: note ?? this.note,
       createdAt: createdAt ?? this.createdAt,
+      profileId: profileId ?? this.profileId,
     );
   }
 
@@ -5595,6 +6225,9 @@ class BloodPressureReadingsCompanion
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (profileId.present) {
+      map['profile_id'] = Variable<int>(profileId.value);
+    }
     return map;
   }
 
@@ -5607,7 +6240,8 @@ class BloodPressureReadingsCompanion
           ..write('pulse: $pulse, ')
           ..write('measuredAt: $measuredAt, ')
           ..write('note: $note, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('profileId: $profileId')
           ..write(')'))
         .toString();
   }
@@ -5682,6 +6316,21 @@ class $BloodSugarReadingsTable extends BloodSugarReadings
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
+  static const VerificationMeta _profileIdMeta = const VerificationMeta(
+    'profileId',
+  );
+  @override
+  late final GeneratedColumn<int> profileId = GeneratedColumn<int>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES profiles (id) ON DELETE CASCADE',
+    ),
+    defaultValue: const Constant(1),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -5690,6 +6339,7 @@ class $BloodSugarReadingsTable extends BloodSugarReadings
     measuredAt,
     note,
     createdAt,
+    profileId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5734,6 +6384,12 @@ class $BloodSugarReadingsTable extends BloodSugarReadings
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     }
+    if (data.containsKey('profile_id')) {
+      context.handle(
+        _profileIdMeta,
+        profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta),
+      );
+    }
     return context;
   }
 
@@ -5769,6 +6425,10 @@ class $BloodSugarReadingsTable extends BloodSugarReadings
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}profile_id'],
+      )!,
     );
   }
 
@@ -5793,6 +6453,9 @@ class BloodSugarReading extends DataClass
   final DateTime measuredAt;
   final String? note;
   final DateTime createdAt;
+
+  /// Whose this is (see [Profiles]). Last: v8 added it (ALTER TABLE appends).
+  final int profileId;
   const BloodSugarReading({
     required this.id,
     required this.mmol,
@@ -5800,6 +6463,7 @@ class BloodSugarReading extends DataClass
     required this.measuredAt,
     this.note,
     required this.createdAt,
+    required this.profileId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -5816,6 +6480,7 @@ class BloodSugarReading extends DataClass
       map['note'] = Variable<String>(note);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['profile_id'] = Variable<int>(profileId);
     return map;
   }
 
@@ -5827,6 +6492,7 @@ class BloodSugarReading extends DataClass
       measuredAt: Value(measuredAt),
       note: note == null && nullToAbsent ? const Value.absent() : Value(note),
       createdAt: Value(createdAt),
+      profileId: Value(profileId),
     );
   }
 
@@ -5844,6 +6510,7 @@ class BloodSugarReading extends DataClass
       measuredAt: serializer.fromJson<DateTime>(json['measuredAt']),
       note: serializer.fromJson<String?>(json['note']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      profileId: serializer.fromJson<int>(json['profileId']),
     );
   }
   @override
@@ -5858,6 +6525,7 @@ class BloodSugarReading extends DataClass
       'measuredAt': serializer.toJson<DateTime>(measuredAt),
       'note': serializer.toJson<String?>(note),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'profileId': serializer.toJson<int>(profileId),
     };
   }
 
@@ -5868,6 +6536,7 @@ class BloodSugarReading extends DataClass
     DateTime? measuredAt,
     Value<String?> note = const Value.absent(),
     DateTime? createdAt,
+    int? profileId,
   }) => BloodSugarReading(
     id: id ?? this.id,
     mmol: mmol ?? this.mmol,
@@ -5875,6 +6544,7 @@ class BloodSugarReading extends DataClass
     measuredAt: measuredAt ?? this.measuredAt,
     note: note.present ? note.value : this.note,
     createdAt: createdAt ?? this.createdAt,
+    profileId: profileId ?? this.profileId,
   );
   BloodSugarReading copyWithCompanion(BloodSugarReadingsCompanion data) {
     return BloodSugarReading(
@@ -5886,6 +6556,7 @@ class BloodSugarReading extends DataClass
           : this.measuredAt,
       note: data.note.present ? data.note.value : this.note,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
     );
   }
 
@@ -5897,14 +6568,15 @@ class BloodSugarReading extends DataClass
           ..write('context: $context, ')
           ..write('measuredAt: $measuredAt, ')
           ..write('note: $note, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('profileId: $profileId')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(id, mmol, context, measuredAt, note, createdAt);
+      Object.hash(id, mmol, context, measuredAt, note, createdAt, profileId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -5914,7 +6586,8 @@ class BloodSugarReading extends DataClass
           other.context == this.context &&
           other.measuredAt == this.measuredAt &&
           other.note == this.note &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.profileId == this.profileId);
 }
 
 class BloodSugarReadingsCompanion extends UpdateCompanion<BloodSugarReading> {
@@ -5924,6 +6597,7 @@ class BloodSugarReadingsCompanion extends UpdateCompanion<BloodSugarReading> {
   final Value<DateTime> measuredAt;
   final Value<String?> note;
   final Value<DateTime> createdAt;
+  final Value<int> profileId;
   const BloodSugarReadingsCompanion({
     this.id = const Value.absent(),
     this.mmol = const Value.absent(),
@@ -5931,6 +6605,7 @@ class BloodSugarReadingsCompanion extends UpdateCompanion<BloodSugarReading> {
     this.measuredAt = const Value.absent(),
     this.note = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.profileId = const Value.absent(),
   });
   BloodSugarReadingsCompanion.insert({
     this.id = const Value.absent(),
@@ -5939,6 +6614,7 @@ class BloodSugarReadingsCompanion extends UpdateCompanion<BloodSugarReading> {
     required DateTime measuredAt,
     this.note = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.profileId = const Value.absent(),
   }) : mmol = Value(mmol),
        context = Value(context),
        measuredAt = Value(measuredAt);
@@ -5949,6 +6625,7 @@ class BloodSugarReadingsCompanion extends UpdateCompanion<BloodSugarReading> {
     Expression<DateTime>? measuredAt,
     Expression<String>? note,
     Expression<DateTime>? createdAt,
+    Expression<int>? profileId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -5957,6 +6634,7 @@ class BloodSugarReadingsCompanion extends UpdateCompanion<BloodSugarReading> {
       if (measuredAt != null) 'measured_at': measuredAt,
       if (note != null) 'note': note,
       if (createdAt != null) 'created_at': createdAt,
+      if (profileId != null) 'profile_id': profileId,
     });
   }
 
@@ -5967,6 +6645,7 @@ class BloodSugarReadingsCompanion extends UpdateCompanion<BloodSugarReading> {
     Value<DateTime>? measuredAt,
     Value<String?>? note,
     Value<DateTime>? createdAt,
+    Value<int>? profileId,
   }) {
     return BloodSugarReadingsCompanion(
       id: id ?? this.id,
@@ -5975,6 +6654,7 @@ class BloodSugarReadingsCompanion extends UpdateCompanion<BloodSugarReading> {
       measuredAt: measuredAt ?? this.measuredAt,
       note: note ?? this.note,
       createdAt: createdAt ?? this.createdAt,
+      profileId: profileId ?? this.profileId,
     );
   }
 
@@ -6001,6 +6681,9 @@ class BloodSugarReadingsCompanion extends UpdateCompanion<BloodSugarReading> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (profileId.present) {
+      map['profile_id'] = Variable<int>(profileId.value);
+    }
     return map;
   }
 
@@ -6012,7 +6695,8 @@ class BloodSugarReadingsCompanion extends UpdateCompanion<BloodSugarReading> {
           ..write('context: $context, ')
           ..write('measuredAt: $measuredAt, ')
           ..write('note: $note, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('profileId: $profileId')
           ..write(')'))
         .toString();
   }
@@ -6021,6 +6705,7 @@ class BloodSugarReadingsCompanion extends UpdateCompanion<BloodSugarReading> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
+  late final $ProfilesTable profiles = $ProfilesTable(this);
   late final $DoctorsTable doctors = $DoctorsTable(this);
   late final $RecordsTable records = $RecordsTable(this);
   late final $MedicinesTable medicines = $MedicinesTable(this);
@@ -6095,6 +6780,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
+    profiles,
     doctors,
     records,
     medicines,
@@ -6131,6 +6817,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('records', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
         'doctors',
         limitUpdateKind: UpdateKind.delete,
       ),
@@ -6145,6 +6838,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('medicines', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
         'medicines',
         limitUpdateKind: UpdateKind.delete,
       ),
@@ -6156,6 +6856,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('reminders', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('reminders', kind: UpdateKind.delete)],
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
@@ -6192,9 +6899,798 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       ),
       result: [TableUpdate('expenses', kind: UpdateKind.update)],
     ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('expenses', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('blood_pressure_readings', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'profiles',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('blood_sugar_readings', kind: UpdateKind.delete)],
+    ),
   ]);
 }
 
+typedef $$ProfilesTableCreateCompanionBuilder =
+    ProfilesCompanion Function({
+      Value<int> id,
+      required String name,
+      Value<int> colorIndex,
+      Value<DateTime> createdAt,
+    });
+typedef $$ProfilesTableUpdateCompanionBuilder =
+    ProfilesCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<int> colorIndex,
+      Value<DateTime> createdAt,
+    });
+
+final class $$ProfilesTableReferences
+    extends BaseReferences<_$AppDatabase, $ProfilesTable, Profile> {
+  $$ProfilesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$RecordsTable, List<MedicalRecord>>
+  _recordsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.records,
+    aliasName: 'profiles__id__records__profile_id',
+  );
+
+  $$RecordsTableProcessedTableManager get recordsRefs {
+    final manager = $$RecordsTableTableManager(
+      $_db,
+      $_db.records,
+    ).filter((f) => f.profileId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_recordsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$MedicinesTable, List<Medicine>>
+  _medicinesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.medicines,
+    aliasName: 'profiles__id__medicines__profile_id',
+  );
+
+  $$MedicinesTableProcessedTableManager get medicinesRefs {
+    final manager = $$MedicinesTableTableManager(
+      $_db,
+      $_db.medicines,
+    ).filter((f) => f.profileId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_medicinesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$RemindersTable, List<Reminder>>
+  _remindersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.reminders,
+    aliasName: 'profiles__id__reminders__profile_id',
+  );
+
+  $$RemindersTableProcessedTableManager get remindersRefs {
+    final manager = $$RemindersTableTableManager(
+      $_db,
+      $_db.reminders,
+    ).filter((f) => f.profileId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_remindersRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$ExpensesTable, List<Expense>> _expensesRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.expenses,
+    aliasName: 'profiles__id__expenses__profile_id',
+  );
+
+  $$ExpensesTableProcessedTableManager get expensesRefs {
+    final manager = $$ExpensesTableTableManager(
+      $_db,
+      $_db.expenses,
+    ).filter((f) => f.profileId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_expensesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $BloodPressureReadingsTable,
+    List<BloodPressureReading>
+  >
+  _bloodPressureReadingsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.bloodPressureReadings,
+        aliasName: 'profiles__id__blood_pressure_readings__profile_id',
+      );
+
+  $$BloodPressureReadingsTableProcessedTableManager
+  get bloodPressureReadingsRefs {
+    final manager = $$BloodPressureReadingsTableTableManager(
+      $_db,
+      $_db.bloodPressureReadings,
+    ).filter((f) => f.profileId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _bloodPressureReadingsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$BloodSugarReadingsTable, List<BloodSugarReading>>
+  _bloodSugarReadingsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.bloodSugarReadings,
+        aliasName: 'profiles__id__blood_sugar_readings__profile_id',
+      );
+
+  $$BloodSugarReadingsTableProcessedTableManager get bloodSugarReadingsRefs {
+    final manager = $$BloodSugarReadingsTableTableManager(
+      $_db,
+      $_db.bloodSugarReadings,
+    ).filter((f) => f.profileId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _bloodSugarReadingsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$ProfilesTableFilterComposer
+    extends Composer<_$AppDatabase, $ProfilesTable> {
+  $$ProfilesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get colorIndex => $composableBuilder(
+    column: $table.colorIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> recordsRefs(
+    Expression<bool> Function($$RecordsTableFilterComposer f) f,
+  ) {
+    final $$RecordsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.records,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordsTableFilterComposer(
+            $db: $db,
+            $table: $db.records,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> medicinesRefs(
+    Expression<bool> Function($$MedicinesTableFilterComposer f) f,
+  ) {
+    final $$MedicinesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.medicines,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MedicinesTableFilterComposer(
+            $db: $db,
+            $table: $db.medicines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> remindersRefs(
+    Expression<bool> Function($$RemindersTableFilterComposer f) f,
+  ) {
+    final $$RemindersTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.reminders,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RemindersTableFilterComposer(
+            $db: $db,
+            $table: $db.reminders,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> expensesRefs(
+    Expression<bool> Function($$ExpensesTableFilterComposer f) f,
+  ) {
+    final $$ExpensesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.expenses,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExpensesTableFilterComposer(
+            $db: $db,
+            $table: $db.expenses,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> bloodPressureReadingsRefs(
+    Expression<bool> Function($$BloodPressureReadingsTableFilterComposer f) f,
+  ) {
+    final $$BloodPressureReadingsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.bloodPressureReadings,
+          getReferencedColumn: (t) => t.profileId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$BloodPressureReadingsTableFilterComposer(
+                $db: $db,
+                $table: $db.bloodPressureReadings,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> bloodSugarReadingsRefs(
+    Expression<bool> Function($$BloodSugarReadingsTableFilterComposer f) f,
+  ) {
+    final $$BloodSugarReadingsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.bloodSugarReadings,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BloodSugarReadingsTableFilterComposer(
+            $db: $db,
+            $table: $db.bloodSugarReadings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$ProfilesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProfilesTable> {
+  $$ProfilesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get colorIndex => $composableBuilder(
+    column: $table.colorIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ProfilesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProfilesTable> {
+  $$ProfilesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get colorIndex => $composableBuilder(
+    column: $table.colorIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  Expression<T> recordsRefs<T extends Object>(
+    Expression<T> Function($$RecordsTableAnnotationComposer a) f,
+  ) {
+    final $$RecordsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.records,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.records,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> medicinesRefs<T extends Object>(
+    Expression<T> Function($$MedicinesTableAnnotationComposer a) f,
+  ) {
+    final $$MedicinesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.medicines,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MedicinesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.medicines,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> remindersRefs<T extends Object>(
+    Expression<T> Function($$RemindersTableAnnotationComposer a) f,
+  ) {
+    final $$RemindersTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.reminders,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RemindersTableAnnotationComposer(
+            $db: $db,
+            $table: $db.reminders,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> expensesRefs<T extends Object>(
+    Expression<T> Function($$ExpensesTableAnnotationComposer a) f,
+  ) {
+    final $$ExpensesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.expenses,
+      getReferencedColumn: (t) => t.profileId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ExpensesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.expenses,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> bloodPressureReadingsRefs<T extends Object>(
+    Expression<T> Function($$BloodPressureReadingsTableAnnotationComposer a) f,
+  ) {
+    final $$BloodPressureReadingsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.bloodPressureReadings,
+          getReferencedColumn: (t) => t.profileId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$BloodPressureReadingsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.bloodPressureReadings,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> bloodSugarReadingsRefs<T extends Object>(
+    Expression<T> Function($$BloodSugarReadingsTableAnnotationComposer a) f,
+  ) {
+    final $$BloodSugarReadingsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.bloodSugarReadings,
+          getReferencedColumn: (t) => t.profileId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$BloodSugarReadingsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.bloodSugarReadings,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$ProfilesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProfilesTable,
+          Profile,
+          $$ProfilesTableFilterComposer,
+          $$ProfilesTableOrderingComposer,
+          $$ProfilesTableAnnotationComposer,
+          $$ProfilesTableCreateCompanionBuilder,
+          $$ProfilesTableUpdateCompanionBuilder,
+          (Profile, $$ProfilesTableReferences),
+          Profile,
+          PrefetchHooks Function({
+            bool recordsRefs,
+            bool medicinesRefs,
+            bool remindersRefs,
+            bool expensesRefs,
+            bool bloodPressureReadingsRefs,
+            bool bloodSugarReadingsRefs,
+          })
+        > {
+  $$ProfilesTableTableManager(_$AppDatabase db, $ProfilesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProfilesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProfilesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProfilesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<int> colorIndex = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => ProfilesCompanion(
+                id: id,
+                name: name,
+                colorIndex: colorIndex,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                Value<int> colorIndex = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => ProfilesCompanion.insert(
+                id: id,
+                name: name,
+                colorIndex: colorIndex,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$ProfilesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                recordsRefs = false,
+                medicinesRefs = false,
+                remindersRefs = false,
+                expensesRefs = false,
+                bloodPressureReadingsRefs = false,
+                bloodSugarReadingsRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (recordsRefs) db.records,
+                    if (medicinesRefs) db.medicines,
+                    if (remindersRefs) db.reminders,
+                    if (expensesRefs) db.expenses,
+                    if (bloodPressureReadingsRefs) db.bloodPressureReadings,
+                    if (bloodSugarReadingsRefs) db.bloodSugarReadings,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (recordsRefs)
+                        await $_getPrefetchedData<
+                          Profile,
+                          $ProfilesTable,
+                          MedicalRecord
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._recordsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).recordsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.profileId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (medicinesRefs)
+                        await $_getPrefetchedData<
+                          Profile,
+                          $ProfilesTable,
+                          Medicine
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._medicinesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).medicinesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.profileId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (remindersRefs)
+                        await $_getPrefetchedData<
+                          Profile,
+                          $ProfilesTable,
+                          Reminder
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._remindersRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).remindersRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.profileId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (expensesRefs)
+                        await $_getPrefetchedData<
+                          Profile,
+                          $ProfilesTable,
+                          Expense
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._expensesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).expensesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.profileId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (bloodPressureReadingsRefs)
+                        await $_getPrefetchedData<
+                          Profile,
+                          $ProfilesTable,
+                          BloodPressureReading
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._bloodPressureReadingsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).bloodPressureReadingsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.profileId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (bloodSugarReadingsRefs)
+                        await $_getPrefetchedData<
+                          Profile,
+                          $ProfilesTable,
+                          BloodSugarReading
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProfilesTableReferences
+                              ._bloodSugarReadingsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProfilesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).bloodSugarReadingsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.profileId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$ProfilesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProfilesTable,
+      Profile,
+      $$ProfilesTableFilterComposer,
+      $$ProfilesTableOrderingComposer,
+      $$ProfilesTableAnnotationComposer,
+      $$ProfilesTableCreateCompanionBuilder,
+      $$ProfilesTableUpdateCompanionBuilder,
+      (Profile, $$ProfilesTableReferences),
+      Profile,
+      PrefetchHooks Function({
+        bool recordsRefs,
+        bool medicinesRefs,
+        bool remindersRefs,
+        bool expensesRefs,
+        bool bloodPressureReadingsRefs,
+        bool bloodSugarReadingsRefs,
+      })
+    >;
 typedef $$DoctorsTableCreateCompanionBuilder =
     DoctorsCompanion Function({
       Value<int> id,
@@ -6927,6 +8423,7 @@ typedef $$RecordsTableCreateCompanionBuilder =
       required DateTime recordDate,
       Value<String?> notes,
       Value<DateTime> createdAt,
+      Value<int> profileId,
     });
 typedef $$RecordsTableUpdateCompanionBuilder =
     RecordsCompanion Function({
@@ -6937,6 +8434,7 @@ typedef $$RecordsTableUpdateCompanionBuilder =
       Value<DateTime> recordDate,
       Value<String?> notes,
       Value<DateTime> createdAt,
+      Value<int> profileId,
     });
 
 final class $$RecordsTableReferences
@@ -6954,6 +8452,23 @@ final class $$RecordsTableReferences
       $_db.doctors,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_doctorIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $ProfilesTable _profileIdTable(_$AppDatabase db) =>
+      db.profiles.createAlias('records__profile_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get profileId {
+    final $_column = $_itemColumn<int>('profile_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_profileIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -7073,6 +8588,29 @@ class $$RecordsTableFilterComposer
           }) => $$DoctorsTableFilterComposer(
             $db: $db,
             $table: $db.doctors,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ProfilesTableFilterComposer get profileId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7219,6 +8757,29 @@ class $$RecordsTableOrderingComposer
     );
     return composer;
   }
+
+  $$ProfilesTableOrderingComposer get profileId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$RecordsTableAnnotationComposer
@@ -7264,6 +8825,29 @@ class $$RecordsTableAnnotationComposer
           }) => $$DoctorsTableAnnotationComposer(
             $db: $db,
             $table: $db.doctors,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ProfilesTableAnnotationComposer get profileId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7365,6 +8949,7 @@ class $$RecordsTableTableManager
           MedicalRecord,
           PrefetchHooks Function({
             bool doctorId,
+            bool profileId,
             bool medicinesRefs,
             bool recordAttachmentsRefs,
             bool expensesRefs,
@@ -7390,6 +8975,7 @@ class $$RecordsTableTableManager
                 Value<DateTime> recordDate = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<int> profileId = const Value.absent(),
               }) => RecordsCompanion(
                 id: id,
                 type: type,
@@ -7398,6 +8984,7 @@ class $$RecordsTableTableManager
                 recordDate: recordDate,
                 notes: notes,
                 createdAt: createdAt,
+                profileId: profileId,
               ),
           createCompanionCallback:
               ({
@@ -7408,6 +8995,7 @@ class $$RecordsTableTableManager
                 required DateTime recordDate,
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<int> profileId = const Value.absent(),
               }) => RecordsCompanion.insert(
                 id: id,
                 type: type,
@@ -7416,6 +9004,7 @@ class $$RecordsTableTableManager
                 recordDate: recordDate,
                 notes: notes,
                 createdAt: createdAt,
+                profileId: profileId,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -7428,6 +9017,7 @@ class $$RecordsTableTableManager
           prefetchHooksCallback:
               ({
                 doctorId = false,
+                profileId = false,
                 medicinesRefs = false,
                 recordAttachmentsRefs = false,
                 expensesRefs = false,
@@ -7464,6 +9054,19 @@ class $$RecordsTableTableManager
                                         ._doctorIdTable(db),
                                     referencedColumn: $$RecordsTableReferences
                                         ._doctorIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+                        if (profileId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.profileId,
+                                    referencedTable: $$RecordsTableReferences
+                                        ._profileIdTable(db),
+                                    referencedColumn: $$RecordsTableReferences
+                                        ._profileIdTable(db)
                                         .id,
                                   )
                                   as T;
@@ -7558,6 +9161,7 @@ typedef $$RecordsTableProcessedTableManager =
       MedicalRecord,
       PrefetchHooks Function({
         bool doctorId,
+        bool profileId,
         bool medicinesRefs,
         bool recordAttachmentsRefs,
         bool expensesRefs,
@@ -7585,6 +9189,7 @@ typedef $$MedicinesTableCreateCompanionBuilder =
       Value<String?> notes,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<int> profileId,
     });
 typedef $$MedicinesTableUpdateCompanionBuilder =
     MedicinesCompanion Function({
@@ -7608,6 +9213,7 @@ typedef $$MedicinesTableUpdateCompanionBuilder =
       Value<String?> notes,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<int> profileId,
     });
 
 final class $$MedicinesTableReferences
@@ -7642,6 +9248,23 @@ final class $$MedicinesTableReferences
       $_db.records,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_prescriptionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $ProfilesTable _profileIdTable(_$AppDatabase db) =>
+      db.profiles.createAlias('medicines__profile_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get profileId {
+    final $_column = $_itemColumn<int>('profile_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_profileIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -7824,6 +9447,29 @@ class $$MedicinesTableFilterComposer
           }) => $$RecordsTableFilterComposer(
             $db: $db,
             $table: $db.records,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ProfilesTableFilterComposer get profileId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8028,6 +9674,29 @@ class $$MedicinesTableOrderingComposer
     );
     return composer;
   }
+
+  $$ProfilesTableOrderingComposer get profileId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$MedicinesTableAnnotationComposer
@@ -8154,6 +9823,29 @@ class $$MedicinesTableAnnotationComposer
     return composer;
   }
 
+  $$ProfilesTableAnnotationComposer get profileId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
   Expression<T> remindersRefs<T extends Object>(
     Expression<T> Function($$RemindersTableAnnotationComposer a) f,
   ) {
@@ -8221,6 +9913,7 @@ class $$MedicinesTableTableManager
           PrefetchHooks Function({
             bool doctorId,
             bool prescriptionId,
+            bool profileId,
             bool remindersRefs,
             bool expensesRefs,
           })
@@ -8258,6 +9951,7 @@ class $$MedicinesTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> profileId = const Value.absent(),
               }) => MedicinesCompanion(
                 id: id,
                 name: name,
@@ -8279,6 +9973,7 @@ class $$MedicinesTableTableManager
                 notes: notes,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                profileId: profileId,
               ),
           createCompanionCallback:
               ({
@@ -8302,6 +9997,7 @@ class $$MedicinesTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> profileId = const Value.absent(),
               }) => MedicinesCompanion.insert(
                 id: id,
                 name: name,
@@ -8323,6 +10019,7 @@ class $$MedicinesTableTableManager
                 notes: notes,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                profileId: profileId,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -8336,6 +10033,7 @@ class $$MedicinesTableTableManager
               ({
                 doctorId = false,
                 prescriptionId = false,
+                profileId = false,
                 remindersRefs = false,
                 expensesRefs = false,
               }) {
@@ -8383,6 +10081,19 @@ class $$MedicinesTableTableManager
                                         ._prescriptionIdTable(db),
                                     referencedColumn: $$MedicinesTableReferences
                                         ._prescriptionIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+                        if (profileId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.profileId,
+                                    referencedTable: $$MedicinesTableReferences
+                                        ._profileIdTable(db),
+                                    referencedColumn: $$MedicinesTableReferences
+                                        ._profileIdTable(db)
                                         .id,
                                   )
                                   as T;
@@ -8457,6 +10168,7 @@ typedef $$MedicinesTableProcessedTableManager =
       PrefetchHooks Function({
         bool doctorId,
         bool prescriptionId,
+        bool profileId,
         bool remindersRefs,
         bool expensesRefs,
       })
@@ -8483,6 +10195,8 @@ typedef $$RemindersTableCreateCompanionBuilder =
       Value<int> snoozeMinutes,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<int?> remindBeforeMinutes,
+      Value<int> profileId,
     });
 typedef $$RemindersTableUpdateCompanionBuilder =
     RemindersCompanion Function({
@@ -8506,6 +10220,8 @@ typedef $$RemindersTableUpdateCompanionBuilder =
       Value<int> snoozeMinutes,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
+      Value<int?> remindBeforeMinutes,
+      Value<int> profileId,
     });
 
 final class $$RemindersTableReferences
@@ -8540,6 +10256,23 @@ final class $$RemindersTableReferences
       $_db.doctors,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_doctorIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $ProfilesTable _profileIdTable(_$AppDatabase db) =>
+      db.profiles.createAlias('reminders__profile_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get profileId {
+    final $_column = $_itemColumn<int>('profile_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_profileIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -8666,6 +10399,11 @@ class $$RemindersTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<int> get remindBeforeMinutes => $composableBuilder(
+    column: $table.remindBeforeMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$MedicinesTableFilterComposer get medicineId {
     final $$MedicinesTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -8703,6 +10441,29 @@ class $$RemindersTableFilterComposer
           }) => $$DoctorsTableFilterComposer(
             $db: $db,
             $table: $db.doctors,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ProfilesTableFilterComposer get profileId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8837,6 +10598,11 @@ class $$RemindersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get remindBeforeMinutes => $composableBuilder(
+    column: $table.remindBeforeMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$MedicinesTableOrderingComposer get medicineId {
     final $$MedicinesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -8874,6 +10640,29 @@ class $$RemindersTableOrderingComposer
           }) => $$DoctorsTableOrderingComposer(
             $db: $db,
             $table: $db.doctors,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ProfilesTableOrderingComposer get profileId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8966,6 +10755,11 @@ class $$RemindersTableAnnotationComposer
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
+  GeneratedColumn<int> get remindBeforeMinutes => $composableBuilder(
+    column: $table.remindBeforeMinutes,
+    builder: (column) => column,
+  );
+
   $$MedicinesTableAnnotationComposer get medicineId {
     final $$MedicinesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -9003,6 +10797,29 @@ class $$RemindersTableAnnotationComposer
           }) => $$DoctorsTableAnnotationComposer(
             $db: $db,
             $table: $db.doctors,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ProfilesTableAnnotationComposer get profileId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9054,6 +10871,7 @@ class $$RemindersTableTableManager
           PrefetchHooks Function({
             bool medicineId,
             bool doctorId,
+            bool profileId,
             bool reminderLogsRefs,
           })
         > {
@@ -9090,6 +10908,8 @@ class $$RemindersTableTableManager
                 Value<int> snoozeMinutes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<int?> remindBeforeMinutes = const Value.absent(),
+                Value<int> profileId = const Value.absent(),
               }) => RemindersCompanion(
                 id: id,
                 type: type,
@@ -9111,6 +10931,8 @@ class $$RemindersTableTableManager
                 snoozeMinutes: snoozeMinutes,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                remindBeforeMinutes: remindBeforeMinutes,
+                profileId: profileId,
               ),
           createCompanionCallback:
               ({
@@ -9134,6 +10956,8 @@ class $$RemindersTableTableManager
                 Value<int> snoozeMinutes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
+                Value<int?> remindBeforeMinutes = const Value.absent(),
+                Value<int> profileId = const Value.absent(),
               }) => RemindersCompanion.insert(
                 id: id,
                 type: type,
@@ -9155,6 +10979,8 @@ class $$RemindersTableTableManager
                 snoozeMinutes: snoozeMinutes,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                remindBeforeMinutes: remindBeforeMinutes,
+                profileId: profileId,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -9168,6 +10994,7 @@ class $$RemindersTableTableManager
               ({
                 medicineId = false,
                 doctorId = false,
+                profileId = false,
                 reminderLogsRefs = false,
               }) {
                 return PrefetchHooks(
@@ -9213,6 +11040,19 @@ class $$RemindersTableTableManager
                                         ._doctorIdTable(db),
                                     referencedColumn: $$RemindersTableReferences
                                         ._doctorIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
+                        if (profileId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.profileId,
+                                    referencedTable: $$RemindersTableReferences
+                                        ._profileIdTable(db),
+                                    referencedColumn: $$RemindersTableReferences
+                                        ._profileIdTable(db)
                                         .id,
                                   )
                                   as T;
@@ -9266,6 +11106,7 @@ typedef $$RemindersTableProcessedTableManager =
       PrefetchHooks Function({
         bool medicineId,
         bool doctorId,
+        bool profileId,
         bool reminderLogsRefs,
       })
     >;
@@ -9944,6 +11785,7 @@ typedef $$ExpensesTableCreateCompanionBuilder =
       required DateTime spentOn,
       Value<String?> notes,
       Value<DateTime> createdAt,
+      Value<int> profileId,
     });
 typedef $$ExpensesTableUpdateCompanionBuilder =
     ExpensesCompanion Function({
@@ -9958,6 +11800,7 @@ typedef $$ExpensesTableUpdateCompanionBuilder =
       Value<DateTime> spentOn,
       Value<String?> notes,
       Value<DateTime> createdAt,
+      Value<int> profileId,
     });
 
 final class $$ExpensesTableReferences
@@ -10009,6 +11852,23 @@ final class $$ExpensesTableReferences
       $_db.records,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_receiptRecordIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $ProfilesTable _profileIdTable(_$AppDatabase db) =>
+      db.profiles.createAlias('expenses__profile_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get profileId {
+    final $_column = $_itemColumn<int>('profile_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_profileIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -10126,6 +11986,29 @@ class $$ExpensesTableFilterComposer
           }) => $$RecordsTableFilterComposer(
             $db: $db,
             $table: $db.records,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ProfilesTableFilterComposer get profileId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10253,6 +12136,29 @@ class $$ExpensesTableOrderingComposer
     );
     return composer;
   }
+
+  $$ProfilesTableOrderingComposer get profileId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ExpensesTableAnnotationComposer
@@ -10358,6 +12264,29 @@ class $$ExpensesTableAnnotationComposer
     );
     return composer;
   }
+
+  $$ProfilesTableAnnotationComposer get profileId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$ExpensesTableTableManager
@@ -10377,6 +12306,7 @@ class $$ExpensesTableTableManager
             bool medicineId,
             bool doctorId,
             bool receiptRecordId,
+            bool profileId,
           })
         > {
   $$ExpensesTableTableManager(_$AppDatabase db, $ExpensesTable table)
@@ -10403,6 +12333,7 @@ class $$ExpensesTableTableManager
                 Value<DateTime> spentOn = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<int> profileId = const Value.absent(),
               }) => ExpensesCompanion(
                 id: id,
                 category: category,
@@ -10415,6 +12346,7 @@ class $$ExpensesTableTableManager
                 spentOn: spentOn,
                 notes: notes,
                 createdAt: createdAt,
+                profileId: profileId,
               ),
           createCompanionCallback:
               ({
@@ -10429,6 +12361,7 @@ class $$ExpensesTableTableManager
                 required DateTime spentOn,
                 Value<String?> notes = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<int> profileId = const Value.absent(),
               }) => ExpensesCompanion.insert(
                 id: id,
                 category: category,
@@ -10441,6 +12374,7 @@ class $$ExpensesTableTableManager
                 spentOn: spentOn,
                 notes: notes,
                 createdAt: createdAt,
+                profileId: profileId,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -10455,6 +12389,7 @@ class $$ExpensesTableTableManager
                 medicineId = false,
                 doctorId = false,
                 receiptRecordId = false,
+                profileId = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -10514,6 +12449,19 @@ class $$ExpensesTableTableManager
                                   )
                                   as T;
                         }
+                        if (profileId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.profileId,
+                                    referencedTable: $$ExpensesTableReferences
+                                        ._profileIdTable(db),
+                                    referencedColumn: $$ExpensesTableReferences
+                                        ._profileIdTable(db)
+                                        .id,
+                                  )
+                                  as T;
+                        }
 
                         return state;
                       },
@@ -10542,6 +12490,7 @@ typedef $$ExpensesTableProcessedTableManager =
         bool medicineId,
         bool doctorId,
         bool receiptRecordId,
+        bool profileId,
       })
     >;
 typedef $$AppSettingsTableCreateCompanionBuilder =
@@ -10692,6 +12641,7 @@ typedef $$BloodPressureReadingsTableCreateCompanionBuilder =
       required DateTime measuredAt,
       Value<String?> note,
       Value<DateTime> createdAt,
+      Value<int> profileId,
     });
 typedef $$BloodPressureReadingsTableUpdateCompanionBuilder =
     BloodPressureReadingsCompanion Function({
@@ -10702,7 +12652,39 @@ typedef $$BloodPressureReadingsTableUpdateCompanionBuilder =
       Value<DateTime> measuredAt,
       Value<String?> note,
       Value<DateTime> createdAt,
+      Value<int> profileId,
     });
+
+final class $$BloodPressureReadingsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $BloodPressureReadingsTable,
+          BloodPressureReading
+        > {
+  $$BloodPressureReadingsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ProfilesTable _profileIdTable(_$AppDatabase db) => db.profiles
+      .createAlias('blood_pressure_readings__profile_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get profileId {
+    final $_column = $_itemColumn<int>('profile_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_profileIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$BloodPressureReadingsTableFilterComposer
     extends Composer<_$AppDatabase, $BloodPressureReadingsTable> {
@@ -10747,6 +12729,29 @@ class $$BloodPressureReadingsTableFilterComposer
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$ProfilesTableFilterComposer get profileId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$BloodPressureReadingsTableOrderingComposer
@@ -10792,6 +12797,29 @@ class $$BloodPressureReadingsTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$ProfilesTableOrderingComposer get profileId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$BloodPressureReadingsTableAnnotationComposer
@@ -10825,6 +12853,29 @@ class $$BloodPressureReadingsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$ProfilesTableAnnotationComposer get profileId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$BloodPressureReadingsTableTableManager
@@ -10838,16 +12889,9 @@ class $$BloodPressureReadingsTableTableManager
           $$BloodPressureReadingsTableAnnotationComposer,
           $$BloodPressureReadingsTableCreateCompanionBuilder,
           $$BloodPressureReadingsTableUpdateCompanionBuilder,
-          (
-            BloodPressureReading,
-            BaseReferences<
-              _$AppDatabase,
-              $BloodPressureReadingsTable,
-              BloodPressureReading
-            >,
-          ),
+          (BloodPressureReading, $$BloodPressureReadingsTableReferences),
           BloodPressureReading,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool profileId})
         > {
   $$BloodPressureReadingsTableTableManager(
     _$AppDatabase db,
@@ -10880,6 +12924,7 @@ class $$BloodPressureReadingsTableTableManager
                 Value<DateTime> measuredAt = const Value.absent(),
                 Value<String?> note = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<int> profileId = const Value.absent(),
               }) => BloodPressureReadingsCompanion(
                 id: id,
                 systolic: systolic,
@@ -10888,6 +12933,7 @@ class $$BloodPressureReadingsTableTableManager
                 measuredAt: measuredAt,
                 note: note,
                 createdAt: createdAt,
+                profileId: profileId,
               ),
           createCompanionCallback:
               ({
@@ -10898,6 +12944,7 @@ class $$BloodPressureReadingsTableTableManager
                 required DateTime measuredAt,
                 Value<String?> note = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<int> profileId = const Value.absent(),
               }) => BloodPressureReadingsCompanion.insert(
                 id: id,
                 systolic: systolic,
@@ -10906,11 +12953,59 @@ class $$BloodPressureReadingsTableTableManager
                 measuredAt: measuredAt,
                 note: note,
                 createdAt: createdAt,
+                profileId: profileId,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$BloodPressureReadingsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({profileId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (profileId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.profileId,
+                                referencedTable:
+                                    $$BloodPressureReadingsTableReferences
+                                        ._profileIdTable(db),
+                                referencedColumn:
+                                    $$BloodPressureReadingsTableReferences
+                                        ._profileIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -10925,16 +13020,9 @@ typedef $$BloodPressureReadingsTableProcessedTableManager =
       $$BloodPressureReadingsTableAnnotationComposer,
       $$BloodPressureReadingsTableCreateCompanionBuilder,
       $$BloodPressureReadingsTableUpdateCompanionBuilder,
-      (
-        BloodPressureReading,
-        BaseReferences<
-          _$AppDatabase,
-          $BloodPressureReadingsTable,
-          BloodPressureReading
-        >,
-      ),
+      (BloodPressureReading, $$BloodPressureReadingsTableReferences),
       BloodPressureReading,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool profileId})
     >;
 typedef $$BloodSugarReadingsTableCreateCompanionBuilder =
     BloodSugarReadingsCompanion Function({
@@ -10944,6 +13032,7 @@ typedef $$BloodSugarReadingsTableCreateCompanionBuilder =
       required DateTime measuredAt,
       Value<String?> note,
       Value<DateTime> createdAt,
+      Value<int> profileId,
     });
 typedef $$BloodSugarReadingsTableUpdateCompanionBuilder =
     BloodSugarReadingsCompanion Function({
@@ -10953,7 +13042,39 @@ typedef $$BloodSugarReadingsTableUpdateCompanionBuilder =
       Value<DateTime> measuredAt,
       Value<String?> note,
       Value<DateTime> createdAt,
+      Value<int> profileId,
     });
+
+final class $$BloodSugarReadingsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $BloodSugarReadingsTable,
+          BloodSugarReading
+        > {
+  $$BloodSugarReadingsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $ProfilesTable _profileIdTable(_$AppDatabase db) =>
+      db.profiles.createAlias('blood_sugar_readings__profile_id__profiles__id');
+
+  $$ProfilesTableProcessedTableManager get profileId {
+    final $_column = $_itemColumn<int>('profile_id')!;
+
+    final manager = $$ProfilesTableTableManager(
+      $_db,
+      $_db.profiles,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_profileIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$BloodSugarReadingsTableFilterComposer
     extends Composer<_$AppDatabase, $BloodSugarReadingsTable> {
@@ -10994,6 +13115,29 @@ class $$BloodSugarReadingsTableFilterComposer
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$ProfilesTableFilterComposer get profileId {
+    final $$ProfilesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableFilterComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$BloodSugarReadingsTableOrderingComposer
@@ -11034,6 +13178,29 @@ class $$BloodSugarReadingsTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$ProfilesTableOrderingComposer get profileId {
+    final $$ProfilesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableOrderingComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$BloodSugarReadingsTableAnnotationComposer
@@ -11064,6 +13231,29 @@ class $$BloodSugarReadingsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$ProfilesTableAnnotationComposer get profileId {
+    final $$ProfilesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.profileId,
+      referencedTable: $db.profiles,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProfilesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.profiles,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$BloodSugarReadingsTableTableManager
@@ -11077,16 +13267,9 @@ class $$BloodSugarReadingsTableTableManager
           $$BloodSugarReadingsTableAnnotationComposer,
           $$BloodSugarReadingsTableCreateCompanionBuilder,
           $$BloodSugarReadingsTableUpdateCompanionBuilder,
-          (
-            BloodSugarReading,
-            BaseReferences<
-              _$AppDatabase,
-              $BloodSugarReadingsTable,
-              BloodSugarReading
-            >,
-          ),
+          (BloodSugarReading, $$BloodSugarReadingsTableReferences),
           BloodSugarReading,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool profileId})
         > {
   $$BloodSugarReadingsTableTableManager(
     _$AppDatabase db,
@@ -11112,6 +13295,7 @@ class $$BloodSugarReadingsTableTableManager
                 Value<DateTime> measuredAt = const Value.absent(),
                 Value<String?> note = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<int> profileId = const Value.absent(),
               }) => BloodSugarReadingsCompanion(
                 id: id,
                 mmol: mmol,
@@ -11119,6 +13303,7 @@ class $$BloodSugarReadingsTableTableManager
                 measuredAt: measuredAt,
                 note: note,
                 createdAt: createdAt,
+                profileId: profileId,
               ),
           createCompanionCallback:
               ({
@@ -11128,6 +13313,7 @@ class $$BloodSugarReadingsTableTableManager
                 required DateTime measuredAt,
                 Value<String?> note = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<int> profileId = const Value.absent(),
               }) => BloodSugarReadingsCompanion.insert(
                 id: id,
                 mmol: mmol,
@@ -11135,11 +13321,59 @@ class $$BloodSugarReadingsTableTableManager
                 measuredAt: measuredAt,
                 note: note,
                 createdAt: createdAt,
+                profileId: profileId,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$BloodSugarReadingsTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({profileId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (profileId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.profileId,
+                                referencedTable:
+                                    $$BloodSugarReadingsTableReferences
+                                        ._profileIdTable(db),
+                                referencedColumn:
+                                    $$BloodSugarReadingsTableReferences
+                                        ._profileIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ),
       );
 }
@@ -11154,21 +13388,16 @@ typedef $$BloodSugarReadingsTableProcessedTableManager =
       $$BloodSugarReadingsTableAnnotationComposer,
       $$BloodSugarReadingsTableCreateCompanionBuilder,
       $$BloodSugarReadingsTableUpdateCompanionBuilder,
-      (
-        BloodSugarReading,
-        BaseReferences<
-          _$AppDatabase,
-          $BloodSugarReadingsTable,
-          BloodSugarReading
-        >,
-      ),
+      (BloodSugarReading, $$BloodSugarReadingsTableReferences),
       BloodSugarReading,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool profileId})
     >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
+  $$ProfilesTableTableManager get profiles =>
+      $$ProfilesTableTableManager(_db, _db.profiles);
   $$DoctorsTableTableManager get doctors =>
       $$DoctorsTableTableManager(_db, _db.doctors);
   $$RecordsTableTableManager get records =>

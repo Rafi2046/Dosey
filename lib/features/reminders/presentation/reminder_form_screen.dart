@@ -66,6 +66,12 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   late int _snooze =
       widget.existing?.snoozeMinutes ?? AppConstants.defaultSnoozeMinutes;
 
+  /// Heads-up lead time in minutes, 0 = none. New appointments default to
+  /// a day before, which is what most people want.
+  late int _headsUp = _isEdit
+      ? widget.existing!.remindBeforeMinutes ?? 0
+      : AppConstants.headsUpOptions.last.inMinutes;
+
   bool _saving = false;
   bool _submitted = false;
 
@@ -149,6 +155,9 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
       endAt: Value(_repeat == RepeatRule.once ? null : _endAt),
       isCritical: Value(_critical),
       snoozeMinutes: Value(_snooze),
+      remindBeforeMinutes: Value(
+        _type == ReminderType.medicine || _headsUp == 0 ? null : _headsUp,
+      ),
     );
 
     final repo = ref.read(remindersRepositoryProvider);
@@ -240,6 +249,31 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
                 if (picked != null) setState(() => _startAt = picked);
               },
             ),
+            if (!isMedicine)
+              LabeledField(
+                label: context.l10n.headsUpLabel,
+                child: ChoicePills<int>(
+                  columns: 2,
+                  options: [
+                    0,
+                    for (final d in AppConstants.headsUpOptions) d.inMinutes,
+                  ],
+                  selected: {_headsUp},
+                  labelOf: (m) => m == 0
+                      ? context.l10n.headsUpNone
+                      : context.l10n.headsUpBefore(
+                          m % Duration.minutesPerDay == 0
+                              ? context.l10n.daysCount(
+                                  m ~/ Duration.minutesPerDay,
+                                )
+                              : context.l10n.inHoursMinutes(
+                                  m ~/ Duration.minutesPerHour,
+                                  m % Duration.minutesPerHour,
+                                ),
+                        ),
+                  onChanged: (s) => setState(() => _headsUp = s.single),
+                ),
+              ),
             RepeatSection(
               rule: _repeat,
               weekdays: _weekdays,

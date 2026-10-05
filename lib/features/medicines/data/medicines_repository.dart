@@ -5,20 +5,30 @@ import '../../reminders/domain/reminder_schedule.dart';
 import '../domain/medicine_with_doctor.dart';
 
 class MedicinesRepository {
-  MedicinesRepository(this._db);
+  MedicinesRepository(this._db, {this.profileId});
 
   final AppDatabase _db;
 
+  /// Whose medicines: only this profile's are listed, and new ones are
+  /// theirs. Null = every profile.
+  final int? profileId;
+
+  Expression<bool> _mine() => profileId == null
+      ? const Constant(true)
+      : _db.medicines.profileId.equals(profileId!);
+
   JoinedSelectStatement<HasResultSet, dynamic> _joined() =>
       _db.select(_db.medicines).join([
-        leftOuterJoin(
-          _db.doctors,
-          _db.doctors.id.equalsExp(_db.medicines.doctorId),
-        ),
-      ])..orderBy([
-        OrderingTerm.desc(_db.medicines.isActive),
-        OrderingTerm.asc(_db.medicines.name),
-      ]);
+          leftOuterJoin(
+            _db.doctors,
+            _db.doctors.id.equalsExp(_db.medicines.doctorId),
+          ),
+        ])
+        ..where(_mine())
+        ..orderBy([
+          OrderingTerm.desc(_db.medicines.isActive),
+          OrderingTerm.asc(_db.medicines.name),
+        ]);
 
   Stream<List<MedicineWithDoctor>> _watch(
     JoinedSelectStatement<HasResultSet, dynamic> query,
@@ -48,10 +58,15 @@ class MedicinesRepository {
   /// Active medicines only, without the doctor join (used for cost projection).
   Stream<List<Medicine>> watchActiveRaw() => (_db.select(
     _db.medicines,
-  )..where((m) => m.isActive.equals(true))).watch();
+  )..where((m) => m.isActive.equals(true) & _mine())).watch();
 
-  Future<int> create(MedicinesCompanion medicine) =>
-      _db.into(_db.medicines).insert(medicine);
+  Future<int> create(MedicinesCompanion medicine) => _db
+      .into(_db.medicines)
+      .insert(
+        profileId == null || medicine.profileId.present
+            ? medicine
+            : medicine.copyWith(profileId: Value(profileId!)),
+      );
 
   Future<void> update(int id, MedicinesCompanion changes) =>
       (_db.update(_db.medicines)..where((m) => m.id.equals(id))).write(
@@ -118,6 +133,8 @@ class MedicinesRepository {
             medicineId: Value(medicine.id),
             doctorId: Value(medicine.doctorId),
             spentOn: on ?? DateTime.now(),
+            // The purchase is on the medicine's owner's books.
+            profileId: Value(medicine.profileId),
           ),
         );
   });
@@ -126,6 +143,7 @@ class MedicinesRepository {
   /// The most recently created medicine, if any.
   Future<Medicine?> newest() =>
       (_db.select(_db.medicines)
+            ..where((_) => _mine())
             ..orderBy([(m) => OrderingTerm.desc(m.id)])
             ..limit(1))
           .getSingleOrNull();

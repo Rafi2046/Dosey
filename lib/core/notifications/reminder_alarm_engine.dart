@@ -87,7 +87,30 @@ class ReminderAlarmEngine {
   /// reminder, and none for disabled reminders or non-leader group members.
   Future<void> syncAll() async {
     await _syncAlarms();
+    await _syncHeadsUps();
     await _homeWidget?.refresh();
+  }
+
+  /// Books each appointment, vaccine or test's heads-up ("also remind me a
+  /// day before") for its next occurrence, and drops the rest. Plain
+  /// scheduled notifications, the same on Android and iOS.
+  Future<void> _syncHeadsUps() async {
+    final now = _clock();
+    for (final r in await _reminders.getAll()) {
+      if (r.type == ReminderType.medicine) continue;
+      final next = r.nextTriggerAt;
+      final before = r.remindBeforeMinutes;
+      final notifyAt = next == null || before == null || !r.isEnabled
+          ? null
+          : next.subtract(Duration(minutes: before));
+      if (notifyAt != null && notifyAt.isAfter(now)) {
+        if (await _reminders.getDetails(r.id) case final d?) {
+          await _notifier.scheduleHeadsUp(d, next!, notifyAt: notifyAt);
+          continue;
+        }
+      }
+      await _notifier.cancelHeadsUp(r.id);
+    }
   }
 
   Future<void> _syncAlarms() async {
@@ -187,6 +210,7 @@ class ReminderAlarmEngine {
     await _scheduler.cancel(reminderId);
     await _scheduler.cancel(snoozeAlarmId(reminderId));
     await _notifier.dismiss(reminderId);
+    await _notifier.cancelHeadsUp(reminderId);
   }
 
   /// Recomputes every next trigger from "now" and re-arms all alarms.

@@ -5,19 +5,26 @@ import '../../../../core/localization/l10n.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../../../core/widgets/pill_button.dart';
 
-/// Edit the user's name. Returns the new text (blank = remove), or null if
+/// Edit a name: the user's own by default, or a family profile's with
+/// [label] / [hint]. Returns the new text (blank = remove), or null if
 /// dismissed.
-Future<String?> showNameSheet(BuildContext context, {String? current}) =>
-    showModalBottomSheet<String>(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => _NameSheet(current: current),
-    );
+Future<String?> showNameSheet(
+  BuildContext context, {
+  String? current,
+  String? label,
+  String? hint,
+}) => showModalBottomSheet<String>(
+  context: context,
+  isScrollControlled: true,
+  builder: (_) => _NameSheet(current: current, label: label, hint: hint),
+);
 
 class _NameSheet extends StatefulWidget {
-  const _NameSheet({this.current});
+  const _NameSheet({this.current, this.label, this.hint});
 
   final String? current;
+  final String? label;
+  final String? hint;
 
   @override
   State<_NameSheet> createState() => _NameSheetState();
@@ -46,9 +53,9 @@ class _NameSheetState extends State<_NameSheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AppTextField(
-                label: l10n.yourName,
+                label: widget.label ?? l10n.yourName,
                 controller: _name,
-                hint: l10n.settingsNameHint,
+                hint: widget.hint ?? l10n.settingsNameHint,
                 textCapitalization: TextCapitalization.words,
                 autofocus: true,
                 onSubmitted: (v) => Navigator.pop(context, v),

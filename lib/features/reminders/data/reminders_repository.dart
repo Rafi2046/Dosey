@@ -6,9 +6,18 @@ import '../domain/reminder_with_details.dart';
 import '../../medicines/domain/stock_status.dart';
 
 class RemindersRepository {
-  RemindersRepository(this._db);
+  RemindersRepository(this._db, {this.profileId});
 
   final AppDatabase _db;
+
+  /// Whose reminders the screens list: only this profile's, and new ones
+  /// are theirs. Null = every profile, as alarms need: everyone's doses
+  /// ring whichever profile is open.
+  final int? profileId;
+
+  Expression<bool> _mine() => profileId == null
+      ? const Constant(true)
+      : _db.reminders.profileId.equals(profileId!);
 
   // ── Queries ───────────────────────────────────────────────────────────────
 
@@ -22,7 +31,11 @@ class RemindersRepository {
           _db.doctors,
           _db.doctors.id.equalsExp(_db.reminders.doctorId),
         ),
-      ]);
+        leftOuterJoin(
+          _db.profiles,
+          _db.profiles.id.equalsExp(_db.reminders.profileId),
+        ),
+      ])..where(_mine());
 
   Stream<List<ReminderWithDetails>> _watch(
     JoinedSelectStatement<HasResultSet, dynamic> query,
@@ -33,6 +46,7 @@ class RemindersRepository {
           reminder: row.readTable(_db.reminders),
           medicine: row.readTableOrNull(_db.medicines),
           doctor: row.readTableOrNull(_db.doctors),
+          profile: row.readTableOrNull(_db.profiles),
         ),
     ],
   );
@@ -132,7 +146,13 @@ class RemindersRepository {
 
   /// Inserts and computes [Reminders.nextTriggerAt]. Returns the stored row.
   Future<Reminder> create(RemindersCompanion reminder, {DateTime? now}) async {
-    final id = await _db.into(_db.reminders).insert(reminder);
+    final id = await _db
+        .into(_db.reminders)
+        .insert(
+          profileId == null || reminder.profileId.present
+              ? reminder
+              : reminder.copyWith(profileId: Value(profileId!)),
+        );
     return refreshNextTrigger(id, now: now);
   }
 

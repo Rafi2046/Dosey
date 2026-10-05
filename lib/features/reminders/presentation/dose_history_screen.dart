@@ -11,12 +11,14 @@ import '../../../core/utils/enum_labels.dart';
 import '../../../core/utils/numbers.dart';
 import '../../../core/widgets/async_value_view.dart';
 import '../../../core/widgets/choice_pills.dart';
+import '../../../core/widgets/circle_icon_button.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../core/widgets/surface_card.dart';
 import '../../../core/widgets/tab_scroll_view.dart';
+import '../../report/presentation/doctor_report_screen.dart';
 import '../domain/dose_history.dart';
 import '../domain/reminder_text.dart';
 import '../providers/reminders_providers.dart';
@@ -58,7 +60,19 @@ class _DoseHistoryScreenState extends ConsumerState<DoseHistoryScreen> {
         centerLast: empty,
         onRefresh: () async => ref.invalidate(doseHistoryProvider(_query)),
         children: [
-          ScreenHeader(title: l10n.historyTitle, subtitle: widget.medicineName),
+          ScreenHeader(
+            title: l10n.historyTitle,
+            subtitle: widget.medicineName,
+            trailing: CircleIconButton(
+              icon: Icons.summarize_rounded,
+              tooltip: l10n.reportShowDoctor,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const DoctorReportScreen(),
+                ),
+              ),
+            ),
+          ),
           ChoicePills<int>(
             options: DoseHistoryScreen.periods,
             onDark: true,

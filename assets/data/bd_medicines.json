@@ -1,0 +1,353 @@
+{
+"_note": "Common Bangladeshi brand names, for name suggestions only. Check every medicine against the prescription.",
+"medicines": [
+[
+"Napa",
+"Paracetamol",
+"500 mg",
+"tablet"
+],
+[
+"Napa Extra",
+"Paracetamol + Caffeine",
+"500 mg + 65 mg",
+"tablet"
+],
+[
+"Napa Extend",
+"Paracetamol",
+"665 mg",
+"tablet"
+],
+[
+"Napa Syrup",
+"Paracetamol",
+"120 mg/5 ml",
+"syrup"
+],
+[
+"Ace",
+"Paracetamol",
+"500 mg",
+"tablet"
+],
+[
+"Ace Plus",
+"Paracetamol + Caffeine",
+"500 mg + 65 mg",
+"tablet"
+],
+[
+"Fast",
+"Paracetamol",
+"500 mg",
+"tablet"
+],
+[
+"Seclo",
+"Omeprazole",
+"20 mg",
+"capsule"
+],
+[
+"Losectil",
+"Omeprazole",
+"20 mg",
+"capsule"
+],
+[
+"Sergel",
+"Esomeprazole",
+"20 mg",
+"capsule"
+],
+[
+"Maxpro",
+"Esomeprazole",
+"20 mg",
+"tablet"
+],
+[
+"Nexum",
+"Esomeprazole",
+"20 mg",
+"tablet"
+],
+[
+"Esoral",
+"Esomeprazole",
+"20 mg",
+"tablet"
+],
+[
+"Pantonix",
+"Pantoprazole",
+"20 mg",
+"tablet"
+],
+[
+"Fexo",
+"Fexofenadine",
+"120 mg",
+"tablet"
+],
+[
+"Fenadin",
+"Fexofenadine",
+"120 mg",
+"tablet"
+],
+[
+"Alatrol",
+"Cetirizine",
+"10 mg",
+"tablet"
+],
+[
+"Monas",
+"Montelukast",
+"10 mg",
+"tablet"
+],
+[
+"Montene",
+"Montelukast",
+"10 mg",
+"tablet"
+],
+[
+"Ciprocin",
+"Ciprofloxacin",
+"500 mg",
+"tablet"
+],
+[
+"Azithrocin",
+"Azithromycin",
+"500 mg",
+"tablet"
+],
+[
+"Zimax",
+"Azithromycin",
+"500 mg",
+"tablet"
+],
+[
+"Moxacil",
+"Amoxicillin",
+"500 mg",
+"capsule"
+],
+[
+"Cef-3",
+"Cefixime",
+"200 mg",
+"capsule"
+],
+[
+"Flagyl",
+"Metronidazole",
+"400 mg",
+"tablet"
+],
+[
+"Amodis",
+"Metronidazole",
+"400 mg",
+"tablet"
+],
+[
+"Comet",
+"Metformin",
+"500 mg",
+"tablet"
+],
+[
+"Mixtard 30",
+"Human insulin (30/70)",
+"100 IU/ml",
+"injection"
+],
+[
+"Actrapid",
+"Human insulin (regular)",
+"100 IU/ml",
+"injection"
+],
+[
+"Insulatard",
+"Human insulin (NPH)",
+"100 IU/ml",
+"injection"
+],
+[
+"NovoMix 30",
+"Insulin aspart (30/70)",
+"100 IU/ml",
+"injection"
+],
+[
+"Lantus",
+"Insulin glargine",
+"100 IU/ml",
+"injection"
+],
+[
+"Osartil",
+"Losartan",
+"50 mg",
+"tablet"
+],
+[
+"Angilock",
+"Losartan",
+"50 mg",
+"tablet"
+],
+[
+"Amdocal",
+"Amlodipine",
+"5 mg",
+"tablet"
+],
+[
+"Camlodin",
+"Amlodipine",
+"5 mg",
+"tablet"
+],
+[
+"Concor",
+"Bisoprolol",
+"5 mg",
+"tablet"
+],
+[
+"Tenormin",
+"Atenolol",
+"50 mg",
+"tablet"
+],
+[
+"Atova",
+"Atorvastatin",
+"10 mg",
+"tablet"
+],
+[
+"Lipitor",
+"Atorvastatin",
+"10 mg",
+"tablet"
+],
+[
+"Ecosprin",
+"Aspirin",
+"75 mg",
+"tablet"
+],
+[
+"Anclog",
+"Clopidogrel",
+"75 mg",
+"tablet"
+],
+[
+"Calbo-D",
+"Calcium + Vitamin D3",
+"500 mg + 200 IU",
+"tablet"
+],
+[
+"Calbo",
+"Calcium carbonate",
+"500 mg",
+"tablet"
+],
+[
+"Xinc",
+"Zinc",
+"20 mg",
+"tablet"
+],
+[
+"Bextram Gold",
+"Multivitamin and minerals",
+"",
+"tablet"
+],
+[
+"Neuro-B",
+"Vitamin B1 + B6 + B12",
+"",
+"tablet"
+],
+[
+"Thyrox",
+"Levothyroxine",
+"50 mcg",
+"tablet"
+],
+[
+"Eltroxin",
+"Levothyroxine",
+"50 mcg",
+"tablet"
+],
+[
+"Motigut",
+"Domperidone",
+"10 mg",
+"tablet"
+],
+[
+"Emistat",
+"Ondansetron",
+"8 mg",
+"tablet"
+],
+[
+"Orsaline-N",
+"Oral rehydration salts",
+"",
+"other"
+],
+[
+"Entacyd",
+"Aluminium hydroxide + Magnesium hydroxide",
+"",
+"tablet"
+],
+[
+"Clofenac",
+"Diclofenac",
+"50 mg",
+"tablet"
+],
+[
+"Naprosyn",
+"Naproxen",
+"500 mg",
+"tablet"
+],
+[
+"Tufnil",
+"Tolfenamic acid",
+"200 mg",
+"tablet"
+],
+[
+"Rivotril",
+"Clonazepam",
+"0.5 mg",
+"tablet"
+],
+[
+"Disopan",
+"Clonazepam",
+"0.5 mg",
+"tablet"
+]
+]
+}

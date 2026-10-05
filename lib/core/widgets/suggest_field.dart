@@ -18,6 +18,7 @@ class SuggestField<T extends Object> extends StatefulWidget {
     this.hint,
     this.icon,
     this.textCapitalization = TextCapitalization.words,
+    this.validator,
   });
 
   final String label;
@@ -31,6 +32,7 @@ class SuggestField<T extends Object> extends StatefulWidget {
   final String? hint;
   final IconData? icon;
   final TextCapitalization textCapitalization;
+  final FormFieldValidator<String>? validator;
 
   @override
   State<SuggestField<T>> createState() => _SuggestFieldState<T>();
@@ -63,6 +65,7 @@ class _SuggestFieldState<T extends Object> extends State<SuggestField<T>> {
               style: AppTextStyles.inputOnLight,
               cursorColor: AppColors.ink,
               onFieldSubmitted: (_) => onSubmitted(),
+              validator: widget.validator,
               decoration: InputDecoration(
                 hintText: widget.hint,
                 suffixIcon: widget.icon == null

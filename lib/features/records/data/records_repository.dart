@@ -7,7 +7,11 @@ import '../domain/record_summary.dart';
 
 /// Keeps record rows and their image files in sync.
 class RecordsRepository {
-  RecordsRepository(this._db, this._storage);
+  RecordsRepository(this._db, this._storage, {this.profileId});
+
+  /// Whose records: only this profile's are listed, and new ones are
+  /// theirs. Null = every profile.
+  final int? profileId;
 
   final AppDatabase _db;
   final FileStorageService _storage;
@@ -41,6 +45,9 @@ class RecordsRepository {
           ])
           ..addColumns([pageCount, coverPath])
           ..orderBy([OrderingTerm.desc(_db.records.recordDate)]);
+    if (profileId case final id?) {
+      query.where(_db.records.profileId.equals(id));
+    }
     if (type != null) query.where(_db.records.type.equalsValue(type));
     if (doctorId != null) query.where(_db.records.doctorId.equals(doctorId));
 
@@ -78,7 +85,13 @@ class RecordsRepository {
         saved.add(await _storage.saveRecordImage(path));
       }
       return await _db.transaction(() async {
-        final id = await _db.into(_db.records).insert(record);
+        final id = await _db
+            .into(_db.records)
+            .insert(
+              profileId == null || record.profileId.present
+                  ? record
+                  : record.copyWith(profileId: Value(profileId!)),
+            );
         await _insertAttachments(id, saved, startOrder: 0);
         return id;
       });

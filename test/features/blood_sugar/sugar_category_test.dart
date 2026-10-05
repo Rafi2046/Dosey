@@ -35,6 +35,7 @@ void main() {
   test('7-day average needs two readings in the last week', () {
     final now = DateTime(2026, 10, 10, 12);
     BloodSugarReading r(double v, DateTime at) => BloodSugarReading(
+      profileId: 1,
       id: at.day,
       mmol: v,
       context: SugarContext.fasting,

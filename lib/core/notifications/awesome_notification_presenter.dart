@@ -7,7 +7,9 @@ import '../../features/reminders/domain/reminder_text.dart';
 import '../../features/reminders/domain/reminder_with_details.dart';
 import '../database/app_database.dart';
 import '../constants/constants.dart';
+import '../utils/date_format.dart';
 import '../utils/enum_labels.dart';
+import '../../features/profiles/presentation/profile_widgets.dart';
 import 'alarm_ports.dart';
 import 'notification_channels.dart';
 import 'reminder_alarm_engine.dart';
@@ -52,7 +54,9 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
       content: NotificationContent(
         id: id,
         channelKey: NotificationChannels.keyFor(r.type, critical: critical),
-        title: grouped ? l10n.alarmGroupNotifTitle(group.length) : r.title,
+        title: grouped
+            ? l10n.alarmGroupNotifTitle(group.length)
+            : _titleFor(l10n, group.first),
         // Several medicines: one line each, with that time's dose. Android
         // renders the body as HTML (a plain "\n" shows as a space), so lines
         // are joined with <br> and escaped; iOS shows plain text, where
@@ -61,9 +65,9 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
             ? [
                 for (final d in group)
                   Platform.isIOS
-                      ? '${d.reminder.title} — ${ReminderText.body(l10n, d)}'
+                      ? '${_titleFor(l10n, d)} — ${ReminderText.body(l10n, d)}'
                       : _html.convert(
-                          '${d.reminder.title} — ${ReminderText.body(l10n, d)}',
+                          '${_titleFor(l10n, d)} — ${ReminderText.body(l10n, d)}',
                         ),
               ].join(Platform.isIOS ? '\n' : '<br>')
             : ReminderText.body(l10n, group.first),
@@ -93,6 +97,13 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
     );
   }
 
+  /// "Ammu: Napa" for a family member's dose; just "Napa" for the user's.
+  static String _titleFor(AppLocalizations l10n, ReminderWithDetails d) =>
+      switch (familyMemberName(l10n, d.profile)) {
+        final name? => l10n.notifForProfile(name, d.reminder.title),
+        null => d.reminder.title,
+      };
+
   @override
   Future<void> dismiss(int reminderId) =>
       AwesomeNotifications().dismiss(reminderId);
@@ -112,6 +123,37 @@ class AwesomeNotificationPresenter implements NotificationPresenter {
       ),
     );
   }
+
+  @override
+  Future<void> scheduleHeadsUp(
+    ReminderWithDetails details,
+    DateTime eventAt, {
+    required DateTime notifyAt,
+  }) {
+    final l10n = AppLocale.l10n;
+    final r = details.reminder;
+    return AwesomeNotifications().createNotification(
+      schedule: NotificationCalendar.fromDate(
+        date: notifyAt,
+        allowWhileIdle: true,
+        preciseAlarm: true,
+      ),
+      content: NotificationContent(
+        id: AppConstants.headsUpIdOffset + r.id,
+        channelKey: AppConstants.channelGentle,
+        title: l10n.headsUpTitle(_titleFor(l10n, details)),
+        body:
+            '${AppDateFormat.dateTime(eventAt)}${l10n.notifDoseSeparator}'
+            '${ReminderText.body(l10n, details)}',
+        category: NotificationCategory.Reminder,
+        color: r.type.color,
+      ),
+    );
+  }
+
+  @override
+  Future<void> cancelHeadsUp(int reminderId) =>
+      AwesomeNotifications().cancel(AppConstants.headsUpIdOffset + reminderId);
 
   static List<NotificationActionButton> _buttons(
     ReminderType type, {

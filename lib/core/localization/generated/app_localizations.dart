@@ -299,7 +299,7 @@ abstract class AppLocalizations {
   /// No description provided for @alarmMarkTaken.
   ///
   /// In en, this message translates to:
-  /// **'Medicine Taken'**
+  /// **'Medicine taken'**
   String get alarmMarkTaken;
 
   /// No description provided for @alarmDone.
@@ -989,13 +989,13 @@ abstract class AppLocalizations {
   /// No description provided for @timeDuration.
   ///
   /// In en, this message translates to:
-  /// **'Time Duration'**
+  /// **'Duration'**
   String get timeDuration;
 
   /// No description provided for @medicineTime.
   ///
   /// In en, this message translates to:
-  /// **'Medicine Time'**
+  /// **'Medicine times'**
   String get medicineTime;
 
   /// No description provided for @daysInWeek.
@@ -1037,7 +1037,7 @@ abstract class AppLocalizations {
   /// No description provided for @changeSetting.
   ///
   /// In en, this message translates to:
-  /// **'Change Setting'**
+  /// **'Edit details'**
   String get changeSetting;
 
   /// No description provided for @refill.
@@ -3565,6 +3565,324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In {duration}'**
   String remindLaterIn(String duration);
+
+  /// No description provided for @recordNoPages.
+  ///
+  /// In en, this message translates to:
+  /// **'No pages yet'**
+  String get recordNoPages;
+
+  /// No description provided for @recordNoPagesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to add a photo of the document.'**
+  String get recordNoPagesHint;
+
+  /// No description provided for @headsUpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming up: {title}'**
+  String headsUpTitle(String title);
+
+  /// No description provided for @headsUpLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Also remind me before'**
+  String get headsUpLabel;
+
+  /// No description provided for @headsUpNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get headsUpNone;
+
+  /// No description provided for @headsUpBefore.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} before'**
+  String headsUpBefore(String duration);
+
+  /// No description provided for @backupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Back up my data'**
+  String get backupTitle;
+
+  /// No description provided for @backupLast.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup: {date}'**
+  String backupLast(String date);
+
+  /// No description provided for @backupNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Not backed up yet: save everything to one file'**
+  String get backupNever;
+
+  /// No description provided for @backupShareSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey backup'**
+  String get backupShareSubject;
+
+  /// No description provided for @backupFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t make the backup. Please try again.'**
+  String get backupFailed;
+
+  /// No description provided for @restoreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from a backup'**
+  String get restoreTitle;
+
+  /// No description provided for @restoreHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace everything here with a backup file'**
+  String get restoreHint;
+
+  /// No description provided for @restoreConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace all data?'**
+  String get restoreConfirmTitle;
+
+  /// No description provided for @restoreConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything in Dosey now will be replaced by this backup: medicines, reminders, history, records and photos. This can\'t be undone.'**
+  String get restoreConfirmBody;
+
+  /// No description provided for @restoreConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restoreConfirm;
+
+  /// No description provided for @restoreDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup restored'**
+  String get restoreDone;
+
+  /// No description provided for @restoreNotABackup.
+  ///
+  /// In en, this message translates to:
+  /// **'That file isn\'t a Dosey backup.'**
+  String get restoreNotABackup;
+
+  /// No description provided for @restoreTooNew.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup is from a newer version of Dosey. Update the app first.'**
+  String get restoreTooNew;
+
+  /// No description provided for @reportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Health report'**
+  String get reportTitle;
+
+  /// No description provided for @reportShowDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Show your doctor'**
+  String get reportShowDoctor;
+
+  /// No description provided for @reportMoreHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A one-page summary to share before a visit'**
+  String get reportMoreHint;
+
+  /// No description provided for @reportPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} – {to}'**
+  String reportPeriod(String from, String to);
+
+  /// No description provided for @reportMadeOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with Dosey on {date}. Recorded by the patient.'**
+  String reportMadeOn(String date);
+
+  /// No description provided for @reportMedicines.
+  ///
+  /// In en, this message translates to:
+  /// **'Current medicines'**
+  String get reportMedicines;
+
+  /// No description provided for @reportNoMedicines.
+  ///
+  /// In en, this message translates to:
+  /// **'No current medicines'**
+  String get reportNoMedicines;
+
+  /// No description provided for @reportAdherence.
+  ///
+  /// In en, this message translates to:
+  /// **'Doses taken, last {days} days'**
+  String reportAdherence(int days);
+
+  /// No description provided for @reportAdherenceDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'{taken} of {total} taken · {missed} missed · {skipped} skipped'**
+  String reportAdherenceDetail(int taken, int total, int missed, int skipped);
+
+  /// No description provided for @reportLatest.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest: {value}'**
+  String reportLatest(String value);
+
+  /// No description provided for @reportAverage.
+  ///
+  /// In en, this message translates to:
+  /// **'{days}-day average: {value}'**
+  String reportAverage(int days, String value);
+
+  /// No description provided for @reportNoReadings.
+  ///
+  /// In en, this message translates to:
+  /// **'No readings in this period'**
+  String get reportNoReadings;
+
+  /// No description provided for @reportShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share report'**
+  String get reportShare;
+
+  /// No description provided for @reportShareFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t share the report. Please try again.'**
+  String get reportShareFailed;
+
+  /// No description provided for @appLockTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App lock'**
+  String get appLockTitle;
+
+  /// No description provided for @appLockHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask for fingerprint, face or phone PIN to open Dosey'**
+  String get appLockHint;
+
+  /// No description provided for @appLockReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Dosey to see your health records'**
+  String get appLockReason;
+
+  /// No description provided for @appLockLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey is locked'**
+  String get appLockLocked;
+
+  /// No description provided for @appLockLockedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your health records are protected.'**
+  String get appLockLockedHint;
+
+  /// No description provided for @appLockUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get appLockUnlock;
+
+  /// No description provided for @appLockUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a screen lock (PIN, pattern or fingerprint) on your phone first.'**
+  String get appLockUnavailable;
+
+  /// No description provided for @profileMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Me'**
+  String get profileMe;
+
+  /// No description provided for @profilesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Family profiles'**
+  String get profilesTitle;
+
+  /// No description provided for @profilesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep medicines for the people you look after'**
+  String get profilesHint;
+
+  /// No description provided for @profileSwitchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Whose medicines?'**
+  String get profileSwitchTitle;
+
+  /// No description provided for @profileAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a family member'**
+  String get profileAdd;
+
+  /// No description provided for @profileNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get profileNameLabel;
+
+  /// No description provided for @profileNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Ammu'**
+  String get profileNameHint;
+
+  /// No description provided for @profileRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get profileRename;
+
+  /// No description provided for @profileDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete profile'**
+  String get profileDelete;
+
+  /// No description provided for @profileDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'All of {name}\'s medicines, reminders, history, records, expenses and readings will be deleted. This can\'t be undone.'**
+  String profileDeleteBody(String name);
+
+  /// No description provided for @profileManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage profiles'**
+  String get profileManage;
+
+  /// No description provided for @profileYou.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get profileYou;
+
+  /// No description provided for @notifForProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {title}'**
+  String notifForProfile(String name, String title);
 }
 
 class _AppLocalizationsDelegate

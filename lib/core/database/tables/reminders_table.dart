@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../enums.dart';
+import 'profiles_table.dart';
 import 'doctors_table.dart';
 import 'medicines_table.dart';
 
@@ -62,6 +63,16 @@ class Reminders extends Table {
   IntColumn get snoozeMinutes => integer().withDefault(const Constant(10))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+
+  /// Appointments, vaccines and tests: also a heads-up notification this
+  /// many minutes before ("tomorrow at 5 pm: …"). Null = none. Last, as
+  /// v7 added it (ALTER TABLE appends columns).
+  IntColumn get remindBeforeMinutes => integer().nullable()();
+
+  /// Whose this is (see [Profiles]). Last: v8 added it (ALTER TABLE appends).
+  IntColumn get profileId => integer()
+      .withDefault(const Constant(1))
+      .references(Profiles, #id, onDelete: KeyAction.cascade)();
 
   @override
   List<String> get customConstraints => [

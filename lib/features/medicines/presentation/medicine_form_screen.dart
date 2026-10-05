@@ -21,6 +21,8 @@ import '../../doctors/presentation/widgets/doctor_picker_field.dart';
 import '../../doctors/providers/doctors_providers.dart';
 import '../../records/presentation/widgets/prescription_picker_field.dart';
 import '../../reminders/domain/reminder_text.dart';
+import '../../../core/widgets/suggest_field.dart';
+import '../data/medicine_names.dart';
 import '../domain/course_progress.dart';
 import '../domain/dose_time.dart';
 import '../domain/scanned_medicine.dart';
@@ -279,6 +281,8 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Start loading the name list before the first keystroke.
+    ref.watch(medicineNamesProvider);
     return CreamScaffold(
       title: _isEdit ? context.l10n.editMedicine : context.l10n.addMedicine,
       bottomBar: PillButton(
@@ -304,11 +308,24 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
                 onChanged: (s) => _onFormChanged(s.single),
               ),
             ),
-            AppTextField(
+            SuggestField<MedicineName>(
               label: context.l10n.medicineName,
               controller: _name,
-              textCapitalization: TextCapitalization.words,
               validator: AppTextField.required,
+              suggestions: (text) =>
+                  ref.read(medicineNamesProvider).value?.search(text) ??
+                  const [],
+              labelOf: (n) => n.name,
+              subtitleOf: (n) => n.subtitle,
+              onSelected: (n) {
+                // Fill only what's still empty: never overwrite typing.
+                if (_strength.text.trim().isEmpty && n.strength.isNotEmpty) {
+                  _strength.text = n.strength;
+                }
+                if (n.form case final form? when form != _form && !_isEdit) {
+                  _onFormChanged(form);
+                }
+              },
             ),
             AppTextField(
               label: context.l10n.medicineStrength,

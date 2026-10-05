@@ -6,7 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
@@ -16,7 +16,7 @@ import io.flutter.plugin.common.MethodChannel
  * turns this off again as soon as no alarm is ringing, so the rest of the app
  * (medical data) is never reachable without unlocking.
  */
-class MainActivity : FlutterActivity() {
+class MainActivity : FlutterFragmentActivity() {
     private var launchedOverLockScreen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {

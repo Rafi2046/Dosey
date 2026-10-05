@@ -15,6 +15,7 @@ void main() {
 
     ScheduledOccurrence makeOccurrence(int id, String title, DateTime at) {
       final reminder = Reminder(
+        profileId: 1,
         id: id,
         type: ReminderType.medicine,
         title: title,
@@ -28,6 +29,7 @@ void main() {
         updatedAt: now,
       );
       final medicine = Medicine(
+        profileId: 1,
         id: id,
         name: title,
         form: MedicineForm.tablet,

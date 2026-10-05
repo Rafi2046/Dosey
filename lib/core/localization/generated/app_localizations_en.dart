@@ -108,7 +108,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addSheetTitle => 'What would you like to add?';
 
   @override
-  String get alarmMarkTaken => 'Medicine Taken';
+  String get alarmMarkTaken => 'Medicine taken';
 
   @override
   String get alarmDone => 'Done';
@@ -457,10 +457,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get medicineDescriptionHint => 'How and why to take it';
 
   @override
-  String get timeDuration => 'Time Duration';
+  String get timeDuration => 'Duration';
 
   @override
-  String get medicineTime => 'Medicine Time';
+  String get medicineTime => 'Medicine times';
 
   @override
   String get daysInWeek => 'Days in a week';
@@ -482,7 +482,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add the times you take this medicine — each one rings like an alarm.';
 
   @override
-  String get changeSetting => 'Change Setting';
+  String get changeSetting => 'Edit details';
 
   @override
   String get refill => 'Refill';
@@ -2172,5 +2172,214 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String remindLaterIn(String duration) {
     return 'In $duration';
+  }
+
+  @override
+  String get recordNoPages => 'No pages yet';
+
+  @override
+  String get recordNoPagesHint => 'Tap to add a photo of the document.';
+
+  @override
+  String headsUpTitle(String title) {
+    return 'Coming up: $title';
+  }
+
+  @override
+  String get headsUpLabel => 'Also remind me before';
+
+  @override
+  String get headsUpNone => 'No';
+
+  @override
+  String headsUpBefore(String duration) {
+    return '$duration before';
+  }
+
+  @override
+  String get backupTitle => 'Back up my data';
+
+  @override
+  String backupLast(String date) {
+    return 'Last backup: $date';
+  }
+
+  @override
+  String get backupNever => 'Not backed up yet: save everything to one file';
+
+  @override
+  String get backupShareSubject => 'Dosey backup';
+
+  @override
+  String get backupFailed => 'Couldn\'t make the backup. Please try again.';
+
+  @override
+  String get restoreTitle => 'Restore from a backup';
+
+  @override
+  String get restoreHint => 'Replace everything here with a backup file';
+
+  @override
+  String get restoreConfirmTitle => 'Replace all data?';
+
+  @override
+  String get restoreConfirmBody =>
+      'Everything in Dosey now will be replaced by this backup: medicines, reminders, history, records and photos. This can\'t be undone.';
+
+  @override
+  String get restoreConfirm => 'Restore';
+
+  @override
+  String get restoreDone => 'Backup restored';
+
+  @override
+  String get restoreNotABackup => 'That file isn\'t a Dosey backup.';
+
+  @override
+  String get restoreTooNew =>
+      'This backup is from a newer version of Dosey. Update the app first.';
+
+  @override
+  String get reportTitle => 'Health report';
+
+  @override
+  String get reportShowDoctor => 'Show your doctor';
+
+  @override
+  String get reportMoreHint => 'A one-page summary to share before a visit';
+
+  @override
+  String reportPeriod(String from, String to) {
+    return '$from – $to';
+  }
+
+  @override
+  String reportMadeOn(String date) {
+    return 'Made with Dosey on $date. Recorded by the patient.';
+  }
+
+  @override
+  String get reportMedicines => 'Current medicines';
+
+  @override
+  String get reportNoMedicines => 'No current medicines';
+
+  @override
+  String reportAdherence(int days) {
+    final intl.NumberFormat daysNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String daysString = daysNumberFormat.format(days);
+
+    return 'Doses taken, last $daysString days';
+  }
+
+  @override
+  String reportAdherenceDetail(int taken, int total, int missed, int skipped) {
+    final intl.NumberFormat takenNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String takenString = takenNumberFormat.format(taken);
+    final intl.NumberFormat totalNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String totalString = totalNumberFormat.format(total);
+    final intl.NumberFormat missedNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String missedString = missedNumberFormat.format(missed);
+    final intl.NumberFormat skippedNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String skippedString = skippedNumberFormat.format(skipped);
+
+    return '$takenString of $totalString taken · $missedString missed · $skippedString skipped';
+  }
+
+  @override
+  String reportLatest(String value) {
+    return 'Latest: $value';
+  }
+
+  @override
+  String reportAverage(int days, String value) {
+    final intl.NumberFormat daysNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String daysString = daysNumberFormat.format(days);
+
+    return '$daysString-day average: $value';
+  }
+
+  @override
+  String get reportNoReadings => 'No readings in this period';
+
+  @override
+  String get reportShare => 'Share report';
+
+  @override
+  String get reportShareFailed =>
+      'Couldn\'t share the report. Please try again.';
+
+  @override
+  String get appLockTitle => 'App lock';
+
+  @override
+  String get appLockHint =>
+      'Ask for fingerprint, face or phone PIN to open Dosey';
+
+  @override
+  String get appLockReason => 'Unlock Dosey to see your health records';
+
+  @override
+  String get appLockLocked => 'Dosey is locked';
+
+  @override
+  String get appLockLockedHint => 'Your health records are protected.';
+
+  @override
+  String get appLockUnlock => 'Unlock';
+
+  @override
+  String get appLockUnavailable =>
+      'Set a screen lock (PIN, pattern or fingerprint) on your phone first.';
+
+  @override
+  String get profileMe => 'Me';
+
+  @override
+  String get profilesTitle => 'Family profiles';
+
+  @override
+  String get profilesHint => 'Keep medicines for the people you look after';
+
+  @override
+  String get profileSwitchTitle => 'Whose medicines?';
+
+  @override
+  String get profileAdd => 'Add a family member';
+
+  @override
+  String get profileNameLabel => 'Name';
+
+  @override
+  String get profileNameHint => 'e.g. Ammu';
+
+  @override
+  String get profileRename => 'Rename';
+
+  @override
+  String get profileDelete => 'Delete profile';
+
+  @override
+  String profileDeleteBody(String name) {
+    return 'All of $name\'s medicines, reminders, history, records, expenses and readings will be deleted. This can\'t be undone.';
+  }
+
+  @override
+  String get profileManage => 'Manage profiles';
+
+  @override
+  String get profileYou => 'You';
+
+  @override
+  String notifForProfile(String name, String title) {
+    return '$name: $title';
   }
 }

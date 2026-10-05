@@ -8,6 +8,7 @@ import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/domain/reminder_with_details.dart';
+import '../../../profiles/presentation/profile_widgets.dart';
 import 'alarm_dose_context.dart';
 
 /// Cream card for several medicines due at the same minute: how many, the
@@ -65,6 +66,11 @@ class AlarmGroupCard extends StatelessWidget {
               )
             else
               AppSpacing.gapMd,
+            if (familyMemberName(l10n, d.profile) case final name?)
+              Text(
+                name.toUpperCase(),
+                style: AppTextStyles.overline.copyWith(color: AppColors.accent),
+              ),
             Text(d.reminder.title, style: AppTextStyles.cardTitleOnLight),
             Text(ReminderText.body(l10n, d), style: AppTextStyles.bodyOnLight),
             AlarmDoseContext(details: d, scheduledFor: scheduledFor),

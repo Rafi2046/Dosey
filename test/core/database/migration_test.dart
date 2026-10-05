@@ -18,6 +18,72 @@ final _v4Schema = File(
 final _v5Schema = File(
   'test/core/database/fixtures/schema_v5.sql',
 ).readAsStringSync();
+final _v6Schema = File(
+  'test/core/database/fixtures/schema_v6.sql',
+).readAsStringSync();
+final _v7Schema = File(
+  'test/core/database/fixtures/schema_v7.sql',
+).readAsStringSync();
+
+/// A v7 database (heads-ups) with one of everything, before profiles.
+AppDatabase _openV7({String? userName}) => AppDatabase(
+  NativeDatabase.memory(
+    setup: (raw) {
+      raw.execute(_v7Schema);
+      raw.execute('PRAGMA user_version = 7');
+      raw.execute('''
+        INSERT INTO medicines (id, name, form, dose_unit, meal_relation,
+            unit_price_minor, stock_quantity, start_date)
+        VALUES (1, 'Napa', 'tablet', 'tablet', 'afterMeal', 100, 20, 0);
+        INSERT INTO reminders (id, type, title, medicine_id, start_at,
+            repeat_rule, is_critical, is_enabled, snooze_minutes, dose_amount,
+            remind_before_minutes)
+        VALUES (10, 'medicine', 'Napa', 1, 1000, 'daily', 1, 1, 10, 1.0, NULL),
+               (11, 'appointment', 'Dr visit', NULL, 5000, 'once', 0, 1, 10,
+                NULL, 1440);
+        INSERT INTO reminder_logs (reminder_id, scheduled_for, status)
+        VALUES (10, 1000, 'taken');
+        INSERT INTO records (id, type, title, record_date)
+        VALUES (1, 'prescription', 'Rx', 0);
+        INSERT INTO expenses (category, title, amount_minor, spent_on)
+        VALUES ('medicine', 'Napa strip', 500, 0);
+        INSERT INTO blood_pressure_readings (systolic, diastolic, measured_at)
+        VALUES (128, 84, 1000);
+        INSERT INTO blood_sugar_readings (mmol, context, measured_at)
+        VALUES (6.4, 'fasting', 1000);
+      ''');
+      if (userName != null) {
+        raw.execute(
+          "INSERT INTO app_settings (key, value) VALUES ('user_name', '$userName')",
+        );
+      }
+    },
+  ),
+);
+
+/// A v6 database (blood sugar log) with real data, before heads-ups.
+AppDatabase _openV6() => AppDatabase(
+  NativeDatabase.memory(
+    setup: (raw) {
+      raw.execute(_v6Schema);
+      raw.execute('PRAGMA user_version = 6');
+      raw.execute('''
+        INSERT INTO medicines (id, name, form, dose_unit, meal_relation,
+            unit_price_minor, stock_quantity, start_date)
+        VALUES (1, 'Napa', 'tablet', 'tablet', 'afterMeal', 100, 20, 0);
+        INSERT INTO reminders (id, type, title, medicine_id, start_at,
+            repeat_rule, is_critical, is_enabled, snooze_minutes, dose_amount)
+        VALUES (10, 'medicine', 'Napa', 1, 1000, 'daily', 1, 1, 10, 1.0),
+               (11, 'appointment', 'Dr visit', NULL, 5000, 'once', 0, 1, 10,
+                NULL);
+        INSERT INTO reminder_logs (reminder_id, scheduled_for, status)
+        VALUES (10, 1000, 'missed');
+        INSERT INTO blood_sugar_readings (mmol, context, measured_at)
+        VALUES (6.4, 'fasting', 1000);
+      ''');
+    },
+  ),
+);
 
 /// A v5 database (blood pressure log) with real data, before blood sugar.
 AppDatabase _openV5() => AppDatabase(
@@ -292,4 +358,114 @@ void main() {
         .insert(AppSettingsCompanion.insert(key: 'locale', value: 'bn'));
     expect((await db.select(db.appSettings).getSingle()).value, 'bn');
   });
+
+  test('v6 → v7 adds heads-ups to reminders, keeping every row', () async {
+    final db = _openV6();
+    addTearDown(db.close);
+    final reminders = await db.select(db.reminders).get();
+    expect(reminders.map((r) => r.title), ['Napa', 'Dr visit']);
+    expect(reminders.map((r) => r.remindBeforeMinutes), [null, null]);
+    expect(
+      (await db.select(db.reminderLogs).getSingle()).status,
+      ReminderLogStatus.missed,
+    );
+    expect(await db.select(db.bloodSugarReadings).get(), hasLength(1));
+    // The new column is writable.
+    await (db.update(db.reminders)..where((r) => r.id.equals(11))).write(
+      const RemindersCompanion(remindBeforeMinutes: Value(1440)),
+    );
+    expect(
+      (await (db.select(
+        db.reminders,
+      )..where((r) => r.id.equals(11))).getSingle()).remindBeforeMinutes,
+      1440,
+    );
+    expect(await db.customSelect('PRAGMA foreign_key_check').get(), isEmpty);
+  });
+
+  test(
+    'a v6 database migrates to the same schema as a fresh install',
+    () async {
+      final migrated = _openV6();
+      final fresh = AppDatabase(NativeDatabase.memory());
+      addTearDown(migrated.close);
+      addTearDown(fresh.close);
+      expect(await _schema(migrated), await _schema(fresh));
+    },
+  );
+
+  test(
+    'v7 → v8 gives everything to the first profile, keeping every row',
+    () async {
+      final db = _openV7(userName: 'Rafi');
+      addTearDown(db.close);
+      final profiles = await db.select(db.profiles).get();
+      expect([for (final p in profiles) (p.id, p.name)], [(1, 'Rafi')]);
+      expect((await db.select(db.medicines).getSingle()).profileId, 1);
+      expect(
+        (await db.select(db.reminders).get()).map(
+          (r) => (r.title, r.profileId),
+        ),
+        [('Napa', 1), ('Dr visit', 1)],
+      );
+      expect(
+        (await db.select(db.reminders).get()).last.remindBeforeMinutes,
+        1440,
+      );
+      expect((await db.select(db.records).getSingle()).profileId, 1);
+      expect((await db.select(db.expenses).getSingle()).profileId, 1);
+      expect(
+        (await db.select(db.bloodPressureReadings).getSingle()).profileId,
+        1,
+      );
+      expect((await db.select(db.bloodSugarReadings).getSingle()).profileId, 1);
+      expect(await db.select(db.reminderLogs).get(), hasLength(1));
+      expect(await db.customSelect('PRAGMA foreign_key_check').get(), isEmpty);
+    },
+  );
+
+  test(
+    'without a saved name the first profile is unnamed (shown as Me)',
+    () async {
+      final db = _openV7();
+      addTearDown(db.close);
+      expect((await db.select(db.profiles).getSingle()).name, '');
+    },
+  );
+
+  test('a fresh install starts with profile 1', () async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+    expect((await db.select(db.profiles).getSingle()).id, 1);
+  });
+
+  test('deleting a profile deletes its data, not anyone else\'s', () async {
+    final db = _openV7();
+    addTearDown(db.close);
+    final ammu = await db
+        .into(db.profiles)
+        .insert(ProfilesCompanion.insert(name: 'Ammu'));
+    await db
+        .into(db.medicines)
+        .insert(
+          MedicinesCompanion.insert(
+            name: 'Seclo',
+            startDate: DateTime(2026),
+            profileId: Value(ammu),
+          ),
+        );
+    await (db.delete(db.profiles)..where((p) => p.id.equals(ammu))).go();
+    expect((await db.select(db.medicines).get()).map((m) => m.name), ['Napa']);
+  });
+
+  test(
+    'a v7 database migrates to the same schema as a fresh install',
+    () async {
+      final migrated = _openV7();
+      final fresh = AppDatabase(NativeDatabase.memory());
+      addTearDown(migrated.close);
+      addTearDown(fresh.close);
+      expect(await _schema(migrated), await _schema(fresh));
+    },
+  );
 }

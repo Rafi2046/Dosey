@@ -615,4 +615,55 @@ void main() {
       expect((await db.select(db.medicines).getSingle()).stockQuantity, 9);
     });
   });
+
+  group('heads-ups', () {
+    Future<Reminder> appointment({int? before, DateTime? at}) => repo.create(
+      RemindersCompanion.insert(
+        type: ReminderType.appointment,
+        title: 'Diabetes follow-up',
+        startAt: at ?? DateTime(2026, 10, 7, 17),
+        remindBeforeMinutes: Value(before),
+      ),
+      now: now,
+    );
+
+    test('books a day-before heads-up for the next occurrence', () async {
+      final r = await appointment(before: 24 * 60);
+      await engine.syncAll();
+      expect(notifier.headsUps[r.id], (
+        DateTime(2026, 10, 7, 17),
+        DateTime(2026, 10, 6, 17),
+      ));
+    });
+
+    test(
+      'none when not asked for, already past, disabled or deleted',
+      () async {
+        final none = await appointment();
+        // Due in 2 h: a day-before heads-up would already be in the past.
+        final soon = await appointment(
+          before: 24 * 60,
+          at: now.add(const Duration(hours: 2)),
+        );
+        final off = await appointment(before: 60);
+        await repo.setEnabled(off.id, enabled: false, now: now);
+        await engine.syncAll();
+        expect(notifier.headsUps.keys, isNot(contains(none.id)));
+        expect(notifier.headsUps.keys, isNot(contains(soon.id)));
+        expect(notifier.headsUps.keys, isNot(contains(off.id)));
+
+        final r = await appointment(before: 60);
+        await engine.syncAll();
+        expect(notifier.headsUps.keys, contains(r.id));
+        await engine.cancel(r.id);
+        expect(notifier.headsUps.keys, isNot(contains(r.id)));
+      },
+    );
+
+    test('medicines never get one', () async {
+      final r = await addDaily();
+      await engine.syncAll();
+      expect(notifier.headsUps.keys, isNot(contains(r.id)));
+    });
+  });
 }

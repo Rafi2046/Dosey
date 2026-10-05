@@ -35,9 +35,11 @@ abstract final class AppDateFormat {
   static String timeOfDay(TimeOfDay value) =>
       time(DateTime(2000, 1, 1, value.hour, value.minute));
 
-  /// "Mon, 5 Oct · 09:00 am"
-  static String dateTime(DateTime value) =>
-      _lowerMeridiem(_dateTime.format(value));
+  /// "Mon, 5 Oct · 09:00 am". The time and its am/pm are joined by a
+  /// no-break space, so a wrapped line never leaves "pm" alone below.
+  static String dateTime(DateTime value) => _lowerMeridiem(
+    _dateTime.format(value),
+  ).replaceAllMapped(RegExp(r' (am|pm)$'), (m) => '\u00A0${m[1]}');
 
   static String _lowerMeridiem(String s) =>
       s.replaceAll('AM', 'am').replaceAll('PM', 'pm');

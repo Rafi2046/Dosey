@@ -65,6 +65,20 @@ class FakeNotificationPresenter implements NotificationPresenter {
   @override
   Future<void> showLowStock(Medicine medicine, int daysLeft) async =>
       lowStock.add((medicine.name, daysLeft));
+
+  /// Reminder id → (event time, when the heads-up shows), as booked.
+  final Map<int, (DateTime, DateTime)> headsUps = {};
+
+  @override
+  Future<void> scheduleHeadsUp(
+    ReminderWithDetails details,
+    DateTime eventAt, {
+    required DateTime notifyAt,
+  }) async => headsUps[details.reminder.id] = (eventAt, notifyAt);
+
+  @override
+  Future<void> cancelHeadsUp(int reminderId) async =>
+      headsUps.remove(reminderId);
 }
 
 class FakePermissionService implements PermissionService {

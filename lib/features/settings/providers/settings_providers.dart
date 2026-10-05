@@ -1,5 +1,7 @@
 import 'dart:ui' show PlatformDispatcher;
 
+import 'package:file_picker/file_picker.dart';
+
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -8,6 +10,9 @@ import '../../../core/database/database_provider.dart';
 import '../../../core/notifications/notification_providers.dart';
 import '../../../core/storage/storage_providers.dart';
 import '../../reminders/providers/reminders_providers.dart';
+import '../../profiles/data/profiles_repository.dart';
+import '../../profiles/providers/profiles_providers.dart';
+import '../data/backup_service.dart';
 import '../data/data_reset_service.dart';
 import '../../../core/localization/l10n.dart';
 import '../data/settings_repository.dart';
@@ -98,12 +103,16 @@ class UserNameController extends AsyncNotifier<String?> {
   Future<String?> build() =>
       ref.read(settingsRepositoryProvider).get(userNameKey);
 
-  /// Saves [name]; blank removes it.
+  /// Saves [name]; blank removes it. The user's own profile carries the
+  /// same name (blank shows as "Me").
   Future<void> set(String? name) async {
     final trimmed = name?.trim() ?? '';
     final value = trimmed.isEmpty ? null : trimmed;
     state = AsyncData(value);
     await ref.read(settingsRepositoryProvider).set(userNameKey, value);
+    await ref
+        .read(profilesRepositoryProvider)
+        .rename(ProfilesRepository.mainProfileId, trimmed);
   }
 }
 
@@ -116,10 +125,35 @@ final packageInfoProvider = FutureProvider<PackageInfo?>((ref) async {
   }
 });
 
+final backupServiceProvider = Provider<BackupService>(
+  (ref) => BackupService(
+    ref.watch(appDatabaseProvider),
+    ref.watch(documentsDirectoryProvider),
+  ),
+);
+
+/// Settings key of the last backup's time (ISO 8601).
+const lastBackupKey = 'last_backup_at';
+
+final lastBackupProvider = FutureProvider<DateTime?>((ref) async {
+  final raw = await ref.watch(settingsRepositoryProvider).get(lastBackupKey);
+  return raw == null ? null : DateTime.tryParse(raw);
+});
+
+/// Lets the user pick a backup file; its bytes, or null if cancelled.
+/// Replaced in tests.
+final backupPickerProvider = Provider<Future<List<int>?> Function()>(
+  (ref) => () async {
+    final picked = await FilePicker.pickFiles();
+    if (picked.isEmpty) return null;
+    return picked.single.xFile.readAsBytes();
+  },
+);
+
 final dataResetServiceProvider = Provider<DataResetService>(
   (ref) => DataResetService(
     ref.watch(appDatabaseProvider),
-    ref.watch(remindersRepositoryProvider),
+    ref.watch(allRemindersRepositoryProvider),
     ref.watch(alarmEngineProvider),
     ref.watch(fileStorageProvider),
   ),

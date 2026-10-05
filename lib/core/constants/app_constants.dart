@@ -51,8 +51,22 @@ abstract final class AppConstants {
   /// Low-stock notifications use `lowStockIdOffset + medicineId`.
   static const int lowStockIdOffset = 1500000000;
 
+  /// Heads-ups before appointments use `headsUpIdOffset + reminderId`.
+  static const int headsUpIdOffset = 1750000000;
+
+  /// "Also remind me before" choices for appointments, vaccines and tests.
+  static const List<Duration> headsUpOptions = [
+    Duration(hours: 1),
+    Duration(hours: 2),
+    Duration(days: 1),
+  ];
+
   /// First dose of "every N hours" schedules.
   static const int doseIntervalStartHour = 8;
+
+  // ── App lock ──────────────────────────────────────────────────────────────
+  /// With App lock on, Dosey locks again after being away this long.
+  static const Duration lockAfter = Duration(seconds: 30);
 
   // ── Storage ───────────────────────────────────────────────────────────────
   static const String databaseName = 'dosey';

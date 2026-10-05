@@ -93,69 +93,81 @@ class _PermissionsPageState extends ConsumerState<PermissionsPage> {
     final permissions = AppPermission.onThisPlatform;
     final allGranted = permissions.every(granted.contains);
 
-    return SingleChildScrollView(
-      padding: AppSpacing.screenPadding.copyWith(
-        top: AppSpacing.xl,
-        bottom: AppSpacing.xl,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(l10n.onboardingPermissionsTitle, style: AppTextStyles.display),
-          AppSpacing.gapMd,
-          Text(l10n.onboardingBody, style: AppTextStyles.bodyMuted),
-          AppSpacing.gapXl,
-          AnimatedSwitcher(
-            duration: AppSpacing.animMedium,
-            child: allGranted
-                ? SurfaceCard(
-                    key: const ValueKey('all-set'),
-                    color: AppColors.mint,
-                    padding: AppSpacing.cardPadding,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+    // The list runs past the screen on most phones: fade its bottom edge
+    // so the next card visibly continues (padding lets the last one clear
+    // the fade once scrolled to).
+    return ShaderMask(
+      blendMode: BlendMode.dstIn,
+      shaderCallback: (rect) => LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: const [AppColors.textOnAccent, AppColors.transparent],
+        stops: [1 - AppSpacing.xxxl / rect.height, 1],
+      ).createShader(rect),
+      child: SingleChildScrollView(
+        padding: AppSpacing.screenPadding.copyWith(
+          top: AppSpacing.xl,
+          bottom: AppSpacing.xxxl + AppSpacing.xl,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.onboardingPermissionsTitle, style: AppTextStyles.display),
+            AppSpacing.gapMd,
+            Text(l10n.onboardingBody, style: AppTextStyles.bodyMuted),
+            AppSpacing.gapXl,
+            AnimatedSwitcher(
+              duration: AppSpacing.animMedium,
+              child: allGranted
+                  ? SurfaceCard(
+                      key: const ValueKey('all-set'),
+                      color: AppColors.mint,
+                      padding: AppSpacing.cardPadding,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.verified_rounded,
+                            color: AppColors.textOnDark,
+                          ),
+                          AppSpacing.gapSm,
+                          Text(l10n.allSet, style: AppTextStyles.cardTitle),
+                        ],
+                      ),
+                    )
+                  : Column(
+                      key: const ValueKey('allow-all'),
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Icon(
-                          Icons.verified_rounded,
-                          color: AppColors.textOnDark,
+                        PillButton(
+                          label: l10n.allowAll,
+                          trailingIcon: Icons.done_all_rounded,
+                          loading: _queue != null && !_awaitingReturn,
+                          onPressed: _allowAll,
                         ),
                         AppSpacing.gapSm,
-                        Text(l10n.allSet, style: AppTextStyles.cardTitle),
+                        Text(
+                          l10n.allowAllHint,
+                          style: AppTextStyles.caption,
+                          textAlign: TextAlign.center,
+                        ),
                       ],
                     ),
-                  )
-                : Column(
-                    key: const ValueKey('allow-all'),
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      PillButton(
-                        label: l10n.allowAll,
-                        trailingIcon: Icons.done_all_rounded,
-                        loading: _queue != null && !_awaitingReturn,
-                        onPressed: _allowAll,
-                      ),
-                      AppSpacing.gapSm,
-                      Text(
-                        l10n.allowAllHint,
-                        style: AppTextStyles.caption,
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-          ),
-          AppSpacing.gapXl,
-          for (final (i, permission) in permissions.indexed) ...[
-            PermissionTile(
-              permission: permission,
-              granted: granted.contains(permission),
-              color: AppColors.cardCycle[i % AppColors.cardCycle.length],
-              onRequest: () =>
-                  ref.read(permissionsProvider.notifier).request(permission),
             ),
-            AppSpacing.gapMd,
+            AppSpacing.gapXl,
+            for (final (i, permission) in permissions.indexed) ...[
+              PermissionTile(
+                permission: permission,
+                granted: granted.contains(permission),
+                color: AppColors.cardCycle[i % AppColors.cardCycle.length],
+                onRequest: () =>
+                    ref.read(permissionsProvider.notifier).request(permission),
+              ),
+              AppSpacing.gapMd,
+            ],
+            const IosSoundCard(),
           ],
-          const IosSoundCard(),
-        ],
+        ),
       ),
     );
   }

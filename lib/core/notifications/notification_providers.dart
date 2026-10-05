@@ -12,7 +12,8 @@ final permissionServiceProvider = Provider<PermissionService>(
 );
 
 final alarmEngineProvider = Provider<ReminderAlarmEngine>((ref) {
-  final reminders = ref.watch(remindersRepositoryProvider);
+  // Every profile's: alarms ring for the whole family.
+  final reminders = ref.watch(allRemindersRepositoryProvider);
   return ReminderAlarmEngine(
     reminders: reminders,
     scheduler: AlarmRuntime.schedulerFor(reminders),
@@ -23,7 +24,7 @@ final alarmEngineProvider = Provider<ReminderAlarmEngine>((ref) {
 
 /// Home screen widget feed (see HomeWidgetSync).
 final homeWidgetSyncProvider = Provider<HomeWidgetSync>(
-  (ref) => HomeWidgetSync(ref.watch(remindersRepositoryProvider)),
+  (ref) => HomeWidgetSync(ref.watch(allRemindersRepositoryProvider)),
 );
 
 /// While the UI is alive, mirrors every reminder change (create, edit,
@@ -34,7 +35,7 @@ final alarmSyncProvider = Provider<void>((ref) {
   final signatures = <int, (bool, DateTime?, bool)>{};
 
   final subscription = ref
-      .watch(remindersRepositoryProvider)
+      .watch(allRemindersRepositoryProvider)
       .watchAllRaw()
       .listen((rows) async {
         final present = <int>{};

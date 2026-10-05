@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../enums.dart';
+import 'profiles_table.dart';
 import 'doctors_table.dart';
 
 /// A medical document: prescription, test report, vaccine card, invoice...
@@ -22,6 +23,11 @@ class Records extends Table {
   DateTimeColumn get recordDate => dateTime()();
   TextColumn get notes => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  /// Whose this is (see [Profiles]). Last: v8 added it (ALTER TABLE appends).
+  IntColumn get profileId => integer()
+      .withDefault(const Constant(1))
+      .references(Profiles, #id, onDelete: KeyAction.cascade)();
 }
 
 @DataClassName('RecordAttachment')

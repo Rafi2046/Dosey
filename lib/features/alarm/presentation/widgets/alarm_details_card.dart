@@ -10,6 +10,7 @@ import '../../../medicines/presentation/widgets/course_progress_pill.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/domain/reminder_with_details.dart';
 import '../../../../core/localization/l10n.dart';
+import '../../../profiles/presentation/profile_widgets.dart';
 import 'alarm_dose_context.dart';
 
 /// Cream card with what to do: type label, title, dose/details, and time.
@@ -54,6 +55,12 @@ class AlarmDetailsCard extends ConsumerWidget {
             ],
           ),
           AppSpacing.gapMd,
+          // Whose dose, when it's a family member's.
+          if (familyMemberName(context.l10n, details.profile)
+              case final name?) ...[
+            ForProfileLabel(name),
+            AppSpacing.gapSm,
+          ],
           if (PreviousMissedChip.appliesTo(ref, details, scheduledFor)) ...[
             PreviousMissedChip(details: details, scheduledFor: scheduledFor),
             AppSpacing.gapSm,

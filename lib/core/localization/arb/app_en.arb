@@ -33,7 +33,7 @@
   "done": "Done",
   "daysUnit": "days",
   "addSheetTitle": "What would you like to add?",
-  "alarmMarkTaken": "Medicine Taken",
+  "alarmMarkTaken": "Medicine taken",
   "alarmDone": "Done",
   "alarmSnooze": "Snooze",
   "alarmSkip": "Skip this time",
@@ -148,15 +148,15 @@
   "medicineDetails": "Medicine details",
   "medicineDescription": "Description",
   "medicineDescriptionHint": "How and why to take it",
-  "timeDuration": "Time Duration",
-  "medicineTime": "Medicine Time",
+  "timeDuration": "Duration",
+  "medicineTime": "Medicine times",
   "daysInWeek": "Days in a week",
   "doses": "Doses",
   "costPerMonth": "Cost per month",
   "inStock": "In stock",
   "prescription": "Prescription",
   "reminderTimesHint": "Add the times you take this medicine — each one rings like an alarm.",
-  "changeSetting": "Change Setting",
+  "changeSetting": "Edit details",
   "refill": "Refill",
   "refillTitle": "Record a refill",
   "refillQuantity": "Quantity bought",
@@ -1017,6 +1017,160 @@
   "@remindLaterIn": {
     "placeholders": {
       "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "recordNoPages": "No pages yet",
+  "recordNoPagesHint": "Tap to add a photo of the document.",
+  "headsUpTitle": "Coming up: {title}",
+  "@headsUpTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "headsUpLabel": "Also remind me before",
+  "headsUpNone": "No",
+  "headsUpBefore": "{duration} before",
+  "@headsUpBefore": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "backupTitle": "Back up my data",
+  "backupLast": "Last backup: {date}",
+  "@backupLast": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "backupNever": "Not backed up yet: save everything to one file",
+  "backupShareSubject": "Dosey backup",
+  "backupFailed": "Couldn't make the backup. Please try again.",
+  "restoreTitle": "Restore from a backup",
+  "restoreHint": "Replace everything here with a backup file",
+  "restoreConfirmTitle": "Replace all data?",
+  "restoreConfirmBody": "Everything in Dosey now will be replaced by this backup: medicines, reminders, history, records and photos. This can't be undone.",
+  "restoreConfirm": "Restore",
+  "restoreDone": "Backup restored",
+  "restoreNotABackup": "That file isn't a Dosey backup.",
+  "restoreTooNew": "This backup is from a newer version of Dosey. Update the app first.",
+  "reportTitle": "Health report",
+  "reportShowDoctor": "Show your doctor",
+  "reportMoreHint": "A one-page summary to share before a visit",
+  "reportPeriod": "{from} – {to}",
+  "@reportPeriod": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "reportMadeOn": "Made with Dosey on {date}. Recorded by the patient.",
+  "@reportMadeOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "reportMedicines": "Current medicines",
+  "reportNoMedicines": "No current medicines",
+  "reportAdherence": "Doses taken, last {days} days",
+  "@reportAdherence": {
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "reportAdherenceDetail": "{taken} of {total} taken · {missed} missed · {skipped} skipped",
+  "@reportAdherenceDetail": {
+    "placeholders": {
+      "taken": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "total": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "missed": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "skipped": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "reportLatest": "Latest: {value}",
+  "@reportLatest": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reportAverage": "{days}-day average: {value}",
+  "@reportAverage": {
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reportNoReadings": "No readings in this period",
+  "reportShare": "Share report",
+  "reportShareFailed": "Couldn't share the report. Please try again.",
+  "appLockTitle": "App lock",
+  "appLockHint": "Ask for fingerprint, face or phone PIN to open Dosey",
+  "appLockReason": "Unlock Dosey to see your health records",
+  "appLockLocked": "Dosey is locked",
+  "appLockLockedHint": "Your health records are protected.",
+  "appLockUnlock": "Unlock",
+  "appLockUnavailable": "Set a screen lock (PIN, pattern or fingerprint) on your phone first.",
+  "profileMe": "Me",
+  "profilesTitle": "Family profiles",
+  "profilesHint": "Keep medicines for the people you look after",
+  "profileSwitchTitle": "Whose medicines?",
+  "profileAdd": "Add a family member",
+  "profileNameLabel": "Name",
+  "profileNameHint": "e.g. Ammu",
+  "profileRename": "Rename",
+  "profileDelete": "Delete profile",
+  "profileDeleteBody": "All of {name}'s medicines, reminders, history, records, expenses and readings will be deleted. This can't be undone.",
+  "@profileDeleteBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "profileManage": "Manage profiles",
+  "profileYou": "You",
+  "notifForProfile": "{name}: {title}",
+  "@notifForProfile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "title": {
         "type": "String"
       }
     }

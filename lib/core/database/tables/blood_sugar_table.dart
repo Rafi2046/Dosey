@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../enums.dart';
+import 'profiles_table.dart';
 
 /// One blood sugar (glucose) check the user wrote down from a glucometer.
 @DataClassName('BloodSugarReading')
@@ -17,6 +18,11 @@ class BloodSugarReadings extends Table {
   DateTimeColumn get measuredAt => dateTime()();
   TextColumn get note => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  /// Whose this is (see [Profiles]). Last: v8 added it (ALTER TABLE appends).
+  IntColumn get profileId => integer()
+      .withDefault(const Constant(1))
+      .references(Profiles, #id, onDelete: KeyAction.cascade)();
 
   @override
   List<String> get customConstraints => const [

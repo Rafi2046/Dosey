@@ -4,6 +4,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/utils/clock_providers.dart';
+import '../../profiles/providers/profiles_providers.dart';
 import '../data/reminders_repository.dart';
 import '../domain/dose_history.dart';
 import '../domain/missed_doses.dart';
@@ -11,7 +12,17 @@ import '../domain/reminder_schedule.dart';
 import '../domain/reminder_with_details.dart';
 import '../domain/scheduled_occurrence.dart';
 
+/// The open profile's reminders (what the screens list and add to).
 final remindersRepositoryProvider = Provider<RemindersRepository>(
+  (ref) => RemindersRepository(
+    ref.watch(appDatabaseProvider),
+    profileId: ref.watch(activeProfileIdProvider),
+  ),
+);
+
+/// Every profile's reminders: for alarms, which ring for everyone in the
+/// family whichever profile is open.
+final allRemindersRepositoryProvider = Provider<RemindersRepository>(
   (ref) => RemindersRepository(ref.watch(appDatabaseProvider)),
 );
 
@@ -29,7 +40,7 @@ final upcomingRemindersProvider = StreamProvider<List<ReminderWithDetails>>(
 
 /// Occurrences ringing right now; drives the full-screen alarm screen.
 final ringingRemindersProvider = StreamProvider<List<ReminderWithDetails>>(
-  (ref) => ref.watch(remindersRepositoryProvider).watchRinging(),
+  (ref) => ref.watch(allRemindersRepositoryProvider).watchRinging(),
 );
 
 final remindersByMedicineProvider = StreamProvider.autoDispose
@@ -134,7 +145,7 @@ final doseHistoryProvider = FutureProvider.autoDispose
 /// providers here broke the alarm screen when a second medicine joined it.
 final medicinesMissedBeforeProvider = FutureProvider.autoDispose
     .family<Set<int>, DateTime>((ref, at) async {
-      final repo = ref.watch(remindersRepositoryProvider);
+      final repo = ref.watch(allRemindersRepositoryProvider);
       final from = DateTime(
         at.year,
         at.month,

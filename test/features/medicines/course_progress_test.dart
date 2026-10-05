@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   Medicine med({required DateTime start, DateTime? end}) => Medicine(
+    profileId: 1,
     id: 1,
     name: 'Amoxicillin',
     form: MedicineForm.capsule,

@@ -15,6 +15,7 @@ import '../../blood_pressure/providers/blood_pressure_providers.dart';
 import '../../blood_sugar/providers/blood_sugar_providers.dart';
 import 'widgets/blood_pressure_section.dart';
 import 'widgets/blood_sugar_section.dart';
+import '../../profiles/presentation/profile_widgets.dart';
 import 'widgets/dashboard_header.dart';
 import 'widgets/low_stock_section.dart';
 import 'widgets/missed_doses_card.dart';
@@ -41,8 +42,9 @@ class DashboardScreen extends ConsumerWidget {
     final projection = ref.watch(medicineCostProjectionProvider).value;
 
     return TabScrollView(
-      // Everything below the greeting and title shimmers while refreshing.
-      refreshFrom: 2,
+      // Everything below the greeting, profile and title shimmers while
+      // refreshing.
+      refreshFrom: 3,
       onRefresh: () async {
         ref.invalidate(todayScheduleProvider);
         ref.invalidate(missedDosesProvider);
@@ -59,6 +61,8 @@ class DashboardScreen extends ConsumerWidget {
           name: ref.watch(userNameProvider).value,
           onBellTap: onOpenReminders,
         ),
+        // Whose day this is, once there's family to switch to.
+        const ProfilePill(margin: EdgeInsets.only(top: AppSpacing.lg)),
         Padding(
           padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
           child: Text(

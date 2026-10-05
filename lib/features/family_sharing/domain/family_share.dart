@@ -1,5 +1,29 @@
 import 'package:flutter/foundation.dart';
 
+enum FamilyShareStatus {
+  unclaimed,
+  pending,
+  accepted,
+  declined;
+
+  static FamilyShareStatus fromString(String? val, {bool isClaimed = false}) {
+    switch (val?.toLowerCase()) {
+      case 'accepted':
+        return FamilyShareStatus.accepted;
+      case 'pending':
+        return FamilyShareStatus.pending;
+      case 'declined':
+        return FamilyShareStatus.declined;
+      case 'unclaimed':
+        return FamilyShareStatus.unclaimed;
+      default:
+        return isClaimed ? FamilyShareStatus.pending : FamilyShareStatus.unclaimed;
+    }
+  }
+
+  String toDbString() => name;
+}
+
 @immutable
 class FamilyShare {
   const FamilyShare({
@@ -10,19 +34,25 @@ class FamilyShare {
     this.caregiverUid,
     this.caregiverName,
     this.isActive = true,
+    this.status = FamilyShareStatus.unclaimed,
     this.createdAt,
     this.expiresAt,
   });
 
   factory FamilyShare.fromJson(Map<String, dynamic> json) {
+    final caregiverUid = json['caregiver_uid'] as String?;
+    final isClaimed = caregiverUid != null && caregiverUid.isNotEmpty;
+    final rawStatus = json['status'] as String?;
+
     return FamilyShare(
       id: json['id'] as String,
       patientUid: json['patient_uid'] as String,
       shareCode: json['share_code'] as String,
       patientName: json['patient_name'] as String?,
-      caregiverUid: json['caregiver_uid'] as String?,
+      caregiverUid: caregiverUid,
       caregiverName: json['caregiver_name'] as String?,
       isActive: json['is_active'] as bool? ?? true,
+      status: FamilyShareStatus.fromString(rawStatus, isClaimed: isClaimed),
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'] as String)
           : null,
@@ -39,10 +69,13 @@ class FamilyShare {
   final String? caregiverUid;
   final String? caregiverName;
   final bool isActive;
+  final FamilyShareStatus status;
   final DateTime? createdAt;
   final DateTime? expiresAt;
 
   bool get isClaimed => caregiverUid != null && caregiverUid!.isNotEmpty;
+  bool get isPending => isClaimed && (status == FamilyShareStatus.pending);
+  bool get isAccepted => isClaimed && (status == FamilyShareStatus.accepted);
 
   Map<String, dynamic> toJson() {
     return {
@@ -53,6 +86,7 @@ class FamilyShare {
       if (caregiverUid != null) 'caregiver_uid': caregiverUid,
       if (caregiverName != null) 'caregiver_name': caregiverName,
       'is_active': isActive,
+      'status': status.toDbString(),
       if (createdAt != null) 'created_at': createdAt!.toIso8601String(),
       if (expiresAt != null) 'expires_at': expiresAt!.toIso8601String(),
     };
@@ -66,6 +100,7 @@ class FamilyShare {
     String? caregiverUid,
     String? caregiverName,
     bool? isActive,
+    FamilyShareStatus? status,
     DateTime? createdAt,
     DateTime? expiresAt,
   }) {
@@ -77,6 +112,7 @@ class FamilyShare {
       caregiverUid: caregiverUid ?? this.caregiverUid,
       caregiverName: caregiverName ?? this.caregiverName,
       isActive: isActive ?? this.isActive,
+      status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       expiresAt: expiresAt ?? this.expiresAt,
     );

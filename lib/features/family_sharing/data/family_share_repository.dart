@@ -58,6 +58,7 @@ class FamilyShareRepository {
             'share_code': code,
             'patient_name': patientName,
             'is_active': true,
+            'status': 'unclaimed',
             'created_at': now.toIso8601String(),
             'expires_at': expiresAt.toIso8601String(),
           })
@@ -73,7 +74,7 @@ class FamilyShareRepository {
     }
   }
 
-  /// Caregiver redeems a 6-character code to link with a patient.
+  /// Caregiver redeems a 6-character code to link with a patient (sets status to pending).
   Future<FamilyShare> redeemShareCode({
     required String shareCode,
     required String caregiverUid,
@@ -110,7 +111,7 @@ class FamilyShareRepository {
 
       if (share.isClaimed && share.caregiverUid != caregiverUid) {
         throw const FamilyShareException(
-          'This share code has already been redeemed by another caregiver.',
+          'This share code has already been requested by another caregiver.',
         );
       }
 
@@ -118,12 +119,13 @@ class FamilyShareRepository {
         throw const FamilyShareException('This share code has expired.');
       }
 
-      // Update the record with caregiver info
+      // Update the record with caregiver info and set status to pending approval
       final updated = await _supabase
           .from('family_shares')
           .update({
             'caregiver_uid': caregiverUid,
             'caregiver_name': caregiverName,
+            'status': 'pending',
           })
           .eq('id', share.id)
           .select()
@@ -139,7 +141,39 @@ class FamilyShareRepository {
     }
   }
 
-  /// Fetches all shares where current user is the patient (shows linked caregivers).
+  /// Patient accepts a caregiver's link request.
+  Future<void> acceptShare(String shareId) async {
+    if (!isAvailable) return;
+    try {
+      await _supabase
+          .from('family_shares')
+          .update({'status': 'accepted'})
+          .eq('id', shareId);
+    } catch (e) {
+      debugPrint('[FamilyShareRepository] Error accepting share: $e');
+      throw FamilyShareException('Failed to accept link request.');
+    }
+  }
+
+  /// Patient declines a caregiver's link request, resetting the share code.
+  Future<void> declineShare(String shareId) async {
+    if (!isAvailable) return;
+    try {
+      await _supabase
+          .from('family_shares')
+          .update({
+            'caregiver_uid': null,
+            'caregiver_name': null,
+            'status': 'unclaimed',
+          })
+          .eq('id', shareId);
+    } catch (e) {
+      debugPrint('[FamilyShareRepository] Error declining share: $e');
+      throw FamilyShareException('Failed to decline link request.');
+    }
+  }
+
+  /// Fetches all shares where current user is the patient (shows linked caregivers & requests).
   Future<List<FamilyShare>> getPatientShares(String patientUid) async {
     if (!isAvailable) return [];
     try {

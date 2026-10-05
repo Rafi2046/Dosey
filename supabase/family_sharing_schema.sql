@@ -12,14 +12,19 @@ CREATE TABLE IF NOT EXISTS public.family_shares (
     caregiver_name TEXT,
     share_code VARCHAR(6) NOT NULL UNIQUE,
     is_active BOOLEAN NOT NULL DEFAULT true,
+    status TEXT NOT NULL DEFAULT 'unclaimed',
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
     expires_at TIMESTAMPTZ
 );
+
+-- Ensure status column exists if table already created
+ALTER TABLE public.family_shares ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'unclaimed';
 
 -- 2. Indexes for fast querying
 CREATE INDEX IF NOT EXISTS idx_family_shares_patient_uid ON public.family_shares(patient_uid);
 CREATE INDEX IF NOT EXISTS idx_family_shares_caregiver_uid ON public.family_shares(caregiver_uid);
 CREATE INDEX IF NOT EXISTS idx_family_shares_share_code ON public.family_shares(share_code);
+CREATE INDEX IF NOT EXISTS idx_family_shares_status ON public.family_shares(status);
 
 -- 3. Enable Row Level Security (RLS)
 ALTER TABLE public.family_shares ENABLE ROW LEVEL SECURITY;

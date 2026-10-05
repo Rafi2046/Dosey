@@ -165,22 +165,26 @@ void main() {
       }
     });
 
-    test('FamilyShare json serialization and copyWith', () {
+    test('FamilyShare json serialization, status enum and copyWith', () {
       final now = DateTime.utc(2026, 10, 5, 12, 0, 0);
       final share = FamilyShare(
         id: 'test-uuid-1',
         patientUid: 'patient-123',
         patientName: 'Jane Doe',
         shareCode: '8K2P9A',
+        status: FamilyShareStatus.unclaimed,
         createdAt: now,
       );
 
       expect(share.isClaimed, isFalse);
+      expect(share.isPending, isFalse);
+      expect(share.isAccepted, isFalse);
 
       final json = share.toJson();
       expect(json['id'], 'test-uuid-1');
       expect(json['patient_uid'], 'patient-123');
       expect(json['share_code'], '8K2P9A');
+      expect(json['status'], 'unclaimed');
       expect(json['is_active'], isTrue);
 
       final deserialized = FamilyShare.fromJson(json);
@@ -188,14 +192,38 @@ void main() {
       expect(deserialized.patientUid, share.patientUid);
       expect(deserialized.shareCode, share.shareCode);
       expect(deserialized.patientName, share.patientName);
+      expect(deserialized.status, FamilyShareStatus.unclaimed);
 
-      final claimed = share.copyWith(
+      // Test pending status
+      final pending = share.copyWith(
         caregiverUid: 'caregiver-456',
         caregiverName: 'Dr. John',
+        status: FamilyShareStatus.pending,
       );
-      expect(claimed.isClaimed, isTrue);
-      expect(claimed.caregiverUid, 'caregiver-456');
-      expect(claimed.caregiverName, 'Dr. John');
+      expect(pending.isClaimed, isTrue);
+      expect(pending.isPending, isTrue);
+      expect(pending.isAccepted, isFalse);
+      expect(pending.caregiverUid, 'caregiver-456');
+      expect(pending.caregiverName, 'Dr. John');
+
+      // Test accepted status
+      final accepted = pending.copyWith(status: FamilyShareStatus.accepted);
+      expect(accepted.isClaimed, isTrue);
+      expect(accepted.isPending, isFalse);
+      expect(accepted.isAccepted, isTrue);
+
+      // Test fromJson with legacy claimed data without status
+      final legacyClaimedJson = {
+        'id': 'legacy-1',
+        'patient_uid': 'p1',
+        'share_code': 'ABC123',
+        'caregiver_uid': 'cg1',
+        'caregiver_name': 'Legacy CG',
+        'is_active': true,
+      };
+      final legacyParsed = FamilyShare.fromJson(legacyClaimedJson);
+      expect(legacyParsed.isClaimed, isTrue);
+      expect(legacyParsed.status, FamilyShareStatus.pending);
     });
   });
 }

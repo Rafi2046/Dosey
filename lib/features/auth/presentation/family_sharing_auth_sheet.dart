@@ -280,7 +280,63 @@ class _FamilySharingAuthSheetState
       ref.invalidate(caregiverSharesProvider);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Linked as caregiver successfully!')),
+          const SnackBar(
+            content: Text(
+              'Connection request sent! Waiting for your family member to accept.',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleAcceptShare(FamilyShare share) async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    try {
+      final repo = ref.read(familyShareRepositoryProvider);
+      await repo.acceptShare(share.id);
+      ref.invalidate(patientSharesProvider);
+      ref.invalidate(caregiverSharesProvider);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Link accepted! ${share.caregiverName ?? "Caregiver"} is now linked.',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleDeclineShare(FamilyShare share) async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    try {
+      final repo = ref.read(familyShareRepositoryProvider);
+      await repo.declineShare(share.id);
+      ref.invalidate(patientSharesProvider);
+      ref.invalidate(caregiverSharesProvider);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Link request declined.')),
         );
       }
     } catch (e) {
@@ -682,7 +738,7 @@ class _FamilySharingAuthSheetState
                   color: AppColors.accent.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.qr_code_2_rounded,
                   color: AppColors.accent,
                   size: 20,
@@ -724,6 +780,13 @@ class _FamilySharingAuthSheetState
             subtitle: 'They enter this code in their Dosey app.',
             color: AppColors.accent,
           ),
+          AppSpacing.gapSm,
+          _buildStepRow(
+            stepNumber: '3',
+            title: 'Approve incoming link requests',
+            subtitle: 'Review and accept requests from your family members.',
+            color: AppColors.accent,
+          ),
           AppSpacing.gapMd,
 
           if (_activeShare != null) ...[
@@ -759,11 +822,175 @@ class _FamilySharingAuthSheetState
             ),
           ],
 
-          // Linked Caregivers list
+          // Incoming Link Requests (Pending Approval)
           patientSharesAsync.when(
             data: (shares) {
-              final claimed = shares.where((s) => s.isClaimed).toList();
-              if (claimed.isEmpty) return const SizedBox.shrink();
+              final pending = shares.where((s) => s.isPending).toList();
+              if (pending.isEmpty) return const SizedBox.shrink();
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppSpacing.gapMd,
+                  const Divider(),
+                  AppSpacing.gapXs,
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: AppColors.warning.withValues(alpha: 0.15),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.notifications_active_rounded,
+                          size: 16,
+                          color: AppColors.warning,
+                        ),
+                      ),
+                      AppSpacing.gapXs,
+                      Text(
+                        'Incoming Link Requests (${pending.length})',
+                        style: AppTextStyles.caption.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.ink,
+                        ),
+                      ),
+                    ],
+                  ),
+                  AppSpacing.gapXs,
+                  ...pending.map(
+                    (share) => Container(
+                      margin: const EdgeInsets.only(top: AppSpacing.xs),
+                      padding: const EdgeInsets.all(AppSpacing.sm),
+                      decoration: BoxDecoration(
+                        color: AppColors.isDark ? AppColors.cream : Colors.white,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        border: Border.all(
+                          color: AppColors.warning.withValues(alpha: 0.5),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 16,
+                                backgroundColor:
+                                    AppColors.warning.withValues(alpha: 0.2),
+                                child: Text(
+                                  (share.caregiverName?.isNotEmpty == true
+                                          ? share.caregiverName![0]
+                                          : 'C')
+                                      .toUpperCase(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.warning,
+                                  ),
+                                ),
+                              ),
+                              AppSpacing.gapSm,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      share.caregiverName ?? 'Family Caregiver',
+                                      style: AppTextStyles.bodyOnLight.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Wants to connect using code ${share.shareCode}',
+                                      style: AppTextStyles.caption.copyWith(
+                                        color: AppColors.inkMuted,
+                                        fontSize: AppSpacing.fontXs,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          AppSpacing.gapSm,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: OutlinedButton.icon(
+                                  icon: const Icon(
+                                    Icons.close_rounded,
+                                    size: 16,
+                                    color: AppColors.error,
+                                  ),
+                                  label: const Text(
+                                    'Decline',
+                                    style: TextStyle(
+                                      color: AppColors.error,
+                                      fontSize: AppSpacing.fontSm,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  style: OutlinedButton.styleFrom(
+                                    side: BorderSide(
+                                      color: AppColors.error.withValues(alpha: 0.5),
+                                    ),
+                                    shape: const StadiumBorder(),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                    ),
+                                  ),
+                                  onPressed: _isLoading
+                                      ? null
+                                      : () => _handleDeclineShare(share),
+                                ),
+                              ),
+                              AppSpacing.gapSm,
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  icon: const Icon(
+                                    Icons.check_rounded,
+                                    size: 16,
+                                    color: Colors.white,
+                                  ),
+                                  label: const Text(
+                                    'Accept',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: AppSpacing.fontSm,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.tileMint,
+                                    elevation: 0,
+                                    shape: const StadiumBorder(),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                    ),
+                                  ),
+                                  onPressed: _isLoading
+                                      ? null
+                                      : () => _handleAcceptShare(share),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+            loading: () => const SizedBox.shrink(),
+            error: (e, st) => const SizedBox.shrink(),
+          ),
+
+          // Linked Caregivers list (Accepted)
+          patientSharesAsync.when(
+            data: (shares) {
+              final accepted = shares.where((s) => s.isAccepted).toList();
+              if (accepted.isEmpty) return const SizedBox.shrink();
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -779,7 +1006,7 @@ class _FamilySharingAuthSheetState
                       ),
                       AppSpacing.gapXs,
                       Text(
-                        'Linked Caregivers (${claimed.length})',
+                        'Linked Caregivers (${accepted.length})',
                         style: AppTextStyles.caption.copyWith(
                           fontWeight: FontWeight.bold,
                           color: AppColors.ink,
@@ -788,7 +1015,7 @@ class _FamilySharingAuthSheetState
                     ],
                   ),
                   AppSpacing.gapXs,
-                  ...claimed.map(
+                  ...accepted.map(
                     (share) => ListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
@@ -801,6 +1028,13 @@ class _FamilySharingAuthSheetState
                         share.caregiverName ?? 'Caregiver',
                         style: AppTextStyles.bodyOnLight.copyWith(
                           fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      subtitle: Text(
+                        'Active sync • Code: ${share.shareCode}',
+                        style: AppTextStyles.caption.copyWith(
+                          fontSize: AppSpacing.fontXs,
+                          color: AppColors.inkMuted,
                         ),
                       ),
                       trailing: IconButton(
@@ -1170,83 +1404,169 @@ class _FamilySharingAuthSheetState
             subtitle: 'Tap the boxes or use the Paste button.',
             color: AppColors.tileMint,
           ),
+          AppSpacing.gapSm,
+          _buildStepRow(
+            stepNumber: '3',
+            title: 'Wait for family member approval',
+            subtitle: 'They must accept your link request to start sync.',
+            color: AppColors.tileMint,
+          ),
           AppSpacing.gapMd,
           _buildCaregiverCodeInput(),
           AppSpacing.gapSm,
           PillButton(
-            label: 'Link to Family Member',
+            label: 'Request Link to Family Member',
             trailingIcon: Icons.arrow_forward_rounded,
             tone: hasValidCode ? PillButtonTone.accent : PillButtonTone.moss,
             loading: _isLoading,
             onPressed: hasValidCode ? () => _handleRedeemShareCode(user) : null,
           ),
 
-          // Monitored Patients list
+          // Caregiver Shares Lists: Pending Approvals & Connected Members
           caregiverSharesAsync.when(
             data: (shares) {
-              if (shares.isEmpty) return const SizedBox.shrink();
+              final pending = shares.where((s) => s.isPending).toList();
+              final accepted = shares.where((s) => s.isAccepted).toList();
+              if (pending.isEmpty && accepted.isEmpty) {
+                return const SizedBox.shrink();
+              }
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppSpacing.gapMd,
-                  const Divider(),
-                  AppSpacing.gapXs,
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.check_circle_rounded,
-                        size: 16,
-                        color: AppColors.tileMint,
-                      ),
-                      AppSpacing.gapXs,
-                      Text(
-                        'Connected Family Members (${shares.length})',
-                        style: AppTextStyles.caption.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.ink,
+                  if (pending.isNotEmpty) ...[
+                    AppSpacing.gapMd,
+                    const Divider(),
+                    AppSpacing.gapXs,
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.hourglass_top_rounded,
+                          size: 16,
+                          color: AppColors.warning,
                         ),
-                      ),
-                    ],
-                  ),
-                  AppSpacing.gapXs,
-                  ...shares.map(
-                    (share) => ListTile(
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                      leading: const CircleAvatar(
-                        radius: 14,
-                        backgroundColor: AppColors.accent,
-                        child: Icon(Icons.favorite, size: 16, color: Colors.white),
-                      ),
-                      title: Text(
-                        share.patientName ?? 'Family Member',
-                        style: AppTextStyles.bodyOnLight.copyWith(
-                          fontWeight: FontWeight.w600,
+                        AppSpacing.gapXs,
+                        Text(
+                          'Pending Approval (${pending.length})',
+                          style: AppTextStyles.caption.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.ink,
+                          ),
                         ),
-                      ),
-                      subtitle: Text(
-                        'Code: ${share.shareCode}',
-                        style: AppTextStyles.caption.copyWith(
-                          fontSize: AppSpacing.fontXs,
-                          color: AppColors.inkMuted,
+                      ],
+                    ),
+                    AppSpacing.gapXs,
+                    ...pending.map(
+                      (share) => ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        leading: const CircleAvatar(
+                          radius: 14,
+                          backgroundColor: AppColors.warning,
+                          child: Icon(
+                            Icons.schedule,
+                            size: 16,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(
-                          Icons.link_off_rounded,
-                          color: AppColors.error,
-                          size: 20,
+                        title: Text(
+                          share.patientName ?? 'Family Member',
+                          style: AppTextStyles.bodyOnLight.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                        tooltip: 'Unlink',
-                        onPressed: () async {
-                          await ref
-                              .read(familyShareRepositoryProvider)
-                              .revokeShare(share.id);
-                          ref.invalidate(caregiverSharesProvider);
-                        },
+                        subtitle: Text(
+                          'Awaiting approval • Code: ${share.shareCode}',
+                          style: AppTextStyles.caption.copyWith(
+                            fontSize: AppSpacing.fontXs,
+                            color: AppColors.warning,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        trailing: TextButton(
+                          onPressed: () async {
+                            await ref
+                                .read(familyShareRepositoryProvider)
+                                .declineShare(share.id);
+                            ref.invalidate(caregiverSharesProvider);
+                          },
+                          child: Text(
+                            'Cancel',
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.inkMuted,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
+
+                  if (accepted.isNotEmpty) ...[
+                    AppSpacing.gapMd,
+                    const Divider(),
+                    AppSpacing.gapXs,
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.check_circle_rounded,
+                          size: 16,
+                          color: AppColors.tileMint,
+                        ),
+                        AppSpacing.gapXs,
+                        Text(
+                          'Connected Family Members (${accepted.length})',
+                          style: AppTextStyles.caption.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.ink,
+                          ),
+                        ),
+                      ],
+                    ),
+                    AppSpacing.gapXs,
+                    ...accepted.map(
+                      (share) => ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        leading: const CircleAvatar(
+                          radius: 14,
+                          backgroundColor: AppColors.accent,
+                          child: Icon(
+                            Icons.favorite,
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        title: Text(
+                          share.patientName ?? 'Family Member',
+                          style: AppTextStyles.bodyOnLight.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'Active sync • Code: ${share.shareCode}',
+                          style: AppTextStyles.caption.copyWith(
+                            fontSize: AppSpacing.fontXs,
+                            color: AppColors.inkMuted,
+                          ),
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(
+                            Icons.link_off_rounded,
+                            color: AppColors.error,
+                            size: 20,
+                          ),
+                          tooltip: 'Unlink',
+                          onPressed: () async {
+                            await ref
+                                .read(familyShareRepositoryProvider)
+                                .revokeShare(share.id);
+                            ref.invalidate(caregiverSharesProvider);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               );
             },

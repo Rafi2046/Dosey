@@ -60,6 +60,7 @@ class BloodSugarScreen extends ConsumerWidget {
               children: [
                 ScreenHeader(
                   title: l10n.sugarTitle,
+                  showBack: false,
                   // Empty: the empty state below already says so.
                   subtitle: list == null || list.isEmpty
                       ? null

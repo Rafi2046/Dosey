@@ -1685,12 +1685,16 @@ void main() {
         }
       }
 
-      Future<void> push(Widget page) async {
+      Future<void> push(Widget page, {bool expectBack = true}) async {
         final navigator = Navigator.of(tester.element(find.byType(AppNavBar)));
         navigator.push(MaterialPageRoute<void>(builder: (_) => page));
         await settle(tester);
-        // Every pushed page offers a back arrow (iOS has no system one).
-        expect(find.byType(BackArrowButton), findsWidgets);
+        // Every pushed page offers a back arrow unless explicitly disabled.
+        if (expectBack) {
+          expect(find.byType(BackArrowButton), findsWidgets);
+        } else {
+          expect(find.byType(BackArrowButton), findsNothing);
+        }
         navigator.pop();
         await settle(tester);
       }
@@ -1700,7 +1704,7 @@ void main() {
       }
       await tab(HomeTab.dashboard);
       await push(const BloodPressureScreen());
-      await push(const BloodSugarScreen());
+      await push(const BloodSugarScreen(), expectBack: false);
       await push(const DoseHistoryScreen());
       await push(const SettingsScreen());
       await push(const MedicineDetailScreen(medicineId: 1));

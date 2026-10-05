@@ -14,6 +14,7 @@ class ScreenHeader extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.trailing,
+    this.showBack,
     this.onLight = false,
     this.padding = const EdgeInsets.only(
       top: AppSpacing.lg,
@@ -26,6 +27,10 @@ class ScreenHeader extends StatelessWidget {
   /// Short live summary ("3 medicines"); hidden while null.
   final String? subtitle;
   final Widget? trailing;
+
+  /// Explicitly control back arrow visibility. When null, auto-detected
+  /// from whether the current route is a [PageRoute] that can pop.
+  final bool? showBack;
 
   /// Ink text for cream surfaces (bottom sheets).
   final bool onLight;
@@ -42,7 +47,8 @@ class ScreenHeader extends StatelessWidget {
     // A page pushed over the tabs (blood pressure, history…) gets a back
     // arrow: iOS has no system back button. Tabs and sheets don't.
     final route = ModalRoute.of(context);
-    final showBack = route is PageRoute && route.canPop;
+    final effectiveShowBack =
+        showBack ?? (route is PageRoute && route.canPop);
     final header = Row(
       children: [
         Expanded(
@@ -103,7 +109,7 @@ class ScreenHeader extends StatelessWidget {
     );
     return Padding(
       padding: padding,
-      child: showBack
+      child: effectiveShowBack
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

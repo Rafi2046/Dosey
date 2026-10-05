@@ -18,7 +18,7 @@ class BloodSugarSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final latest = ref.watch(bloodSugarReadingsProvider).value?.firstOrNull;
+    final latest = ref.watch(latestBloodSugarProvider).value;
     if (latest == null) return const SizedBox.shrink();
     final l10n = context.l10n;
     void open() => Navigator.of(

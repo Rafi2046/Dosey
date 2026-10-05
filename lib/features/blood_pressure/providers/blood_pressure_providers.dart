@@ -17,3 +17,14 @@ final bloodPressureReadingsProvider =
     StreamProvider<List<BloodPressureReading>>(
       (ref) => ref.watch(bloodPressureRepositoryProvider).watchAll(),
     );
+
+/// The most recent reading only; uses [select] so the widget rebuilds only
+/// when the actual first element changes — not whenever the provider chain
+/// invalidates (which avoids "setState during build" on profile switches).
+final latestBloodPressureProvider =
+    Provider<AsyncValue<BloodPressureReading?>>((ref) {
+  return ref.watch(
+    bloodPressureReadingsProvider
+        .select((async) => async.whenData((list) => list.firstOrNull)),
+  );
+});

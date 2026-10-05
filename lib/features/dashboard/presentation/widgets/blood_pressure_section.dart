@@ -19,7 +19,7 @@ class BloodPressureSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final latest = ref.watch(bloodPressureReadingsProvider).value?.firstOrNull;
+    final latest = ref.watch(latestBloodPressureProvider).value;
     if (latest == null) return const SizedBox.shrink();
     final l10n = context.l10n;
     void open() => Navigator.of(context).push(

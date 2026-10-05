@@ -176,24 +176,28 @@ class ReminderTypeFilter extends Notifier<ReminderType?> {
 final filteredRemindersProvider =
     Provider<AsyncValue<List<ReminderWithDetails>>>((ref) {
       final type = ref.watch(reminderTypeFilterProvider);
-      return ref
-          .watch(remindersProvider)
-          .whenData(
+      return ref.watch(
+        remindersProvider.select(
+          (async) => async.whenData(
             (list) => type == null
                 ? list
                 : list.where((d) => d.reminder.type == type).toList(),
-          );
+          ),
+        ),
+      );
     });
 
 /// Upcoming appointments, vaccines and tests (not daily medicine doses).
 final upcomingEventsProvider = Provider<AsyncValue<List<ReminderWithDetails>>>(
-  (ref) => ref
-      .watch(upcomingRemindersProvider)
-      .whenData(
+  (ref) => ref.watch(
+    upcomingRemindersProvider.select(
+      (async) => async.whenData(
         (list) => list
             .where((d) => d.reminder.type != ReminderType.medicine)
             .toList(),
       ),
+    ),
+  ),
 );
 
 final remindersByDoctorProvider = Provider.autoDispose

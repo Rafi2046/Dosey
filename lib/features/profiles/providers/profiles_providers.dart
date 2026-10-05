@@ -2,6 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
+import '../../blood_pressure/providers/blood_pressure_providers.dart';
+import '../../blood_sugar/providers/blood_sugar_providers.dart';
+import '../../expenses/providers/expenses_providers.dart';
+import '../../medicines/providers/medicines_providers.dart';
+import '../../records/providers/records_providers.dart';
+import '../../reminders/providers/reminders_providers.dart';
 import '../../settings/providers/settings_providers.dart';
 import '../data/profiles_repository.dart';
 
@@ -33,6 +39,22 @@ class ActiveProfile extends Notifier<int> {
 
   Future<void> select(int id) async {
     state = id;
+
+    // Eagerly flush every provider chain that watches activeProfileIdProvider.
+    // This forces Riverpod to rebuild/settle them RIGHT NOW — outside any
+    // widget build phase — so that by the time the framework builds the next
+    // frame, no provider is dirty and no cascading invalidation can trigger
+    // "setState during build" on the UncontrolledProviderScope.
+    ref.read(bloodPressureRepositoryProvider);
+    ref.read(bloodPressureReadingsProvider);
+    ref.read(bloodSugarRepositoryProvider);
+    ref.read(bloodSugarReadingsProvider);
+    ref.read(remindersRepositoryProvider);
+    ref.read(remindersProvider);
+    ref.read(expensesRepositoryProvider);
+    ref.read(medicinesRepositoryProvider);
+    ref.read(recordsRepositoryProvider);
+
     await ref.read(settingsRepositoryProvider).set(activeProfileKey, '$id');
   }
 }

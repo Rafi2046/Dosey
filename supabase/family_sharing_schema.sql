@@ -47,3 +47,37 @@ CREATE POLICY "Allow anon update family_shares" ON public.family_shares
     FOR UPDATE
     TO anon, authenticated
     USING (true);
+
+-- 5. Create patient_shared_adherence table for live dose tracking & caregiver monitoring
+CREATE TABLE IF NOT EXISTS public.patient_shared_adherence (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    patient_uid TEXT NOT NULL,
+    patient_name TEXT,
+    date TEXT NOT NULL, -- YYYY-MM-DD
+    medicine_name TEXT NOT NULL,
+    dosage TEXT,
+    time TEXT NOT NULL, -- HH:mm a (e.g. 09:00 AM)
+    form TEXT,
+    meal_relation TEXT,
+    status TEXT NOT NULL DEFAULT 'pending', -- 'pending', 'taken', 'skipped', 'missed'
+    taken_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    UNIQUE (patient_uid, date, medicine_name, time)
+);
+
+CREATE INDEX IF NOT EXISTS idx_shared_adherence_patient_date ON public.patient_shared_adherence(patient_uid, date);
+ALTER TABLE public.patient_shared_adherence ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow anon read patient_shared_adherence" ON public.patient_shared_adherence;
+CREATE POLICY "Allow anon read patient_shared_adherence" ON public.patient_shared_adherence
+    FOR SELECT
+    TO anon, authenticated
+    USING (true);
+
+DROP POLICY IF EXISTS "Allow anon upsert patient_shared_adherence" ON public.patient_shared_adherence;
+CREATE POLICY "Allow anon upsert patient_shared_adherence" ON public.patient_shared_adherence
+    FOR ALL
+    TO anon, authenticated
+    USING (true)
+    WITH CHECK (true);
+

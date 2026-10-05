@@ -12,6 +12,7 @@ import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../family_sharing/domain/family_share.dart';
+import '../../family_sharing/presentation/family_member_adherence_screen.dart';
 import '../../family_sharing/providers/family_share_providers.dart';
 import '../data/auth_repository.dart';
 import '../providers/auth_providers.dart';
@@ -1544,26 +1545,46 @@ class _FamilySharingAuthSheetState
                           ),
                         ),
                         subtitle: Text(
-                          'Active sync • Code: ${share.shareCode}',
+                          'Active sync • Tap to view schedule',
                           style: AppTextStyles.caption.copyWith(
                             fontSize: AppSpacing.fontXs,
-                            color: AppColors.inkMuted,
+                            color: AppColors.tileMint,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        trailing: IconButton(
-                          icon: const Icon(
-                            Icons.link_off_rounded,
-                            color: AppColors.error,
-                            size: 20,
-                          ),
-                          tooltip: 'Unlink',
-                          onPressed: () async {
-                            await ref
-                                .read(familyShareRepositoryProvider)
-                                .revokeShare(share.id);
-                            ref.invalidate(caregiverSharesProvider);
-                          },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.link_off_rounded,
+                                color: AppColors.error,
+                                size: 20,
+                              ),
+                              tooltip: 'Unlink',
+                              onPressed: () async {
+                                await ref
+                                    .read(familyShareRepositoryProvider)
+                                    .revokeShare(share.id);
+                                ref.invalidate(caregiverSharesProvider);
+                              },
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 14,
+                              color: AppColors.inkMuted,
+                            ),
+                          ],
                         ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) =>
+                                  FamilyMemberAdherenceScreen(share: share),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],

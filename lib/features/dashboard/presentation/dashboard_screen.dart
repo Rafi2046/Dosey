@@ -13,6 +13,9 @@ import '../../expenses/providers/expenses_providers.dart';
 import '../../reminders/presentation/reminder_form_screen.dart';
 import '../../blood_pressure/providers/blood_pressure_providers.dart';
 import '../../blood_sugar/providers/blood_sugar_providers.dart';
+import '../../family_sharing/presentation/widgets/caregiver_monitoring_card.dart';
+import '../../family_sharing/providers/family_share_providers.dart';
+import '../../family_sharing/providers/shared_adherence_providers.dart';
 import 'widgets/blood_pressure_section.dart';
 import 'widgets/blood_sugar_section.dart';
 import '../../profiles/presentation/profile_widgets.dart';
@@ -37,6 +40,9 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Keep shared adherence sync alive for patient
+    ref.watch(sharedAdherenceAutoSyncProvider);
+
     final now = ref.watch(minuteTickerProvider).value ?? DateTime.now();
     final spent = ref.watch(currentMonthExpenseTotalProvider).value ?? 0;
     final projection = ref.watch(medicineCostProjectionProvider).value;
@@ -50,6 +56,7 @@ class DashboardScreen extends ConsumerWidget {
         ref.invalidate(missedDosesProvider);
         ref.invalidate(lowStockMedicinesProvider);
         ref.invalidate(remindersProvider);
+        ref.invalidate(caregiverSharesProvider);
         ref.invalidate(currentMonthExpenseTotalProvider);
         ref.invalidate(medicineCostProjectionProvider);
         ref.invalidate(bloodPressureReadingsProvider);
@@ -71,6 +78,8 @@ class DashboardScreen extends ConsumerWidget {
           ),
         ),
         const MissedDosesCard(),
+        // Caregiver active monitoring card (if monitoring a linked family member)
+        const CaregiverMonitoringCard(),
         TodayReminderStack(
           onAddReminder: () => Navigator.of(context).push(
             MaterialPageRoute<void>(builder: (_) => const ReminderFormScreen()),

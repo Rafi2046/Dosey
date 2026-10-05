@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "918524133674-suhj9e6heovu39skt5l7ugnu9eqftteg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.onesttech.dosey",
+            "certificate_hash": "8a460d2c74c57000108f04316ed37b46de37518f"
+          }
+        },
+        {
           "client_id": "918524133674-annc5hqp9h0847bvpbrrd1irjskt4c2e.apps.googleusercontent.com",
           "client_type": 3
         }

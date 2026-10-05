@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/cloud/push_messaging_service.dart';
 import '../../auth/providers/auth_providers.dart';
 import '../../reminders/providers/reminders_providers.dart';
 import '../data/shared_adherence_repository.dart';
@@ -32,8 +33,8 @@ final patientAdherenceScheduleProvider = FutureProvider.autoDispose
 ///
 /// Watches only the signed-in uid, so the realtime channel and poll timer
 /// live as long as the session instead of being torn down on every schedule
-/// change. Delivery needs the app running; a fresh check also runs whenever
-/// the app comes back to the foreground.
+/// change. These cover the app being open; FCM push (registered here too)
+/// covers it being in the background or closed.
 final caregiverNudgeListenerProvider = Provider<void>((ref) {
   final uid = ref.watch(currentUserProvider.select((u) => u?.uid));
   if (uid == null) return;
@@ -41,6 +42,7 @@ final caregiverNudgeListenerProvider = Provider<void>((ref) {
   final repo = ref.read(sharedAdherenceRepositoryProvider);
   void check() => repo.checkAndDeliverNudges(uid);
 
+  PushMessagingService.register(uid);
   check();
   final channel = repo.subscribeToNudges(uid, check);
   // Fallback for when realtime isn't enabled on the table or drops.

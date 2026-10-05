@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../core/cloud/cloud_initializer.dart';
+import '../../../core/cloud/push_messaging_service.dart';
 
 /// Repository managing Firebase Authentication for Family Sharing & Caregiver Mode.
 class AuthRepository {
@@ -143,6 +144,8 @@ class AuthRepository {
   Future<void> signOut() async {
     if (!isAvailable) return;
     try {
+      // Stop caregiver nudge pushes reaching a signed-out device.
+      await PushMessagingService.unregister();
       await _auth.signOut();
       if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
         await GoogleSignIn().signOut().catchError((_) => null);

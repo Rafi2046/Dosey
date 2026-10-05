@@ -114,3 +114,68 @@ BEGIN
     ALTER PUBLICATION supabase_realtime ADD TABLE public.family_nudges;
 EXCEPTION WHEN duplicate_object THEN NULL;
 END $$;
+
+-- 8. Push tokens: one row per device, for caregiver nudges via FCM.
+-- No RLS policies on purpose: app users can't read tokens, they only
+-- register/unregister their own device through the functions below. The
+-- send-nudge-push edge function reads them with the service role.
+CREATE TABLE IF NOT EXISTS public.device_push_tokens (
+    token TEXT PRIMARY KEY,
+    uid TEXT NOT NULL,
+    platform TEXT,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+CREATE INDEX IF NOT EXISTS idx_device_push_tokens_uid ON public.device_push_tokens(uid);
+ALTER TABLE public.device_push_tokens ENABLE ROW LEVEL SECURITY;
+
+CREATE OR REPLACE FUNCTION public.register_push_token(p_uid TEXT, p_token TEXT, p_platform TEXT)
+RETURNS VOID
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    -- A device that changes account moves to the new uid.
+    INSERT INTO public.device_push_tokens (token, uid, platform, updated_at)
+    VALUES (p_token, p_uid, p_platform, timezone('utc'::text, now()))
+    ON CONFLICT (token) DO UPDATE
+        SET uid = EXCLUDED.uid,
+            platform = EXCLUDED.platform,
+            updated_at = EXCLUDED.updated_at;
+$$;
+
+CREATE OR REPLACE FUNCTION public.unregister_push_token(p_token TEXT)
+RETURNS VOID
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    DELETE FROM public.device_push_tokens WHERE token = p_token;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.register_push_token(TEXT, TEXT, TEXT) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.unregister_push_token(TEXT) TO anon, authenticated;
+
+-- 9. On each new nudge, ask the send-nudge-push edge function to push it.
+CREATE EXTENSION IF NOT EXISTS pg_net;
+
+CREATE OR REPLACE FUNCTION public.push_family_nudge()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+    PERFORM net.http_post(
+        url := 'https://datkdpcomjgtuhodggml.supabase.co/functions/v1/send-nudge-push',
+        headers := '{"Content-Type": "application/json"}'::jsonb,
+        body := jsonb_build_object('nudge_id', NEW.id)
+    );
+    RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS family_nudges_push ON public.family_nudges;
+CREATE TRIGGER family_nudges_push
+    AFTER INSERT ON public.family_nudges
+    FOR EACH ROW EXECUTE FUNCTION public.push_family_nudge();

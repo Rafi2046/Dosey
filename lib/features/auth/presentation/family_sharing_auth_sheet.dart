@@ -21,8 +21,12 @@ Future<void> showFamilySharingAuthSheet(BuildContext context) =>
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      showDragHandle: false,
       backgroundColor: Colors.transparent,
-      builder: (_) => const FamilySharingAuthSheet(),
+      builder: (_) => const FractionallySizedBox(
+        heightFactor: AppSpacing.moreSheetHeightFactor,
+        child: FamilySharingAuthSheet(),
+      ),
     );
 
 class FamilySharingAuthSheet extends ConsumerStatefulWidget {

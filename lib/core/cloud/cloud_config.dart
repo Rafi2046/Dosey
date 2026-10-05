@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Configuration constants for Cloud Services (Firebase & Supabase).
 ///
 /// Values can be supplied at build/run time via `--dart-define`:

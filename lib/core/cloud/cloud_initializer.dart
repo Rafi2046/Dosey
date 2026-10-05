@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../firebase_options.dart';
 import 'cloud_config.dart';
 
 /// Initializes Firebase and Supabase gracefully without crashing
@@ -22,7 +23,9 @@ abstract final class CloudInitializer {
   static Future<void> _initFirebase() async {
     try {
       if (Firebase.apps.isEmpty) {
-        await Firebase.initializeApp();
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
       }
       _firebaseInitialized = true;
       debugPrint('[CloudInitializer] Firebase initialized successfully.');
@@ -41,10 +44,12 @@ abstract final class CloudInitializer {
       if (CloudConfig.isSupabaseConfigured) {
         await Supabase.initialize(
           url: CloudConfig.supabaseUrl,
-          anonKey: CloudConfig.supabaseAnonKey,
+          publishableKey: CloudConfig.supabaseAnonKey,
         );
         _supabaseInitialized = true;
-        debugPrint('[CloudInitializer] Supabase initialized successfully.');
+        debugPrint(
+          '[CloudInitializer] Supabase initialized successfully.',
+        );
       } else {
         debugPrint(
           '[CloudInitializer] Supabase credentials not set via --dart-define. Offline mode active.',

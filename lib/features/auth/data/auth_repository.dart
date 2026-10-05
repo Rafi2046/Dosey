@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
+import '../../../core/cloud/cloud_initializer.dart';
+
 /// Repository managing Firebase Authentication for Family Sharing & Caregiver Mode.
 class AuthRepository {
   const AuthRepository();
@@ -16,6 +18,15 @@ class AuthRepository {
 
   User? get currentUser => isAvailable ? _auth.currentUser : null;
 
+  Future<void> _ensureAvailable() async {
+    if (Firebase.apps.isEmpty) {
+      await CloudInitializer.initialize();
+    }
+    if (!isAvailable) {
+      throw const AuthException('Firebase is not initialized.');
+    }
+  }
+
   Stream<User?> authStateChanges() {
     if (!isAvailable) {
       return Stream.value(null);
@@ -25,11 +36,12 @@ class AuthRepository {
 
   /// Signs in using Google Sign-In and links to Firebase Auth.
   Future<UserCredential?> signInWithGoogle() async {
-    if (!isAvailable) {
-      throw const AuthException('Firebase is not initialized.');
-    }
+    await _ensureAvailable();
     try {
-      final googleSignIn = GoogleSignIn();
+      final googleSignIn = GoogleSignIn(
+        serverClientId:
+            '918524133674-annc5hqp9h0847bvpbrrd1irjskt4c2e.apps.googleusercontent.com',
+      );
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
         return null; // User cancelled
@@ -51,9 +63,7 @@ class AuthRepository {
 
   /// Signs in using Sign in with Apple (iOS / macOS / Web).
   Future<UserCredential?> signInWithApple() async {
-    if (!isAvailable) {
-      throw const AuthException('Firebase is not initialized.');
-    }
+    await _ensureAvailable();
     try {
       final appleCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
@@ -79,27 +89,50 @@ class AuthRepository {
     required String email,
     required String password,
   }) async {
-    if (!isAvailable) {
-      throw const AuthException('Firebase is not initialized.');
-    }
+    await _ensureAvailable();
     return _auth.signInWithEmailAndPassword(
       email: email.trim(),
       password: password,
     );
   }
 
-  /// Registers a new account with Email and Password.
+  /// Registers a new account with Email and Password and optional displayName.
   Future<UserCredential> registerWithEmail({
     required String email,
     required String password,
+    String? displayName,
   }) async {
-    if (!isAvailable) {
-      throw const AuthException('Firebase is not initialized.');
-    }
-    return _auth.createUserWithEmailAndPassword(
+    await _ensureAvailable();
+    final credential = await _auth.createUserWithEmailAndPassword(
       email: email.trim(),
       password: password,
     );
+    if (displayName != null && displayName.trim().isNotEmpty) {
+      try {
+        await credential.user?.updateDisplayName(displayName.trim());
+      } catch (e) {
+        debugPrint('[AuthRepository] Failed to update display name: $e');
+      }
+    }
+    return credential;
+  }
+
+  /// Sends a password reset email.
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _ensureAvailable();
+    await _auth.sendPasswordResetEmail(email: email.trim());
+  }
+
+  /// Deletes the currently signed-in user account.
+  Future<void> deleteAccount() async {
+    if (!isAvailable) return;
+    final user = _auth.currentUser;
+    if (user != null) {
+      await user.delete();
+      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+        await GoogleSignIn().signOut().catchError((_) => null);
+      }
+    }
   }
 
   /// Signs out of all identity providers.
@@ -114,6 +147,27 @@ class AuthRepository {
       debugPrint('[AuthRepository] Sign-Out error: $e');
     }
   }
+
+  /// Formats Firebase authentication errors into clear, actionable messages.
+  static String formatAuthError(dynamic error) {
+    if (error is FirebaseAuthException) {
+      return switch (error.code) {
+        'user-not-found' => 'No account found with this email address.',
+        'wrong-password' => 'Incorrect password. Please try again.',
+        'email-already-in-use' => 'An account with this email already exists.',
+        'invalid-email' => 'Please enter a valid email address.',
+        'weak-password' => 'Password must be at least 6 characters.',
+        'user-disabled' => 'This account has been disabled.',
+        'too-many-requests' => 'Too many attempts. Please try again later.',
+        'operation-not-allowed' => 'This sign-in method is not enabled.',
+        'network-request-failed' => 'Network error. Please check your connection.',
+        'invalid-credential' => 'Invalid email or password. Please check and retry.',
+        'requires-recent-login' => 'Please sign out and sign in again before deleting your account.',
+        _ => error.message ?? 'Authentication error occurred.',
+      };
+    }
+    return error.toString();
+  }
 }
 
 class AuthException implements Exception {
@@ -123,3 +177,4 @@ class AuthException implements Exception {
   @override
   String toString() => message;
 }
+

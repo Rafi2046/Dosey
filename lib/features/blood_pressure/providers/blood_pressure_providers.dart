@@ -17,11 +17,3 @@ final bloodPressureReadingsProvider =
     StreamProvider<List<BloodPressureReading>>(
       (ref) => ref.watch(bloodPressureRepositoryProvider).watchAll(),
     );
-
-/// The most recent reading only.
-final latestBloodPressureProvider =
-    Provider<AsyncValue<BloodPressureReading?>>((ref) {
-  return ref.watch(bloodPressureReadingsProvider).whenData(
-    (list) => list.firstOrNull,
-  );
-});

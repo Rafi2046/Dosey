@@ -7,8 +7,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/cloud/cloud_initializer.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/app_colors.dart';
 import '../../../core/database/enums.dart';
 import '../../reminders/domain/scheduled_occurrence.dart';
+import '../domain/family_share.dart';
 import '../domain/shared_adherence_dose.dart';
 
 class SharedAdherenceRepository {
@@ -127,7 +129,9 @@ class SharedAdherenceRepository {
     String? caregiverName,
     String? message,
   }) async {
-    if (!isAvailable) return;
+    if (!isAvailable) {
+      throw const FamilyShareException('Cloud services are not connected.');
+    }
 
     try {
       await _supabase.from('family_nudges').insert({
@@ -135,19 +139,57 @@ class SharedAdherenceRepository {
         'caregiver_uid': caregiverUid,
         'caregiver_name': caregiverName,
         'message': message ??
-            '${caregiverName ?? "Your caregiver"} reminded you to take your pending medicines! 💊',
+            '${caregiverName ?? "Your caregiver"} sent a gentle reminder to take your pending medicines! 💊',
         'created_at': DateTime.now().toUtc().toIso8601String(),
         'is_read': false,
       });
     } catch (e) {
       debugPrint('[SharedAdherenceRepository] Error sending reminder nudge: $e');
-      // Non-fatal if table not migrated yet
+      if (e is PostgrestException) {
+        if (e.message.contains('does not exist') || e.code == '42P01') {
+          throw const FamilyShareException(
+            'The family_nudges table was not found in Supabase. Please run the SQL migration script in your Supabase SQL Editor.',
+          );
+        }
+        throw FamilyShareException('Failed to send reminder: ${e.message}');
+      }
+      throw FamilyShareException('Failed to send reminder: $e');
+    }
+  }
+
+  /// Subscribes to Realtime incoming nudges for the patient.
+  RealtimeChannel? subscribeToNudges(
+    String patientUid,
+    void Function() onNudgeReceived,
+  ) {
+    if (!isAvailable) return null;
+    try {
+      final channel = _supabase.channel('public:family_nudges:$patientUid');
+      channel
+          .onPostgresChanges(
+            event: PostgresChangeEvent.insert,
+            schema: 'public',
+            table: 'family_nudges',
+            filter: PostgresChangeFilter(
+              type: PostgresChangeFilterType.eq,
+              column: 'patient_uid',
+              value: patientUid,
+            ),
+            callback: (payload) {
+              onNudgeReceived();
+            },
+          )
+          .subscribe();
+      return channel;
+    } catch (e) {
+      debugPrint('[SharedAdherenceRepository] Realtime subscribe error: $e');
+      return null;
     }
   }
 
   /// Patient checks for incoming unread reminders from caregivers and triggers local notifications.
-  Future<void> checkAndDeliverNudges(String patientUid) async {
-    if (!isAvailable) return;
+  Future<int> checkAndDeliverNudges(String patientUid) async {
+    if (!isAvailable) return 0;
 
     try {
       final nudges = await _supabase
@@ -156,31 +198,40 @@ class SharedAdherenceRepository {
           .eq('patient_uid', patientUid)
           .eq('is_read', false);
 
-      for (final raw in (nudges as List<dynamic>)) {
+      final list = (nudges as List<dynamic>);
+      if (list.isEmpty) return 0;
+
+      for (final raw in list) {
         final id = raw['id'] as String;
-        final caregiverName = raw['caregiver_name'] as String? ?? 'Your Caregiver';
-        final message = raw['message'] as String? ?? 'It is time to take your scheduled medicines!';
+        final caregiverName =
+            raw['caregiver_name'] as String? ?? 'Your Family Member';
+        final message = raw['message'] as String? ??
+            'It is time to take your scheduled medicines!';
 
         // Create high priority local notification
-        AwesomeNotifications().createNotification(
+        await AwesomeNotifications().createNotification(
           content: NotificationContent(
-            id: Random().nextInt(100000),
+            id: Random().nextInt(1000000),
             channelKey: AppConstants.channelMedicine,
             title: '🔔 Reminder from $caregiverName',
             body: message,
             notificationLayout: NotificationLayout.Default,
+            category: NotificationCategory.Reminder,
             wakeUpScreen: true,
+            color: AppColors.accent,
           ),
         );
 
-        // Mark as read
+        // Mark as read in Supabase
         await _supabase
             .from('family_nudges')
             .update({'is_read': true})
             .eq('id', id);
       }
+      return list.length;
     } catch (e) {
       debugPrint('[SharedAdherenceRepository] Error checking nudges: $e');
+      return 0;
     }
   }
 }

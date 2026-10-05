@@ -19,7 +19,12 @@ class BloodPressureSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final latest = ref.watch(latestBloodPressureProvider).value;
+    // Selected straight off the stream: a derived provider here got
+    // invalidated mid-build after a pull-to-refresh, tripping Riverpod's
+    // "markNeedsBuild during build" assertion.
+    final latest = ref.watch(
+      bloodPressureReadingsProvider.select((r) => r.value?.firstOrNull),
+    );
     if (latest == null) return const SizedBox.shrink();
     final l10n = context.l10n;
     void open() => Navigator.of(context).push(

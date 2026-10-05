@@ -16,12 +16,3 @@ final bloodSugarRepositoryProvider = Provider<BloodSugarRepository>(
 final bloodSugarReadingsProvider = StreamProvider<List<BloodSugarReading>>(
   (ref) => ref.watch(bloodSugarRepositoryProvider).watchAll(),
 );
-
-/// The most recent reading only.
-final latestBloodSugarProvider =
-    Provider<AsyncValue<BloodSugarReading?>>((ref) {
-  return ref.watch(bloodSugarReadingsProvider).whenData(
-    (list) => list.firstOrNull,
-  );
-});
-

@@ -51,19 +51,38 @@ class FamilyShareRepository {
       final now = DateTime.now().toUtc();
       final expiresAt = now.add(const Duration(days: 7));
 
-      final data = await _supabase
-          .from('family_shares')
-          .insert({
-            'patient_uid': patientUid,
-            'share_code': code,
-            'patient_name': patientName,
-            'is_active': true,
-            'status': 'unclaimed',
-            'created_at': now.toIso8601String(),
-            'expires_at': expiresAt.toIso8601String(),
-          })
-          .select()
-          .single();
+      final insertPayload = <String, dynamic>{
+        'patient_uid': patientUid,
+        'share_code': code,
+        'patient_name': patientName,
+        'is_active': true,
+        'status': 'unclaimed',
+        'created_at': now.toIso8601String(),
+        'expires_at': expiresAt.toIso8601String(),
+      };
+
+      Map<String, dynamic> data;
+      try {
+        data = await _supabase
+            .from('family_shares')
+            .insert(insertPayload)
+            .select()
+            .single();
+      } catch (insertError) {
+        if (insertError.toString().contains('status') ||
+            (insertError is PostgrestException &&
+                insertError.message.contains('status'))) {
+          // Graceful fallback if status column is not yet migrated in Supabase
+          insertPayload.remove('status');
+          data = await _supabase
+              .from('family_shares')
+              .insert(insertPayload)
+              .select()
+              .single();
+        } else {
+          rethrow;
+        }
+      }
 
       return FamilyShare.fromJson(data);
     } catch (e) {
@@ -120,16 +139,36 @@ class FamilyShareRepository {
       }
 
       // Update the record with caregiver info and set status to pending approval
-      final updated = await _supabase
-          .from('family_shares')
-          .update({
-            'caregiver_uid': caregiverUid,
-            'caregiver_name': caregiverName,
-            'status': 'pending',
-          })
-          .eq('id', share.id)
-          .select()
-          .single();
+      final updatePayload = <String, dynamic>{
+        'caregiver_uid': caregiverUid,
+        'caregiver_name': caregiverName,
+        'status': 'pending',
+      };
+
+      Map<String, dynamic> updated;
+      try {
+        updated = await _supabase
+            .from('family_shares')
+            .update(updatePayload)
+            .eq('id', share.id)
+            .select()
+            .single();
+      } catch (updateError) {
+        if (updateError.toString().contains('status') ||
+            (updateError is PostgrestException &&
+                updateError.message.contains('status'))) {
+          // Graceful fallback if status column is not yet migrated in Supabase
+          updatePayload.remove('status');
+          updated = await _supabase
+              .from('family_shares')
+              .update(updatePayload)
+              .eq('id', share.id)
+              .select()
+              .single();
+        } else {
+          rethrow;
+        }
+      }
 
       return FamilyShare.fromJson(updated);
     } catch (e) {
@@ -150,6 +189,10 @@ class FamilyShareRepository {
           .update({'status': 'accepted'})
           .eq('id', shareId);
     } catch (e) {
+      if (e.toString().contains('status') ||
+          (e is PostgrestException && e.message.contains('status'))) {
+        return;
+      }
       debugPrint('[FamilyShareRepository] Error accepting share: $e');
       throw FamilyShareException('Failed to accept link request.');
     }
@@ -168,6 +211,17 @@ class FamilyShareRepository {
           })
           .eq('id', shareId);
     } catch (e) {
+      if (e.toString().contains('status') ||
+          (e is PostgrestException && e.message.contains('status'))) {
+        await _supabase
+            .from('family_shares')
+            .update({
+              'caregiver_uid': null,
+              'caregiver_name': null,
+            })
+            .eq('id', shareId);
+        return;
+      }
       debugPrint('[FamilyShareRepository] Error declining share: $e');
       throw FamilyShareException('Failed to decline link request.');
     }

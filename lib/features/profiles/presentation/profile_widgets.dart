@@ -150,10 +150,8 @@ class _ProfileSwitcher extends ConsumerWidget {
                 profile: p,
                 selected: p.id == activeId,
                 onTap: () {
+                  ref.read(activeProfileIdProvider.notifier).select(p.id);
                   Navigator.pop(context);
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ref.read(activeProfileIdProvider.notifier).select(p.id);
-                  });
                 },
               ),
               AppSpacing.gapSm,
@@ -166,10 +164,8 @@ class _ProfileSwitcher extends ConsumerWidget {
               onPressed: () async {
                 final id = await addFamilyMember(context, ref);
                 if (id == null) return;
+                ref.read(activeProfileIdProvider.notifier).select(id);
                 if (context.mounted) Navigator.pop(context);
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  ref.read(activeProfileIdProvider.notifier).select(id);
-                });
               },
             ),
             TextButton.icon(
@@ -308,12 +304,10 @@ class ProfilesScreen extends ConsumerWidget {
               profile: p,
               selected: p.id == ref.watch(activeProfileIdProvider),
               onTap: () {
+                ref.read(activeProfileIdProvider.notifier).select(p.id);
                 if (context.mounted) {
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 }
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  ref.read(activeProfileIdProvider.notifier).select(p.id);
-                });
               },
               trailing: PopupMenuButton<_ProfileAction>(
                 iconColor: AppColors.ink,

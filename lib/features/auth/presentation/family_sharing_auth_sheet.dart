@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/widgets/app_text_field.dart';
@@ -39,6 +40,7 @@ class _FamilySharingAuthSheetState
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
   final _shareCodeController = TextEditingController();
+  final _shareCodeFocusNode = FocusNode();
 
   bool _isRegister = false;
   bool _isResetMode = false;
@@ -52,11 +54,20 @@ class _FamilySharingAuthSheetState
   FamilyShare? _activeShare;
 
   @override
+  void initState() {
+    super.initState();
+    _shareCodeController.addListener(() {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
     _shareCodeController.dispose();
+    _shareCodeFocusNode.dispose();
     super.dispose();
   }
 
@@ -449,7 +460,10 @@ class _FamilySharingAuthSheetState
       children: [
         // Profile Info Card
         Container(
-          padding: const EdgeInsets.all(AppSpacing.md),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
           decoration: BoxDecoration(
             color: AppColors.creamLight,
             borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -458,7 +472,7 @@ class _FamilySharingAuthSheetState
           child: Row(
             children: [
               CircleAvatar(
-                radius: 24,
+                radius: 20,
                 backgroundColor: AppColors.tileMint,
                 child: Text(
                   (user.displayName?.isNotEmpty == true
@@ -467,22 +481,29 @@ class _FamilySharingAuthSheetState
                               ? user.email![0]
                               : 'U')
                       .toUpperCase(),
-                  style: AppTextStyles.headline.copyWith(color: Colors.white),
+                  style: AppTextStyles.headline.copyWith(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
                 ),
               ),
-              AppSpacing.gapMd,
+              AppSpacing.gapSm,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       user.displayName ?? 'Family Account',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.bodyOnLight.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
                       user.email ?? user.uid,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.inkMuted,
                       ),
@@ -490,6 +511,7 @@ class _FamilySharingAuthSheetState
                   ],
                 ),
               ),
+              AppSpacing.gapSm,
               const StatusChip(
                 label: 'Cloud Active',
                 icon: Icons.check_circle_rounded,
@@ -499,9 +521,9 @@ class _FamilySharingAuthSheetState
             ],
           ),
         ),
-        AppSpacing.gapLg,
+        AppSpacing.gapMd,
 
-        // Mode switch tabs: 0 = Share My Doses, 1 = Caregiver Mode
+        // Mode switch tabs: 0 = My Share Code, 1 = Enter Family Code
         Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
@@ -512,14 +534,16 @@ class _FamilySharingAuthSheetState
             children: [
               Expanded(
                 child: _ModeTab(
-                  label: 'Share My Doses',
+                  label: 'My Code',
+                  icon: Icons.qr_code_2_rounded,
                   active: _activeFamilyTab == 0,
                   onTap: () => setState(() => _activeFamilyTab = 0),
                 ),
               ),
               Expanded(
                 child: _ModeTab(
-                  label: 'Caregiver Mode',
+                  label: 'Enter Code',
+                  icon: Icons.vpn_key_rounded,
                   active: _activeFamilyTab == 1,
                   onTap: () => setState(() => _activeFamilyTab = 1),
                 ),
@@ -537,24 +561,95 @@ class _FamilySharingAuthSheetState
           _buildCaregiverLinkCard(user, caregiverSharesAsync),
         ],
 
-        AppSpacing.gapXl,
-        PillButton(
-          label: 'Sign Out of Family Sharing',
-          tone: PillButtonTone.moss,
-          loading: _isLoading,
-          onPressed: _handleSignOut,
-        ),
-        AppSpacing.gapSm,
-        Center(
-          child: TextButton(
-            onPressed: _isLoading ? null : _handleDeleteAccount,
-            child: Text(
-              'Delete Account / Disconnect Cloud',
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.error,
-                decoration: TextDecoration.underline,
+        AppSpacing.gapLg,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton.icon(
+              icon: Icon(
+                Icons.logout_rounded,
+                size: 16,
+                color: AppColors.inkMuted,
+              ),
+              label: Text(
+                'Sign Out',
+                style: AppTextStyles.caption.copyWith(
+                  color: AppColors.inkMuted,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onPressed: _isLoading ? null : _handleSignOut,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
+                '•',
+                style: TextStyle(color: AppColors.inkMuted.withValues(alpha: 0.5)),
               ),
             ),
+            TextButton(
+              onPressed: _isLoading ? null : _handleDeleteAccount,
+              child: Text(
+                'Delete Account',
+                style: AppTextStyles.caption.copyWith(
+                  color: AppColors.error,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStepRow({
+    required String stepNumber,
+    required String title,
+    required String subtitle,
+    required Color color,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 20,
+          height: 20,
+          margin: const EdgeInsets.only(top: 2),
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            stepNumber,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        AppSpacing.gapSm,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: AppTextStyles.bodyOnLight.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: AppSpacing.fontSm,
+                ),
+              ),
+              Text(
+                subtitle,
+                style: AppTextStyles.caption.copyWith(
+                  color: AppColors.inkMuted,
+                  fontSize: AppSpacing.fontXs,
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -577,24 +672,53 @@ class _FamilySharingAuthSheetState
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.qr_code_rounded,
-                color: AppColors.accent,
-                size: 20,
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.accent.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.qr_code_2_rounded,
+                  color: AppColors.accent,
+                  size: 20,
+                ),
               ),
               AppSpacing.gapSm,
-              Text(
-                'Share Your Medication Schedule',
-                style: AppTextStyles.bodyOnLight.copyWith(
-                  fontWeight: FontWeight.w600,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Share Your Doses & Reminders',
+                      style: AppTextStyles.bodyOnLight.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      'Let family members monitor your medication adherence',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.inkMuted,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          AppSpacing.gapXs,
-          Text(
-            'Generate a secure 6-character code to share your adherence with a family member or caregiver.',
-            style: AppTextStyles.caption.copyWith(color: AppColors.inkMuted),
+          AppSpacing.gapMd,
+          _buildStepRow(
+            stepNumber: '1',
+            title: 'Generate your 6-character code below',
+            subtitle: 'Your unique code connects caregiver devices.',
+            color: AppColors.accent,
+          ),
+          AppSpacing.gapSm,
+          _buildStepRow(
+            stepNumber: '2',
+            title: 'Send it to your caregiver or family member',
+            subtitle: 'They enter this code in their Dosey app.',
+            color: AppColors.accent,
           ),
           AppSpacing.gapMd,
 
@@ -608,7 +732,8 @@ class _FamilySharingAuthSheetState
                   return _buildShareCodeDisplay(unclaimed.first.shareCode);
                 }
                 return PillButton(
-                  label: 'Generate Family Share Code',
+                  label: 'Generate My Family Share Code',
+                  trailingIcon: Icons.vpn_key_rounded,
                   tone: PillButtonTone.accent,
                   loading: _isLoading,
                   onPressed: () => _handleGenerateShareCode(user),
@@ -621,7 +746,8 @@ class _FamilySharingAuthSheetState
                 ),
               ),
               error: (e, st) => PillButton(
-                label: 'Generate Family Share Code',
+                label: 'Generate My Family Share Code',
+                trailingIcon: Icons.vpn_key_rounded,
                 tone: PillButtonTone.accent,
                 loading: _isLoading,
                 onPressed: () => _handleGenerateShareCode(user),
@@ -640,12 +766,22 @@ class _FamilySharingAuthSheetState
                   AppSpacing.gapMd,
                   const Divider(),
                   AppSpacing.gapXs,
-                  Text(
-                    'Linked Caregivers (${claimed.length})',
-                    style: AppTextStyles.caption.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.ink,
-                    ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.verified_user_rounded,
+                        size: 16,
+                        color: AppColors.tileMint,
+                      ),
+                      AppSpacing.gapXs,
+                      Text(
+                        'Linked Caregivers (${claimed.length})',
+                        style: AppTextStyles.caption.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.ink,
+                        ),
+                      ),
+                    ],
                   ),
                   AppSpacing.gapXs,
                   ...claimed.map(
@@ -659,7 +795,9 @@ class _FamilySharingAuthSheetState
                       ),
                       title: Text(
                         share.caregiverName ?? 'Caregiver',
-                        style: AppTextStyles.bodyOnLight,
+                        style: AppTextStyles.bodyOnLight.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       trailing: IconButton(
                         icon: const Icon(
@@ -667,6 +805,7 @@ class _FamilySharingAuthSheetState
                           color: AppColors.error,
                           size: 20,
                         ),
+                        tooltip: 'Unlink',
                         onPressed: () async {
                           await ref
                               .read(familyShareRepositoryProvider)
@@ -691,48 +830,127 @@ class _FamilySharingAuthSheetState
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.cream,
+        color: AppColors.isDark ? AppColors.cream : Colors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        border: Border.all(color: AppColors.tileMint.withValues(alpha: 0.5)),
+        border: Border.all(
+          color: AppColors.isDark
+              ? AppColors.accent.withValues(alpha: 0.5)
+              : AppColors.accent.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: AppColors.isDark ? 0.3 : 0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         children: [
           Text(
-            'YOUR SHARE CODE',
+            'YOUR 6-CHARACTER SHARE CODE',
             style: AppTextStyles.overline.copyWith(
-              color: AppColors.inkMuted,
+              color: AppColors.accent,
               letterSpacing: 1.5,
+              fontWeight: FontWeight.w700,
             ),
           ),
-          AppSpacing.gapXs,
+          AppSpacing.gapSm,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            children: code.split('').map((char) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                width: 40,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: AppColors.creamLight,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.divider),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  char,
+                  style: AppTextStyles.headline.copyWith(
+                    fontSize: 22,
+                    letterSpacing: 0,
+                    color: AppColors.ink,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          AppSpacing.gapMd,
+          Row(
             children: [
-              Text(
-                code,
-                style: AppTextStyles.headline.copyWith(
-                  fontSize: 28,
-                  letterSpacing: 6,
-                  color: AppColors.ink,
-                  fontWeight: FontWeight.w800,
+              Expanded(
+                child: OutlinedButton.icon(
+                  icon: Icon(Icons.copy_rounded, size: 15, color: AppColors.ink),
+                  label: Text(
+                    'Copy Code',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: AppColors.ink,
+                      fontSize: AppSpacing.fontSm,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: AppColors.divider),
+                    backgroundColor: AppColors.isDark
+                        ? AppColors.creamLight
+                        : Colors.white,
+                    shape: const StadiumBorder(),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                  ),
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: code));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Code "$code" copied to clipboard!'),
+                      ),
+                    );
+                  },
                 ),
               ),
               AppSpacing.gapSm,
-              IconButton(
-                icon: const Icon(Icons.copy_rounded, color: AppColors.accent),
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: code));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Code "$code" copied to clipboard!'),
+              Expanded(
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.share_rounded, size: 15, color: Colors.white),
+                  label: const Text(
+                    'Share Code',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: AppSpacing.fontSm,
+                      fontWeight: FontWeight.w600,
                     ),
-                  );
-                },
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    elevation: 0,
+                    shape: const StadiumBorder(),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                  ),
+                  onPressed: () {
+                    SharePlus.instance.share(
+                      ShareParams(
+                        text:
+                            'Here is my Dosey family share code: $code\n\nEnter it in your Dosey app under Settings > Caregiver & Family Mode to link our accounts.',
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
+          AppSpacing.gapXs,
           Text(
-            'Share this code with your caregiver. Valid for 7 days.',
+            'Share this code with your family member. Valid for 7 days.',
             style: AppTextStyles.caption.copyWith(
               fontSize: AppSpacing.fontXs,
               color: AppColors.inkMuted,
@@ -743,10 +961,151 @@ class _FamilySharingAuthSheetState
     );
   }
 
+  Widget _buildCaregiverCodeInput() {
+    final text = _shareCodeController.text.toUpperCase();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        GestureDetector(
+          onTap: () => _shareCodeFocusNode.requestFocus(),
+          behavior: HitTestBehavior.opaque,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // Visual 6-box display
+              Row(
+                children: List.generate(6, (index) {
+                  final char = index < text.length ? text[index] : '';
+                  final isFocused = _shareCodeFocusNode.hasFocus &&
+                      (index == text.length || (index == 5 && text.length == 6));
+                  return Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: AppColors.isDark ? AppColors.cream : Colors.white,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        border: Border.all(
+                          color: isFocused
+                              ? AppColors.tileMint
+                              : (char.isNotEmpty ? AppColors.ink : AppColors.divider),
+                          width: isFocused ? 2.0 : 1.2,
+                        ),
+                        boxShadow: isFocused
+                            ? [
+                                BoxShadow(
+                                  color: AppColors.tileMint.withValues(alpha: 0.25),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ]
+                            : [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.03),
+                                  blurRadius: 3,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        char,
+                        style: AppTextStyles.headline.copyWith(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.ink,
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+
+              // Invisible real TextField on top
+              Opacity(
+                opacity: 0.0,
+                child: TextField(
+                  focusNode: _shareCodeFocusNode,
+                  controller: _shareCodeController,
+                  maxLength: 6,
+                  textCapitalization: TextCapitalization.characters,
+                  autocorrect: false,
+                  enableSuggestions: false,
+                  keyboardType: TextInputType.text,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
+                    LengthLimitingTextInputFormatter(6),
+                  ],
+                  decoration: const InputDecoration(
+                    counterText: '',
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        AppSpacing.gapSm,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton.icon(
+              icon: const Icon(
+                Icons.content_paste_rounded,
+                size: 16,
+                color: AppColors.tileMint,
+              ),
+              label: Text(
+                'Paste Code',
+                style: AppTextStyles.caption.copyWith(
+                  color: AppColors.tileMint,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onPressed: () async {
+                final data = await Clipboard.getData('text/plain');
+                final rawText = data?.text?.trim().toUpperCase() ?? '';
+                final cleaned = rawText.replaceAll(RegExp(r'[^A-Z0-9]'), '');
+                if (cleaned.isNotEmpty) {
+                  final code = cleaned.length > 6 ? cleaned.substring(0, 6) : cleaned;
+                  _shareCodeController.text = code;
+                  _shareCodeController.selection =
+                      TextSelection.collapsed(offset: code.length);
+                }
+              },
+            ),
+            if (text.isNotEmpty) ...[
+              AppSpacing.gapSm,
+              TextButton.icon(
+                icon: Icon(
+                  Icons.clear_rounded,
+                  size: 16,
+                  color: AppColors.inkMuted,
+                ),
+                label: Text(
+                  'Clear',
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.inkMuted,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                onPressed: () {
+                  _shareCodeController.clear();
+                },
+              ),
+            ],
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildCaregiverLinkCard(
     User user,
     AsyncValue<List<FamilyShare>> caregiverSharesAsync,
   ) {
+    final hasValidCode = _shareCodeController.text.trim().length == 6;
+
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -759,42 +1118,63 @@ class _FamilySharingAuthSheetState
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.volunteer_activism_rounded,
-                color: AppColors.tileMint,
-                size: 20,
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.tileMint.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.group_add_rounded,
+                  color: AppColors.tileMint,
+                  size: 20,
+                ),
               ),
               AppSpacing.gapSm,
-              Text(
-                'Monitor a Family Member',
-                style: AppTextStyles.bodyOnLight.copyWith(
-                  fontWeight: FontWeight.w600,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Link to a Family Member',
+                      style: AppTextStyles.bodyOnLight.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      'Enter their 6-character code to link profiles',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.inkMuted,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          AppSpacing.gapXs,
-          Text(
-            'Enter the 6-character code given to you by your patient or family member.',
-            style: AppTextStyles.caption.copyWith(color: AppColors.inkMuted),
+          AppSpacing.gapMd,
+          _buildStepRow(
+            stepNumber: '1',
+            title: 'Ask your family member for their 6-character code',
+            subtitle: 'Found under "My Share Code" on their phone.',
+            color: AppColors.tileMint,
+          ),
+          AppSpacing.gapSm,
+          _buildStepRow(
+            stepNumber: '2',
+            title: 'Enter or paste the 6-character code below',
+            subtitle: 'Tap the boxes or use the Paste button.',
+            color: AppColors.tileMint,
           ),
           AppSpacing.gapMd,
-          AppTextField(
-            label: 'Family Share Code',
-            hint: 'e.g. 8K2P9A',
-            controller: _shareCodeController,
-            textCapitalization: TextCapitalization.characters,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
-              LengthLimitingTextInputFormatter(6),
-            ],
-          ),
+          _buildCaregiverCodeInput(),
           AppSpacing.gapSm,
           PillButton(
             label: 'Link to Family Member',
-            tone: PillButtonTone.moss,
+            trailingIcon: Icons.arrow_forward_rounded,
+            tone: hasValidCode ? PillButtonTone.accent : PillButtonTone.moss,
             loading: _isLoading,
-            onPressed: () => _handleRedeemShareCode(user),
+            onPressed: hasValidCode ? () => _handleRedeemShareCode(user) : null,
           ),
 
           // Monitored Patients list
@@ -807,12 +1187,22 @@ class _FamilySharingAuthSheetState
                   AppSpacing.gapMd,
                   const Divider(),
                   AppSpacing.gapXs,
-                  Text(
-                    'Monitored Patients (${shares.length})',
-                    style: AppTextStyles.caption.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.ink,
-                    ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.check_circle_rounded,
+                        size: 16,
+                        color: AppColors.tileMint,
+                      ),
+                      AppSpacing.gapXs,
+                      Text(
+                        'Connected Family Members (${shares.length})',
+                        style: AppTextStyles.caption.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.ink,
+                        ),
+                      ),
+                    ],
                   ),
                   AppSpacing.gapXs,
                   ...shares.map(
@@ -826,7 +1216,9 @@ class _FamilySharingAuthSheetState
                       ),
                       title: Text(
                         share.patientName ?? 'Family Member',
-                        style: AppTextStyles.bodyOnLight,
+                        style: AppTextStyles.bodyOnLight.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       subtitle: Text(
                         'Code: ${share.shareCode}',
@@ -841,6 +1233,7 @@ class _FamilySharingAuthSheetState
                           color: AppColors.error,
                           size: 20,
                         ),
+                        tooltip: 'Unlink',
                         onPressed: () async {
                           await ref
                               .read(familyShareRepositoryProvider)
@@ -1161,11 +1554,13 @@ class _ModeTab extends StatelessWidget {
     required this.label,
     required this.active,
     required this.onTap,
+    this.icon,
   });
 
   final String label;
   final bool active;
   final VoidCallback onTap;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -1173,28 +1568,44 @@ class _ModeTab extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: AppSpacing.animFast,
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 8),
         decoration: BoxDecoration(
-          color: active ? AppColors.cream : Colors.transparent,
+          color: active
+              ? (AppColors.isDark ? AppColors.sand : Colors.white)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
           boxShadow: active
               ? [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 4,
+                    color: Colors.black.withValues(alpha: AppColors.isDark ? 0.25 : 0.08),
+                    blurRadius: 5,
                     offset: const Offset(0, 2),
                   ),
                 ]
               : null,
         ),
-        child: Center(
-          child: Text(
-            label,
-            style: AppTextStyles.bodyOnLight.copyWith(
-              fontWeight: active ? FontWeight.bold : FontWeight.normal,
-              color: active ? AppColors.ink : AppColors.inkMuted,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              Icon(
+                icon,
+                size: 17,
+                color: active
+                    ? (AppColors.isDark ? AppColors.ink : AppColors.accent)
+                    : AppColors.inkMuted,
+              ),
+              AppSpacing.gapXs,
+            ],
+            Text(
+              label,
+              style: AppTextStyles.bodyOnLight.copyWith(
+                fontSize: AppSpacing.fontSm,
+                fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                color: active ? AppColors.ink : AppColors.inkMuted,
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

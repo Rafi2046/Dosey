@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -39,9 +40,12 @@ class AuthRepository {
     await _ensureAvailable();
     try {
       final googleSignIn = GoogleSignIn(
+        scopes: const ['email', 'profile'],
         serverClientId:
             '918524133674-annc5hqp9h0847bvpbrrd1irjskt4c2e.apps.googleusercontent.com',
       );
+      await googleSignIn.signOut().catchError((_) => null);
+
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
         return null; // User cancelled
@@ -165,6 +169,9 @@ class AuthRepository {
         'requires-recent-login' => 'Please sign out and sign in again before deleting your account.',
         _ => error.message ?? 'Authentication error occurred.',
       };
+    }
+    if (error is PlatformException) {
+      return 'Google Sign-In failed (${error.code}: ${error.message ?? 'Configuration error'}). You can also create an account with Email & Password below.';
     }
     return error.toString();
   }

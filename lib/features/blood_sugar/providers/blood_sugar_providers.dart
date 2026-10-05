@@ -17,13 +17,11 @@ final bloodSugarReadingsProvider = StreamProvider<List<BloodSugarReading>>(
   (ref) => ref.watch(bloodSugarRepositoryProvider).watchAll(),
 );
 
-/// The most recent reading only; uses [select] to avoid the
-/// "setState during build" race on profile switches.
+/// The most recent reading only.
 final latestBloodSugarProvider =
     Provider<AsyncValue<BloodSugarReading?>>((ref) {
-  return ref.watch(
-    bloodSugarReadingsProvider
-        .select((async) => async.whenData((list) => list.firstOrNull)),
+  return ref.watch(bloodSugarReadingsProvider).whenData(
+    (list) => list.firstOrNull,
   );
 });
 

@@ -14,6 +14,8 @@ import '../../../core/widgets/status_chip.dart';
 import '../../family_sharing/domain/family_share.dart';
 import '../../family_sharing/presentation/family_member_adherence_screen.dart';
 import '../../family_sharing/providers/family_share_providers.dart';
+import '../../family_sharing/providers/shared_adherence_providers.dart';
+import '../../reminders/providers/reminders_providers.dart';
 import '../data/auth_repository.dart';
 import '../providers/auth_providers.dart';
 
@@ -338,6 +340,47 @@ class _FamilySharingAuthSheetState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Link request declined.')),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleManualSyncSchedule(User user) async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    try {
+      final occurrences = await ref.read(todayScheduleProvider.future);
+      if (occurrences.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('No medicines found in today\'s schedule to sync.'),
+            ),
+          );
+        }
+        return;
+      }
+      final repo = ref.read(sharedAdherenceRepositoryProvider);
+      await repo.syncTodaySchedule(
+        patientUid: user.uid,
+        patientName: user.displayName ?? user.email?.split('@').first,
+        occurrences: occurrences,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Successfully synced ${occurrences.length} medicines to cloud! ✅',
+            ),
+          ),
         );
       }
     } catch (e) {
@@ -1053,6 +1096,14 @@ class _FamilySharingAuthSheetState
                         },
                       ),
                     ),
+                  ),
+                  AppSpacing.gapMd,
+                  PillButton(
+                    label: 'Sync Medicines to Caregivers Now',
+                    trailingIcon: Icons.cloud_upload_rounded,
+                    tone: PillButtonTone.moss,
+                    loading: _isLoading,
+                    onPressed: () => _handleManualSyncSchedule(user),
                   ),
                 ],
               );

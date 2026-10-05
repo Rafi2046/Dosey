@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/database/database_provider.dart';
 import '../../core/widgets/pill_button.dart';
+import '../../features/auth/providers/auth_providers.dart';
+import '../../features/family_sharing/providers/shared_adherence_providers.dart';
 import '../../features/records/providers/records_providers.dart';
 import '../../features/reminders/providers/reminders_providers.dart';
 import 'demo_data_seeder.dart';
@@ -27,6 +29,23 @@ class DebugDemoDataButton extends ConsumerWidget {
           ref.read(remindersRepositoryProvider),
           ref.read(recordsRepositoryProvider),
         );
+        ref.invalidate(todayScheduleProvider);
+        ref.invalidate(remindersProvider);
+        ref.invalidate(enabledRemindersProvider);
+
+        final user = ref.read(currentUserProvider);
+        if (user != null) {
+          final schedule = await ref.read(todayScheduleProvider.future);
+          if (schedule.isNotEmpty) {
+            final repo = ref.read(sharedAdherenceRepositoryProvider);
+            await repo.syncTodaySchedule(
+              patientUid: user.uid,
+              patientName: user.displayName ?? user.email?.split('@').first,
+              occurrences: schedule,
+            );
+          }
+        }
+
         messenger.showSnackBar(SnackBar(content: Text(loaded)));
       },
     );

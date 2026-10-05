@@ -89,12 +89,22 @@ class SharedAdherenceRepository {
       final targetDate = date ?? DateTime.now();
       final dateKey = formatDateKey(targetDate);
 
-      final response = await _supabase
+      var response = await _supabase
           .from('patient_shared_adherence')
           .select()
           .eq('patient_uid', patientUid)
           .eq('date', dateKey)
           .order('time', ascending: true);
+
+      if ((response as List<dynamic>).isEmpty) {
+        // Fallback: fetch most recent shared doses for this patient if exact date is empty
+        response = await _supabase
+            .from('patient_shared_adherence')
+            .select()
+            .eq('patient_uid', patientUid)
+            .order('updated_at', ascending: false)
+            .limit(20);
+      }
 
       return (response as List<dynamic>)
           .map((json) =>

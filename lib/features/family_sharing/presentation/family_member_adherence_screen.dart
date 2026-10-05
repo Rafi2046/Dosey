@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,11 +7,12 @@ import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../../../core/widgets/status_chip.dart';
+import '../../auth/providers/auth_providers.dart';
 import '../domain/family_share.dart';
 import '../domain/shared_adherence_dose.dart';
 import '../providers/shared_adherence_providers.dart';
 
-class FamilyMemberAdherenceScreen extends ConsumerWidget {
+class FamilyMemberAdherenceScreen extends ConsumerStatefulWidget {
   const FamilyMemberAdherenceScreen({
     super.key,
     required this.share,
@@ -18,33 +20,72 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
 
   final FamilyShare share;
 
-  IconData _iconForForm(String? form) {
+  @override
+  ConsumerState<FamilyMemberAdherenceScreen> createState() =>
+      _FamilyMemberAdherenceScreenState();
+}
+
+class _FamilyMemberAdherenceScreenState
+    extends ConsumerState<FamilyMemberAdherenceScreen> {
+  bool _isSendingNudge = false;
+
+  String _imageForForm(String? form) {
     switch (form?.toLowerCase()) {
       case 'injection':
-        return Icons.vaccines_rounded;
+        return AppImages.medInjection;
       case 'capsule':
-        return Icons.medication_liquid_rounded;
-      case 'syrup':
-      case 'drops':
-        return Icons.water_drop_rounded;
-      case 'inhaler':
-        return Icons.air_rounded;
+        return AppImages.medCapsule;
+      case 'tablet':
+        return AppImages.medTablet;
       default:
-        return Icons.medication_rounded;
+        return AppImages.medOther;
+    }
+  }
+
+  Future<void> _handleSendNudge(User? user) async {
+    if (user == null) return;
+    setState(() => _isSendingNudge = true);
+    try {
+      final repo = ref.read(sharedAdherenceRepositoryProvider);
+      await repo.sendGentleReminder(
+        patientUid: widget.share.patientUid,
+        caregiverUid: user.uid,
+        caregiverName: user.displayName ?? user.email?.split('@').first,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Gentle reminder sent to ${widget.share.patientName ?? "Family Member"}\'s phone! 🔔',
+            ),
+            backgroundColor: AppColors.tileMoss,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to send reminder: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSendingNudge = false);
     }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final patientName = share.patientName ?? 'Family Member';
+  Widget build(BuildContext context) {
+    final patientName = widget.share.patientName ?? 'Family Member';
+    final user = ref.watch(currentUserProvider);
     final scheduleAsync =
-        ref.watch(patientAdherenceScheduleProvider(share.patientUid));
+        ref.watch(patientAdherenceScheduleProvider(widget.share.patientUid));
 
     return CreamScaffold(
       title: patientName,
       body: RefreshIndicator(
         onRefresh: () async {
-          ref.invalidate(patientAdherenceScheduleProvider(share.patientUid));
+          ref.invalidate(
+              patientAdherenceScheduleProvider(widget.share.patientUid));
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -57,7 +98,10 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
             children: [
               // Patient Profile Banner
               Container(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.creamLight,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -65,8 +109,8 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
-                    InitialsAvatar(name: patientName, size: 48),
-                    AppSpacing.gapMd,
+                    InitialsAvatar(name: patientName, size: 40),
+                    AppSpacing.gapSm,
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,9 +122,8 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          AppSpacing.gapXs,
                           Text(
-                            'Share Code: ${share.shareCode}',
+                            'Share Code: ${widget.share.shareCode}',
                             style: AppTextStyles.caption.copyWith(
                               color: AppColors.inkMuted,
                               fontSize: AppSpacing.fontXs,
@@ -124,14 +167,14 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
                         pending: pendingCount,
                         missed: missedCount,
                       ),
-                      AppSpacing.gapLg,
+                      AppSpacing.gapMd,
 
                       // Section Title
                       Row(
                         children: [
                           const Icon(
                             Icons.calendar_today_rounded,
-                            size: 18,
+                            size: 16,
                             color: AppColors.accent,
                           ),
                           AppSpacing.gapXs,
@@ -139,6 +182,7 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
                             "Today's Medication Schedule",
                             style: AppTextStyles.subtitleOnLight.copyWith(
                               fontWeight: FontWeight.w700,
+                              fontSize: AppSpacing.fontSm,
                             ),
                           ),
                         ],
@@ -154,22 +198,14 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
                         return _buildDoseItem(dose, color);
                       }),
 
-                      AppSpacing.gapLg,
+                      AppSpacing.gapMd,
                       // Nudge / Caregiver Action Button
                       PillButton(
                         label: 'Send Gentle Reminder',
                         trailingIcon: Icons.notifications_active_rounded,
                         tone: PillButtonTone.accent,
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Gentle reminder sent to $patientName! 🔔',
-                              ),
-                              backgroundColor: AppColors.tileMoss,
-                            ),
-                          );
-                        },
+                        loading: _isSendingNudge,
+                        onPressed: () => _handleSendNudge(user),
                       ),
                     ],
                   );
@@ -237,7 +273,7 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: AppColors.tileMint.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
@@ -245,7 +281,7 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
                 child: const Icon(
                   Icons.trending_up_rounded,
                   color: AppColors.tileMint,
-                  size: 20,
+                  size: 18,
                 ),
               ),
               AppSpacing.gapSm,
@@ -257,12 +293,14 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
                       "Today's Adherence: $adherenceRate%",
                       style: AppTextStyles.bodyOnLight.copyWith(
                         fontWeight: FontWeight.w700,
+                        fontSize: AppSpacing.fontSm,
                       ),
                     ),
                     Text(
                       '$taken of $total doses completed',
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.inkMuted,
+                        fontSize: AppSpacing.fontXs,
                       ),
                     ),
                   ],
@@ -270,17 +308,17 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
               ),
             ],
           ),
-          AppSpacing.gapMd,
+          AppSpacing.gapSm,
           ClipRRect(
             borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
             child: LinearProgressIndicator(
               value: total > 0 ? taken / total : 0,
-              minHeight: 8,
+              minHeight: 6,
               backgroundColor: AppColors.divider,
               valueColor: const AlwaysStoppedAnimation(AppColors.tileMint),
             ),
           ),
-          AppSpacing.gapMd,
+          AppSpacing.gapSm,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -296,7 +334,7 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
 
   Widget _buildCountPill(String label, int count, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
@@ -305,8 +343,8 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 8,
-            height: 8,
+            width: 6,
+            height: 6,
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           AppSpacing.gapXs,
@@ -324,7 +362,7 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
   }
 
   Widget _buildDoseItem(SharedAdherenceDose dose, Color accentColor) {
-    Color statusBg = AppColors.warning.withValues(alpha: 0.15);
+    Color statusBg = AppColors.warning.withValues(alpha: 0.12);
     Color statusFg = AppColors.warning;
     String statusText = 'Pending';
     IconData statusIcon = Icons.hourglass_top_rounded;
@@ -335,20 +373,20 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
       statusText = 'Taken';
       statusIcon = Icons.check_circle_rounded;
     } else if (dose.isMissed) {
-      statusBg = AppColors.error.withValues(alpha: 0.15);
+      statusBg = AppColors.error.withValues(alpha: 0.12);
       statusFg = AppColors.error;
       statusText = 'Missed';
       statusIcon = Icons.error_rounded;
     } else if (dose.isSkipped) {
-      statusBg = AppColors.inkMuted.withValues(alpha: 0.15);
+      statusBg = AppColors.inkMuted.withValues(alpha: 0.12);
       statusFg = AppColors.inkMuted;
       statusText = 'Skipped';
       statusIcon = Icons.remove_circle_outline_rounded;
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-      padding: const EdgeInsets.all(AppSpacing.md),
+      margin: const EdgeInsets.only(bottom: AppSpacing.xs),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: AppColors.creamLight,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -356,20 +394,21 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
       ),
       child: Row(
         children: [
+          // Native clean Dosey medicine illustration
           Container(
-            width: 44,
-            height: 44,
+            width: 36,
+            height: 36,
+            padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
-              color: accentColor.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(10),
+              color: accentColor.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(
-              _iconForForm(dose.form),
-              color: accentColor,
-              size: 22,
+            child: Image.asset(
+              _imageForForm(dose.form),
+              fit: BoxFit.contain,
             ),
           ),
-          AppSpacing.gapMd,
+          AppSpacing.gapSm,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -377,13 +416,15 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
                 Text(
                   dose.medicineName,
                   style: AppTextStyles.bodyOnLight.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
+                    fontSize: AppSpacing.fontSm,
                   ),
                 ),
                 Text(
                   dose.dosage ?? '1 Dose',
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.inkMuted,
+                    fontSize: AppSpacing.fontXs,
                   ),
                 ),
               ],
@@ -395,13 +436,13 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
               Text(
                 dose.time,
                 style: AppTextStyles.bodyOnLight.copyWith(
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   fontSize: AppSpacing.fontSm,
                 ),
               ),
-              AppSpacing.gapXs,
+              const SizedBox(height: 3),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                 decoration: BoxDecoration(
                   color: statusBg,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
@@ -409,13 +450,13 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(statusIcon, size: 12, color: statusFg),
+                    Icon(statusIcon, size: 10, color: statusFg),
                     const SizedBox(width: 3),
                     Text(
                       statusText,
                       style: TextStyle(
                         color: statusFg,
-                        fontSize: 11,
+                        fontSize: 10.5,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -441,7 +482,7 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
         children: [
           Icon(
             Icons.medication_outlined,
-            size: 48,
+            size: 40,
             color: AppColors.inkMuted,
           ),
           AppSpacing.gapMd,
@@ -453,7 +494,7 @@ class FamilyMemberAdherenceScreen extends ConsumerWidget {
           ),
           AppSpacing.gapXs,
           Text(
-            'When ${share.patientName ?? "your family member"} opens Dosey or adds reminders on their device, their schedule will appear here automatically.',
+            'When ${widget.share.patientName ?? "your family member"} opens Dosey or adds reminders on their device, their schedule will appear here automatically.',
             textAlign: TextAlign.center,
             style: AppTextStyles.caption.copyWith(
               color: AppColors.inkMuted,

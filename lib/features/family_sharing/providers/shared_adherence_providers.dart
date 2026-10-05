@@ -22,10 +22,12 @@ final sharedAdherenceAutoSyncProvider = Provider<void>((ref) {
   final user = ref.watch(currentUserProvider);
   if (user == null) return;
 
+  final repo = ref.read(sharedAdherenceRepositoryProvider);
+  repo.checkAndDeliverNudges(user.uid);
+
   final scheduleAsync = ref.watch(todayScheduleProvider);
   scheduleAsync.whenData((occurrences) {
     if (occurrences.isNotEmpty) {
-      final repo = ref.read(sharedAdherenceRepositoryProvider);
       repo.syncTodaySchedule(
         patientUid: user.uid,
         patientName: user.displayName ?? user.email?.split('@').first,

@@ -81,3 +81,31 @@ CREATE POLICY "Allow anon upsert patient_shared_adherence" ON public.patient_sha
     USING (true)
     WITH CHECK (true);
 
+-- 6. Create family_nudges table for caregiver reminders
+CREATE TABLE IF NOT EXISTS public.family_nudges (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    patient_uid TEXT NOT NULL,
+    caregiver_uid TEXT NOT NULL,
+    caregiver_name TEXT,
+    message TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    is_read BOOLEAN NOT NULL DEFAULT false
+);
+
+CREATE INDEX IF NOT EXISTS idx_family_nudges_patient ON public.family_nudges(patient_uid, is_read);
+ALTER TABLE public.family_nudges ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow anon read family_nudges" ON public.family_nudges;
+CREATE POLICY "Allow anon read family_nudges" ON public.family_nudges
+    FOR SELECT
+    TO anon, authenticated
+    USING (true);
+
+DROP POLICY IF EXISTS "Allow anon insert family_nudges" ON public.family_nudges;
+CREATE POLICY "Allow anon insert family_nudges" ON public.family_nudges
+    FOR ALL
+    TO anon, authenticated
+    USING (true)
+    WITH CHECK (true);
+
+

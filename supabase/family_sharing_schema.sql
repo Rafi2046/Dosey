@@ -108,4 +108,9 @@ CREATE POLICY "Allow anon insert family_nudges" ON public.family_nudges
     USING (true)
     WITH CHECK (true);
 
-
+-- 7. Realtime: deliver caregiver nudges instantly instead of waiting for the poll.
+DO $$
+BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.family_nudges;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;

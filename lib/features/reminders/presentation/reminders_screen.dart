@@ -28,7 +28,15 @@ class RemindersScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final filter = ref.watch(reminderTypeFilterProvider);
-    final reminders = ref.watch(filteredRemindersProvider);
+    // Filtered here rather than in a derived provider, which Riverpod can
+    // invalidate mid-build after a refresh.
+    final reminders = ref
+        .watch(remindersProvider)
+        .whenData(
+          (list) => filter == null
+              ? list
+              : list.where((d) => d.reminder.type == filter).toList(),
+        );
     final repo = ref.read(remindersRepositoryProvider);
 
     return TabScrollView(

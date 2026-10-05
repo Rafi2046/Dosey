@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/database/enums.dart';
 import '../../../../core/utils/date_format.dart';
 import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/widgets/section_header.dart';
@@ -21,7 +22,13 @@ class UpcomingEventsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final events = ref.watch(upcomingEventsProvider).value ?? const [];
+    final events = ref.watch(
+      upcomingRemindersProvider.select(
+        (r) => (r.value ?? const [])
+            .where((d) => d.reminder.type != ReminderType.medicine)
+            .toList(),
+      ),
+    );
     if (events.isEmpty) return const SizedBox.shrink();
 
     return Column(

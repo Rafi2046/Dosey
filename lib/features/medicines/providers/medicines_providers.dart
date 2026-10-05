@@ -42,21 +42,6 @@ final stockStatusProvider = Provider.family<StockStatus, Medicine>(
   (ref, m) => StockStatus(m, ref.watch(unitsPerDayProvider)[m.id] ?? 0),
 );
 
-final lowStockMedicinesProvider =
-    Provider<AsyncValue<List<MedicineWithDoctor>>>((ref) {
-      final units = ref.watch(unitsPerDayProvider);
-      return ref
-          .watch(activeMedicinesProvider)
-          .whenData(
-            (list) => list
-                .where(
-                  (m) =>
-                      StockStatus(m.medicine, units[m.medicine.id] ?? 0).isLow,
-                )
-                .toList(),
-          );
-    });
-
 final medicinesByDoctorProvider = StreamProvider.autoDispose
     .family<List<MedicineWithDoctor>, int>(
       (ref, doctorId) =>

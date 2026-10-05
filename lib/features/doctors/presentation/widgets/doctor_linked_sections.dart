@@ -28,8 +28,9 @@ class DoctorLinkedSections extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final medicines =
         ref.watch(medicinesByDoctorProvider(doctorId)).value ?? const [];
-    final reminders =
-        ref.watch(remindersByDoctorProvider(doctorId)).value ?? const [];
+    final reminders = (ref.watch(remindersProvider).value ?? const [])
+        .where((d) => d.reminder.doctorId == doctorId)
+        .toList();
     final records =
         ref.watch(recordsByDoctorProvider(doctorId)).value ?? const [];
 

@@ -5,6 +5,7 @@ import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
+import '../../../medicines/domain/stock_status.dart';
 import '../../../medicines/presentation/medicine_detail_screen.dart';
 import '../../../medicines/providers/medicines_providers.dart';
 import '../../../../core/localization/l10n.dart';
@@ -16,7 +17,13 @@ class LowStockSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final items = ref.watch(lowStockMedicinesProvider).value ?? const [];
+    // Computed here rather than in a derived provider, which Riverpod can
+    // invalidate mid-build after a pull-to-refresh.
+    final units = ref.watch(unitsPerDayProvider);
+    final items = [
+      for (final m in ref.watch(activeMedicinesProvider).value ?? const [])
+        if (StockStatus(m.medicine, units[m.medicine.id] ?? 0).isLow) m,
+    ];
     if (items.isEmpty) return const SizedBox.shrink();
 
     return Column(

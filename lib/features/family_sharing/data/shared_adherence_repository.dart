@@ -10,7 +10,6 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/database/enums.dart';
 import '../../reminders/domain/scheduled_occurrence.dart';
-import '../domain/family_share.dart';
 import '../domain/shared_adherence_dose.dart';
 import 'family_share_repository.dart';
 
@@ -75,10 +74,9 @@ class SharedAdherenceRepository {
         };
       }).toList();
 
-      await _supabase.from('patient_shared_adherence').upsert(
-            rows,
-            onConflict: 'patient_uid,date,medicine_name,time',
-          );
+      await _supabase
+          .from('patient_shared_adherence')
+          .upsert(rows, onConflict: 'patient_uid,date,medicine_name,time');
     } catch (e) {
       debugPrint('[SharedAdherenceRepository] Error syncing schedule: $e');
       // Non-fatal if table not migrated yet
@@ -114,8 +112,10 @@ class SharedAdherenceRepository {
       }
 
       return (response as List<dynamic>)
-          .map((json) =>
-              SharedAdherenceDose.fromJson(json as Map<String, dynamic>))
+          .map(
+            (json) =>
+                SharedAdherenceDose.fromJson(json as Map<String, dynamic>),
+          )
           .toList();
     } catch (e) {
       debugPrint('[SharedAdherenceRepository] Error fetching schedule: $e');
@@ -139,13 +139,16 @@ class SharedAdherenceRepository {
         'patient_uid': patientUid,
         'caregiver_uid': caregiverUid,
         'caregiver_name': caregiverName,
-        'message': message ??
+        'message':
+            message ??
             '${caregiverName ?? "Your caregiver"} sent a gentle reminder to take your pending medicines! 💊',
         'created_at': DateTime.now().toUtc().toIso8601String(),
         'is_read': false,
       });
     } catch (e) {
-      debugPrint('[SharedAdherenceRepository] Error sending reminder nudge: $e');
+      debugPrint(
+        '[SharedAdherenceRepository] Error sending reminder nudge: $e',
+      );
       if (e is PostgrestException) {
         if (e.message.contains('does not exist') || e.code == '42P01') {
           throw const FamilyShareException(
@@ -188,32 +191,48 @@ class SharedAdherenceRepository {
     }
   }
 
-  /// Patient checks for incoming unread reminders from caregivers and triggers local notifications.
+  /// Guards against overlapping checks (initial, realtime, poll, resume)
+  /// delivering the same nudge twice.
+  static bool _checking = false;
+
+  /// Patient checks for incoming unread reminders from caregivers and
+  /// shows each as a local notification.
   Future<int> checkAndDeliverNudges(String patientUid) async {
-    if (!isAvailable) return 0;
+    if (!isAvailable || _checking) return 0;
+    _checking = true;
 
     try {
       final nudges = await _supabase
           .from('family_nudges')
           .select()
           .eq('patient_uid', patientUid)
-          .eq('is_read', false);
+          .eq('is_read', false)
+          .order('created_at');
 
-      final list = (nudges as List<dynamic>);
-      if (list.isEmpty) return 0;
+      var delivered = 0;
+      for (final raw in nudges) {
+        // Claim it first: only the device whose update flips is_read shows
+        // the notification, so a second device or check doesn't repeat it.
+        final claimed = await _supabase
+            .from('family_nudges')
+            .update({'is_read': true})
+            .eq('id', raw['id'] as String)
+            .eq('is_read', false)
+            .select('id');
+        if (claimed.isEmpty) continue;
 
-      for (final raw in list) {
-        final id = raw['id'] as String;
         final caregiverName =
             raw['caregiver_name'] as String? ?? 'Your Family Member';
-        final message = raw['message'] as String? ??
+        final message =
+            raw['message'] as String? ??
             'It is time to take your scheduled medicines!';
 
-        // Create high priority local notification
+        // Gentle channel: the medicine channel is the alarm channel and
+        // expects a reminder payload.
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: Random().nextInt(1000000),
-            channelKey: AppConstants.channelMedicine,
+            channelKey: AppConstants.channelGentle,
             title: '🔔 Reminder from $caregiverName',
             body: message,
             notificationLayout: NotificationLayout.Default,
@@ -222,17 +241,14 @@ class SharedAdherenceRepository {
             color: AppColors.accent,
           ),
         );
-
-        // Mark as read in Supabase
-        await _supabase
-            .from('family_nudges')
-            .update({'is_read': true})
-            .eq('id', id);
+        delivered++;
       }
-      return list.length;
+      return delivered;
     } catch (e) {
       debugPrint('[SharedAdherenceRepository] Error checking nudges: $e');
       return 0;
+    } finally {
+      _checking = false;
     }
   }
 }

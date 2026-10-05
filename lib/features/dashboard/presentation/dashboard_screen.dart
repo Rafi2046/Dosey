@@ -54,7 +54,7 @@ class DashboardScreen extends ConsumerWidget {
       onRefresh: () async {
         ref.invalidate(todayScheduleProvider);
         ref.invalidate(missedDosesProvider);
-        ref.invalidate(lowStockMedicinesProvider);
+        ref.invalidate(activeMedicinesProvider);
         ref.invalidate(remindersProvider);
         ref.invalidate(caregiverSharesProvider);
         ref.invalidate(currentMonthExpenseTotalProvider);

@@ -17,6 +17,7 @@ class BackArrowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tooltip(
       message: MaterialLocalizations.of(context).backButtonTooltip,
+      triggerMode: TooltipTriggerMode.manual,
       child: InkResponse(
         onTap: onPressed ?? () => Navigator.of(context).maybePop(),
         radius: AppSpacing.circleButton / 2,

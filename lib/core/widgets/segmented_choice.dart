@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 
-/// Full-width single choice: equal segments in one rounded track
+/// Full-width single choice: equal segments in one refined rounded track
 /// ("Phone default | English | বাংলা"). For cream surfaces.
 class SegmentedChoice<T> extends StatelessWidget {
   const SegmentedChoice({
@@ -23,11 +23,15 @@ class SegmentedChoice<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSpacing.chipHeight,
-      padding: const EdgeInsets.all(AppSpacing.xxs),
-      decoration: ShapeDecoration(
-        color: AppColors.sand,
-        shape: const StadiumBorder(),
+      height: 40,
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        color: AppColors.sand.withValues(alpha: 0.35),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: AppColors.divider.withValues(alpha: 0.1),
+          width: 1,
+        ),
       ),
       child: Row(
         children: [
@@ -61,38 +65,51 @@ class _Segment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = selected ? AppColors.onSelected : AppColors.ink;
+    final fg = selected ? AppColors.onSelected : AppColors.inkMuted;
     return Semantics(
       selected: selected,
       button: true,
       child: AnimatedContainer(
-        duration: AppSpacing.animFast,
-        decoration: ShapeDecoration(
-          color: selected ? AppColors.selected : AppColors.transparent,
-          shape: const StadiumBorder(),
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        decoration: BoxDecoration(
+          color: selected ? AppColors.selected : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: selected
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.12),
+                    blurRadius: 4,
+                    offset: const Offset(0, 1.5),
+                  ),
+                ]
+              : null,
         ),
         child: Material(
           type: MaterialType.transparency,
-          shape: const StadiumBorder(),
+          borderRadius: BorderRadius.circular(8),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: onTap,
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                // Long labels shrink instead of wrapping.
+                padding: const EdgeInsets.symmetric(horizontal: 6),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (icon != null) ...[
-                        Icon(icon, size: AppSpacing.iconSm, color: fg),
-                        AppSpacing.gapXs,
+                        Icon(icon, size: 15, color: fg),
+                        const SizedBox(width: 4),
                       ],
                       Text(
                         label,
-                        style: AppTextStyles.chip.copyWith(color: fg),
+                        style: AppTextStyles.caption.copyWith(
+                          color: fg,
+                          fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                          fontSize: 12.5,
+                        ),
                       ),
                     ],
                   ),

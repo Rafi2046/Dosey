@@ -4,25 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../app/home_tab.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../core/notifications/notification_providers.dart';
 import '../../../core/notifications/permission_service.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/utils/share_providers.dart';
-import '../../../app/home_tab.dart';
 import '../../../core/widgets/app_switch.dart';
+import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/segmented_choice.dart';
+import '../../../core/widgets/status_chip.dart';
 import '../../auth/presentation/family_sharing_auth_sheet.dart';
 import '../../auth/providers/auth_providers.dart';
 import '../../lock/providers/app_lock_providers.dart';
+import '../../onboarding/providers/permissions_provider.dart';
 import '../../profiles/data/profiles_repository.dart';
 import '../../profiles/presentation/profile_widgets.dart';
 import '../../profiles/providers/profiles_providers.dart';
-import '../../../core/widgets/confirm_dialog.dart';
-import '../../../core/widgets/cream_scaffold.dart';
-import '../../../core/widgets/status_chip.dart';
-import '../../onboarding/providers/permissions_provider.dart';
 import '../data/backup_service.dart';
 import '../domain/legal_document.dart';
 import '../providers/settings_providers.dart';
@@ -197,18 +197,18 @@ class SettingsScreen extends ConsumerWidget {
 
     return CreamScaffold(
       title: l10n.settingsTitle,
-      // Same sage background as Home and the tabs; the cards stay light.
       onDark: true,
       body: ListView(
         padding: AppSpacing.screenPadding.copyWith(bottom: AppSpacing.xxl),
         children: [
+          // ── ACCOUNT & FAMILY SHARING ───────────────────────────────────────
           SettingsSection(
             title: l10n.settingsProfile,
             children: [
               SettingsTile(
                 icon: Icons.person_rounded,
                 color: AppColors.tileOlive,
-                title: name ?? l10n.settingsAddName,
+                title: name ?? authUser?.displayName ?? l10n.settingsAddName,
                 subtitle: name == null ? l10n.settingsNameHint : l10n.yourName,
                 onTap: () async {
                   final entered = await showNameSheet(context, current: name);
@@ -222,36 +222,35 @@ class SettingsScreen extends ConsumerWidget {
                 color: AppColors.tileMint,
                 title: l10n.profilesTitle,
                 subtitle: l10n.profilesHint,
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const ProfilesScreen(),
-                  ),
-                ),
+                onTap: () => _push(context, const ProfilesScreen()),
               ),
-            ],
-          ),
-          SettingsSection(
-            title: 'Family Sharing',
-            children: [
               SettingsTile(
                 icon: Icons.diversity_1_rounded,
                 color: AppColors.accent,
                 title: 'Caregiver & Family Mode',
                 subtitle: authUser != null
-                    ? (authUser.email ?? authUser.displayName ?? 'Connected')
+                    ? (authUser.email ?? 'Family Sharing Connected')
                     : 'Link with family & caregivers',
+                subtitleMaxLines: 1,
                 trailing: authUser != null
-                    ? const StatusChip(
+                    ? StatusChip(
                         label: 'Active',
                         icon: Icons.cloud_done_rounded,
                         background: AppColors.tileMint,
                         foreground: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
                       )
                     : null,
                 onTap: () => showFamilySharingAuthSheet(context),
               ),
             ],
           ),
+
+          // ── PREFERENCES & CONTROLS ─────────────────────────────────────────
           SettingsSection(
             title: l10n.settingsPreferences,
             children: [
@@ -300,11 +299,6 @@ class SettingsScreen extends ConsumerWidget {
                   onChanged: (v) => _setAppLock(context, ref, v),
                 ),
               ),
-            ],
-          ),
-          SettingsSection(
-            title: l10n.settingsReminders,
-            children: [
               SettingsTile(
                 icon: Icons.alarm_on_rounded,
                 color: AppColors.accent,
@@ -313,18 +307,31 @@ class SettingsScreen extends ConsumerWidget {
                     ? StatusChip(
                         label: l10n.permissionsAllAllowed,
                         icon: Icons.check_rounded,
-                        background: AppColors.mint,
+                        background: AppColors.tileMint,
+                        foreground: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
                       )
                     : StatusChip(
                         label: l10n.permissionsMissing(missing),
                         icon: Icons.warning_amber_rounded,
                         background: AppColors.accent,
                         foreground: AppColors.textOnAccent,
+                        borderRadius: BorderRadius.circular(8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
                       ),
                 onTap: () => _push(context, const PermissionsScreen()),
               ),
             ],
           ),
+
+          // ── YOUR DATA & BACKUP ─────────────────────────────────────────────
           SettingsSection(
             title: l10n.settingsYourData,
             children: [
@@ -354,6 +361,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ],
           ),
+
+          // ── HELP & SUPPORT ─────────────────────────────────────────────────
           SettingsSection(
             title: l10n.settingsSupport,
             children: [
@@ -383,6 +392,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ],
           ),
+
+          // ── ABOUT & LEGAL ──────────────────────────────────────────────────
           SettingsSection(
             title: l10n.settingsAbout,
             children: [
@@ -415,32 +426,47 @@ class SettingsScreen extends ConsumerWidget {
                   const LegalScreen(document: LegalDocument.disclaimer),
                 ),
               ),
-              SettingsTile(
-                icon: Icons.code_rounded,
-                color: AppColors.tileOlive,
-                title: l10n.licenses,
-                onTap: () => showLicensePage(
-                  context: context,
-                  applicationName: l10n.appName,
-                  applicationVersion: version,
-                  applicationIcon: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: Image.asset(
-                      AppImages.logo,
-                      width: AppSpacing.appIconLarge,
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
-          if (version != null)
-            Center(
-              child: Text(
-                '${l10n.appName} · $version',
-                style: AppTextStyles.caption,
+
+          // ── FOOTER BRANDING ────────────────────────────────────────────────
+          if (version != null) ...[
+            Padding(
+              padding: const EdgeInsets.only(
+                top: AppSpacing.md,
+                bottom: AppSpacing.xl,
+              ),
+              child: Column(
+                children: [
+                  Opacity(
+                    opacity: 0.5,
+                    child: Image.asset(
+                      AppImages.logo,
+                      width: 28,
+                      height: 28,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    '${l10n.appName} · $version',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textOnDarkMuted,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Offline-first • Privacy conscious',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textOnDarkMuted.withValues(alpha: 0.6),
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
               ),
             ),
+          ],
         ],
       ),
     );

@@ -11,6 +11,8 @@ class StatusChip extends StatelessWidget {
     this.foreground,
     this.icon,
     this.leading,
+    this.padding,
+    this.borderRadius,
     this.onTap,
   });
 
@@ -23,6 +25,8 @@ class StatusChip extends StatelessWidget {
 
   /// Shown before the label instead of [icon] (e.g. a progress ring).
   final Widget? leading;
+  final EdgeInsetsGeometry? padding;
+  final BorderRadiusGeometry? borderRadius;
   final VoidCallback? onTap;
 
   @override
@@ -31,12 +35,14 @@ class StatusChip extends StatelessWidget {
     final foreground = this.foreground ?? AppColors.textOnDark;
     return Material(
       color: background,
-      shape: const StadiumBorder(),
+      shape: borderRadius != null
+          ? RoundedRectangleBorder(borderRadius: borderRadius!)
+          : const StadiumBorder(),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: AppSpacing.chipPadding,
+          padding: padding ?? AppSpacing.chipPadding,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

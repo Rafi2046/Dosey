@@ -12,6 +12,7 @@ import '../../../core/database/enums.dart';
 import '../../reminders/domain/scheduled_occurrence.dart';
 import '../domain/family_share.dart';
 import '../domain/shared_adherence_dose.dart';
+import 'family_share_repository.dart';
 
 class SharedAdherenceRepository {
   const SharedAdherenceRepository();

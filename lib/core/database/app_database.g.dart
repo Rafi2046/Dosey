@@ -1779,6 +1779,39 @@ class $MedicinesTable extends Medicines
     ),
     defaultValue: const Constant(1),
   );
+  static const VerificationMeta _cloudIdMeta = const VerificationMeta(
+    'cloudId',
+  );
+  @override
+  late final GeneratedColumn<String> cloudId = GeneratedColumn<String>(
+    'cloud_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _firebaseUidMeta = const VerificationMeta(
+    'firebaseUid',
+  );
+  @override
+  late final GeneratedColumn<String> firebaseUid = GeneratedColumn<String>(
+    'firebase_uid',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _familyShareCodeMeta = const VerificationMeta(
+    'familyShareCode',
+  );
+  @override
+  late final GeneratedColumn<String> familyShareCode = GeneratedColumn<String>(
+    'family_share_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1802,6 +1835,9 @@ class $MedicinesTable extends Medicines
     createdAt,
     updatedAt,
     profileId,
+    cloudId,
+    firebaseUid,
+    familyShareCode,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1951,6 +1987,30 @@ class $MedicinesTable extends Medicines
         profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta),
       );
     }
+    if (data.containsKey('cloud_id')) {
+      context.handle(
+        _cloudIdMeta,
+        cloudId.isAcceptableOrUnknown(data['cloud_id']!, _cloudIdMeta),
+      );
+    }
+    if (data.containsKey('firebase_uid')) {
+      context.handle(
+        _firebaseUidMeta,
+        firebaseUid.isAcceptableOrUnknown(
+          data['firebase_uid']!,
+          _firebaseUidMeta,
+        ),
+      );
+    }
+    if (data.containsKey('family_share_code')) {
+      context.handle(
+        _familyShareCodeMeta,
+        familyShareCode.isAcceptableOrUnknown(
+          data['family_share_code']!,
+          _familyShareCodeMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -2048,6 +2108,18 @@ class $MedicinesTable extends Medicines
         DriftSqlType.int,
         data['${effectivePrefix}profile_id'],
       )!,
+      cloudId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cloud_id'],
+      ),
+      firebaseUid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}firebase_uid'],
+      ),
+      familyShareCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}family_share_code'],
+      ),
     );
   }
 
@@ -2107,6 +2179,11 @@ class Medicine extends DataClass implements Insertable<Medicine> {
 
   /// Whose this is (see [Profiles]). Last: v8 added it (ALTER TABLE appends).
   final int profileId;
+
+  /// Cloud synchronization fields (Supabase & Firebase Auth).
+  final String? cloudId;
+  final String? firebaseUid;
+  final String? familyShareCode;
   const Medicine({
     required this.id,
     required this.name,
@@ -2129,6 +2206,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     required this.createdAt,
     required this.updatedAt,
     required this.profileId,
+    this.cloudId,
+    this.firebaseUid,
+    this.familyShareCode,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2182,6 +2262,15 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['profile_id'] = Variable<int>(profileId);
+    if (!nullToAbsent || cloudId != null) {
+      map['cloud_id'] = Variable<String>(cloudId);
+    }
+    if (!nullToAbsent || firebaseUid != null) {
+      map['firebase_uid'] = Variable<String>(firebaseUid);
+    }
+    if (!nullToAbsent || familyShareCode != null) {
+      map['family_share_code'] = Variable<String>(familyShareCode);
+    }
     return map;
   }
 
@@ -2228,6 +2317,15 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
       profileId: Value(profileId),
+      cloudId: cloudId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cloudId),
+      firebaseUid: firebaseUid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(firebaseUid),
+      familyShareCode: familyShareCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(familyShareCode),
     );
   }
 
@@ -2262,6 +2360,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       profileId: serializer.fromJson<int>(json['profileId']),
+      cloudId: serializer.fromJson<String?>(json['cloudId']),
+      firebaseUid: serializer.fromJson<String?>(json['firebaseUid']),
+      familyShareCode: serializer.fromJson<String?>(json['familyShareCode']),
     );
   }
   @override
@@ -2293,6 +2394,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'profileId': serializer.toJson<int>(profileId),
+      'cloudId': serializer.toJson<String?>(cloudId),
+      'firebaseUid': serializer.toJson<String?>(firebaseUid),
+      'familyShareCode': serializer.toJson<String?>(familyShareCode),
     };
   }
 
@@ -2318,6 +2422,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     DateTime? createdAt,
     DateTime? updatedAt,
     int? profileId,
+    Value<String?> cloudId = const Value.absent(),
+    Value<String?> firebaseUid = const Value.absent(),
+    Value<String?> familyShareCode = const Value.absent(),
   }) => Medicine(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -2350,6 +2457,11 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     profileId: profileId ?? this.profileId,
+    cloudId: cloudId.present ? cloudId.value : this.cloudId,
+    firebaseUid: firebaseUid.present ? firebaseUid.value : this.firebaseUid,
+    familyShareCode: familyShareCode.present
+        ? familyShareCode.value
+        : this.familyShareCode,
   );
   Medicine copyWithCompanion(MedicinesCompanion data) {
     return Medicine(
@@ -2390,6 +2502,13 @@ class Medicine extends DataClass implements Insertable<Medicine> {
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      cloudId: data.cloudId.present ? data.cloudId.value : this.cloudId,
+      firebaseUid: data.firebaseUid.present
+          ? data.firebaseUid.value
+          : this.firebaseUid,
+      familyShareCode: data.familyShareCode.present
+          ? data.familyShareCode.value
+          : this.familyShareCode,
     );
   }
 
@@ -2416,7 +2535,10 @@ class Medicine extends DataClass implements Insertable<Medicine> {
           ..write('notes: $notes, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('profileId: $profileId')
+          ..write('profileId: $profileId, ')
+          ..write('cloudId: $cloudId, ')
+          ..write('firebaseUid: $firebaseUid, ')
+          ..write('familyShareCode: $familyShareCode')
           ..write(')'))
         .toString();
   }
@@ -2444,6 +2566,9 @@ class Medicine extends DataClass implements Insertable<Medicine> {
     createdAt,
     updatedAt,
     profileId,
+    cloudId,
+    firebaseUid,
+    familyShareCode,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -2469,7 +2594,10 @@ class Medicine extends DataClass implements Insertable<Medicine> {
           other.notes == this.notes &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.profileId == this.profileId);
+          other.profileId == this.profileId &&
+          other.cloudId == this.cloudId &&
+          other.firebaseUid == this.firebaseUid &&
+          other.familyShareCode == this.familyShareCode);
 }
 
 class MedicinesCompanion extends UpdateCompanion<Medicine> {
@@ -2494,6 +2622,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<int> profileId;
+  final Value<String?> cloudId;
+  final Value<String?> firebaseUid;
+  final Value<String?> familyShareCode;
   const MedicinesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -2516,6 +2647,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.profileId = const Value.absent(),
+    this.cloudId = const Value.absent(),
+    this.firebaseUid = const Value.absent(),
+    this.familyShareCode = const Value.absent(),
   });
   MedicinesCompanion.insert({
     this.id = const Value.absent(),
@@ -2539,6 +2673,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.profileId = const Value.absent(),
+    this.cloudId = const Value.absent(),
+    this.firebaseUid = const Value.absent(),
+    this.familyShareCode = const Value.absent(),
   }) : name = Value(name),
        startDate = Value(startDate);
   static Insertable<Medicine> custom({
@@ -2563,6 +2700,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? profileId,
+    Expression<String>? cloudId,
+    Expression<String>? firebaseUid,
+    Expression<String>? familyShareCode,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2586,6 +2726,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (profileId != null) 'profile_id': profileId,
+      if (cloudId != null) 'cloud_id': cloudId,
+      if (firebaseUid != null) 'firebase_uid': firebaseUid,
+      if (familyShareCode != null) 'family_share_code': familyShareCode,
     });
   }
 
@@ -2611,6 +2754,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<int>? profileId,
+    Value<String?>? cloudId,
+    Value<String?>? firebaseUid,
+    Value<String?>? familyShareCode,
   }) {
     return MedicinesCompanion(
       id: id ?? this.id,
@@ -2634,6 +2780,9 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       profileId: profileId ?? this.profileId,
+      cloudId: cloudId ?? this.cloudId,
+      firebaseUid: firebaseUid ?? this.firebaseUid,
+      familyShareCode: familyShareCode ?? this.familyShareCode,
     );
   }
 
@@ -2707,6 +2856,15 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
     if (profileId.present) {
       map['profile_id'] = Variable<int>(profileId.value);
     }
+    if (cloudId.present) {
+      map['cloud_id'] = Variable<String>(cloudId.value);
+    }
+    if (firebaseUid.present) {
+      map['firebase_uid'] = Variable<String>(firebaseUid.value);
+    }
+    if (familyShareCode.present) {
+      map['family_share_code'] = Variable<String>(familyShareCode.value);
+    }
     return map;
   }
 
@@ -2733,7 +2891,10 @@ class MedicinesCompanion extends UpdateCompanion<Medicine> {
           ..write('notes: $notes, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('profileId: $profileId')
+          ..write('profileId: $profileId, ')
+          ..write('cloudId: $cloudId, ')
+          ..write('firebaseUid: $firebaseUid, ')
+          ..write('familyShareCode: $familyShareCode')
           ..write(')'))
         .toString();
   }
@@ -3007,6 +3168,39 @@ class $RemindersTable extends Reminders
     ),
     defaultValue: const Constant(1),
   );
+  static const VerificationMeta _cloudIdMeta = const VerificationMeta(
+    'cloudId',
+  );
+  @override
+  late final GeneratedColumn<String> cloudId = GeneratedColumn<String>(
+    'cloud_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _firebaseUidMeta = const VerificationMeta(
+    'firebaseUid',
+  );
+  @override
+  late final GeneratedColumn<String> firebaseUid = GeneratedColumn<String>(
+    'firebase_uid',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _familyShareCodeMeta = const VerificationMeta(
+    'familyShareCode',
+  );
+  @override
+  late final GeneratedColumn<String> familyShareCode = GeneratedColumn<String>(
+    'family_share_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -3031,6 +3225,9 @@ class $RemindersTable extends Reminders
     updatedAt,
     remindBeforeMinutes,
     profileId,
+    cloudId,
+    firebaseUid,
+    familyShareCode,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3183,6 +3380,30 @@ class $RemindersTable extends Reminders
         profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta),
       );
     }
+    if (data.containsKey('cloud_id')) {
+      context.handle(
+        _cloudIdMeta,
+        cloudId.isAcceptableOrUnknown(data['cloud_id']!, _cloudIdMeta),
+      );
+    }
+    if (data.containsKey('firebase_uid')) {
+      context.handle(
+        _firebaseUidMeta,
+        firebaseUid.isAcceptableOrUnknown(
+          data['firebase_uid']!,
+          _firebaseUidMeta,
+        ),
+      );
+    }
+    if (data.containsKey('family_share_code')) {
+      context.handle(
+        _familyShareCodeMeta,
+        familyShareCode.isAcceptableOrUnknown(
+          data['family_share_code']!,
+          _familyShareCodeMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -3284,6 +3505,18 @@ class $RemindersTable extends Reminders
         DriftSqlType.int,
         data['${effectivePrefix}profile_id'],
       )!,
+      cloudId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cloud_id'],
+      ),
+      firebaseUid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}firebase_uid'],
+      ),
+      familyShareCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}family_share_code'],
+      ),
     );
   }
 
@@ -3349,6 +3582,11 @@ class Reminder extends DataClass implements Insertable<Reminder> {
 
   /// Whose this is (see [Profiles]). Last: v8 added it (ALTER TABLE appends).
   final int profileId;
+
+  /// Cloud synchronization fields (Supabase & Firebase Auth).
+  final String? cloudId;
+  final String? firebaseUid;
+  final String? familyShareCode;
   const Reminder({
     required this.id,
     required this.type,
@@ -3372,6 +3610,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     required this.updatedAt,
     this.remindBeforeMinutes,
     required this.profileId,
+    this.cloudId,
+    this.firebaseUid,
+    this.familyShareCode,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3428,6 +3669,15 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       map['remind_before_minutes'] = Variable<int>(remindBeforeMinutes);
     }
     map['profile_id'] = Variable<int>(profileId);
+    if (!nullToAbsent || cloudId != null) {
+      map['cloud_id'] = Variable<String>(cloudId);
+    }
+    if (!nullToAbsent || firebaseUid != null) {
+      map['firebase_uid'] = Variable<String>(firebaseUid);
+    }
+    if (!nullToAbsent || familyShareCode != null) {
+      map['family_share_code'] = Variable<String>(familyShareCode);
+    }
     return map;
   }
 
@@ -3477,6 +3727,15 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           ? const Value.absent()
           : Value(remindBeforeMinutes),
       profileId: Value(profileId),
+      cloudId: cloudId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cloudId),
+      firebaseUid: firebaseUid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(firebaseUid),
+      familyShareCode: familyShareCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(familyShareCode),
     );
   }
 
@@ -3514,6 +3773,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
         json['remindBeforeMinutes'],
       ),
       profileId: serializer.fromJson<int>(json['profileId']),
+      cloudId: serializer.fromJson<String?>(json['cloudId']),
+      firebaseUid: serializer.fromJson<String?>(json['firebaseUid']),
+      familyShareCode: serializer.fromJson<String?>(json['familyShareCode']),
     );
   }
   @override
@@ -3546,6 +3808,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'remindBeforeMinutes': serializer.toJson<int?>(remindBeforeMinutes),
       'profileId': serializer.toJson<int>(profileId),
+      'cloudId': serializer.toJson<String?>(cloudId),
+      'firebaseUid': serializer.toJson<String?>(firebaseUid),
+      'familyShareCode': serializer.toJson<String?>(familyShareCode),
     };
   }
 
@@ -3572,6 +3837,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     DateTime? updatedAt,
     Value<int?> remindBeforeMinutes = const Value.absent(),
     int? profileId,
+    Value<String?> cloudId = const Value.absent(),
+    Value<String?> firebaseUid = const Value.absent(),
+    Value<String?> familyShareCode = const Value.absent(),
   }) => Reminder(
     id: id ?? this.id,
     type: type ?? this.type,
@@ -3601,6 +3869,11 @@ class Reminder extends DataClass implements Insertable<Reminder> {
         ? remindBeforeMinutes.value
         : this.remindBeforeMinutes,
     profileId: profileId ?? this.profileId,
+    cloudId: cloudId.present ? cloudId.value : this.cloudId,
+    firebaseUid: firebaseUid.present ? firebaseUid.value : this.firebaseUid,
+    familyShareCode: familyShareCode.present
+        ? familyShareCode.value
+        : this.familyShareCode,
   );
   Reminder copyWithCompanion(RemindersCompanion data) {
     return Reminder(
@@ -3648,6 +3921,13 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           ? data.remindBeforeMinutes.value
           : this.remindBeforeMinutes,
       profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      cloudId: data.cloudId.present ? data.cloudId.value : this.cloudId,
+      firebaseUid: data.firebaseUid.present
+          ? data.firebaseUid.value
+          : this.firebaseUid,
+      familyShareCode: data.familyShareCode.present
+          ? data.familyShareCode.value
+          : this.familyShareCode,
     );
   }
 
@@ -3675,7 +3955,10 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('remindBeforeMinutes: $remindBeforeMinutes, ')
-          ..write('profileId: $profileId')
+          ..write('profileId: $profileId, ')
+          ..write('cloudId: $cloudId, ')
+          ..write('firebaseUid: $firebaseUid, ')
+          ..write('familyShareCode: $familyShareCode')
           ..write(')'))
         .toString();
   }
@@ -3704,6 +3987,9 @@ class Reminder extends DataClass implements Insertable<Reminder> {
     updatedAt,
     remindBeforeMinutes,
     profileId,
+    cloudId,
+    firebaseUid,
+    familyShareCode,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -3730,7 +4016,10 @@ class Reminder extends DataClass implements Insertable<Reminder> {
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.remindBeforeMinutes == this.remindBeforeMinutes &&
-          other.profileId == this.profileId);
+          other.profileId == this.profileId &&
+          other.cloudId == this.cloudId &&
+          other.firebaseUid == this.firebaseUid &&
+          other.familyShareCode == this.familyShareCode);
 }
 
 class RemindersCompanion extends UpdateCompanion<Reminder> {
@@ -3756,6 +4045,9 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
   final Value<DateTime> updatedAt;
   final Value<int?> remindBeforeMinutes;
   final Value<int> profileId;
+  final Value<String?> cloudId;
+  final Value<String?> firebaseUid;
+  final Value<String?> familyShareCode;
   const RemindersCompanion({
     this.id = const Value.absent(),
     this.type = const Value.absent(),
@@ -3779,6 +4071,9 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     this.updatedAt = const Value.absent(),
     this.remindBeforeMinutes = const Value.absent(),
     this.profileId = const Value.absent(),
+    this.cloudId = const Value.absent(),
+    this.firebaseUid = const Value.absent(),
+    this.familyShareCode = const Value.absent(),
   });
   RemindersCompanion.insert({
     this.id = const Value.absent(),
@@ -3803,6 +4098,9 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     this.updatedAt = const Value.absent(),
     this.remindBeforeMinutes = const Value.absent(),
     this.profileId = const Value.absent(),
+    this.cloudId = const Value.absent(),
+    this.firebaseUid = const Value.absent(),
+    this.familyShareCode = const Value.absent(),
   }) : type = Value(type),
        title = Value(title),
        startAt = Value(startAt);
@@ -3829,6 +4127,9 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     Expression<DateTime>? updatedAt,
     Expression<int>? remindBeforeMinutes,
     Expression<int>? profileId,
+    Expression<String>? cloudId,
+    Expression<String>? firebaseUid,
+    Expression<String>? familyShareCode,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3854,6 +4155,9 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
       if (remindBeforeMinutes != null)
         'remind_before_minutes': remindBeforeMinutes,
       if (profileId != null) 'profile_id': profileId,
+      if (cloudId != null) 'cloud_id': cloudId,
+      if (firebaseUid != null) 'firebase_uid': firebaseUid,
+      if (familyShareCode != null) 'family_share_code': familyShareCode,
     });
   }
 
@@ -3880,6 +4184,9 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     Value<DateTime>? updatedAt,
     Value<int?>? remindBeforeMinutes,
     Value<int>? profileId,
+    Value<String?>? cloudId,
+    Value<String?>? firebaseUid,
+    Value<String?>? familyShareCode,
   }) {
     return RemindersCompanion(
       id: id ?? this.id,
@@ -3904,6 +4211,9 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
       updatedAt: updatedAt ?? this.updatedAt,
       remindBeforeMinutes: remindBeforeMinutes ?? this.remindBeforeMinutes,
       profileId: profileId ?? this.profileId,
+      cloudId: cloudId ?? this.cloudId,
+      firebaseUid: firebaseUid ?? this.firebaseUid,
+      familyShareCode: familyShareCode ?? this.familyShareCode,
     );
   }
 
@@ -3980,6 +4290,15 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
     if (profileId.present) {
       map['profile_id'] = Variable<int>(profileId.value);
     }
+    if (cloudId.present) {
+      map['cloud_id'] = Variable<String>(cloudId.value);
+    }
+    if (firebaseUid.present) {
+      map['firebase_uid'] = Variable<String>(firebaseUid.value);
+    }
+    if (familyShareCode.present) {
+      map['family_share_code'] = Variable<String>(familyShareCode.value);
+    }
     return map;
   }
 
@@ -4007,7 +4326,10 @@ class RemindersCompanion extends UpdateCompanion<Reminder> {
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('remindBeforeMinutes: $remindBeforeMinutes, ')
-          ..write('profileId: $profileId')
+          ..write('profileId: $profileId, ')
+          ..write('cloudId: $cloudId, ')
+          ..write('firebaseUid: $firebaseUid, ')
+          ..write('familyShareCode: $familyShareCode')
           ..write(')'))
         .toString();
   }
@@ -4077,6 +4399,50 @@ class $ReminderLogsTable extends ReminderLogs
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _cloudIdMeta = const VerificationMeta(
+    'cloudId',
+  );
+  @override
+  late final GeneratedColumn<String> cloudId = GeneratedColumn<String>(
+    'cloud_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _firebaseUidMeta = const VerificationMeta(
+    'firebaseUid',
+  );
+  @override
+  late final GeneratedColumn<String> firebaseUid = GeneratedColumn<String>(
+    'firebase_uid',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _familyShareCodeMeta = const VerificationMeta(
+    'familyShareCode',
+  );
+  @override
+  late final GeneratedColumn<String> familyShareCode = GeneratedColumn<String>(
+    'family_share_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -4084,6 +4450,10 @@ class $ReminderLogsTable extends ReminderLogs
     scheduledFor,
     status,
     actedAt,
+    cloudId,
+    firebaseUid,
+    updatedAt,
+    familyShareCode,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4125,6 +4495,36 @@ class $ReminderLogsTable extends ReminderLogs
         actedAt.isAcceptableOrUnknown(data['acted_at']!, _actedAtMeta),
       );
     }
+    if (data.containsKey('cloud_id')) {
+      context.handle(
+        _cloudIdMeta,
+        cloudId.isAcceptableOrUnknown(data['cloud_id']!, _cloudIdMeta),
+      );
+    }
+    if (data.containsKey('firebase_uid')) {
+      context.handle(
+        _firebaseUidMeta,
+        firebaseUid.isAcceptableOrUnknown(
+          data['firebase_uid']!,
+          _firebaseUidMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('family_share_code')) {
+      context.handle(
+        _familyShareCodeMeta,
+        familyShareCode.isAcceptableOrUnknown(
+          data['family_share_code']!,
+          _familyShareCodeMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -4160,6 +4560,22 @@ class $ReminderLogsTable extends ReminderLogs
         DriftSqlType.dateTime,
         data['${effectivePrefix}acted_at'],
       ),
+      cloudId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cloud_id'],
+      ),
+      firebaseUid: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}firebase_uid'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+      familyShareCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}family_share_code'],
+      ),
     );
   }
 
@@ -4183,12 +4599,22 @@ class ReminderLog extends DataClass implements Insertable<ReminderLog> {
   /// When the user acted. For [ReminderLogStatus.snoozed]: when the dose
   /// rings again (it only counts as missed a while after that).
   final DateTime? actedAt;
+
+  /// Cloud synchronization fields (Supabase & Firebase Auth).
+  final String? cloudId;
+  final String? firebaseUid;
+  final DateTime? updatedAt;
+  final String? familyShareCode;
   const ReminderLog({
     required this.id,
     required this.reminderId,
     required this.scheduledFor,
     required this.status,
     this.actedAt,
+    this.cloudId,
+    this.firebaseUid,
+    this.updatedAt,
+    this.familyShareCode,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4204,6 +4630,18 @@ class ReminderLog extends DataClass implements Insertable<ReminderLog> {
     if (!nullToAbsent || actedAt != null) {
       map['acted_at'] = Variable<DateTime>(actedAt);
     }
+    if (!nullToAbsent || cloudId != null) {
+      map['cloud_id'] = Variable<String>(cloudId);
+    }
+    if (!nullToAbsent || firebaseUid != null) {
+      map['firebase_uid'] = Variable<String>(firebaseUid);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    if (!nullToAbsent || familyShareCode != null) {
+      map['family_share_code'] = Variable<String>(familyShareCode);
+    }
     return map;
   }
 
@@ -4216,6 +4654,18 @@ class ReminderLog extends DataClass implements Insertable<ReminderLog> {
       actedAt: actedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(actedAt),
+      cloudId: cloudId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cloudId),
+      firebaseUid: firebaseUid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(firebaseUid),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+      familyShareCode: familyShareCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(familyShareCode),
     );
   }
 
@@ -4232,6 +4682,10 @@ class ReminderLog extends DataClass implements Insertable<ReminderLog> {
         serializer.fromJson<String>(json['status']),
       ),
       actedAt: serializer.fromJson<DateTime?>(json['actedAt']),
+      cloudId: serializer.fromJson<String?>(json['cloudId']),
+      firebaseUid: serializer.fromJson<String?>(json['firebaseUid']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      familyShareCode: serializer.fromJson<String?>(json['familyShareCode']),
     );
   }
   @override
@@ -4245,6 +4699,10 @@ class ReminderLog extends DataClass implements Insertable<ReminderLog> {
         $ReminderLogsTable.$converterstatus.toJson(status),
       ),
       'actedAt': serializer.toJson<DateTime?>(actedAt),
+      'cloudId': serializer.toJson<String?>(cloudId),
+      'firebaseUid': serializer.toJson<String?>(firebaseUid),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'familyShareCode': serializer.toJson<String?>(familyShareCode),
     };
   }
 
@@ -4254,12 +4712,22 @@ class ReminderLog extends DataClass implements Insertable<ReminderLog> {
     DateTime? scheduledFor,
     ReminderLogStatus? status,
     Value<DateTime?> actedAt = const Value.absent(),
+    Value<String?> cloudId = const Value.absent(),
+    Value<String?> firebaseUid = const Value.absent(),
+    Value<DateTime?> updatedAt = const Value.absent(),
+    Value<String?> familyShareCode = const Value.absent(),
   }) => ReminderLog(
     id: id ?? this.id,
     reminderId: reminderId ?? this.reminderId,
     scheduledFor: scheduledFor ?? this.scheduledFor,
     status: status ?? this.status,
     actedAt: actedAt.present ? actedAt.value : this.actedAt,
+    cloudId: cloudId.present ? cloudId.value : this.cloudId,
+    firebaseUid: firebaseUid.present ? firebaseUid.value : this.firebaseUid,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    familyShareCode: familyShareCode.present
+        ? familyShareCode.value
+        : this.familyShareCode,
   );
   ReminderLog copyWithCompanion(ReminderLogsCompanion data) {
     return ReminderLog(
@@ -4272,6 +4740,14 @@ class ReminderLog extends DataClass implements Insertable<ReminderLog> {
           : this.scheduledFor,
       status: data.status.present ? data.status.value : this.status,
       actedAt: data.actedAt.present ? data.actedAt.value : this.actedAt,
+      cloudId: data.cloudId.present ? data.cloudId.value : this.cloudId,
+      firebaseUid: data.firebaseUid.present
+          ? data.firebaseUid.value
+          : this.firebaseUid,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      familyShareCode: data.familyShareCode.present
+          ? data.familyShareCode.value
+          : this.familyShareCode,
     );
   }
 
@@ -4282,14 +4758,27 @@ class ReminderLog extends DataClass implements Insertable<ReminderLog> {
           ..write('reminderId: $reminderId, ')
           ..write('scheduledFor: $scheduledFor, ')
           ..write('status: $status, ')
-          ..write('actedAt: $actedAt')
+          ..write('actedAt: $actedAt, ')
+          ..write('cloudId: $cloudId, ')
+          ..write('firebaseUid: $firebaseUid, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('familyShareCode: $familyShareCode')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, reminderId, scheduledFor, status, actedAt);
+  int get hashCode => Object.hash(
+    id,
+    reminderId,
+    scheduledFor,
+    status,
+    actedAt,
+    cloudId,
+    firebaseUid,
+    updatedAt,
+    familyShareCode,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4298,7 +4787,11 @@ class ReminderLog extends DataClass implements Insertable<ReminderLog> {
           other.reminderId == this.reminderId &&
           other.scheduledFor == this.scheduledFor &&
           other.status == this.status &&
-          other.actedAt == this.actedAt);
+          other.actedAt == this.actedAt &&
+          other.cloudId == this.cloudId &&
+          other.firebaseUid == this.firebaseUid &&
+          other.updatedAt == this.updatedAt &&
+          other.familyShareCode == this.familyShareCode);
 }
 
 class ReminderLogsCompanion extends UpdateCompanion<ReminderLog> {
@@ -4307,12 +4800,20 @@ class ReminderLogsCompanion extends UpdateCompanion<ReminderLog> {
   final Value<DateTime> scheduledFor;
   final Value<ReminderLogStatus> status;
   final Value<DateTime?> actedAt;
+  final Value<String?> cloudId;
+  final Value<String?> firebaseUid;
+  final Value<DateTime?> updatedAt;
+  final Value<String?> familyShareCode;
   const ReminderLogsCompanion({
     this.id = const Value.absent(),
     this.reminderId = const Value.absent(),
     this.scheduledFor = const Value.absent(),
     this.status = const Value.absent(),
     this.actedAt = const Value.absent(),
+    this.cloudId = const Value.absent(),
+    this.firebaseUid = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.familyShareCode = const Value.absent(),
   });
   ReminderLogsCompanion.insert({
     this.id = const Value.absent(),
@@ -4320,6 +4821,10 @@ class ReminderLogsCompanion extends UpdateCompanion<ReminderLog> {
     required DateTime scheduledFor,
     required ReminderLogStatus status,
     this.actedAt = const Value.absent(),
+    this.cloudId = const Value.absent(),
+    this.firebaseUid = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.familyShareCode = const Value.absent(),
   }) : reminderId = Value(reminderId),
        scheduledFor = Value(scheduledFor),
        status = Value(status);
@@ -4329,6 +4834,10 @@ class ReminderLogsCompanion extends UpdateCompanion<ReminderLog> {
     Expression<DateTime>? scheduledFor,
     Expression<String>? status,
     Expression<DateTime>? actedAt,
+    Expression<String>? cloudId,
+    Expression<String>? firebaseUid,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? familyShareCode,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -4336,6 +4845,10 @@ class ReminderLogsCompanion extends UpdateCompanion<ReminderLog> {
       if (scheduledFor != null) 'scheduled_for': scheduledFor,
       if (status != null) 'status': status,
       if (actedAt != null) 'acted_at': actedAt,
+      if (cloudId != null) 'cloud_id': cloudId,
+      if (firebaseUid != null) 'firebase_uid': firebaseUid,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (familyShareCode != null) 'family_share_code': familyShareCode,
     });
   }
 
@@ -4345,6 +4858,10 @@ class ReminderLogsCompanion extends UpdateCompanion<ReminderLog> {
     Value<DateTime>? scheduledFor,
     Value<ReminderLogStatus>? status,
     Value<DateTime?>? actedAt,
+    Value<String?>? cloudId,
+    Value<String?>? firebaseUid,
+    Value<DateTime?>? updatedAt,
+    Value<String?>? familyShareCode,
   }) {
     return ReminderLogsCompanion(
       id: id ?? this.id,
@@ -4352,6 +4869,10 @@ class ReminderLogsCompanion extends UpdateCompanion<ReminderLog> {
       scheduledFor: scheduledFor ?? this.scheduledFor,
       status: status ?? this.status,
       actedAt: actedAt ?? this.actedAt,
+      cloudId: cloudId ?? this.cloudId,
+      firebaseUid: firebaseUid ?? this.firebaseUid,
+      updatedAt: updatedAt ?? this.updatedAt,
+      familyShareCode: familyShareCode ?? this.familyShareCode,
     );
   }
 
@@ -4375,6 +4896,18 @@ class ReminderLogsCompanion extends UpdateCompanion<ReminderLog> {
     if (actedAt.present) {
       map['acted_at'] = Variable<DateTime>(actedAt.value);
     }
+    if (cloudId.present) {
+      map['cloud_id'] = Variable<String>(cloudId.value);
+    }
+    if (firebaseUid.present) {
+      map['firebase_uid'] = Variable<String>(firebaseUid.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (familyShareCode.present) {
+      map['family_share_code'] = Variable<String>(familyShareCode.value);
+    }
     return map;
   }
 
@@ -4385,7 +4918,11 @@ class ReminderLogsCompanion extends UpdateCompanion<ReminderLog> {
           ..write('reminderId: $reminderId, ')
           ..write('scheduledFor: $scheduledFor, ')
           ..write('status: $status, ')
-          ..write('actedAt: $actedAt')
+          ..write('actedAt: $actedAt, ')
+          ..write('cloudId: $cloudId, ')
+          ..write('firebaseUid: $firebaseUid, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('familyShareCode: $familyShareCode')
           ..write(')'))
         .toString();
   }
@@ -9190,6 +9727,9 @@ typedef $$MedicinesTableCreateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> profileId,
+      Value<String?> cloudId,
+      Value<String?> firebaseUid,
+      Value<String?> familyShareCode,
     });
 typedef $$MedicinesTableUpdateCompanionBuilder =
     MedicinesCompanion Function({
@@ -9214,6 +9754,9 @@ typedef $$MedicinesTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<int> profileId,
+      Value<String?> cloudId,
+      Value<String?> firebaseUid,
+      Value<String?> familyShareCode,
     });
 
 final class $$MedicinesTableReferences
@@ -9407,6 +9950,21 @@ class $$MedicinesTableFilterComposer
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cloudId => $composableBuilder(
+    column: $table.cloudId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get firebaseUid => $composableBuilder(
+    column: $table.firebaseUid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get familyShareCode => $composableBuilder(
+    column: $table.familyShareCode,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -9629,6 +10187,21 @@ class $$MedicinesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get cloudId => $composableBuilder(
+    column: $table.cloudId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get firebaseUid => $composableBuilder(
+    column: $table.firebaseUid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get familyShareCode => $composableBuilder(
+    column: $table.familyShareCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$DoctorsTableOrderingComposer get doctorId {
     final $$DoctorsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -9776,6 +10349,19 @@ class $$MedicinesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get cloudId =>
+      $composableBuilder(column: $table.cloudId, builder: (column) => column);
+
+  GeneratedColumn<String> get firebaseUid => $composableBuilder(
+    column: $table.firebaseUid,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get familyShareCode => $composableBuilder(
+    column: $table.familyShareCode,
+    builder: (column) => column,
+  );
 
   $$DoctorsTableAnnotationComposer get doctorId {
     final $$DoctorsTableAnnotationComposer composer = $composerBuilder(
@@ -9952,6 +10538,9 @@ class $$MedicinesTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> profileId = const Value.absent(),
+                Value<String?> cloudId = const Value.absent(),
+                Value<String?> firebaseUid = const Value.absent(),
+                Value<String?> familyShareCode = const Value.absent(),
               }) => MedicinesCompanion(
                 id: id,
                 name: name,
@@ -9974,6 +10563,9 @@ class $$MedicinesTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 profileId: profileId,
+                cloudId: cloudId,
+                firebaseUid: firebaseUid,
+                familyShareCode: familyShareCode,
               ),
           createCompanionCallback:
               ({
@@ -9998,6 +10590,9 @@ class $$MedicinesTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int> profileId = const Value.absent(),
+                Value<String?> cloudId = const Value.absent(),
+                Value<String?> firebaseUid = const Value.absent(),
+                Value<String?> familyShareCode = const Value.absent(),
               }) => MedicinesCompanion.insert(
                 id: id,
                 name: name,
@@ -10020,6 +10615,9 @@ class $$MedicinesTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 profileId: profileId,
+                cloudId: cloudId,
+                firebaseUid: firebaseUid,
+                familyShareCode: familyShareCode,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -10197,6 +10795,9 @@ typedef $$RemindersTableCreateCompanionBuilder =
       Value<DateTime> updatedAt,
       Value<int?> remindBeforeMinutes,
       Value<int> profileId,
+      Value<String?> cloudId,
+      Value<String?> firebaseUid,
+      Value<String?> familyShareCode,
     });
 typedef $$RemindersTableUpdateCompanionBuilder =
     RemindersCompanion Function({
@@ -10222,6 +10823,9 @@ typedef $$RemindersTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
       Value<int?> remindBeforeMinutes,
       Value<int> profileId,
+      Value<String?> cloudId,
+      Value<String?> firebaseUid,
+      Value<String?> familyShareCode,
     });
 
 final class $$RemindersTableReferences
@@ -10401,6 +11005,21 @@ class $$RemindersTableFilterComposer
 
   ColumnFilters<int> get remindBeforeMinutes => $composableBuilder(
     column: $table.remindBeforeMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cloudId => $composableBuilder(
+    column: $table.cloudId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get firebaseUid => $composableBuilder(
+    column: $table.firebaseUid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get familyShareCode => $composableBuilder(
+    column: $table.familyShareCode,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10603,6 +11222,21 @@ class $$RemindersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get cloudId => $composableBuilder(
+    column: $table.cloudId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get firebaseUid => $composableBuilder(
+    column: $table.firebaseUid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get familyShareCode => $composableBuilder(
+    column: $table.familyShareCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$MedicinesTableOrderingComposer get medicineId {
     final $$MedicinesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -10760,6 +11394,19 @@ class $$RemindersTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get cloudId =>
+      $composableBuilder(column: $table.cloudId, builder: (column) => column);
+
+  GeneratedColumn<String> get firebaseUid => $composableBuilder(
+    column: $table.firebaseUid,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get familyShareCode => $composableBuilder(
+    column: $table.familyShareCode,
+    builder: (column) => column,
+  );
+
   $$MedicinesTableAnnotationComposer get medicineId {
     final $$MedicinesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -10910,6 +11557,9 @@ class $$RemindersTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int?> remindBeforeMinutes = const Value.absent(),
                 Value<int> profileId = const Value.absent(),
+                Value<String?> cloudId = const Value.absent(),
+                Value<String?> firebaseUid = const Value.absent(),
+                Value<String?> familyShareCode = const Value.absent(),
               }) => RemindersCompanion(
                 id: id,
                 type: type,
@@ -10933,6 +11583,9 @@ class $$RemindersTableTableManager
                 updatedAt: updatedAt,
                 remindBeforeMinutes: remindBeforeMinutes,
                 profileId: profileId,
+                cloudId: cloudId,
+                firebaseUid: firebaseUid,
+                familyShareCode: familyShareCode,
               ),
           createCompanionCallback:
               ({
@@ -10958,6 +11611,9 @@ class $$RemindersTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<int?> remindBeforeMinutes = const Value.absent(),
                 Value<int> profileId = const Value.absent(),
+                Value<String?> cloudId = const Value.absent(),
+                Value<String?> firebaseUid = const Value.absent(),
+                Value<String?> familyShareCode = const Value.absent(),
               }) => RemindersCompanion.insert(
                 id: id,
                 type: type,
@@ -10981,6 +11637,9 @@ class $$RemindersTableTableManager
                 updatedAt: updatedAt,
                 remindBeforeMinutes: remindBeforeMinutes,
                 profileId: profileId,
+                cloudId: cloudId,
+                firebaseUid: firebaseUid,
+                familyShareCode: familyShareCode,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -11117,6 +11776,10 @@ typedef $$ReminderLogsTableCreateCompanionBuilder =
       required DateTime scheduledFor,
       required ReminderLogStatus status,
       Value<DateTime?> actedAt,
+      Value<String?> cloudId,
+      Value<String?> firebaseUid,
+      Value<DateTime?> updatedAt,
+      Value<String?> familyShareCode,
     });
 typedef $$ReminderLogsTableUpdateCompanionBuilder =
     ReminderLogsCompanion Function({
@@ -11125,6 +11788,10 @@ typedef $$ReminderLogsTableUpdateCompanionBuilder =
       Value<DateTime> scheduledFor,
       Value<ReminderLogStatus> status,
       Value<DateTime?> actedAt,
+      Value<String?> cloudId,
+      Value<String?> firebaseUid,
+      Value<DateTime?> updatedAt,
+      Value<String?> familyShareCode,
     });
 
 final class $$ReminderLogsTableReferences
@@ -11176,6 +11843,26 @@ class $$ReminderLogsTableFilterComposer
 
   ColumnFilters<DateTime> get actedAt => $composableBuilder(
     column: $table.actedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cloudId => $composableBuilder(
+    column: $table.cloudId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get firebaseUid => $composableBuilder(
+    column: $table.firebaseUid,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get familyShareCode => $composableBuilder(
+    column: $table.familyShareCode,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -11232,6 +11919,26 @@ class $$ReminderLogsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get cloudId => $composableBuilder(
+    column: $table.cloudId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get firebaseUid => $composableBuilder(
+    column: $table.firebaseUid,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get familyShareCode => $composableBuilder(
+    column: $table.familyShareCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$RemindersTableOrderingComposer get reminderId {
     final $$RemindersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -11278,6 +11985,22 @@ class $$ReminderLogsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get actedAt =>
       $composableBuilder(column: $table.actedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get cloudId =>
+      $composableBuilder(column: $table.cloudId, builder: (column) => column);
+
+  GeneratedColumn<String> get firebaseUid => $composableBuilder(
+    column: $table.firebaseUid,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get familyShareCode => $composableBuilder(
+    column: $table.familyShareCode,
+    builder: (column) => column,
+  );
 
   $$RemindersTableAnnotationComposer get reminderId {
     final $$RemindersTableAnnotationComposer composer = $composerBuilder(
@@ -11336,12 +12059,20 @@ class $$ReminderLogsTableTableManager
                 Value<DateTime> scheduledFor = const Value.absent(),
                 Value<ReminderLogStatus> status = const Value.absent(),
                 Value<DateTime?> actedAt = const Value.absent(),
+                Value<String?> cloudId = const Value.absent(),
+                Value<String?> firebaseUid = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String?> familyShareCode = const Value.absent(),
               }) => ReminderLogsCompanion(
                 id: id,
                 reminderId: reminderId,
                 scheduledFor: scheduledFor,
                 status: status,
                 actedAt: actedAt,
+                cloudId: cloudId,
+                firebaseUid: firebaseUid,
+                updatedAt: updatedAt,
+                familyShareCode: familyShareCode,
               ),
           createCompanionCallback:
               ({
@@ -11350,12 +12081,20 @@ class $$ReminderLogsTableTableManager
                 required DateTime scheduledFor,
                 required ReminderLogStatus status,
                 Value<DateTime?> actedAt = const Value.absent(),
+                Value<String?> cloudId = const Value.absent(),
+                Value<String?> firebaseUid = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String?> familyShareCode = const Value.absent(),
               }) => ReminderLogsCompanion.insert(
                 id: id,
                 reminderId: reminderId,
                 scheduledFor: scheduledFor,
                 status: status,
                 actedAt: actedAt,
+                cloudId: cloudId,
+                firebaseUid: firebaseUid,
+                updatedAt: updatedAt,
+                familyShareCode: familyShareCode,
               ),
           withReferenceMapper: (p0) => p0
               .map(

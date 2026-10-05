@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'app/app.dart';
+import 'core/cloud/cloud_initializer.dart';
 import 'core/database/app_database.dart';
 import 'core/database/database_provider.dart';
 import 'core/notifications/alarm_runtime.dart';
@@ -20,6 +21,7 @@ import 'features/settings/providers/settings_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await CloudInitializer.initialize();
   // Portrait only (also set natively: AndroidManifest / Info.plist).
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // Hospital/clinic search data (assets/data) is OpenStreetMap's; credit it

@@ -74,6 +74,11 @@ class Reminders extends Table {
       .withDefault(const Constant(1))
       .references(Profiles, #id, onDelete: KeyAction.cascade)();
 
+  /// Cloud synchronization fields (Supabase & Firebase Auth).
+  TextColumn get cloudId => text().nullable()();
+  TextColumn get firebaseUid => text().nullable()();
+  TextColumn get familyShareCode => text().nullable()();
+
   @override
   List<String> get customConstraints => [
     "CHECK (type <> 'medicine' OR medicine_id IS NOT NULL)",
@@ -96,6 +101,12 @@ class ReminderLogs extends Table {
   /// When the user acted. For [ReminderLogStatus.snoozed]: when the dose
   /// rings again (it only counts as missed a while after that).
   DateTimeColumn get actedAt => dateTime().nullable()();
+
+  /// Cloud synchronization fields (Supabase & Firebase Auth).
+  TextColumn get cloudId => text().nullable()();
+  TextColumn get firebaseUid => text().nullable()();
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+  TextColumn get familyShareCode => text().nullable()();
 
   @override
   List<Set<Column>> get uniqueKeys => [

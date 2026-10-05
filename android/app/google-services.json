@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "918524133674",
+    "project_id": "dosey-502ae",
+    "storage_bucket": "dosey-502ae.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918524133674:android:003fc84db793dec0b7de53",
+        "android_client_info": {
+          "package_name": "com.onesttech.dosey"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpvxXYwlwZfncPg_ivAVYEGjYv3wd3zKg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

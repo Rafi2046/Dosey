@@ -13,6 +13,8 @@ import '../../../core/utils/share_providers.dart';
 import '../../../app/home_tab.dart';
 import '../../../core/widgets/app_switch.dart';
 import '../../../core/widgets/segmented_choice.dart';
+import '../../auth/presentation/family_sharing_auth_sheet.dart';
+import '../../auth/providers/auth_providers.dart';
 import '../../lock/providers/app_lock_providers.dart';
 import '../../profiles/data/profiles_repository.dart';
 import '../../profiles/presentation/profile_widgets.dart';
@@ -187,6 +189,7 @@ class SettingsScreen extends ConsumerWidget {
         .where((p) => !granted.contains(p))
         .length;
     final name = ref.watch(userNameProvider).value;
+    final authUser = ref.watch(currentUserProvider);
     final info = ref.watch(packageInfoProvider).value;
     final version = info == null
         ? null
@@ -224,6 +227,28 @@ class SettingsScreen extends ConsumerWidget {
                     builder: (_) => const ProfilesScreen(),
                   ),
                 ),
+              ),
+            ],
+          ),
+          SettingsSection(
+            title: 'Family Sharing',
+            children: [
+              SettingsTile(
+                icon: Icons.diversity_1_rounded,
+                color: AppColors.accent,
+                title: 'Caregiver & Family Mode',
+                subtitle: authUser != null
+                    ? (authUser.email ?? authUser.displayName ?? 'Connected')
+                    : 'Link with family & caregivers',
+                trailing: authUser != null
+                    ? const StatusChip(
+                        label: 'Active',
+                        icon: Icons.cloud_done_rounded,
+                        background: AppColors.tileMint,
+                        foreground: Colors.white,
+                      )
+                    : null,
+                onTap: () => showFamilySharingAuthSheet(context),
               ),
             ],
           ),

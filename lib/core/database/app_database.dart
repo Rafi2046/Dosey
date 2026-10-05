@@ -37,7 +37,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -69,6 +69,7 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(reminders, reminders.remindBeforeMinutes);
       }
       if (from < 8) await _addProfiles(m, from);
+      if (from < 9) await _addCloudSyncFields(m, from);
     },
     beforeOpen: (details) async {
       // SQLite ships with FK enforcement off; cascades depend on it.
@@ -89,6 +90,9 @@ class AppDatabase extends _$AppDatabase {
           reminders.doseAmount,
           reminders.remindBeforeMinutes,
           reminders.profileId,
+          reminders.cloudId,
+          reminders.firebaseUid,
+          reminders.familyShareCode,
         ],
         columnTransformer: {
           reminders.doseAmount: const CustomExpression<double>(
@@ -107,6 +111,9 @@ class AppDatabase extends _$AppDatabase {
           medicines.stripsPerBox,
           medicines.refillAlertDays,
           medicines.profileId,
+          medicines.cloudId,
+          medicines.firebaseUid,
+          medicines.familyShareCode,
         ],
       ),
     );
@@ -148,9 +155,30 @@ class AppDatabase extends _$AppDatabase {
         medicines.stripsPerBox,
         medicines.refillAlertDays,
         medicines.profileId,
+        medicines.cloudId,
+        medicines.firebaseUid,
+        medicines.familyShareCode,
       ],
     ),
   );
+
+  /// v9: cloud sync fields (cloud_id, firebase_uid, family_share_code, updated_at).
+  Future<void> _addCloudSyncFields(Migrator m, int from) async {
+    if (from >= 4) {
+      await m.addColumn(medicines, medicines.cloudId);
+      await m.addColumn(medicines, medicines.firebaseUid);
+      await m.addColumn(medicines, medicines.familyShareCode);
+    }
+    if (from >= 3) {
+      await m.addColumn(reminders, reminders.cloudId);
+      await m.addColumn(reminders, reminders.firebaseUid);
+      await m.addColumn(reminders, reminders.familyShareCode);
+    }
+    await m.addColumn(reminderLogs, reminderLogs.cloudId);
+    await m.addColumn(reminderLogs, reminderLogs.firebaseUid);
+    await m.addColumn(reminderLogs, reminderLogs.updatedAt);
+    await m.addColumn(reminderLogs, reminderLogs.familyShareCode);
+  }
 
   /// Adds [delta] (negative to consume) to a medicine's stock, clamped at
   /// zero. No-op when stock isn't tracked (null).

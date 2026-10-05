@@ -20,6 +20,8 @@ class AppTextField extends StatelessWidget {
     this.textCapitalization = TextCapitalization.sentences,
     this.inputFormatters,
     this.autofocus = false,
+    this.obscureText = false,
+    this.suffixIcon,
     this.onSubmitted,
   });
 
@@ -37,6 +39,8 @@ class AppTextField extends StatelessWidget {
        textCapitalization = TextCapitalization.none,
        inputFormatters = null,
        autofocus = false,
+       obscureText = false,
+       suffixIcon = null,
        onSubmitted = null;
 
   final String label;
@@ -52,6 +56,8 @@ class AppTextField extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final List<TextInputFormatter>? inputFormatters;
   final bool autofocus;
+  final bool obscureText;
+  final Widget? suffixIcon;
 
   /// Keyboard "done"; also makes the action key say done.
   final ValueChanged<String>? onSubmitted;
@@ -73,6 +79,7 @@ class AppTextField extends StatelessWidget {
         validator: validator,
         maxLines: maxLines,
         minLines: 1,
+        obscureText: obscureText,
         textCapitalization: textCapitalization,
         inputFormatters: inputFormatters,
         autofocus: autofocus,
@@ -84,6 +91,7 @@ class AppTextField extends StatelessWidget {
           hintText: hint,
           prefixText: prefixText,
           prefixStyle: AppTextStyles.inputOnLight,
+          suffixIcon: suffixIcon,
         ),
       ),
     );

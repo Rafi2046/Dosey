@@ -67,6 +67,11 @@ class Medicines extends Table {
       .withDefault(const Constant(1))
       .references(Profiles, #id, onDelete: KeyAction.cascade)();
 
+  /// Cloud synchronization fields (Supabase & Firebase Auth).
+  TextColumn get cloudId => text().nullable()();
+  TextColumn get firebaseUid => text().nullable()();
+  TextColumn get familyShareCode => text().nullable()();
+
   @override
   List<String> get customConstraints => [
     'CHECK (unit_price_minor >= 0)',

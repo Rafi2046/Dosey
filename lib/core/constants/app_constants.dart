@@ -23,7 +23,7 @@ abstract final class AppConstants {
 
   /// Settings › Rate Dosey. Must match the final applicationId.
   static const String playStoreUrl =
-      'https://play.google.com/store/apps/details?id=com.example.dosey';
+      'https://play.google.com/store/apps/details?id=com.onesttech.dosey';
 
   /// "Last updated" date on the privacy policy, terms and disclaimer.
   static final DateTime legalUpdated = DateTime(2026, 10, 3);

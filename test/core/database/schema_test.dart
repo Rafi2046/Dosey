@@ -159,4 +159,57 @@ void main() {
       throwsA(isA<SqliteException>()),
     );
   });
+
+  test('cloud sync fields can be stored on medicines, reminders, and logs', () async {
+    final medId = await db.into(db.medicines).insert(
+      MedicinesCompanion.insert(
+        name: 'Aspirin',
+        startDate: DateTime(2026, 10, 1),
+        cloudId: const Value('med-uuid-123'),
+        firebaseUid: const Value('firebase-user-abc'),
+        familyShareCode: const Value('FAM999'),
+      ),
+    );
+    final med = await (db.select(db.medicines)..where((t) => t.id.equals(medId))).getSingle();
+    expect(med.cloudId, 'med-uuid-123');
+    expect(med.firebaseUid, 'firebase-user-abc');
+    expect(med.familyShareCode, 'FAM999');
+    expect(med.updatedAt, isNotNull);
+
+    final remId = await db.into(db.reminders).insert(
+      RemindersCompanion.insert(
+        type: ReminderType.medicine,
+        title: 'Take Aspirin',
+        startAt: DateTime(2026, 10, 1, 8),
+        medicineId: Value(medId),
+        cloudId: const Value('rem-uuid-456'),
+        firebaseUid: const Value('firebase-user-abc'),
+        familyShareCode: const Value('FAM999'),
+      ),
+    );
+    final rem = await (db.select(db.reminders)..where((t) => t.id.equals(remId))).getSingle();
+    expect(rem.cloudId, 'rem-uuid-456');
+    expect(rem.firebaseUid, 'firebase-user-abc');
+    expect(rem.familyShareCode, 'FAM999');
+    expect(rem.updatedAt, isNotNull);
+
+    final logNow = DateTime(2026, 10, 1, 8, 30);
+    final logId = await db.into(db.reminderLogs).insert(
+      ReminderLogsCompanion.insert(
+        reminderId: remId,
+        scheduledFor: DateTime(2026, 10, 1, 8),
+        status: ReminderLogStatus.taken,
+        cloudId: const Value('log-uuid-789'),
+        firebaseUid: const Value('firebase-user-abc'),
+        familyShareCode: const Value('FAM999'),
+        updatedAt: Value(logNow),
+      ),
+    );
+    final log = await (db.select(db.reminderLogs)..where((t) => t.id.equals(logId))).getSingle();
+    expect(log.cloudId, 'log-uuid-789');
+    expect(log.firebaseUid, 'firebase-user-abc');
+    expect(log.familyShareCode, 'FAM999');
+    expect(log.updatedAt, logNow);
+  });
 }
+

@@ -10,7 +10,6 @@ import 'package:share_plus/share_plus.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/pill_button.dart';
-import '../../../core/widgets/status_chip.dart';
 import '../../family_sharing/domain/family_share.dart';
 import '../../family_sharing/presentation/family_member_adherence_screen.dart';
 import '../../family_sharing/providers/family_share_providers.dart';
@@ -26,9 +25,11 @@ Future<void> showFamilySharingAuthSheet(BuildContext context) =>
       isScrollControlled: true,
       showDragHandle: false,
       backgroundColor: Colors.transparent,
-      builder: (_) => const FractionallySizedBox(
-        heightFactor: AppSpacing.moreSheetHeightFactor,
-        child: FamilySharingAuthSheet(),
+      builder: (ctx) => ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(ctx).height * 0.85,
+        ),
+        child: const FamilySharingAuthSheet(),
       ),
     );
 
@@ -566,7 +567,7 @@ class _FamilySharingAuthSheetState
         Container(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm,
+            vertical: 9,
           ),
           decoration: BoxDecoration(
             color: AppColors.creamLight,
@@ -576,7 +577,7 @@ class _FamilySharingAuthSheetState
           child: Row(
             children: [
               CircleAvatar(
-                radius: 20,
+                radius: 18,
                 backgroundColor: AppColors.tileMint,
                 child: Text(
                   (user.displayName?.isNotEmpty == true
@@ -585,9 +586,10 @@ class _FamilySharingAuthSheetState
                               ? user.email![0]
                               : 'U')
                       .toUpperCase(),
-                  style: AppTextStyles.headline.copyWith(
+                  style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
                   ),
                 ),
               ),
@@ -595,41 +597,68 @@ class _FamilySharingAuthSheetState
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       user.displayName ?? 'Family Account',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.bodyOnLight.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13.5,
                       ),
                     ),
+                    const SizedBox(height: 1),
                     Text(
                       user.email ?? user.uid,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.inkMuted,
+                        fontSize: 11.5,
                       ),
                     ),
                   ],
                 ),
               ),
               AppSpacing.gapSm,
-              const StatusChip(
-                label: 'Cloud Active',
-                icon: Icons.check_circle_rounded,
-                background: AppColors.tileMint,
-                foreground: Colors.white,
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 3.5,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.tileMint.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.cloud_done_rounded,
+                      size: 11,
+                      color: AppColors.tileMoss,
+                    ),
+                    SizedBox(width: 3),
+                    Text(
+                      'Cloud Active',
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.tileMoss,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
-        AppSpacing.gapMd,
+        AppSpacing.gapSm,
 
         // Mode switch tabs: 0 = My Share Code, 1 = Enter Family Code
         Container(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
             color: AppColors.creamLight,
             borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
@@ -655,7 +684,7 @@ class _FamilySharingAuthSheetState
             ],
           ),
         ),
-        AppSpacing.gapMd,
+        AppSpacing.gapSm,
 
         if (_activeFamilyTab == 0) ...[
           // PATIENT MODE: Share my adherence
@@ -665,14 +694,14 @@ class _FamilySharingAuthSheetState
           _buildCaregiverLinkCard(user, caregiverSharesAsync),
         ],
 
-        AppSpacing.gapLg,
+        AppSpacing.gapMd,
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton.icon(
               icon: Icon(
                 Icons.logout_rounded,
-                size: 16,
+                size: 15,
                 color: AppColors.inkMuted,
               ),
               label: Text(
@@ -680,12 +709,13 @@ class _FamilySharingAuthSheetState
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.inkMuted,
                   fontWeight: FontWeight.w600,
+                  fontSize: 12,
                 ),
               ),
               onPressed: _isLoading ? null : _handleSignOut,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Text(
                 '•',
                 style: TextStyle(color: AppColors.inkMuted.withValues(alpha: 0.5)),
@@ -698,6 +728,7 @@ class _FamilySharingAuthSheetState
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.error,
                   fontWeight: FontWeight.w500,
+                  fontSize: 12,
                 ),
               ),
             ),
@@ -717,9 +748,9 @@ class _FamilySharingAuthSheetState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 20,
-          height: 20,
-          margin: const EdgeInsets.only(top: 2),
+          width: 17,
+          height: 17,
+          margin: const EdgeInsets.only(top: 1),
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
@@ -729,28 +760,29 @@ class _FamilySharingAuthSheetState
             stepNumber,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        AppSpacing.gapSm,
+        const SizedBox(width: 7),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 title,
                 style: AppTextStyles.bodyOnLight.copyWith(
                   fontWeight: FontWeight.w600,
-                  fontSize: AppSpacing.fontSm,
+                  fontSize: 12,
                 ),
               ),
               Text(
                 subtitle,
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.inkMuted,
-                  fontSize: AppSpacing.fontXs,
+                  fontSize: 10.5,
                 ),
               ),
             ],
@@ -764,20 +796,21 @@ class _FamilySharingAuthSheetState
     User user,
     AsyncValue<List<FamilyShare>> patientSharesAsync,
   ) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.creamLight,
+    return Material(
+      color: AppColors.creamLight,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        border: Border.all(color: AppColors.divider),
+        side: BorderSide(color: AppColors.divider),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
                   color: AppColors.accent.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
@@ -785,7 +818,7 @@ class _FamilySharingAuthSheetState
                 child: const Icon(
                   Icons.qr_code_2_rounded,
                   color: AppColors.accent,
-                  size: 20,
+                  size: 18,
                 ),
               ),
               AppSpacing.gapSm,
@@ -797,12 +830,14 @@ class _FamilySharingAuthSheetState
                       'Share Your Doses & Reminders',
                       style: AppTextStyles.bodyOnLight.copyWith(
                         fontWeight: FontWeight.w700,
+                        fontSize: 13.5,
                       ),
                     ),
                     Text(
                       'Let family members monitor your medication adherence',
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.inkMuted,
+                        fontSize: 11,
                       ),
                     ),
                   ],
@@ -810,28 +845,28 @@ class _FamilySharingAuthSheetState
               ),
             ],
           ),
-          AppSpacing.gapMd,
+          AppSpacing.gapSm,
           _buildStepRow(
             stepNumber: '1',
             title: 'Generate your 6-character code below',
             subtitle: 'Your unique code connects caregiver devices.',
             color: AppColors.accent,
           ),
-          AppSpacing.gapSm,
+          const SizedBox(height: 5),
           _buildStepRow(
             stepNumber: '2',
             title: 'Send it to your caregiver or family member',
             subtitle: 'They enter this code in their Dosey app.',
             color: AppColors.accent,
           ),
-          AppSpacing.gapSm,
+          const SizedBox(height: 5),
           _buildStepRow(
             stepNumber: '3',
             title: 'Approve incoming link requests',
             subtitle: 'Review and accept requests from your family members.',
             color: AppColors.accent,
           ),
-          AppSpacing.gapMd,
+          AppSpacing.gapSm,
 
           if (_activeShare != null) ...[
             _buildShareCodeDisplay(_activeShare!.shareCode),
@@ -843,7 +878,7 @@ class _FamilySharingAuthSheetState
                   return _buildShareCodeDisplay(unclaimed.first.shareCode);
                 }
                 return PillButton(
-                  label: 'Generate My Family Share Code',
+                  label: 'Generate Share Code',
                   trailingIcon: Icons.vpn_key_rounded,
                   tone: PillButtonTone.accent,
                   loading: _isLoading,
@@ -857,7 +892,7 @@ class _FamilySharingAuthSheetState
                 ),
               ),
               error: (e, st) => PillButton(
-                label: 'Generate My Family Share Code',
+                label: 'Generate Share Code',
                 trailingIcon: Icons.vpn_key_rounded,
                 tone: PillButtonTone.accent,
                 loading: _isLoading,
@@ -1113,8 +1148,9 @@ class _FamilySharingAuthSheetState
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildShareCodeDisplay(String code) {
     return Container(
@@ -1396,28 +1432,29 @@ class _FamilySharingAuthSheetState
   ) {
     final hasValidCode = _shareCodeController.text.trim().length == 6;
 
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.creamLight,
+    return Material(
+      color: AppColors.creamLight,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        border: Border.all(color: AppColors.divider),
+        side: BorderSide(color: AppColors.divider),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
                   color: AppColors.tileMint.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.group_add_rounded,
                   color: AppColors.tileMint,
-                  size: 20,
+                  size: 18,
                 ),
               ),
               AppSpacing.gapSm,
@@ -1429,12 +1466,14 @@ class _FamilySharingAuthSheetState
                       'Link to a Family Member',
                       style: AppTextStyles.bodyOnLight.copyWith(
                         fontWeight: FontWeight.w700,
+                        fontSize: 13.5,
                       ),
                     ),
                     Text(
                       'Enter their 6-character code to link profiles',
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.inkMuted,
+                        fontSize: 11,
                       ),
                     ),
                   ],
@@ -1442,32 +1481,32 @@ class _FamilySharingAuthSheetState
               ),
             ],
           ),
-          AppSpacing.gapMd,
-          _buildStepRow(
-            stepNumber: '1',
-            title: 'Ask your family member for their 6-character code',
-            subtitle: 'Found under "My Share Code" on their phone.',
-            color: AppColors.tileMint,
-          ),
           AppSpacing.gapSm,
           _buildStepRow(
+            stepNumber: '1',
+            title: 'Ask family member for their code',
+            subtitle: 'Found under "My Code" on their phone.',
+            color: AppColors.tileMint,
+          ),
+          const SizedBox(height: 5),
+          _buildStepRow(
             stepNumber: '2',
-            title: 'Enter or paste the 6-character code below',
+            title: 'Enter or paste the code below',
             subtitle: 'Tap the boxes or use the Paste button.',
             color: AppColors.tileMint,
           ),
-          AppSpacing.gapSm,
+          const SizedBox(height: 5),
           _buildStepRow(
             stepNumber: '3',
-            title: 'Wait for family member approval',
-            subtitle: 'They must accept your link request to start sync.',
+            title: 'Wait for their approval',
+            subtitle: 'They must accept your link request to sync.',
             color: AppColors.tileMint,
           ),
-          AppSpacing.gapMd,
+          AppSpacing.gapSm,
           _buildCaregiverCodeInput(),
           AppSpacing.gapSm,
           PillButton(
-            label: 'Request Link to Family Member',
+            label: 'Send Link Request',
             trailingIcon: Icons.arrow_forward_rounded,
             tone: hasValidCode ? PillButtonTone.accent : PillButtonTone.moss,
             loading: _isLoading,
@@ -1647,8 +1686,9 @@ class _FamilySharingAuthSheetState
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildGuestContent(bool isAppleSupported) {
     if (_isResetMode) {
@@ -1991,7 +2031,7 @@ class _ModeTab extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: AppSpacing.animFast,
-        padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
         decoration: BoxDecoration(
           color: active
               ? (AppColors.isDark ? AppColors.sand : Colors.white)

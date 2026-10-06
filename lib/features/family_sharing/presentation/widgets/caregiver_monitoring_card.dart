@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/initials_avatar.dart';
-import '../../../../core/widgets/status_chip.dart';
 import '../../../../core/widgets/surface_card.dart';
 import '../../domain/family_share.dart';
 import '../../providers/family_share_providers.dart';
@@ -77,26 +75,39 @@ class _PatientCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(
+                    Text(
+                      'CAREGIVER MONITORING',
+                      style: AppTextStyles.overline.copyWith(
                         color: AppColors.tileMint,
-                        shape: BoxShape.circle,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 10,
+                        letterSpacing: 0.5,
                       ),
                     ),
-                    const SizedBox(width: 5),
-                    Flexible(
-                      child: Text(
-                        'CAREGIVER MONITORING',
-                        style: AppTextStyles.overline.copyWith(
-                          color: AppColors.tileMint,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                    const SizedBox(width: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 5,
+                        vertical: 1.5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.tileMint,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.sync_rounded, size: 9, color: Colors.white),
+                          SizedBox(width: 2),
+                          Text(
+                            'Live',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 9.5,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -121,23 +132,10 @@ class _PatientCard extends StatelessWidget {
               ],
             ),
           ),
-          AppSpacing.gapSm,
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const StatusChip(
-                label: 'Live',
-                icon: Icons.sync_rounded,
-                background: AppColors.tileMint,
-                foreground: Colors.white,
-              ),
-              const SizedBox(width: 2),
-              Icon(
-                Icons.chevron_right_rounded,
-                size: 20,
-                color: AppColors.inkMuted,
-              ),
-            ],
+          Icon(
+            Icons.chevron_right_rounded,
+            size: 22,
+            color: AppColors.inkMuted,
           ),
         ],
       ),

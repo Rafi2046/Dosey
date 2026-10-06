@@ -2,7 +2,6 @@ import 'package:dosey/core/constants/constants.dart';
 import 'package:dosey/core/localization/l10n.dart';
 import 'package:dosey/features/auth/data/auth_repository.dart';
 import 'package:dosey/features/auth/presentation/family_sharing_auth_sheet.dart';
-import 'package:dosey/features/auth/providers/auth_providers.dart';
 import 'package:dosey/features/family_sharing/data/family_share_repository.dart';
 import 'package:dosey/features/family_sharing/domain/family_share.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -7,6 +7,7 @@ import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../../../core/widgets/status_chip.dart';
+import '../../../core/widgets/surface_card.dart';
 import '../../auth/providers/auth_providers.dart';
 import '../domain/family_share.dart';
 import '../domain/shared_adherence_dose.dart';
@@ -108,37 +109,29 @@ class _FamilyMemberAdherenceScreenState
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Patient Profile Compact Banner
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.creamLight,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                  border: Border.all(color: AppColors.divider),
-                ),
+              SurfaceCard(
+                color: AppColors.creamLight,
+                elevated: true,
+                radius: AppSpacing.radiusLg,
+                padding: AppSpacing.cardPadding,
                 child: Row(
                   children: [
-                    InitialsAvatar(name: patientName, size: 36),
-                    AppSpacing.gapSm,
+                    InitialsAvatar(name: patientName, size: AppSpacing.avatarMd),
+                    AppSpacing.gapMd,
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             patientName,
-                            style: AppTextStyles.headlineOnLight.copyWith(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
+                            style: AppTextStyles.cardTitleOnLight.copyWith(
+                              fontSize: 17,
                             ),
                           ),
+                          AppSpacing.gapXs,
                           Text(
                             'Share Code: ${widget.share.shareCode}',
-                            style: AppTextStyles.caption.copyWith(
-                              color: AppColors.inkMuted,
-                              fontSize: 11,
-                            ),
+                            style: AppTextStyles.captionOnLight,
                           ),
                         ],
                       ),
@@ -152,7 +145,7 @@ class _FamilyMemberAdherenceScreenState
                   ],
                 ),
               ),
-              AppSpacing.gapMd,
+              AppSpacing.gapLg,
 
               // Schedule Content
               scheduleAsync.when(
@@ -178,7 +171,7 @@ class _FamilyMemberAdherenceScreenState
                         pending: pendingCount,
                         missed: missedCount,
                       ),
-                      AppSpacing.gapMd,
+                      AppSpacing.gapLg,
 
                       // Section Title
                       Padding(
@@ -186,27 +179,26 @@ class _FamilyMemberAdherenceScreenState
                         child: Row(
                           children: [
                             Container(
-                              width: 3,
-                              height: 12,
+                              width: AppSpacing.headerTickWidth,
+                              height: AppSpacing.headerTickHeight,
                               decoration: BoxDecoration(
                                 color: AppColors.accent,
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
-                            const SizedBox(width: 6),
+                            AppSpacing.gapSm,
                             Text(
                               "TODAY'S SCHEDULE",
                               style: AppTextStyles.overline.copyWith(
                                 fontWeight: FontWeight.w800,
-                                fontSize: 11.5,
-                                letterSpacing: 0.8,
+                                letterSpacing: 1.0,
                                 color: AppColors.inkMuted,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      AppSpacing.gapSm,
 
                       // Doses List
                       ...doses.asMap().entries.map((entry) {
@@ -217,7 +209,7 @@ class _FamilyMemberAdherenceScreenState
                         return _buildDoseItem(dose, color);
                       }),
 
-                      AppSpacing.gapMd,
+                      AppSpacing.gapLg,
                       // Nudge / Caregiver Action Button
                       PillButton(
                         label: 'Send Gentle Reminder',
@@ -280,44 +272,40 @@ class _FamilyMemberAdherenceScreenState
     required int pending,
     required int missed,
   }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.creamLight,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        border: Border.all(color: AppColors.divider),
-      ),
+    return SurfaceCard(
+      color: AppColors.creamLight,
+      elevated: true,
+      radius: AppSpacing.radiusLg,
+      padding: AppSpacing.cardPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Today's Adherence: $adherenceRate%",
-                      style: AppTextStyles.bodyOnLight.copyWith(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13.5,
-                      ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Today's Adherence",
+                    style: AppTextStyles.cardTitleOnLight.copyWith(
+                      fontSize: 17,
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '$taken of $total doses completed',
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.inkMuted,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  AppSpacing.gapXs,
+                  Text(
+                    '$taken of $total doses completed',
+                    style: AppTextStyles.captionOnLight,
+                  ),
+                ],
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
-                  color: AppColors.tileMint.withValues(alpha: 0.15),
+                  color: AppColors.tileMint.withValues(alpha: 0.18),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
                 ),
                 child: Text(
@@ -325,23 +313,23 @@ class _FamilyMemberAdherenceScreenState
                   style: const TextStyle(
                     color: AppColors.tileMoss,
                     fontWeight: FontWeight.w800,
-                    fontSize: 12,
+                    fontSize: 14,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          AppSpacing.gapMd,
           ClipRRect(
             borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
             child: LinearProgressIndicator(
               value: total > 0 ? taken / total : 0,
-              minHeight: 5,
+              minHeight: AppSpacing.barHeight,
               backgroundColor: AppColors.divider,
               valueColor: const AlwaysStoppedAnimation(AppColors.tileMint),
             ),
           ),
-          const SizedBox(height: 10),
+          AppSpacing.gapMd,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -357,7 +345,10 @@ class _FamilyMemberAdherenceScreenState
 
   Widget _buildCountPill(String label, int count, Color bgTint, Color fgColor) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: 6,
+      ),
       decoration: BoxDecoration(
         color: bgTint.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
@@ -366,17 +357,17 @@ class _FamilyMemberAdherenceScreenState
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 5,
-            height: 5,
+            width: 6,
+            height: 6,
             decoration: BoxDecoration(color: fgColor, shape: BoxShape.circle),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 6),
           Text(
             '$label: $count',
             style: TextStyle(
               color: fgColor,
               fontWeight: FontWeight.w700,
-              fontSize: 11,
+              fontSize: 12.5,
             ),
           ),
         ],
@@ -385,23 +376,23 @@ class _FamilyMemberAdherenceScreenState
   }
 
   Widget _buildDoseItem(SharedAdherenceDose dose, Color accentColor) {
-    Color statusBg = AppColors.warning.withValues(alpha: 0.12);
+    Color statusBg = AppColors.warning.withValues(alpha: 0.14);
     Color statusFg = const Color(0xFFC07000);
     String statusText = 'Pending';
     IconData statusIcon = Icons.hourglass_top_rounded;
 
     if (dose.isTaken) {
-      statusBg = AppColors.tileMint.withValues(alpha: 0.15);
+      statusBg = AppColors.tileMint.withValues(alpha: 0.18);
       statusFg = AppColors.tileMoss;
       statusText = 'Taken';
       statusIcon = Icons.check_circle_rounded;
     } else if (dose.isMissed) {
-      statusBg = AppColors.error.withValues(alpha: 0.12);
+      statusBg = AppColors.error.withValues(alpha: 0.14);
       statusFg = AppColors.error;
       statusText = 'Missed';
       statusIcon = Icons.error_rounded;
     } else if (dose.isSkipped) {
-      statusBg = AppColors.inkMuted.withValues(alpha: 0.12);
+      statusBg = AppColors.inkMuted.withValues(alpha: 0.14);
       statusFg = AppColors.inkMuted;
       statusText = 'Skipped';
       statusIcon = Icons.remove_circle_outline_rounded;
@@ -414,123 +405,122 @@ class _FamilyMemberAdherenceScreenState
       subtitle += ' • ${dose.mealRelation}';
     }
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-      decoration: BoxDecoration(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: SurfaceCard(
         color: AppColors.creamLight,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        border: Border.all(color: AppColors.divider),
-      ),
-      child: Row(
-        children: [
-          // Small, refined, bespoke Dosey medicine illustration
-          Container(
-            width: 28,
-            height: 28,
-            padding: const EdgeInsets.all(3.5),
-            decoration: BoxDecoration(
-              color: accentColor.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(6),
+        elevated: true,
+        radius: AppSpacing.radiusLg,
+        padding: AppSpacing.cardPadding,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Generous Dosey medicine illustration
+            Container(
+              width: AppSpacing.avatarMd,
+              height: AppSpacing.avatarMd,
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: accentColor.withValues(alpha: 0.14),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              ),
+              child: Image.asset(
+                _imageForForm(dose.form),
+                fit: BoxFit.contain,
+              ),
             ),
-            child: Image.asset(
-              _imageForForm(dose.form),
-              fit: BoxFit.contain,
+            AppSpacing.gapMd,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    dose.medicineName,
+                    style: AppTextStyles.cardTitleOnLight.copyWith(
+                      fontSize: 16.5,
+                    ),
+                  ),
+                  AppSpacing.gapXs,
+                  Text(
+                    subtitle,
+                    style: AppTextStyles.captionOnLight,
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            AppSpacing.gapSm,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  dose.medicineName,
+                  dose.time,
                   style: AppTextStyles.bodyOnLight.copyWith(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                    color: AppColors.ink,
                   ),
                 ),
-                Text(
-                  subtitle,
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.inkMuted,
-                    fontSize: 11,
+                AppSpacing.gapXs,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 9,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: statusBg,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(statusIcon, size: 12, color: statusFg),
+                      const SizedBox(width: 4),
+                      Text(
+                        statusText,
+                        style: TextStyle(
+                          color: statusFg,
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                dose.time,
-                style: AppTextStyles.bodyOnLight.copyWith(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12.5,
-                ),
-              ),
-              const SizedBox(height: 3),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: statusBg,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(statusIcon, size: 9.5, color: statusFg),
-                    const SizedBox(width: 3),
-                    Text(
-                      statusText,
-                      style: TextStyle(
-                        color: statusFg,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    return Container(
+    return SurfaceCard(
+      color: AppColors.creamLight,
+      elevated: true,
+      radius: AppSpacing.radiusLg,
       padding: const EdgeInsets.all(AppSpacing.xl),
-      decoration: BoxDecoration(
-        color: AppColors.creamLight,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        border: Border.all(color: AppColors.divider),
-      ),
       child: Column(
         children: [
           Icon(
             Icons.medication_outlined,
-            size: 36,
+            size: 48,
             color: AppColors.inkMuted,
           ),
           AppSpacing.gapMd,
           Text(
             'No Shared Doses Found Today',
-            style: AppTextStyles.headlineOnLight.copyWith(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
+            style: AppTextStyles.cardTitleOnLight.copyWith(
+              fontSize: 16,
             ),
           ),
           AppSpacing.gapXs,
           Text(
             'When ${widget.share.patientName ?? "your family member"} opens Dosey or logs doses, their schedule will appear here automatically.',
             textAlign: TextAlign.center,
-            style: AppTextStyles.caption.copyWith(
-              color: AppColors.inkMuted,
-              fontSize: 11.5,
-            ),
+            style: AppTextStyles.captionOnLight,
           ),
         ],
       ),

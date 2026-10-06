@@ -15,6 +15,8 @@ class PillButton extends StatelessWidget {
     this.trailingIcon,
     this.showRingChevron = false,
     this.loading = false,
+    this.padding,
+    this.scaleDownText = false,
   });
 
   final String label;
@@ -23,6 +25,8 @@ class PillButton extends StatelessWidget {
   final IconData? trailingIcon;
   final bool showRingChevron;
   final bool loading;
+  final EdgeInsetsGeometry? padding;
+  final bool scaleDownText;
 
   (Color, Color) get _colors => switch (tone) {
     PillButtonTone.accent => (AppColors.accent, AppColors.textOnAccent),
@@ -47,9 +51,10 @@ class PillButton extends StatelessWidget {
           child: SizedBox(
             height: AppSpacing.buttonHeight,
             child: Padding(
-              padding: showRingChevron
-                  ? AppSpacing.ctaPadding
-                  : AppSpacing.screenPadding,
+              padding: padding ??
+                  (showRingChevron
+                      ? AppSpacing.ctaPadding
+                      : AppSpacing.screenPadding),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -60,15 +65,32 @@ class PillButton extends StatelessWidget {
                     )
                   else
                     Flexible(
-                      child: Text(
-                        label,
-                        style: AppTextStyles.button.copyWith(color: foreground),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      child: scaleDownText
+                          ? FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                label,
+                                style: AppTextStyles.button.copyWith(
+                                  color: foreground,
+                                ),
+                                maxLines: 1,
+                              ),
+                            )
+                          : Text(
+                              label,
+                              style: AppTextStyles.button.copyWith(
+                                color: foreground,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                     ),
                   if (trailingIcon != null) ...[
-                    AppSpacing.gapMd,
-                    Icon(trailingIcon, color: foreground),
+                    AppSpacing.gapSm,
+                    Icon(
+                      trailingIcon,
+                      color: foreground,
+                      size: AppSpacing.iconMd,
+                    ),
                   ],
                   if (showRingChevron) ...[
                     AppSpacing.gapLg,

@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/database/enums.dart';
+import '../../../../core/localization/l10n.dart';
 import '../../../../core/notifications/reminder_alarm_engine.dart';
 import '../../../../core/utils/numbers.dart';
 import '../../../../core/widgets/pill_button.dart';
-import '../../../../core/localization/l10n.dart';
 
-/// "Medicine Taken ✓" (moss) and "Snooze" (accent) pills; below them
-/// "Remind me later" (a longer snooze, for when it can't be taken now) and,
-/// for doses, Skip.
-class AlarmActions extends StatelessWidget {
+typedef AlarmActionCallback = void Function(
+  AlarmAction action, {
+  Duration? snoozeFor,
+});
+
+/// "Medicine Taken ✓" (moss) and an adjustable "Snooze [ - ] [ 10 mins ] [ + ]"
+/// (accent) interactive stepper bar; below them "Remind me later" and Skip.
+class AlarmActions extends StatefulWidget {
   const AlarmActions({
     super.key,
     required this.type,
@@ -24,7 +29,7 @@ class AlarmActions extends StatelessWidget {
   final ReminderType type;
   final int snoozeMinutes;
   final bool busy;
-  final ValueChanged<AlarmAction> onAction;
+  final AlarmActionCallback onAction;
 
   /// Opens the "remind me in…" choice; hidden when null.
   final VoidCallback? onRemindLater;
@@ -33,54 +38,158 @@ class AlarmActions extends StatelessWidget {
   final bool grouped;
 
   @override
+  State<AlarmActions> createState() => _AlarmActionsState();
+}
+
+class _AlarmActionsState extends State<AlarmActions> {
+  late int _snoozeMinutes;
+  static const List<int> _steps = [5, 10, 15, 20, 25, 30, 45, 60];
+
+  @override
+  void initState() {
+    super.initState();
+    _snoozeMinutes = widget.snoozeMinutes > 0 ? widget.snoozeMinutes : 10;
+  }
+
+  void _decrease() {
+    if (widget.busy) return;
+    HapticFeedback.lightImpact();
+    final prevIndex = _steps.lastIndexWhere((s) => s < _snoozeMinutes);
+    if (prevIndex >= 0) {
+      setState(() => _snoozeMinutes = _steps[prevIndex]);
+    } else if (_snoozeMinutes > 5) {
+      setState(() => _snoozeMinutes = (_snoozeMinutes - 5).clamp(5, 60));
+    }
+  }
+
+  void _increase() {
+    if (widget.busy) return;
+    HapticFeedback.lightImpact();
+    final nextIndex = _steps.indexWhere((s) => s > _snoozeMinutes);
+    if (nextIndex >= 0) {
+      setState(() => _snoozeMinutes = _steps[nextIndex]);
+    } else if (_snoozeMinutes < 60) {
+      setState(() => _snoozeMinutes = (_snoozeMinutes + 5).clamp(5, 60));
+    }
+  }
+
+  bool get _canDecrease => _snoozeMinutes > _steps.first;
+  bool get _canIncrease => _snoozeMinutes < _steps.last;
+
+  @override
   Widget build(BuildContext context) {
-    final isMedicine = type == ReminderType.medicine;
+    final isMedicine = widget.type == ReminderType.medicine;
+    final l10n = context.l10n;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         PillButton(
-          label: grouped
-              ? context.l10n.alarmMarkAllTaken
+          label: widget.grouped
+              ? l10n.alarmMarkAllTaken
               : isMedicine
-              ? context.l10n.alarmMarkTaken
-              : context.l10n.alarmDone,
+              ? l10n.alarmMarkTaken
+              : l10n.alarmDone,
           tone: PillButtonTone.moss,
           trailingIcon: Icons.check_rounded,
-          onPressed: busy ? null : () => onAction(AlarmAction.taken),
+          scaleDownText: true,
+          onPressed: widget.busy
+              ? null
+              : () => widget.onAction(AlarmAction.taken),
         ),
         AppSpacing.gapMd,
-        PillButton(
-          // AppNumber: "১০" in Bengali, "10" in English.
-          label:
-              '${context.l10n.alarmSnooze} ${AppNumber.format(snoozeMinutes)} '
-              '${context.l10n.minutesShort}',
-          trailingIcon: Icons.snooze_rounded,
-          onPressed: busy ? null : () => onAction(AlarmAction.snooze),
+        // Duolingo / Google Clock style interactive Snooze bar with [-] and [+]
+        Row(
+          children: [
+            _StepButton(
+              icon: Icons.remove_rounded,
+              onPressed: !widget.busy && _canDecrease ? _decrease : null,
+            ),
+            AppSpacing.gapSm,
+            Expanded(
+              child: PillButton(
+                label:
+                    '${l10n.alarmSnooze} ${AppNumber.format(_snoozeMinutes)} '
+                    '${l10n.minutesShort}',
+                tone: PillButtonTone.accent,
+                trailingIcon: Icons.snooze_rounded,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                ),
+                scaleDownText: true,
+                onPressed: widget.busy
+                    ? null
+                    : () => widget.onAction(
+                          AlarmAction.snooze,
+                          snoozeFor: Duration(minutes: _snoozeMinutes),
+                        ),
+              ),
+            ),
+            AppSpacing.gapSm,
+            _StepButton(
+              icon: Icons.add_rounded,
+              onPressed: !widget.busy && _canIncrease ? _increase : null,
+            ),
+          ],
         ),
         AppSpacing.gapSm,
-        // Each link at its own width, side by side and centred; if both
-        // don't fit (longer English labels), they wrap onto two centred
-        // lines rather than being cut off.
+        // Each link at its own width, side by side and centred
         Wrap(
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: AppSpacing.lg,
           children: [
-            if (onRemindLater case final remindLater?)
+            if (widget.onRemindLater case final remindLater?)
               _Link(
                 icon: Icons.schedule_rounded,
-                label: context.l10n.remindLater,
-                onPressed: busy ? null : remindLater,
+                label: l10n.remindLater,
+                onPressed: widget.busy ? null : remindLater,
               ),
             if (isMedicine)
               _Link(
                 icon: Icons.redo_rounded,
-                label: context.l10n.alarmSkip,
-                onPressed: busy ? null : () => onAction(AlarmAction.skip),
+                label: l10n.alarmSkip,
+                onPressed: widget.busy
+                    ? null
+                    : () => widget.onAction(AlarmAction.skip),
               ),
           ],
         ),
       ],
+    );
+  }
+}
+
+class _StepButton extends StatelessWidget {
+  const _StepButton({required this.icon, required this.onPressed});
+
+  final IconData icon;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onPressed != null;
+    return AnimatedOpacity(
+      duration: AppSpacing.animFast,
+      opacity: enabled ? 1.0 : 0.35,
+      child: Material(
+        color: AppColors.accent,
+        shape: const CircleBorder(),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onPressed,
+          child: SizedBox.square(
+            dimension: AppSpacing.circleButton,
+            child: Center(
+              child: Icon(
+                icon,
+                color: AppColors.textOnAccent,
+                size: AppSpacing.iconMd,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -98,5 +207,9 @@ class _Link extends StatelessWidget {
     icon: Icon(icon, size: AppSpacing.iconSm),
     label: Text(label),
     onPressed: onPressed,
+    style: TextButton.styleFrom(
+      foregroundColor: AppColors.textOnDarkMuted,
+      visualDensity: VisualDensity.compact,
+    ),
   );
 }

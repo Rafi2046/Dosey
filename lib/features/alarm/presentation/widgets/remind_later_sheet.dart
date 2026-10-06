@@ -10,10 +10,11 @@ import '../../../../core/widgets/sheet_title.dart';
 Future<Duration?> showRemindLaterSheet(BuildContext context) =>
     showModalBottomSheet<Duration>(
       context: context,
+      isScrollControlled: true,
       builder: (context) {
         final l10n = context.l10n;
         return SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: AppSpacing.screenPadding.copyWith(bottom: AppSpacing.lg),
             child: Column(
               mainAxisSize: MainAxisSize.min,

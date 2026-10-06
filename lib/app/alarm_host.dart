@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/database/enums.dart';
 import '../core/notifications/native_bridge.dart';
+import '../core/notifications/notification_providers.dart';
+import '../core/utils/clock_providers.dart';
 import '../features/alarm/presentation/alarm_ring_screen.dart';
 import '../features/reminders/domain/reminder_with_details.dart';
 import '../features/reminders/providers/reminders_providers.dart';
@@ -22,7 +24,8 @@ class AlarmHost extends ConsumerStatefulWidget {
   ConsumerState<AlarmHost> createState() => _AlarmHostState();
 }
 
-class _AlarmHostState extends ConsumerState<AlarmHost> {
+class _AlarmHostState extends ConsumerState<AlarmHost>
+    with WidgetsBindingObserver {
   Route<void>? _route;
   (List<int>, DateTime)? _showing;
 
@@ -82,12 +85,41 @@ class _AlarmHostState extends ConsumerState<AlarmHost> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    // Watch for reminders that have been marked as ringing
     ref.listenManual(ringingRemindersProvider, (_, next) {
       final ringing = next.value;
       if (ringing == null) return;
       // The navigator may not exist yet on the very first frame.
       WidgetsBinding.instance.addPostFrameCallback((_) => _onRinging(ringing));
     }, fireImmediately: true);
+
+    // While in foreground, actively check for due occurrences on minute ticks
+    ref.listenManual(minuteTickerProvider, (_, next) {
+      final now = next.value;
+      if (now != null) {
+        ref.read(alarmEngineProvider).checkDueNow(now);
+      }
+    }, fireImmediately: true);
+
+    // Initial foreground check
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(alarmEngineProvider).checkDueNow();
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.read(alarmEngineProvider).checkDueNow();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override

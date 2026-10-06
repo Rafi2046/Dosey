@@ -372,6 +372,46 @@ class ReminderAlarmEngine {
     return result;
   }
 
+  /// When the app is open in the foreground (especially on iOS), checks if any
+  /// reminder's scheduled occurrence is due right now and marks it as ringing
+  /// so [AlarmRingScreen] opens immediately over the current screen.
+  Future<void> checkDueNow([DateTime? now]) async {
+    final current = now ?? _clock();
+    final today = DateTime(current.year, current.month, current.day);
+    final all = await _reminders.getAll();
+    final enabled = all.where((r) => r.isEnabled).toList();
+
+    final dueMedicineIds = <int>[];
+    DateTime? dueMedicineSlot;
+
+    for (final r in enabled) {
+      if (r.ringingFor != null) continue;
+
+      final occurrences = ReminderSchedule.occurrencesOn(r, today);
+      for (final at in occurrences) {
+        if (at.hour == current.hour &&
+            at.minute == current.minute &&
+            current.difference(at) <= AppConstants.missedThreshold) {
+          final statuses = await _reminders.statusesFor([r.id], at);
+          if (statuses[r.id]?.isAnswered ?? false) continue;
+
+          if (r.type == ReminderType.medicine) {
+            dueMedicineIds.add(r.id);
+            dueMedicineSlot = at;
+          } else {
+            await _reminders.setRinging(r.id, at);
+          }
+        }
+      }
+    }
+
+    if (dueMedicineIds.isNotEmpty && dueMedicineSlot != null) {
+      for (final id in dueMedicineIds) {
+        await _reminders.setRinging(id, dueMedicineSlot);
+      }
+    }
+  }
+
   // ── Stock ─────────────────────────────────────────────────────────────────
 
   /// Notifies once, when a dose moves the medicine into its refill-alert

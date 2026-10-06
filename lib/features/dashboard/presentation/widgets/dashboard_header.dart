@@ -51,13 +51,15 @@ class DashboardHeader extends ConsumerWidget {
           ),
           AppSpacing.gapMd,
           Expanded(
-            child: hasMultipleProfiles
-                ? InkWell(
-                    onTap: () => showProfileSwitcher(context),
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      child: Column(
+            child: InkWell(
+              onTap: hasMultipleProfiles
+                  ? () => showProfileSwitcher(context)
+                  : null,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: displayName.isNotEmpty
+                    ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -67,6 +69,8 @@ class DashboardHeader extends ConsumerWidget {
                               color: AppColors.textOnDarkMuted,
                               fontSize: 12,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
@@ -82,30 +86,26 @@ class DashboardHeader extends ConsumerWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              const SizedBox(width: 3),
-                              Icon(
-                                Icons.expand_more_rounded,
-                                size: 20,
-                                color: AppColors.textOnDark,
-                              ),
+                              if (hasMultipleProfiles) ...[
+                                const SizedBox(width: 3),
+                                Icon(
+                                  Icons.expand_more_rounded,
+                                  size: 20,
+                                  color: AppColors.textOnDark,
+                                ),
+                              ],
                             ],
                           ),
                         ],
-                      ),
-                    ),
-                  )
-                : Text(
-                    switch (name) {
-                      final n? => context.l10n.greetingWithName(
+                      )
+                    : Text(
                         _greeting(context.l10n),
-                        n,
+                        style: AppTextStyles.subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      null => _greeting(context.l10n),
-                    },
-                    style: AppTextStyles.subtitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              ),
+            ),
           ),
           IconButton(
             tooltip: context.l10n.settingsTitle,

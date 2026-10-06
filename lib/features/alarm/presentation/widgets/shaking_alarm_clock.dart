@@ -4,7 +4,12 @@ import '../../../../core/constants/constants.dart';
 
 /// The alarm-clock illustration, gently rattling while the alarm rings.
 class ShakingAlarmClock extends StatefulWidget {
-  const ShakingAlarmClock({super.key});
+  const ShakingAlarmClock({
+    super.key,
+    this.height = AppSpacing.alarmIllustration,
+  });
+
+  final double height;
 
   @override
   State<ShakingAlarmClock> createState() => _ShakingAlarmClockState();
@@ -34,7 +39,7 @@ class _ShakingAlarmClockState extends State<ShakingAlarmClock>
       turns: _turns,
       child: Image.asset(
         AppImages.alarmClock,
-        height: AppSpacing.alarmIllustration,
+        height: widget.height,
         fit: BoxFit.contain,
       ),
     );

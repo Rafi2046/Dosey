@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -62,40 +64,68 @@ class _AlarmRingScreenState extends ConsumerState<AlarmRingScreen> {
     final snooze = group
         .map((d) => d.reminder.snoozeMinutes)
         .reduce((a, b) => a < b ? a : b);
+
     return PopScope(
       // Must be answered explicitly; back gesture doesn't silence the alarm.
       canPop: false,
       child: Scaffold(
         body: SafeArea(
-          child: Padding(
-            padding: AppSpacing.screenPadding,
-            child: Column(
-              children: [
-                const Spacer(),
-                const ShakingAlarmClock(),
-                AppSpacing.gapXl,
-                if (group.length == 1)
-                  AlarmDetailsCard(
-                    details: group.single,
-                    scheduledFor: widget.scheduledFor,
-                  )
-                else
-                  AlarmGroupCard(
-                    group: group,
-                    scheduledFor: widget.scheduledFor,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isCompact = constraints.maxHeight < 700;
+              final clockHeight = isCompact
+                  ? (constraints.maxHeight * 0.18).clamp(90.0, 130.0)
+                  : (constraints.maxHeight * 0.22).clamp(140.0, 185.0);
+
+              return SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                padding: AppSpacing.screenPadding,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: math.max(
+                      0.0,
+                      constraints.maxHeight - AppSpacing.screenPadding.vertical,
+                    ),
                   ),
-                const Spacer(),
-                AlarmActions(
-                  type: reminder.type,
-                  snoozeMinutes: snooze,
-                  grouped: group.length > 1,
-                  busy: _busy,
-                  onAction: _act,
-                  onRemindLater: _remindLater,
+                  child: IntrinsicHeight(
+                    child: Column(
+                      children: [
+                        if (!isCompact) const Spacer(),
+                        ShakingAlarmClock(height: clockHeight),
+                        SizedBox(
+                          height: isCompact ? AppSpacing.md : AppSpacing.lg,
+                        ),
+                        if (group.length == 1)
+                          AlarmDetailsCard(
+                            details: group.single,
+                            scheduledFor: widget.scheduledFor,
+                          )
+                        else
+                          AlarmGroupCard(
+                            group: group,
+                            scheduledFor: widget.scheduledFor,
+                          ),
+                        const Spacer(),
+                        SizedBox(
+                          height: isCompact ? AppSpacing.sm : AppSpacing.md,
+                        ),
+                        AlarmActions(
+                          type: reminder.type,
+                          snoozeMinutes: snooze,
+                          grouped: group.length > 1,
+                          busy: _busy,
+                          onAction: _act,
+                          onRemindLater: _remindLater,
+                        ),
+                        SizedBox(
+                          height: isCompact ? AppSpacing.xs : AppSpacing.sm,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                AppSpacing.gapLg,
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),

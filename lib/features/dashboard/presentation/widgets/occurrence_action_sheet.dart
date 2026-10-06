@@ -13,6 +13,7 @@ import '../../../../core/utils/enum_labels.dart';
 import '../../../../core/utils/numbers.dart';
 import '../../../../core/utils/pickers.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
+import '../../../../core/widgets/surface_card.dart';
 import '../../../medicines/presentation/medicine_detail_screen.dart';
 import '../../../medicines/presentation/widgets/course_progress_pill.dart';
 import '../../../reminders/domain/reminder_text.dart';
@@ -25,15 +26,16 @@ import '../../../reminders/providers/reminders_providers.dart';
 /// navigation to full medicine details.
 Future<void> showOccurrenceActions(
   BuildContext context,
-  ScheduledOccurrence occurrence,
-) => showGeneralDialog<void>(
+  ScheduledOccurrence occurrence, {
+  Color? color,
+}) => showGeneralDialog<void>(
   context: context,
   barrierDismissible: true,
   barrierLabel: 'Dismiss',
   barrierColor: Colors.black.withValues(alpha: 0.65),
   transitionDuration: const Duration(milliseconds: 280),
   pageBuilder: (context, anim1, anim2) =>
-      _OccurrenceDetailPopup(occurrence: occurrence),
+      _OccurrenceDetailPopup(occurrence: occurrence, color: color),
   transitionBuilder: (context, anim1, anim2, child) {
     final curve = CurvedAnimation(
       parent: anim1,
@@ -51,9 +53,10 @@ Future<void> showOccurrenceActions(
 );
 
 class _OccurrenceDetailPopup extends ConsumerStatefulWidget {
-  const _OccurrenceDetailPopup({required this.occurrence});
+  const _OccurrenceDetailPopup({required this.occurrence, this.color});
 
   final ScheduledOccurrence occurrence;
+  final Color? color;
 
   @override
   ConsumerState<_OccurrenceDetailPopup> createState() =>
@@ -168,6 +171,13 @@ class _OccurrenceDetailPopupState
     final slot = ReminderText.slotLabel(l10n, r, _currentTime);
     final dosage = ReminderText.body(l10n, details);
 
+    final cardColor = widget.color ??
+        (AppColors.isDark ? AppColors.olive : AppColors.cream);
+    final isLight = SurfaceCard.isLight(cardColor);
+    final textColor = isLight ? AppColors.ink : AppColors.textOnDark;
+    final mutedColor =
+        isLight ? AppColors.inkMuted : AppColors.textOnDarkMuted;
+
     return Center(
       child: Material(
         color: Colors.transparent,
@@ -175,11 +185,19 @@ class _OccurrenceDetailPopupState
           width: MediaQuery.sizeOf(context).width * 0.90,
           constraints: const BoxConstraints(maxWidth: 380, maxHeight: 620),
           decoration: BoxDecoration(
-            color: AppColors.cream,
+            color: cardColor,
             borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+            border: Border.all(
+              color: isLight
+                  ? AppColors.divider
+                  : Colors.white.withValues(alpha: 0.15),
+              width: 1,
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.35),
+                color: Colors.black.withValues(
+                  alpha: AppColors.isDark ? 0.55 : 0.35,
+                ),
                 blurRadius: 28,
                 offset: const Offset(0, 10),
               ),
@@ -203,10 +221,14 @@ class _OccurrenceDetailPopupState
                           height: 42,
                           padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                            color: AppColors.creamLight,
+                            color: isLight
+                                ? AppColors.creamLight
+                                : Colors.white.withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: AppColors.divider,
+                              color: isLight
+                                  ? AppColors.divider
+                                  : Colors.white.withValues(alpha: 0.2),
                               width: 1,
                             ),
                           ),
@@ -217,12 +239,16 @@ class _OccurrenceDetailPopupState
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: AppColors.tileMint.withValues(alpha: 0.15),
+                            color: isLight
+                                ? AppColors.tileMint.withValues(alpha: 0.15)
+                                : Colors.white.withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             r.type.icon,
-                            color: AppColors.tileMint,
+                            color: isLight
+                                ? AppColors.tileMint
+                                : AppColors.textOnDark,
                             size: 20,
                           ),
                         ),
@@ -235,9 +261,13 @@ class _OccurrenceDetailPopupState
                               dosage.isNotEmpty
                                   ? '$slot • $dosage'
                                   : slot,
-                              style: AppTextStyles.captionOnLight.copyWith(
+                              style: (isLight
+                                      ? AppTextStyles.captionOnLight
+                                      : AppTextStyles.caption)
+                                  .copyWith(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
+                                color: mutedColor,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -245,9 +275,13 @@ class _OccurrenceDetailPopupState
                             const SizedBox(height: 1),
                             Text(
                               r.title,
-                              style: AppTextStyles.headlineOnLight.copyWith(
+                              style: (isLight
+                                      ? AppTextStyles.headlineOnLight
+                                      : AppTextStyles.headline)
+                                  .copyWith(
                                 fontSize: 18.5,
                                 fontWeight: FontWeight.w800,
+                                color: textColor,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -256,7 +290,9 @@ class _OccurrenceDetailPopupState
                         ),
                       ),
                       Material(
-                        color: Colors.black.withValues(alpha: 0.05),
+                        color: isLight
+                            ? Colors.black.withValues(alpha: 0.05)
+                            : Colors.white.withValues(alpha: 0.12),
                         shape: const CircleBorder(),
                         child: InkWell(
                           customBorder: const CircleBorder(),
@@ -266,7 +302,7 @@ class _OccurrenceDetailPopupState
                             child: Icon(
                               Icons.close_rounded,
                               size: 18,
-                              color: AppColors.ink,
+                              color: textColor,
                             ),
                           ),
                         ),
@@ -278,12 +314,26 @@ class _OccurrenceDetailPopupState
 
                   // Hero Interactive Time Card (1-Tap Change Time)
                   Material(
-                    color: AppColors.sand,
+                    color: isLight
+                        ? AppColors.sand
+                        : (AppColors.isDark
+                            ? AppColors.creamLight.withValues(alpha: 0.5)
+                            : Colors.black.withValues(alpha: 0.22)),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     child: InkWell(
                       onTap: _savingTime ? null : _changeTime,
                       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                      child: Padding(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(AppSpacing.radiusMd),
+                          border: Border.all(
+                            color: isLight
+                                ? AppColors.divider.withValues(alpha: 0.3)
+                                : Colors.white.withValues(alpha: 0.12),
+                            width: 0.8,
+                          ),
+                        ),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 10,
@@ -309,16 +359,23 @@ class _OccurrenceDetailPopupState
                                 children: [
                                   Text(
                                     'নির্ধারিত সময়',
-                                    style: AppTextStyles.captionOnLight.copyWith(
+                                    style: (isLight
+                                            ? AppTextStyles.captionOnLight
+                                            : AppTextStyles.caption)
+                                        .copyWith(
                                       fontSize: 10.5,
-                                      color: AppColors.inkMuted,
+                                      color: mutedColor,
                                     ),
                                   ),
                                   Text(
                                     AppDateFormat.time(_currentTime),
-                                    style: AppTextStyles.cardTitleOnLight.copyWith(
+                                    style: (isLight
+                                            ? AppTextStyles.cardTitleOnLight
+                                            : AppTextStyles.cardTitle)
+                                        .copyWith(
                                       fontSize: 16.5,
                                       fontWeight: FontWeight.w800,
+                                      color: textColor,
                                     ),
                                   ),
                                 ],
@@ -330,7 +387,11 @@ class _OccurrenceDetailPopupState
                                 vertical: 5,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.moss,
+                                color: isLight
+                                    ? AppColors.moss
+                                    : (AppColors.isDark
+                                        ? AppColors.selected
+                                        : AppColors.moss),
                                 borderRadius: BorderRadius.circular(
                                   AppSpacing.radiusPill,
                                 ),
@@ -339,24 +400,36 @@ class _OccurrenceDetailPopupState
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   _savingTime
-                                      ? const SizedBox(
+                                      ? SizedBox(
                                           width: 11,
                                           height: 11,
                                           child: CircularProgressIndicator(
                                             strokeWidth: 2,
-                                            color: Colors.white,
+                                            color: isLight
+                                                ? Colors.white
+                                                : (AppColors.isDark
+                                                    ? AppColors.onSelected
+                                                    : Colors.white),
                                           ),
                                         )
-                                      : const Icon(
+                                      : Icon(
                                           Icons.edit_rounded,
                                           size: 12,
-                                          color: Colors.white,
+                                          color: isLight
+                                              ? Colors.white
+                                              : (AppColors.isDark
+                                                  ? AppColors.onSelected
+                                                  : Colors.white),
                                         ),
                                   const SizedBox(width: 4),
-                                  const Text(
+                                  Text(
                                     'পরিবর্তন',
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: isLight
+                                          ? Colors.white
+                                          : (AppColors.isDark
+                                              ? AppColors.onSelected
+                                              : Colors.white),
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -381,7 +454,7 @@ class _OccurrenceDetailPopupState
                           CourseProgressPill(
                             medicine: med,
                             today: DateUtils.dateOnly(now),
-                            onLight: true,
+                            onLight: isLight,
                             compact: true,
                           ),
                         if (med != null && med.stockQuantity != null)
@@ -391,12 +464,16 @@ class _OccurrenceDetailPopupState
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.creamLight,
+                              color: isLight
+                                  ? AppColors.creamLight
+                                  : Colors.white.withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(
                                 AppSpacing.radiusPill,
                               ),
                               border: Border.all(
-                                color: AppColors.divider,
+                                color: isLight
+                                    ? AppColors.divider
+                                    : Colors.white.withValues(alpha: 0.15),
                                 width: 0.8,
                               ),
                             ),
@@ -406,16 +483,20 @@ class _OccurrenceDetailPopupState
                                 Icon(
                                   Icons.inventory_2_rounded,
                                   size: 12,
-                                  color: AppColors.inkMuted,
+                                  color: mutedColor,
                                 ),
                                 const SizedBox(width: 3),
                                 Text(
                                   l10n.unitsLeft(
                                     AppNumber.format(med.stockQuantity!),
                                   ),
-                                  style: AppTextStyles.captionOnLight.copyWith(
+                                  style: (isLight
+                                          ? AppTextStyles.captionOnLight
+                                          : AppTextStyles.caption)
+                                      .copyWith(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
+                                    color: textColor,
                                   ),
                                 ),
                               ],
@@ -428,29 +509,39 @@ class _OccurrenceDetailPopupState
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.creamLight,
+                              color: isLight
+                                  ? AppColors.creamLight
+                                  : Colors.white.withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(
                                 AppSpacing.radiusPill,
                               ),
                               border: Border.all(
-                                color: AppColors.divider,
+                                color: isLight
+                                    ? AppColors.divider
+                                    : Colors.white.withValues(alpha: 0.15),
                                 width: 0.8,
                               ),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.medical_services_rounded,
                                   size: 12,
-                                  color: AppColors.tileMint,
+                                  color: isLight
+                                      ? AppColors.tileMint
+                                      : AppColors.mint,
                                 ),
                                 const SizedBox(width: 3),
                                 Text(
                                   doc.name,
-                                  style: AppTextStyles.captionOnLight.copyWith(
+                                  style: (isLight
+                                          ? AppTextStyles.captionOnLight
+                                          : AppTextStyles.caption)
+                                      .copyWith(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
+                                    color: textColor,
                                   ),
                                 ),
                               ],
@@ -463,7 +554,9 @@ class _OccurrenceDetailPopupState
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.sand,
+                              color: isLight
+                                  ? AppColors.sand
+                                  : Colors.white.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(
                                 AppSpacing.radiusPill,
                               ),
@@ -474,7 +567,7 @@ class _OccurrenceDetailPopupState
                                 fontFamily: 'DMSans',
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.ink,
+                                color: textColor,
                               ),
                             ),
                           ),
@@ -494,8 +587,16 @@ class _OccurrenceDetailPopupState
                               ? l10n.alarmMarkTaken
                               : l10n.alarmDone,
                           icon: Icons.check_rounded,
-                          backgroundColor: AppColors.moss,
-                          foregroundColor: AppColors.textOnDark,
+                          backgroundColor: isLight
+                              ? AppColors.moss
+                              : (AppColors.isDark
+                                  ? AppColors.selected
+                                  : AppColors.moss),
+                          foregroundColor: isLight
+                              ? AppColors.textOnDark
+                              : (AppColors.isDark
+                                  ? AppColors.onSelected
+                                  : AppColors.textOnDark),
                           onPressed: () => _act(AlarmAction.taken),
                         ),
                       ),
@@ -505,9 +606,13 @@ class _OccurrenceDetailPopupState
                         child: _PopupActionButton(
                           label: l10n.skipDose,
                           icon: Icons.redo_rounded,
-                          backgroundColor: AppColors.creamLight,
-                          foregroundColor: AppColors.ink,
-                          borderColor: AppColors.divider,
+                          backgroundColor: isLight
+                              ? AppColors.creamLight
+                              : Colors.white.withValues(alpha: 0.12),
+                          foregroundColor: textColor,
+                          borderColor: isLight
+                              ? AppColors.divider
+                              : Colors.white.withValues(alpha: 0.2),
                           onPressed: () => _act(AlarmAction.skip),
                         ),
                       ),
@@ -530,7 +635,7 @@ class _OccurrenceDetailPopupState
                           ),
                         ),
                         style: TextButton.styleFrom(
-                          foregroundColor: AppColors.inkMuted,
+                          foregroundColor: mutedColor,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 6,
                             vertical: 2,
@@ -572,15 +677,23 @@ class _OccurrenceDetailPopupState
                     const SizedBox(height: 2),
                     Center(
                       child: TextButton.icon(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.arrow_forward_rounded,
                           size: 14,
-                          color: AppColors.tileMint,
+                          color: isLight
+                              ? AppColors.tileMint
+                              : (AppColors.isDark
+                                  ? AppColors.selected
+                                  : AppColors.textOnDark),
                         ),
-                        label: const Text(
+                        label: Text(
                           'ওষুধের সম্পূর্ণ বিবরণ দেখুন',
                           style: TextStyle(
-                            color: AppColors.tileMint,
+                            color: isLight
+                                ? AppColors.tileMint
+                                : (AppColors.isDark
+                                    ? AppColors.selected
+                                    : AppColors.textOnDark),
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),

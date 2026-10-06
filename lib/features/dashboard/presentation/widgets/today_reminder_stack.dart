@@ -48,7 +48,11 @@ class TodayReminderStack extends ConsumerWidget {
                 now: now,
                 bottomInset:
                     i == items.length - 1 ? 0 : AppSpacing.stackOverlap,
-                onTap: () => showOccurrenceActions(context, o),
+                onTap: () => showOccurrenceActions(
+                  context,
+                  o,
+                  color: AppColors.cardCycle[i % AppColors.cardCycle.length],
+                ),
               ),
           ],
         );

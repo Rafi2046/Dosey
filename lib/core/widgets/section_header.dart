@@ -28,14 +28,23 @@ class SectionHeader extends StatelessWidget {
         ? AppColors.inkMuted
         : AppColors.textOnDarkMuted;
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.xl, bottom: AppSpacing.md),
+      padding: const EdgeInsets.only(top: AppSpacing.lg, bottom: AppSpacing.sm),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(child: Text(title, style: style)),
           if (actionLabel != null)
             TextButton(
               onPressed: onAction,
-              style: TextButton.styleFrom(foregroundColor: actionColor),
+              style: TextButton.styleFrom(
+                foregroundColor: actionColor,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
               child: Text(actionLabel!, style: AppTextStyles.chip),
             ),
         ],

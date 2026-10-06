@@ -69,9 +69,12 @@ class DashboardScreen extends ConsumerWidget {
           onBellTap: onOpenReminders,
         ),
         // Whose day this is, once there's family to switch to.
-        const ProfilePill(margin: EdgeInsets.only(top: AppSpacing.lg)),
+        const ProfilePill(margin: EdgeInsets.only(top: AppSpacing.md)),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
+          padding: const EdgeInsets.only(
+            top: AppSpacing.md,
+            bottom: AppSpacing.md,
+          ),
           child: Text(
             context.l10n.dashboardTitle,
             style: AppTextStyles.display,

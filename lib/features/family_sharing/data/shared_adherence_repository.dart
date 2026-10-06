@@ -62,7 +62,7 @@ class SharedAdherenceRepository {
 
         return {
           'patient_uid': patientUid,
-          if (patientName != null) 'patient_name': patientName,
+          'patient_name': ?patientName,
           'date': dateKey,
           'medicine_name': medicineName,
           'dosage': dosage,

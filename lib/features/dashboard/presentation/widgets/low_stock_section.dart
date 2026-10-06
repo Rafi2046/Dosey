@@ -30,14 +30,14 @@ class LowStockSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SectionHeader(title: context.l10n.runningLow),
-        for (final item in items) ...[
+        for (int i = 0; i < items.length; i++) ...[
           SurfaceCard(
             color: AppColors.cream,
             padding: AppSpacing.cardPadding,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) =>
-                    MedicineDetailScreen(medicineId: item.medicine.id),
+                    MedicineDetailScreen(medicineId: items[i].medicine.id),
               ),
             ),
             child: Row(
@@ -49,17 +49,17 @@ class LowStockSection extends ConsumerWidget {
                 AppSpacing.gapMd,
                 Expanded(
                   child: Text(
-                    item.medicine.name,
+                    items[i].medicine.name,
                     style: AppTextStyles.cardTitleOnLight,
                   ),
                 ),
                 StatusChip(
                   label: switch (ref
-                      .watch(stockStatusProvider(item.medicine))
+                      .watch(stockStatusProvider(items[i].medicine))
                       .daysLeft) {
                     final d? => context.l10n.daysLeft(d),
                     null => context.l10n.unitsLeft(
-                      AppNumber.format(item.medicine.stockQuantity!),
+                      AppNumber.format(items[i].medicine.stockQuantity!),
                     ),
                   },
                   background: AppColors.accent,
@@ -68,7 +68,7 @@ class LowStockSection extends ConsumerWidget {
               ],
             ),
           ),
-          AppSpacing.gapSm,
+          if (i < items.length - 1) AppSpacing.gapSm,
         ],
       ],
     );

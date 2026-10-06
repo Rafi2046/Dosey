@@ -31,6 +31,7 @@ class TodayReminderStack extends ConsumerWidget {
             title: context.l10n.nothingScheduled,
             actionLabel: context.l10n.addReminder,
             onAction: onAddReminder,
+            compact: true,
           );
         }
         final nextIndex = items.indexWhere(
@@ -45,7 +46,8 @@ class TodayReminderStack extends ConsumerWidget {
                 color: AppColors.cardCycle[i % AppColors.cardCycle.length],
                 isNext: i == nextIndex,
                 now: now,
-                bottomInset: AppSpacing.stackOverlap,
+                bottomInset:
+                    i == items.length - 1 ? 0 : AppSpacing.stackOverlap,
                 onTap: () => showOccurrenceActions(context, o),
               ),
           ],

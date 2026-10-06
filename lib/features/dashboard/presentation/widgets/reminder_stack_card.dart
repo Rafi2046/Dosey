@@ -83,7 +83,7 @@ class ReminderStackCard extends StatelessWidget {
       elevated: true,
       radius: AppSpacing.radiusXl,
       padding: AppSpacing.cardPaddingLg.copyWith(
-        bottom: AppSpacing.xl + bottomInset,
+        bottom: AppSpacing.lg + bottomInset,
       ),
       onTap: onTap,
       child: Row(

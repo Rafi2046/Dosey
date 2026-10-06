@@ -31,6 +31,7 @@ class UpcomingEventsSection extends ConsumerWidget {
     );
     if (events.isEmpty) return const SizedBox.shrink();
 
+    final displayEvents = events.take(_maxItems).toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -39,41 +40,52 @@ class UpcomingEventsSection extends ConsumerWidget {
           actionLabel: context.l10n.seeAll,
           onAction: onSeeAll,
         ),
-        for (final d in events.take(_maxItems)) ...[
+        for (int i = 0; i < displayEvents.length; i++) ...[
           SurfaceCard(
             color: AppColors.moss,
             padding: AppSpacing.cardPadding,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => ReminderFormScreen(existing: d.reminder),
+                builder: (_) =>
+                    ReminderFormScreen(existing: displayEvents[i].reminder),
               ),
             ),
             child: Row(
               children: [
-                Icon(d.reminder.type.icon, color: AppColors.textOnDark),
+                Icon(
+                  displayEvents[i].reminder.type.icon,
+                  color: AppColors.textOnDark,
+                ),
                 AppSpacing.gapMd,
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(d.reminder.title, style: AppTextStyles.cardTitle),
-                      if (d.doctor != null || d.reminder.location != null)
+                      Text(
+                        displayEvents[i].reminder.title,
+                        style: AppTextStyles.cardTitle,
+                      ),
+                      if (displayEvents[i].doctor != null ||
+                          displayEvents[i].reminder.location != null)
                         Text(
-                          d.doctor?.name ?? d.reminder.location!,
+                          displayEvents[i].doctor?.name ??
+                              displayEvents[i].reminder.location!,
                           style: AppTextStyles.caption,
                         ),
                     ],
                   ),
                 ),
                 StatusChip(
-                  label: AppDateFormat.shortDate(d.reminder.nextTriggerAt!),
+                  label: AppDateFormat.shortDate(
+                    displayEvents[i].reminder.nextTriggerAt!,
+                  ),
                   background: AppColors.creamLight,
                   foreground: AppColors.ink,
                 ),
               ],
             ),
           ),
-          AppSpacing.gapSm,
+          if (i < displayEvents.length - 1) AppSpacing.gapSm,
         ],
       ],
     );

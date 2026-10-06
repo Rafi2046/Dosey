@@ -30,7 +30,7 @@ class MissedDosesCard extends ConsumerWidget {
     final names = {for (final o in doses) o.details.reminder.title};
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: SurfaceCard(
         color: AppColors.cream,
         elevated: true,

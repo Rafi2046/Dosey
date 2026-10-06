@@ -105,70 +105,80 @@ class _RecordDetailScreenState extends ConsumerState<RecordDetailScreen> {
             ],
           ),
       ],
-      bottomBar: PillButton(
-        label: context.l10n.addPages,
-        tone: PillButtonTone.moss,
-        trailingIcon: Icons.add_a_photo_rounded,
-        onPressed: _addPages,
+      bottomBar: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 520),
+          child: PillButton(
+            label: context.l10n.addPages,
+            tone: PillButtonTone.moss,
+            trailingIcon: Icons.add_a_photo_rounded,
+            onPressed: _addPages,
+          ),
+        ),
       ),
       body: AsyncValueView(
         skeleton: const Skeleton.detail(),
         value: value,
         data: (record) => record == null
             ? const SizedBox.shrink()
-            : ListView(
-                padding: AppSpacing.screenPadding,
-                children: [
-                  if (pages.isEmpty)
-                    // Nothing to page through: invite adding the first one.
-                    SurfaceCard(
-                      color: AppColors.creamLight,
-                      onTap: _addPages,
-                      child: Column(
-                        children: [
-                          AppSpacing.gapXl,
-                          Icon(
-                            Icons.add_a_photo_rounded,
-                            size: AppSpacing.iconLg,
-                            color: AppColors.inkMuted,
+            : Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 720),
+                  child: ListView(
+                    padding: AppSpacing.screenPadding,
+                    children: [
+                      if (pages.isEmpty)
+                        // Nothing to page through: invite adding the first one.
+                        SurfaceCard(
+                          color: AppColors.creamLight,
+                          onTap: _addPages,
+                          child: Column(
+                            children: [
+                              AppSpacing.gapXl,
+                              Icon(
+                                Icons.add_a_photo_rounded,
+                                size: AppSpacing.iconLg,
+                                color: AppColors.inkMuted,
+                              ),
+                              AppSpacing.gapMd,
+                              Text(
+                                context.l10n.recordNoPages,
+                                style: AppTextStyles.cardTitleOnLight,
+                              ),
+                              AppSpacing.gapXs,
+                              Text(
+                                context.l10n.recordNoPagesHint,
+                                style: AppTextStyles.captionOnLight,
+                                textAlign: TextAlign.center,
+                              ),
+                              AppSpacing.gapXl,
+                            ],
                           ),
-                          AppSpacing.gapMd,
-                          Text(
-                            context.l10n.recordNoPages,
-                            style: AppTextStyles.cardTitleOnLight,
-                          ),
-                          AppSpacing.gapXs,
-                          Text(
-                            context.l10n.recordNoPagesHint,
-                            style: AppTextStyles.captionOnLight,
-                            textAlign: TextAlign.center,
-                          ),
-                          AppSpacing.gapXl,
-                        ],
+                        )
+                      else
+                        RecordPageViewer(
+                          pages: pages,
+                          onPageChanged: (i) => _page = i,
+                        ),
+                      AppSpacing.gapXl,
+                      InfoBlock(
+                        label: context.l10n.recordType,
+                        value: record.type.label(context.l10n),
                       ),
-                    )
-                  else
-                    RecordPageViewer(
-                      pages: pages,
-                      onPageChanged: (i) => _page = i,
-                    ),
-                  AppSpacing.gapXl,
-                  InfoBlock(
-                    label: context.l10n.recordType,
-                    value: record.type.label(context.l10n),
+                      InfoBlock(
+                        label: context.l10n.recordDate,
+                        value: AppDateFormat.date(record.recordDate),
+                      ),
+                      if (record.doctorId != null)
+                        _DoctorBlock(doctorId: record.doctorId!),
+                      if (record.notes != null)
+                        InfoBlock(
+                          label: context.l10n.recordNotes,
+                          value: record.notes!,
+                        ),
+                    ],
                   ),
-                  InfoBlock(
-                    label: context.l10n.recordDate,
-                    value: AppDateFormat.date(record.recordDate),
-                  ),
-                  if (record.doctorId != null)
-                    _DoctorBlock(doctorId: record.doctorId!),
-                  if (record.notes != null)
-                    InfoBlock(
-                      label: context.l10n.recordNotes,
-                      value: record.notes!,
-                    ),
-                ],
+                ),
               ),
       ),
     );

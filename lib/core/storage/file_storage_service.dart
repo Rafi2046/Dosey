@@ -40,6 +40,24 @@ class FileStorageService {
     if (await folder.exists()) await folder.delete(recursive: true);
   }
 
+  /// Upgrades any legacy first-aid kit demo images to the new high-resolution
+  /// prescription and lab report images.
+  Future<void> upgradeLegacyDemoImages(List<int> newImageBytes) async {
+    try {
+      final folder = Directory(p.join(root.path, AppConstants.recordsFolder));
+      if (!await folder.exists()) return;
+      final files = await folder.list().toList();
+      for (final entity in files) {
+        if (entity is File) {
+          final len = await entity.length();
+          if (len == 25239 || len < 30000) {
+            await entity.writeAsBytes(newImageBytes, flush: true);
+          }
+        }
+      }
+    } catch (_) {}
+  }
+
   static String _extensionOf(String path) {
     final ext = p.extension(path);
     return ext.isEmpty ? AppConstants.imageExtension : ext.toLowerCase();

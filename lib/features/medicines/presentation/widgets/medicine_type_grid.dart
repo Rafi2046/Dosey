@@ -45,15 +45,18 @@ class MedicineTypeGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.sizeOf(context);
+    final isTablet = screenSize.shortestSide >= 600 || screenSize.width >= 600;
+
     return Column(
       children: [
         GridView.count(
-          crossAxisCount: 2,
+          crossAxisCount: isTablet ? 4 : 2,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: AppSpacing.lg,
-          crossAxisSpacing: AppSpacing.lg,
-          childAspectRatio: AppSpacing.medTypeAspect,
+          mainAxisSpacing: isTablet ? AppSpacing.md : AppSpacing.lg,
+          crossAxisSpacing: isTablet ? AppSpacing.md : AppSpacing.lg,
+          childAspectRatio: isTablet ? 0.95 : AppSpacing.medTypeAspect,
           children: [
             for (final (i, form) in _primary.indexed)
               MedicineTypeTile(

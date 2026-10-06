@@ -35,10 +35,28 @@ class _Placeholder extends StatelessWidget {
   const _Placeholder();
 
   @override
-  Widget build(BuildContext context) => ColoredBox(
+  Widget build(BuildContext context) => Container(
     color: AppColors.sand,
-    child: Center(
-      child: Icon(Icons.image_not_supported_rounded, color: AppColors.inkMuted),
+    alignment: Alignment.center,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.description_outlined,
+          size: 32,
+          color: AppColors.inkMuted.withValues(alpha: 0.6),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Document',
+          style: TextStyle(
+            fontFamily: 'DMSans',
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
+            color: AppColors.inkMuted.withValues(alpha: 0.7),
+          ),
+        ),
+      ],
     ),
   );
 }

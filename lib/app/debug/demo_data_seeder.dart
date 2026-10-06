@@ -142,10 +142,15 @@ abstract final class DemoDataSeeder {
       ),
     );
 
-    // A prescription "photo" from a bundled asset.
-    final bytes = await rootBundle.load(AppImages.medOther);
-    final tmp = File('${(await getTemporaryDirectory()).path}/demo_rx.png')
-      ..writeAsBytesSync(bytes.buffer.asUint8List());
+    // Realistic prescription and lab report documents from bundled assets.
+    final rxBytes = await rootBundle.load(AppImages.samplePrescription);
+    final rxTmp = File('${(await getTemporaryDirectory()).path}/demo_rx.jpg')
+      ..writeAsBytesSync(rxBytes.buffer.asUint8List());
+
+    final labBytes = await rootBundle.load(AppImages.sampleLabReport);
+    final labTmp = File('${(await getTemporaryDirectory()).path}/demo_lab.jpg')
+      ..writeAsBytesSync(labBytes.buffer.asUint8List());
+
     await records.create(
       RecordsCompanion.insert(
         type: RecordType.prescription,
@@ -153,7 +158,7 @@ abstract final class DemoDataSeeder {
         recordDate: today.subtract(const Duration(days: 20)),
         doctorId: Value(endo),
       ),
-      [tmp.path, tmp.path],
+      [rxTmp.path, rxTmp.path],
     );
     await records.create(
       RecordsCompanion.insert(
@@ -162,7 +167,7 @@ abstract final class DemoDataSeeder {
         recordDate: today.subtract(const Duration(days: 7)),
         doctorId: Value(cardio),
       ),
-      [tmp.path],
+      [labTmp.path],
     );
 
     for (final (title, category, amount, daysAgo) in [

@@ -23,6 +23,9 @@ class RecordsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filter = ref.watch(recordTypeFilterProvider);
     final records = ref.watch(recordSummariesProvider);
+    final screenSize = MediaQuery.sizeOf(context);
+    final isTablet = screenSize.shortestSide >= 600 || screenSize.width >= 600;
+    final cols = isTablet ? 3 : 2;
 
     return TabScrollView(
       // Nothing to list: centre the empty state in the space left.
@@ -50,7 +53,7 @@ class RecordsScreen extends ConsumerWidget {
           data: (list) => list.isEmpty
               ? EmptyState(
                   title: context.l10n.noRecords,
-                  image: AppImages.medOther,
+                  image: AppImages.samplePrescription,
                   actionLabel: context.l10n.addRecord,
                   onAction: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
@@ -60,17 +63,16 @@ class RecordsScreen extends ConsumerWidget {
                 )
               : Column(
                   children: [
-                    // Rows of two with natural heights (titles may wrap).
-                    for (var i = 0; i < list.length; i += 2) ...[
+                    for (var i = 0; i < list.length; i += cols) ...[
                       IntrinsicHeight(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            for (final j in [i, i + 1]) ...[
-                              if (j > i) AppSpacing.gapMd,
+                            for (var c = 0; c < cols; c++) ...[
+                              if (c > 0) AppSpacing.gapMd,
                               Expanded(
-                                child: j < list.length
-                                    ? _tile(context, list, j)
+                                child: (i + c) < list.length
+                                    ? _tile(context, list, i + c)
                                     : const SizedBox.shrink(),
                               ),
                             ],

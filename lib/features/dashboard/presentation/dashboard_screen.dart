@@ -18,7 +18,6 @@ import '../../family_sharing/providers/family_share_providers.dart';
 import '../../family_sharing/providers/shared_adherence_providers.dart';
 import 'widgets/blood_pressure_section.dart';
 import 'widgets/blood_sugar_section.dart';
-import '../../profiles/presentation/profile_widgets.dart';
 import 'widgets/dashboard_header.dart';
 import 'widgets/low_stock_section.dart';
 import 'widgets/missed_doses_card.dart';
@@ -68,8 +67,6 @@ class DashboardScreen extends ConsumerWidget {
           name: ref.watch(userNameProvider).value,
           onBellTap: onOpenReminders,
         ),
-        // Whose day this is, once there's family to switch to.
-        const ProfilePill(margin: EdgeInsets.only(top: AppSpacing.md)),
         Padding(
           padding: const EdgeInsets.only(
             top: AppSpacing.md,

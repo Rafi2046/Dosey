@@ -120,6 +120,202 @@ class ProfilePill extends ConsumerWidget {
   }
 }
 
+/// Horizontal 1-tap profile switcher bar for the dashboard when there are multiple family profiles.
+class FamilyProfileBar extends ConsumerWidget {
+  const FamilyProfileBar({super.key, this.margin = EdgeInsets.zero});
+
+  final EdgeInsets margin;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profiles = ref.watch(profilesProvider).value ?? const [];
+    final activeId = ref.watch(activeProfileIdProvider);
+    if (profiles.length < 2) return const SizedBox.shrink();
+
+    return Padding(
+      padding: margin,
+      child: SizedBox(
+        height: 44,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          clipBehavior: Clip.none,
+          children: [
+            for (final p in profiles) ...[
+              _ProfileBarItem(
+                profile: p,
+                isSelected: p.id == activeId,
+                onTap: () =>
+                    ref.read(activeProfileIdProvider.notifier).select(p.id),
+              ),
+              AppSpacing.gapSm,
+            ],
+            _AddProfileBarButton(
+              onTap: () async {
+                final id = await addFamilyMember(context, ref);
+                if (id != null) {
+                  ref.read(activeProfileIdProvider.notifier).select(id);
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProfileBarItem extends StatelessWidget {
+  const _ProfileBarItem({
+    required this.profile,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final Profile profile;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final name = profileName(context.l10n, profile);
+    final isMe = profile.id == ProfilesRepository.mainProfileId;
+
+    return AnimatedContainer(
+      duration: AppSpacing.animFast,
+      curve: Curves.easeOutCubic,
+      decoration: BoxDecoration(
+        color: isSelected ? AppColors.creamLight : AppColors.moss,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+        border: Border.all(
+          color: isSelected
+              ? AppColors.tileMint
+              : Colors.white.withValues(alpha: 0.08),
+          width: isSelected ? 1.5 : 1,
+        ),
+        boxShadow: isSelected
+            ? [
+                BoxShadow(
+                  color: AppColors.tileMint.withValues(alpha: 0.25),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InitialsAvatar(
+                  name: name,
+                  size: 26,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  name,
+                  style: TextStyle(
+                    fontFamily: 'DMSans',
+                    fontSize: 13,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    color:
+                        isSelected ? AppColors.ink : AppColors.textOnDarkMuted,
+                  ),
+                ),
+                if (isMe) ...[
+                  const SizedBox(width: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 1.5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppColors.tileMint.withValues(alpha: 0.15)
+                          : Colors.white.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      context.l10n.profileYou,
+                      style: TextStyle(
+                        fontFamily: 'DMSans',
+                        fontSize: 9.5,
+                        fontWeight: FontWeight.bold,
+                        color: isSelected
+                            ? AppColors.tileMint
+                            : AppColors.textOnDarkMuted,
+                      ),
+                    ),
+                  ),
+                ],
+                if (isSelected) ...[
+                  const SizedBox(width: 6),
+                  const Icon(
+                    Icons.check_circle_rounded,
+                    size: 15,
+                    color: AppColors.tileMint,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AddProfileBarButton extends StatelessWidget {
+  const _AddProfileBarButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white.withValues(alpha: 0.08),
+      shape: StadiumBorder(
+        side: BorderSide(
+          color: Colors.white.withValues(alpha: 0.15),
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.add_rounded,
+                size: 18,
+                color: AppColors.textOnDark,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                context.l10n.profileAdd,
+                style: TextStyle(
+                  fontFamily: 'DMSans',
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textOnDark,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// "Whose medicines?": pick a profile, add one, or manage them.
 Future<void> showProfileSwitcher(BuildContext context) =>
     showModalBottomSheet<void>(
@@ -138,25 +334,30 @@ class _ProfileSwitcher extends ConsumerWidget {
     final activeId = ref.watch(activeProfileIdProvider);
     return SafeArea(
       child: SingleChildScrollView(
-        padding: AppSpacing.screenPadding.copyWith(bottom: AppSpacing.lg),
+        padding: AppSpacing.screenPadding.copyWith(
+          top: AppSpacing.xs,
+          bottom: AppSpacing.md,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SheetTitle(l10n.profileSwitchTitle),
-            AppSpacing.gapLg,
-            for (final p in profiles) ...[
+            AppSpacing.gapMd,
+            for (int i = 0; i < profiles.length; i++) ...[
               _ProfileRow(
-                profile: p,
-                selected: p.id == activeId,
+                profile: profiles[i],
+                selected: profiles[i].id == activeId,
                 onTap: () {
-                  ref.read(activeProfileIdProvider.notifier).select(p.id);
+                  ref
+                      .read(activeProfileIdProvider.notifier)
+                      .select(profiles[i].id);
                   Navigator.pop(context);
                 },
               ),
-              AppSpacing.gapSm,
+              if (i < profiles.length - 1) const SizedBox(height: 8),
             ],
-            AppSpacing.gapSm,
+            AppSpacing.gapMd,
             PillButton(
               label: l10n.profileAdd,
               tone: PillButtonTone.moss,
@@ -168,10 +369,20 @@ class _ProfileSwitcher extends ConsumerWidget {
                 if (context.mounted) Navigator.pop(context);
               },
             ),
+            const SizedBox(height: 4),
             TextButton.icon(
-              icon: const Icon(Icons.manage_accounts_rounded),
-              label: Text(l10n.profileManage),
-              style: TextButton.styleFrom(foregroundColor: AppColors.inkMuted),
+              icon: const Icon(Icons.manage_accounts_rounded, size: 18),
+              label: Text(
+                l10n.profileManage,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.inkMuted,
+                visualDensity: VisualDensity.compact,
+              ),
               onPressed: () {
                 final navigator = Navigator.of(context);
                 navigator.pop();
@@ -207,6 +418,8 @@ class _ProfileRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final name = profileName(l10n, profile);
+    final isMain = profile.id == ProfilesRepository.mainProfileId;
+
     return Material(
       color: selected ? AppColors.sand : AppColors.creamLight,
       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -214,27 +427,44 @@ class _ProfileRow extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: AppSpacing.cardPadding,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: 10,
+          ),
           child: Row(
             children: [
-              InitialsAvatar(name: name),
+              InitialsAvatar(name: name, size: 36),
               AppSpacing.gapMd,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(name, style: AppTextStyles.cardTitleOnLight),
-                    if (profile.id == ProfilesRepository.mainProfileId)
+                    Text(
+                      name,
+                      style: AppTextStyles.cardTitleOnLight.copyWith(
+                        fontSize: 15,
+                        fontWeight:
+                            selected ? FontWeight.w700 : FontWeight.w600,
+                      ),
+                    ),
+                    if (isMain)
                       Text(
                         l10n.profileYou,
-                        style: AppTextStyles.captionOnLight,
+                        style: AppTextStyles.captionOnLight.copyWith(
+                          fontSize: 11.5,
+                        ),
                       ),
                   ],
                 ),
               ),
               ?trailing,
               if (selected && trailing == null)
-                Icon(Icons.check_circle_rounded, color: AppColors.ink),
+                Icon(
+                  Icons.check_circle_rounded,
+                  color: AppColors.ink,
+                  size: 20,
+                ),
             ],
           ),
         ),

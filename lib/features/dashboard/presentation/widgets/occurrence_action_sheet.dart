@@ -178,15 +178,28 @@ class _OccurrenceDetailPopupState
     final mutedColor =
         isLight ? AppColors.inkMuted : AppColors.textOnDarkMuted;
 
+    final screenSize = MediaQuery.sizeOf(context);
+    final isTablet = screenSize.shortestSide >= 600 || screenSize.width >= 600;
+
+    final dialogWidth = isTablet
+        ? (screenSize.width * 0.62).clamp(480.0, 560.0)
+        : screenSize.width * 0.90;
+    final maxDialogHeight = isTablet ? 740.0 : 620.0;
+
     return Center(
       child: Material(
         color: Colors.transparent,
         child: Container(
-          width: MediaQuery.sizeOf(context).width * 0.90,
-          constraints: const BoxConstraints(maxWidth: 380, maxHeight: 620),
+          width: dialogWidth,
+          constraints: BoxConstraints(
+            maxWidth: isTablet ? 560 : 380,
+            maxHeight: maxDialogHeight,
+          ),
           decoration: BoxDecoration(
             color: cardColor,
-            borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+            borderRadius: BorderRadius.circular(
+              isTablet ? AppSpacing.radiusXl + 4 : AppSpacing.radiusXl,
+            ),
             border: Border.all(
               color: isLight
                   ? AppColors.divider
@@ -198,15 +211,19 @@ class _OccurrenceDetailPopupState
                 color: Colors.black.withValues(
                   alpha: AppColors.isDark ? 0.55 : 0.35,
                 ),
-                blurRadius: 28,
+                blurRadius: isTablet ? 36 : 28,
                 offset: const Offset(0, 10),
               ),
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+            borderRadius: BorderRadius.circular(
+              isTablet ? AppSpacing.radiusXl + 4 : AppSpacing.radiusXl,
+            ),
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+              padding: isTablet
+                  ? const EdgeInsets.fromLTRB(26, 22, 26, 22)
+                  : const EdgeInsets.fromLTRB(18, 16, 18, 16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -217,9 +234,9 @@ class _OccurrenceDetailPopupState
                     children: [
                       if (med != null)
                         Container(
-                          width: 42,
-                          height: 42,
-                          padding: const EdgeInsets.all(5),
+                          width: isTablet ? 52 : 42,
+                          height: isTablet ? 52 : 42,
+                          padding: EdgeInsets.all(isTablet ? 7 : 5),
                           decoration: BoxDecoration(
                             color: isLight
                                 ? AppColors.creamLight
@@ -236,8 +253,8 @@ class _OccurrenceDetailPopupState
                         )
                       else
                         Container(
-                          width: 40,
-                          height: 40,
+                          width: isTablet ? 48 : 40,
+                          height: isTablet ? 48 : 40,
                           decoration: BoxDecoration(
                             color: isLight
                                 ? AppColors.tileMint.withValues(alpha: 0.15)
@@ -249,10 +266,10 @@ class _OccurrenceDetailPopupState
                             color: isLight
                                 ? AppColors.tileMint
                                 : AppColors.textOnDark,
-                            size: 20,
+                            size: isTablet ? 24 : 20,
                           ),
                         ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: isTablet ? 14 : 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,7 +282,7 @@ class _OccurrenceDetailPopupState
                                       ? AppTextStyles.captionOnLight
                                       : AppTextStyles.caption)
                                   .copyWith(
-                                fontSize: 11,
+                                fontSize: isTablet ? 13 : 11,
                                 fontWeight: FontWeight.w600,
                                 color: mutedColor,
                               ),
@@ -279,7 +296,7 @@ class _OccurrenceDetailPopupState
                                       ? AppTextStyles.headlineOnLight
                                       : AppTextStyles.headline)
                                   .copyWith(
-                                fontSize: 18.5,
+                                fontSize: isTablet ? 22 : 18.5,
                                 fontWeight: FontWeight.w800,
                                 color: textColor,
                               ),
@@ -298,10 +315,10 @@ class _OccurrenceDetailPopupState
                           customBorder: const CircleBorder(),
                           onTap: () => Navigator.pop(context),
                           child: Padding(
-                            padding: const EdgeInsets.all(6),
+                            padding: EdgeInsets.all(isTablet ? 8 : 6),
                             child: Icon(
                               Icons.close_rounded,
-                              size: 18,
+                              size: isTablet ? 22 : 18,
                               color: textColor,
                             ),
                           ),
@@ -310,7 +327,7 @@ class _OccurrenceDetailPopupState
                     ],
                   ),
 
-                  const SizedBox(height: 12),
+                  SizedBox(height: isTablet ? 16 : 12),
 
                   // Hero Interactive Time Card (1-Tap Change Time)
                   Material(
@@ -319,14 +336,19 @@ class _OccurrenceDetailPopupState
                         : (AppColors.isDark
                             ? AppColors.creamLight.withValues(alpha: 0.5)
                             : Colors.black.withValues(alpha: 0.22)),
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    borderRadius: BorderRadius.circular(
+                      isTablet ? AppSpacing.radiusLg : AppSpacing.radiusMd,
+                    ),
                     child: InkWell(
                       onTap: _savingTime ? null : _changeTime,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        isTablet ? AppSpacing.radiusLg : AppSpacing.radiusMd,
+                      ),
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            isTablet ? AppSpacing.radiusLg : AppSpacing.radiusMd,
+                          ),
                           border: Border.all(
                             color: isLight
                                 ? AppColors.divider.withValues(alpha: 0.3)
@@ -334,25 +356,25 @@ class _OccurrenceDetailPopupState
                             width: 0.8,
                           ),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 10,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isTablet ? 16 : 12,
+                          vertical: isTablet ? 14 : 10,
                         ),
                         child: Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(7),
+                              padding: EdgeInsets.all(isTablet ? 9 : 7),
                               decoration: BoxDecoration(
                                 color: AppColors.accent.withValues(alpha: 0.18),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.access_time_filled_rounded,
                                 color: AppColors.accent,
-                                size: 18,
+                                size: isTablet ? 22 : 18,
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            SizedBox(width: isTablet ? 14 : 10),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -363,7 +385,7 @@ class _OccurrenceDetailPopupState
                                             ? AppTextStyles.captionOnLight
                                             : AppTextStyles.caption)
                                         .copyWith(
-                                      fontSize: 10.5,
+                                      fontSize: isTablet ? 12 : 10.5,
                                       color: mutedColor,
                                     ),
                                   ),
@@ -373,7 +395,7 @@ class _OccurrenceDetailPopupState
                                             ? AppTextStyles.cardTitleOnLight
                                             : AppTextStyles.cardTitle)
                                         .copyWith(
-                                      fontSize: 16.5,
+                                      fontSize: isTablet ? 19 : 16.5,
                                       fontWeight: FontWeight.w800,
                                       color: textColor,
                                     ),
@@ -382,9 +404,9 @@ class _OccurrenceDetailPopupState
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 9,
-                                vertical: 5,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isTablet ? 13 : 9,
+                                vertical: isTablet ? 7 : 5,
                               ),
                               decoration: BoxDecoration(
                                 color: isLight
@@ -401,8 +423,8 @@ class _OccurrenceDetailPopupState
                                 children: [
                                   _savingTime
                                       ? SizedBox(
-                                          width: 11,
-                                          height: 11,
+                                          width: isTablet ? 13 : 11,
+                                          height: isTablet ? 13 : 11,
                                           child: CircularProgressIndicator(
                                             strokeWidth: 2,
                                             color: isLight
@@ -414,14 +436,14 @@ class _OccurrenceDetailPopupState
                                         )
                                       : Icon(
                                           Icons.edit_rounded,
-                                          size: 12,
+                                          size: isTablet ? 15 : 12,
                                           color: isLight
                                               ? Colors.white
                                               : (AppColors.isDark
                                                   ? AppColors.onSelected
                                                   : Colors.white),
                                         ),
-                                  const SizedBox(width: 4),
+                                  SizedBox(width: isTablet ? 6 : 4),
                                   Text(
                                     'পরিবর্তন',
                                     style: TextStyle(
@@ -430,7 +452,7 @@ class _OccurrenceDetailPopupState
                                           : (AppColors.isDark
                                               ? AppColors.onSelected
                                               : Colors.white),
-                                      fontSize: 11,
+                                      fontSize: isTablet ? 13 : 11,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -445,10 +467,10 @@ class _OccurrenceDetailPopupState
 
                   // Metadata Badges (Course / Stock / Doctor / Status)
                   if (med != null || doc != null || status != null) ...[
-                    const SizedBox(height: 10),
+                    SizedBox(height: isTablet ? 14 : 10),
                     Wrap(
-                      spacing: 6,
-                      runSpacing: 6,
+                      spacing: isTablet ? 8 : 6,
+                      runSpacing: isTablet ? 8 : 6,
                       children: [
                         if (med != null && med.endDate != null)
                           CourseProgressPill(
@@ -459,9 +481,9 @@ class _OccurrenceDetailPopupState
                           ),
                         if (med != null && med.stockQuantity != null)
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isTablet ? 11 : 8,
+                              vertical: isTablet ? 6 : 4,
                             ),
                             decoration: BoxDecoration(
                               color: isLight
@@ -482,10 +504,10 @@ class _OccurrenceDetailPopupState
                               children: [
                                 Icon(
                                   Icons.inventory_2_rounded,
-                                  size: 12,
+                                  size: isTablet ? 14 : 12,
                                   color: mutedColor,
                                 ),
-                                const SizedBox(width: 3),
+                                SizedBox(width: isTablet ? 4 : 3),
                                 Text(
                                   l10n.unitsLeft(
                                     AppNumber.format(med.stockQuantity!),
@@ -494,7 +516,7 @@ class _OccurrenceDetailPopupState
                                           ? AppTextStyles.captionOnLight
                                           : AppTextStyles.caption)
                                       .copyWith(
-                                    fontSize: 11,
+                                    fontSize: isTablet ? 12.5 : 11,
                                     fontWeight: FontWeight.w600,
                                     color: textColor,
                                   ),
@@ -504,9 +526,9 @@ class _OccurrenceDetailPopupState
                           ),
                         if (doc != null)
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isTablet ? 11 : 8,
+                              vertical: isTablet ? 6 : 4,
                             ),
                             decoration: BoxDecoration(
                               color: isLight
@@ -527,19 +549,19 @@ class _OccurrenceDetailPopupState
                               children: [
                                 Icon(
                                   Icons.medical_services_rounded,
-                                  size: 12,
+                                  size: isTablet ? 14 : 12,
                                   color: isLight
                                       ? AppColors.tileMint
                                       : AppColors.mint,
                                 ),
-                                const SizedBox(width: 3),
+                                SizedBox(width: isTablet ? 4 : 3),
                                 Text(
                                   doc.name,
                                   style: (isLight
                                           ? AppTextStyles.captionOnLight
                                           : AppTextStyles.caption)
                                       .copyWith(
-                                    fontSize: 11,
+                                    fontSize: isTablet ? 12.5 : 11,
                                     fontWeight: FontWeight.w600,
                                     color: textColor,
                                   ),
@@ -549,9 +571,9 @@ class _OccurrenceDetailPopupState
                           ),
                         if (status != null)
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isTablet ? 11 : 8,
+                              vertical: isTablet ? 6 : 4,
                             ),
                             decoration: BoxDecoration(
                               color: isLight
@@ -565,7 +587,7 @@ class _OccurrenceDetailPopupState
                               status.label(l10n),
                               style: TextStyle(
                                 fontFamily: 'DMSans',
-                                fontSize: 11,
+                                fontSize: isTablet ? 12.5 : 11,
                                 fontWeight: FontWeight.w600,
                                 color: textColor,
                               ),
@@ -575,7 +597,7 @@ class _OccurrenceDetailPopupState
                     ),
                   ],
 
-                  const SizedBox(height: 14),
+                  SizedBox(height: isTablet ? 18 : 14),
 
                   // Side-by-Side Action Buttons (Taken / Skip)
                   Row(
@@ -587,6 +609,9 @@ class _OccurrenceDetailPopupState
                               ? l10n.alarmMarkTaken
                               : l10n.alarmDone,
                           icon: Icons.check_rounded,
+                          height: isTablet ? 52 : 42,
+                          fontSize: isTablet ? 15.5 : 13.5,
+                          iconSize: isTablet ? 19 : 16,
                           backgroundColor: isLight
                               ? AppColors.moss
                               : (AppColors.isDark
@@ -600,12 +625,15 @@ class _OccurrenceDetailPopupState
                           onPressed: () => _act(AlarmAction.taken),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: isTablet ? 12 : 8),
                       Expanded(
                         flex: 9,
                         child: _PopupActionButton(
                           label: l10n.skipDose,
                           icon: Icons.redo_rounded,
+                          height: isTablet ? 52 : 42,
+                          fontSize: isTablet ? 15.5 : 13.5,
+                          iconSize: isTablet ? 19 : 16,
                           backgroundColor: isLight
                               ? AppColors.creamLight
                               : Colors.white.withValues(alpha: 0.12),
@@ -619,26 +647,29 @@ class _OccurrenceDetailPopupState
                     ],
                   ),
 
-                  const SizedBox(height: 6),
+                  SizedBox(height: isTablet ? 10 : 6),
 
                   // Bottom Utilities: Full Edit, Delete & Medicine details link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton.icon(
-                        icon: const Icon(Icons.tune_rounded, size: 14),
+                        icon: Icon(
+                          Icons.tune_rounded,
+                          size: isTablet ? 16 : 14,
+                        ),
                         label: Text(
                           l10n.editReminder,
-                          style: const TextStyle(
-                            fontSize: 11.5,
+                          style: TextStyle(
+                            fontSize: isTablet ? 13 : 11.5,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         style: TextButton.styleFrom(
                           foregroundColor: mutedColor,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isTablet ? 10 : 6,
+                            vertical: isTablet ? 4 : 2,
                           ),
                           visualDensity: VisualDensity.compact,
                           minimumSize: Size.zero,
@@ -647,22 +678,22 @@ class _OccurrenceDetailPopupState
                         onPressed: _edit,
                       ),
                       TextButton.icon(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.delete_outline_rounded,
-                          size: 14,
+                          size: isTablet ? 16 : 14,
                         ),
                         label: Text(
                           l10n.deleteThisTime,
-                          style: const TextStyle(
-                            fontSize: 11.5,
+                          style: TextStyle(
+                            fontSize: isTablet ? 13 : 11.5,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         style: TextButton.styleFrom(
                           foregroundColor: AppColors.error,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isTablet ? 10 : 6,
+                            vertical: isTablet ? 4 : 2,
                           ),
                           visualDensity: VisualDensity.compact,
                           minimumSize: Size.zero,
@@ -674,12 +705,12 @@ class _OccurrenceDetailPopupState
                   ),
 
                   if (med != null) ...[
-                    const SizedBox(height: 2),
+                    SizedBox(height: isTablet ? 4 : 2),
                     Center(
                       child: TextButton.icon(
                         icon: Icon(
                           Icons.arrow_forward_rounded,
-                          size: 14,
+                          size: isTablet ? 16 : 14,
                           color: isLight
                               ? AppColors.tileMint
                               : (AppColors.isDark
@@ -695,14 +726,14 @@ class _OccurrenceDetailPopupState
                                     ? AppColors.selected
                                     : AppColors.textOnDark),
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: isTablet ? 14 : 12,
                           ),
                         ),
                         style: TextButton.styleFrom(
                           visualDensity: VisualDensity.compact,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isTablet ? 12 : 8,
+                            vertical: isTablet ? 4 : 2,
                           ),
                         ),
                         onPressed: () {
@@ -735,6 +766,9 @@ class _PopupActionButton extends StatelessWidget {
     required this.foregroundColor,
     required this.onPressed,
     this.borderColor,
+    this.height = 42,
+    this.fontSize = 13.5,
+    this.iconSize = 16,
   });
 
   final String label;
@@ -743,6 +777,9 @@ class _PopupActionButton extends StatelessWidget {
   final Color foregroundColor;
   final VoidCallback onPressed;
   final Color? borderColor;
+  final double height;
+  final double fontSize;
+  final double iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -757,7 +794,7 @@ class _PopupActionButton extends StatelessWidget {
       child: InkWell(
         onTap: onPressed,
         child: SizedBox(
-          height: 42,
+          height: height,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
@@ -770,7 +807,7 @@ class _PopupActionButton extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'DMSans',
                       color: foregroundColor,
-                      fontSize: 13.5,
+                      fontSize: fontSize,
                       fontWeight: FontWeight.w700,
                       letterSpacing: -0.1,
                     ),
@@ -781,7 +818,7 @@ class _PopupActionButton extends StatelessWidget {
                 const SizedBox(width: 5),
                 Icon(
                   icon,
-                  size: 16,
+                  size: iconSize,
                   color: foregroundColor,
                 ),
               ],

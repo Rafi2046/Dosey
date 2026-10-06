@@ -25,7 +25,7 @@ void main() {
             type: ReminderType.medicine,
             snoozeMinutes: 10,
             busy: false,
-            onAction: (_) {},
+            onAction: (_, {snoozeFor}) {},
           ),
         ),
       ),

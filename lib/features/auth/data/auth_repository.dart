@@ -41,6 +41,9 @@ class AuthRepository {
     await _ensureAvailable();
     try {
       final googleSignIn = GoogleSignIn(
+        clientId: (!kIsWeb && Platform.isIOS)
+            ? '918524133674-gajiev6rg9o88ofbf606pm5cbfj7arad.apps.googleusercontent.com'
+            : null,
         scopes: const ['email', 'profile'],
         serverClientId:
             '918524133674-annc5hqp9h0847bvpbrrd1irjskt4c2e.apps.googleusercontent.com',
@@ -135,7 +138,11 @@ class AuthRepository {
     if (user != null) {
       await user.delete();
       if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-        await GoogleSignIn().signOut().catchError((_) => null);
+        await GoogleSignIn(
+          clientId: Platform.isIOS
+              ? '918524133674-gajiev6rg9o88ofbf606pm5cbfj7arad.apps.googleusercontent.com'
+              : null,
+        ).signOut().catchError((_) => null);
       }
     }
   }
@@ -148,7 +155,11 @@ class AuthRepository {
       await PushMessagingService.unregister();
       await _auth.signOut();
       if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-        await GoogleSignIn().signOut().catchError((_) => null);
+        await GoogleSignIn(
+          clientId: Platform.isIOS
+              ? '918524133674-gajiev6rg9o88ofbf606pm5cbfj7arad.apps.googleusercontent.com'
+              : null,
+        ).signOut().catchError((_) => null);
       }
     } catch (e) {
       debugPrint('[AuthRepository] Sign-Out error: $e');

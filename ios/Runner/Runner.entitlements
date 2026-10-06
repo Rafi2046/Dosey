@@ -3,6 +3,10 @@
 <!-- App Group shared by Dosey and its home screen widget (AppConstants.appGroupId). -->
 <plist version="1.0">
 <dict>
+	<key>com.apple.developer.applesignin</key>
+	<array>
+		<string>Default</string>
+	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
 		<string>group.com.example.dosey</string>

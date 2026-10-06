@@ -227,6 +227,44 @@ class FamilyShareRepository {
     }
   }
 
+  /// Listens to real-time changes for patient shares (shows linked caregivers & requests).
+  Stream<List<FamilyShare>> watchPatientShares(String patientUid) {
+    if (!isAvailable) return const Stream.empty();
+    try {
+      return _supabase
+          .from('family_shares')
+          .stream(primaryKey: ['id'])
+          .eq('patient_uid', patientUid)
+          .order('created_at', ascending: false)
+          .map((rows) => rows
+              .where((json) => json['is_active'] == true)
+              .map((json) => FamilyShare.fromJson(json))
+              .toList());
+    } catch (e) {
+      debugPrint('[FamilyShareRepository] Error streaming patient shares: $e');
+      return const Stream.empty();
+    }
+  }
+
+  /// Listens to real-time changes for caregiver shares (shows monitored patients).
+  Stream<List<FamilyShare>> watchCaregiverShares(String caregiverUid) {
+    if (!isAvailable) return const Stream.empty();
+    try {
+      return _supabase
+          .from('family_shares')
+          .stream(primaryKey: ['id'])
+          .eq('caregiver_uid', caregiverUid)
+          .order('created_at', ascending: false)
+          .map((rows) => rows
+              .where((json) => json['is_active'] == true)
+              .map((json) => FamilyShare.fromJson(json))
+              .toList());
+    } catch (e) {
+      debugPrint('[FamilyShareRepository] Error streaming caregiver shares: $e');
+      return const Stream.empty();
+    }
+  }
+
   /// Fetches all shares where current user is the patient (shows linked caregivers & requests).
   Future<List<FamilyShare>> getPatientShares(String patientUid) async {
     if (!isAvailable) return [];

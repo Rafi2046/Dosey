@@ -9,17 +9,17 @@ final familyShareRepositoryProvider = Provider<FamilyShareRepository>((ref) {
 });
 
 final patientSharesProvider =
-    FutureProvider.autoDispose<List<FamilyShare>>((ref) async {
+    StreamProvider.autoDispose<List<FamilyShare>>((ref) {
   final user = ref.watch(currentUserProvider);
-  if (user == null) return [];
+  if (user == null) return const Stream.empty();
   final repo = ref.watch(familyShareRepositoryProvider);
-  return repo.getPatientShares(user.uid);
+  return repo.watchPatientShares(user.uid);
 });
 
 final caregiverSharesProvider =
-    FutureProvider.autoDispose<List<FamilyShare>>((ref) async {
+    StreamProvider.autoDispose<List<FamilyShare>>((ref) {
   final user = ref.watch(currentUserProvider);
-  if (user == null) return [];
+  if (user == null) return const Stream.empty();
   final repo = ref.watch(familyShareRepositoryProvider);
-  return repo.getCaregiverShares(user.uid);
+  return repo.watchCaregiverShares(user.uid);
 });

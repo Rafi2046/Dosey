@@ -169,7 +169,7 @@ class _AnimatedDashboardTitleState extends State<AnimatedDashboardTitle>
                       opacity: _showCursor ? 1.0 : 0.0,
                       duration: const Duration(milliseconds: 120),
                       child: Container(
-                        margin: const EdgeInsets.only(left: 3),
+                        margin: const EdgeInsets.only(left: AppSpacing.xs),
                         width: 7,
                         height: 24,
                         decoration: BoxDecoration(

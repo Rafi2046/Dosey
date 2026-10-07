@@ -80,15 +80,15 @@ class _PatientCard extends StatelessWidget {
                       style: AppTextStyles.overline.copyWith(
                         color: AppColors.tileMint,
                         fontWeight: FontWeight.w800,
-                        fontSize: 10,
+                        fontSize: AppSpacing.fontXs,
                         letterSpacing: 0.5,
                       ),
                     ),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: AppSpacing.sm),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 5,
-                        vertical: 1.5,
+                        horizontal: AppSpacing.xs,
+                        vertical: AppSpacing.xxs,
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.tileMint,
@@ -98,12 +98,12 @@ class _PatientCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.sync_rounded, size: 9, color: Colors.white),
-                          SizedBox(width: 2),
+                          SizedBox(width: AppSpacing.xxs),
                           Text(
                             'Live',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 9.5,
+                              fontSize: AppSpacing.fontXs,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -112,11 +112,11 @@ class _PatientCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSpacing.xxs),
                 Text(
                   patientName,
                   style: AppTextStyles.cardTitleOnLight.copyWith(
-                    fontSize: 15.5,
+                    fontSize: AppSpacing.fontMd,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -124,7 +124,7 @@ class _PatientCard extends StatelessWidget {
                 Text(
                   "Tap to view today's schedule",
                   style: AppTextStyles.captionOnLight.copyWith(
-                    fontSize: 11,
+                    fontSize: AppSpacing.fontXs,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

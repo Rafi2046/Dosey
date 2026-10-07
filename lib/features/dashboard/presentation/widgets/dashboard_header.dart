@@ -63,7 +63,7 @@ class DashboardHeader extends ConsumerWidget {
                   : null,
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
                 child: displayName.isNotEmpty
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +73,7 @@ class DashboardHeader extends ConsumerWidget {
                             _greeting(context.l10n),
                             style: AppTextStyles.caption.copyWith(
                               color: AppColors.textOnDarkMuted,
-                              fontSize: 12,
+                              fontSize: AppSpacing.fontSm,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -86,14 +86,14 @@ class DashboardHeader extends ConsumerWidget {
                                   displayName,
                                   style: AppTextStyles.subtitle.copyWith(
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 16.5,
+                                    fontSize: AppSpacing.fontLg,
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               if (hasMultipleProfiles) ...[
-                                const SizedBox(width: 3),
+                                const SizedBox(width: AppSpacing.xs),
                                 Icon(
                                   Icons.expand_more_rounded,
                                   size: 20,

@@ -37,7 +37,7 @@ class SettingsSection extends StatelessWidget {
                       color: AppColors.textOnDarkMuted,
                       letterSpacing: 1.2,
                       fontWeight: FontWeight.w700,
-                      fontSize: 11,
+                      fontSize: AppSpacing.fontXs,
                     ),
                   ),
                 ),
@@ -48,7 +48,7 @@ class SettingsSection extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               color: AppColors.creamLight,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppSpacing.lg),
               border: Border.all(
                 color: AppColors.divider.withValues(alpha: 0.12),
                 width: 1,

@@ -241,10 +241,10 @@ class SettingsScreen extends ConsumerWidget {
                           icon: Icons.cloud_done_rounded,
                           background: AppColors.tileMint,
                           foreground: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppSpacing.sm),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
+                            horizontal: AppSpacing.md,
+                            vertical: AppSpacing.xs,
                           ),
                         )
                       : null,
@@ -316,10 +316,10 @@ class SettingsScreen extends ConsumerWidget {
                           icon: Icons.check_rounded,
                           background: AppColors.tileMint,
                           foreground: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppSpacing.sm),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
+                            horizontal: AppSpacing.md,
+                            vertical: AppSpacing.xs,
                           ),
                         )
                       : StatusChip(
@@ -327,10 +327,10 @@ class SettingsScreen extends ConsumerWidget {
                           icon: Icons.warning_amber_rounded,
                           background: AppColors.accent,
                           foreground: AppColors.textOnAccent,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppSpacing.sm),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
+                            horizontal: AppSpacing.md,
+                            vertical: AppSpacing.xs,
                           ),
                         ),
                   onTap: () => _push(context, const PermissionsScreen()),
@@ -454,16 +454,16 @@ class SettingsScreen extends ConsumerWidget {
                       '${l10n.appName} · $version',
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.textOnDarkMuted,
-                        fontSize: 12,
+                        fontSize: AppSpacing.fontSm,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSpacing.xxs),
                     Text(
                       'Offline-first • Privacy conscious',
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.textOnDarkMuted,
-                        fontSize: 11,
+                        fontSize: AppSpacing.fontXs,
                       ),
                     ),
                   ],

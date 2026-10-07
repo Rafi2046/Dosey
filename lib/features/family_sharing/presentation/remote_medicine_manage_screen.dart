@@ -140,7 +140,7 @@ class _RemoteMedicineManageScreenState
                 color: AppColors.creamLight,
                 elevated: true,
                 radius: AppSpacing.radiusLg,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
                 child: Row(
                   children: [
                     InitialsAvatar(name: patientName, size: AppSpacing.avatarMd),
@@ -152,14 +152,14 @@ class _RemoteMedicineManageScreenState
                           Text(
                             patientName,
                             style: AppTextStyles.cardTitleOnLight.copyWith(
-                              fontSize: 17,
+                              fontSize: AppSpacing.fontLg,
                               fontWeight: FontWeight.w800,
                               color: AppColors.ink,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: AppSpacing.xs),
                           Row(
                             children: [
                               Container(
@@ -170,7 +170,7 @@ class _RemoteMedicineManageScreenState
                                   shape: BoxShape.circle,
                                 ),
                               ),
-                              const SizedBox(width: 6),
+                              const SizedBox(width: AppSpacing.sm),
                               Text(
                                 'Live Caregiver Sync',
                                 style: AppTextStyles.captionOnLight.copyWith(
@@ -185,8 +185,8 @@ class _RemoteMedicineManageScreenState
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
+                        horizontal: AppSpacing.md,
+                        vertical: AppSpacing.xs,
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.isDark
@@ -210,12 +210,12 @@ class _RemoteMedicineManageScreenState
                                 ? AppColors.selected
                                 : AppColors.moss,
                           ),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: AppSpacing.xs),
                           Text(
                             '2-Way',
                             style: TextStyle(
                               fontFamily: 'PlusJakartaSans',
-                              fontSize: 12,
+                              fontSize: AppSpacing.fontSm,
                               fontWeight: FontWeight.w700,
                               color: AppColors.isDark
                                   ? AppColors.selected
@@ -233,7 +233,7 @@ class _RemoteMedicineManageScreenState
               // Section Header
               prescriptionsAsync.maybeWhen(
                 data: (items) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -268,13 +268,13 @@ class _RemoteMedicineManageScreenState
                                 ? AppColors.selected
                                 : AppColors.moss,
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                              horizontal: AppSpacing.sm,
+                              vertical: AppSpacing.xs,
                             ),
                             textStyle: const TextStyle(
                               fontFamily: 'PlusJakartaSans',
                               fontWeight: FontWeight.w700,
-                              fontSize: 13,
+                              fontSize: AppSpacing.fontSm,
                             ),
                           ),
                         ),
@@ -347,7 +347,7 @@ class _RemoteMedicineManageScreenState
       color: AppColors.creamLight,
       elevated: true,
       radius: AppSpacing.radiusLg,
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxl, horizontal: AppSpacing.xl),
       child: Column(
         children: [
           Image.asset(AppImages.emptyMedicines, height: 96),
@@ -355,14 +355,14 @@ class _RemoteMedicineManageScreenState
           Text(
             'No medicines configured yet',
             style: AppTextStyles.cardTitleOnLight.copyWith(
-              fontSize: 17,
+              fontSize: AppSpacing.fontLg,
               fontWeight: FontWeight.w800,
               color: AppColors.ink,
             ),
           ),
           AppSpacing.gapSm,
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
             child: Text(
               'Add prescriptions for $patientName. Doses and timings will instantly sync to their phone alarms.',
               textAlign: TextAlign.center,
@@ -407,7 +407,7 @@ class _RemoteMedicineManageScreenState
     required String desc,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.sand.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -432,7 +432,7 @@ class _RemoteMedicineManageScreenState
                   title,
                   style: TextStyle(
                     fontFamily: 'PlusJakartaSans',
-                    fontSize: 13,
+                    fontSize: AppSpacing.fontSm,
                     fontWeight: FontWeight.w700,
                     color: AppColors.ink,
                   ),
@@ -440,7 +440,7 @@ class _RemoteMedicineManageScreenState
                 Text(
                   desc,
                   style: AppTextStyles.captionOnLight.copyWith(
-                    fontSize: 11.5,
+                    fontSize: AppSpacing.fontXs,
                     color: AppColors.inkMuted,
                   ),
                 ),
@@ -459,7 +459,7 @@ class _RemoteMedicineManageScreenState
         : 'Family Member';
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: SurfaceCard(
         color: AppColors.creamLight,
         elevated: true,
@@ -491,12 +491,12 @@ class _RemoteMedicineManageScreenState
                         item.name,
                         style: TextStyle(
                           fontFamily: 'PlusJakartaSans',
-                          fontSize: 17,
+                          fontSize: AppSpacing.fontLg,
                           fontWeight: FontWeight.w800,
                           color: AppColors.ink,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: AppSpacing.xxs),
                       Text(
                         '${item.doseAmount.toStringAsFixed(0)} ${item.form} • ${item.mealRelation}',
                         style: AppTextStyles.captionOnLight.copyWith(
@@ -521,9 +521,9 @@ class _RemoteMedicineManageScreenState
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSpacing.md),
             const Divider(height: 1),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSpacing.md),
 
             // Timings row
             Row(
@@ -533,7 +533,7 @@ class _RemoteMedicineManageScreenState
                   size: 16,
                   color: AppColors.accent,
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: AppSpacing.sm),
                 Text(
                   'Daily Timings: ',
                   style: AppTextStyles.captionOnLight.copyWith(
@@ -553,8 +553,8 @@ class _RemoteMedicineManageScreenState
 
                       return Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2.5,
+                          horizontal: AppSpacing.sm,
+                          vertical: AppSpacing.xs,
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.sand,
@@ -565,7 +565,7 @@ class _RemoteMedicineManageScreenState
                           timeStr,
                           style: TextStyle(
                             fontFamily: 'NDot',
-                            fontSize: 12.5,
+                            fontSize: AppSpacing.fontSm,
                             fontWeight: FontWeight.w700,
                             color: AppColors.ink,
                           ),
@@ -577,7 +577,7 @@ class _RemoteMedicineManageScreenState
               ],
             ),
             if (item.stockQuantity != null) ...[
-              const SizedBox(height: 6),
+              const SizedBox(height: AppSpacing.sm),
               Row(
                 children: [
                   Icon(
@@ -585,7 +585,7 @@ class _RemoteMedicineManageScreenState
                     size: 15,
                     color: AppColors.inkMuted,
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: AppSpacing.sm),
                   Text(
                     'Stock remaining: ${item.stockQuantity!.toStringAsFixed(0)} units',
                     style: AppTextStyles.captionOnLight,

@@ -62,6 +62,16 @@ abstract final class AppColors {
   static const Color warning = Color(0xFFF3B344);
   static const Color error = Color(0xFFE5565B);
 
+  // Status colors for text and icons, lifted on dark backgrounds so they
+  // stay readable there.
+  static const Color successOnDark = Color(0xFF64D2B4);
+  static const Color warningOnDark = Color(0xFFFFB74D);
+  static const Color warningOnLight = Color(0xFFC07000);
+  static const Color errorOnDark = Color(0xFFFF7D7D);
+  static Color get successText => isDark ? successOnDark : tileMoss;
+  static Color get warningText => isDark ? warningOnDark : warningOnLight;
+  static Color get errorText => isDark ? errorOnDark : error;
+
   // ── Reminder type accents ─────────────────────────────────────────────────
   static Color get medicine => mint;
   static Color get appointment => olive;

@@ -209,7 +209,7 @@ class _ProfileBarItem extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -217,35 +217,35 @@ class _ProfileBarItem extends StatelessWidget {
                   name: name,
                   size: 26,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.sm),
                 Text(
                   name,
                   style: TextStyle(
                     fontFamily: 'PlusJakartaSans',
-                    fontSize: 13,
+                    fontSize: AppSpacing.fontSm,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     color:
                         isSelected ? AppColors.ink : AppColors.textOnDarkMuted,
                   ),
                 ),
                 if (isMe) ...[
-                  const SizedBox(width: 4),
+                  const SizedBox(width: AppSpacing.xs),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 5,
-                      vertical: 1.5,
+                      horizontal: AppSpacing.xs,
+                      vertical: AppSpacing.xxs,
                     ),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? AppColors.tileMint.withValues(alpha: 0.15)
                           : Colors.white.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(AppSpacing.sm),
                     ),
                     child: Text(
                       context.l10n.profileYou,
                       style: TextStyle(
                         fontFamily: 'PlusJakartaSans',
-                        fontSize: 9.5,
+                        fontSize: AppSpacing.fontXs,
                         fontWeight: FontWeight.bold,
                         color: isSelected
                             ? AppColors.tileMint
@@ -255,7 +255,7 @@ class _ProfileBarItem extends StatelessWidget {
                   ),
                 ],
                 if (isSelected) ...[
-                  const SizedBox(width: 6),
+                  const SizedBox(width: AppSpacing.sm),
                   const Icon(
                     Icons.check_circle_rounded,
                     size: 15,
@@ -289,7 +289,7 @@ class _AddProfileBarButton extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -298,12 +298,12 @@ class _AddProfileBarButton extends StatelessWidget {
                 size: 18,
                 color: AppColors.textOnDark,
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppSpacing.xs),
               Text(
                 context.l10n.profileAdd,
                 style: TextStyle(
                   fontFamily: 'PlusJakartaSans',
-                  fontSize: 12.5,
+                  fontSize: AppSpacing.fontSm,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textOnDark,
                 ),
@@ -355,7 +355,7 @@ class _ProfileSwitcher extends ConsumerWidget {
                   Navigator.pop(context);
                 },
               ),
-              if (i < profiles.length - 1) const SizedBox(height: 8),
+              if (i < profiles.length - 1) const SizedBox(height: AppSpacing.sm),
             ],
             AppSpacing.gapMd,
             PillButton(
@@ -369,13 +369,13 @@ class _ProfileSwitcher extends ConsumerWidget {
                 if (context.mounted) Navigator.pop(context);
               },
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.xs),
             TextButton.icon(
               icon: const Icon(Icons.manage_accounts_rounded, size: 18),
               label: Text(
                 l10n.profileManage,
                 style: const TextStyle(
-                  fontSize: 13,
+                  fontSize: AppSpacing.fontSm,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -429,7 +429,7 @@ class _ProfileRow extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
-            vertical: 10,
+            vertical: AppSpacing.md,
           ),
           child: Row(
             children: [
@@ -443,7 +443,7 @@ class _ProfileRow extends StatelessWidget {
                     Text(
                       name,
                       style: AppTextStyles.cardTitleOnLight.copyWith(
-                        fontSize: 15,
+                        fontSize: AppSpacing.fontMd,
                         fontWeight:
                             selected ? FontWeight.w700 : FontWeight.w600,
                       ),
@@ -452,7 +452,7 @@ class _ProfileRow extends StatelessWidget {
                       Text(
                         l10n.profileYou,
                         style: AppTextStyles.captionOnLight.copyWith(
-                          fontSize: 11.5,
+                          fontSize: AppSpacing.fontXs,
                         ),
                       ),
                   ],

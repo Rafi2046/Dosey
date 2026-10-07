@@ -235,22 +235,22 @@ class _RemoteMedicineFormScreenState
                   children: MedicineForm.values.map((form) {
                     final isSelected = _selectedForm == form;
                     return Padding(
-                      padding: const EdgeInsets.only(right: 10),
+                      padding: const EdgeInsets.only(right: AppSpacing.md),
                       child: InkWell(
                         onTap: () => setState(() => _selectedForm = form),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(AppSpacing.lg),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 180),
                           width: 86,
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 10,
+                            horizontal: AppSpacing.sm,
+                            vertical: AppSpacing.md,
                           ),
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? AppColors.sand
                                 : AppColors.creamLight,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(AppSpacing.lg),
                             border: Border.all(
                               color: isSelected
                                   ? (AppColors.isDark
@@ -269,12 +269,12 @@ class _RemoteMedicineFormScreenState
                                 height: 38,
                                 fit: BoxFit.contain,
                               ),
-                              const SizedBox(height: 6),
+                              const SizedBox(height: AppSpacing.sm),
                               Text(
                                 form.label(l10n),
                                 style: TextStyle(
                                   fontFamily: 'PlusJakartaSans',
-                                  fontSize: 12,
+                                  fontSize: AppSpacing.fontSm,
                                   fontWeight: isSelected
                                       ? FontWeight.w800
                                       : FontWeight.w600,
@@ -326,15 +326,15 @@ class _RemoteMedicineFormScreenState
                     final timeStr = AppDateFormat.timeOfDay(time);
 
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 10,
+                          horizontal: AppSpacing.lg,
+                          vertical: AppSpacing.md,
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.creamLight,
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(AppSpacing.lg),
                           border: Border.all(color: AppColors.divider),
                         ),
                         child: Row(
@@ -366,7 +366,7 @@ class _RemoteMedicineFormScreenState
                                     timeStr,
                                     style: TextStyle(
                                       fontFamily: 'NDot',
-                                      fontSize: 18,
+                                      fontSize: AppSpacing.fontLg,
                                       fontWeight: FontWeight.w700,
                                       color: AppColors.ink,
                                       letterSpacing: 0.8,
@@ -396,7 +396,7 @@ class _RemoteMedicineFormScreenState
                       ),
                     );
                   }),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSpacing.xs),
                   Material(
                     color: Colors.transparent,
                     child: InkWell(
@@ -404,8 +404,8 @@ class _RemoteMedicineFormScreenState
                       borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 16,
+                          vertical: AppSpacing.md,
+                          horizontal: AppSpacing.lg,
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.sand.withValues(alpha: 0.5),
@@ -427,12 +427,12 @@ class _RemoteMedicineFormScreenState
                                   ? AppColors.selected
                                   : AppColors.moss,
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: AppSpacing.sm),
                             Text(
                               'Add Another Intake Time',
                               style: TextStyle(
                                 fontFamily: 'PlusJakartaSans',
-                                fontSize: 13.5,
+                                fontSize: AppSpacing.fontSm,
                                 fontWeight: FontWeight.w700,
                                 color: AppColors.isDark
                                     ? AppColors.selected

@@ -46,12 +46,12 @@ class _Placeholder extends StatelessWidget {
           size: 32,
           color: AppColors.inkMuted.withValues(alpha: 0.6),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppSpacing.xs),
         Text(
           'Document',
           style: TextStyle(
             fontFamily: 'PlusJakartaSans',
-            fontSize: 10,
+            fontSize: AppSpacing.fontXs,
             fontWeight: FontWeight.w600,
             color: AppColors.inkMuted.withValues(alpha: 0.7),
           ),

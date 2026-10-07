@@ -307,16 +307,16 @@ class _FamilyMemberAdherenceScreenState
                                     child: Text(
                                       patientName,
                                       style: AppTextStyles.cardTitleOnLight.copyWith(
-                                        fontSize: 17,
+                                        fontSize: AppSpacing.fontLg,
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  const SizedBox(width: 6),
+                                  const SizedBox(width: AppSpacing.sm),
                                   InkWell(
                                     onTap: () => _handleEditPatientName(currentShare),
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(AppSpacing.md),
                                     child: Padding(
                                       padding: const EdgeInsets.all(3.0),
                                       child: Icon(
@@ -344,20 +344,20 @@ class _FamilyMemberAdherenceScreenState
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.md),
                     const Divider(height: 1),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSpacing.md),
                     InkWell(
                       onTap: () => _openManageMedicines(currentShare),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppSpacing.md),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 9,
+                          horizontal: AppSpacing.md,
+                          vertical: AppSpacing.sm,
                         ),
                         decoration: BoxDecoration(
                           color: AppColors.sand,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppSpacing.md),
                           border: Border.all(color: AppColors.divider),
                         ),
                         child: Row(
@@ -367,13 +367,13 @@ class _FamilyMemberAdherenceScreenState
                               size: 19,
                               color: AppColors.moss,
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: AppSpacing.sm),
                             Expanded(
                               child: Text(
                                 'Manage & Edit Medicines for $patientName',
                                 style: TextStyle(
                                   fontFamily: 'PlusJakartaSans',
-                                  fontSize: 13,
+                                  fontSize: AppSpacing.fontSm,
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.ink,
                                 ),
@@ -421,7 +421,7 @@ class _FamilyMemberAdherenceScreenState
 
                       // Section Title
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
                         child: Row(
                           children: [
                             Container(
@@ -517,7 +517,7 @@ class _FamilyMemberAdherenceScreenState
                     style: AppTextStyles.caption.copyWith(
                       color: AppColors.error,
                       fontWeight: FontWeight.w600,
-                      fontSize: 12.5,
+                      fontSize: AppSpacing.fontSm,
                     ),
                   ),
                   onPressed: () =>
@@ -555,7 +555,7 @@ class _FamilyMemberAdherenceScreenState
                   Text(
                     "Today's Adherence",
                     style: AppTextStyles.cardTitleOnLight.copyWith(
-                      fontSize: 17,
+                      fontSize: AppSpacing.fontLg,
                     ),
                   ),
                   AppSpacing.gapXs,
@@ -568,7 +568,7 @@ class _FamilyMemberAdherenceScreenState
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.md,
-                  vertical: 6,
+                  vertical: AppSpacing.sm,
                 ),
                 decoration: BoxDecoration(
                   color: AppColors.tileMint.withValues(
@@ -580,11 +580,9 @@ class _FamilyMemberAdherenceScreenState
                   '$adherenceRate%',
                   style: TextStyle(
                     fontFamily: 'NDot',
-                    color: AppColors.isDark
-                        ? const Color(0xFF64D2B4)
-                        : AppColors.tileMoss,
+                    color: AppColors.successText,
                     fontWeight: FontWeight.w700,
-                    fontSize: 14,
+                    fontSize: AppSpacing.fontMd,
                     letterSpacing: 0.8,
                   ),
                 ),
@@ -609,21 +607,19 @@ class _FamilyMemberAdherenceScreenState
                 'Taken',
                 taken,
                 AppColors.tileMint,
-                AppColors.isDark ? const Color(0xFF64D2B4) : AppColors.tileMoss,
+                AppColors.successText,
               ),
               _buildCountPill(
                 'Pending',
                 pending,
                 AppColors.warning,
-                AppColors.isDark
-                    ? const Color(0xFFFFB74D)
-                    : const Color(0xFFC07000),
+                AppColors.warningText,
               ),
               _buildCountPill(
                 'Missed',
                 missed,
                 AppColors.error,
-                AppColors.isDark ? const Color(0xFFFF7D7D) : AppColors.error,
+                AppColors.errorText,
               ),
             ],
           ),
@@ -636,7 +632,7 @@ class _FamilyMemberAdherenceScreenState
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
-        vertical: 6,
+        vertical: AppSpacing.sm,
       ),
       decoration: BoxDecoration(
         color: bgTint.withValues(alpha: AppColors.isDark ? 0.22 : 0.12),
@@ -650,13 +646,13 @@ class _FamilyMemberAdherenceScreenState
             height: 6,
             decoration: BoxDecoration(color: fgColor, shape: BoxShape.circle),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: AppSpacing.sm),
           Text(
             '$label: $count',
             style: TextStyle(
               color: fgColor,
               fontWeight: FontWeight.w700,
-              fontSize: 12.5,
+              fontSize: AppSpacing.fontSm,
             ),
           ),
         ],
@@ -668,9 +664,7 @@ class _FamilyMemberAdherenceScreenState
     Color statusBg = AppColors.warning.withValues(
       alpha: AppColors.isDark ? 0.22 : 0.14,
     );
-    Color statusFg = AppColors.isDark
-        ? const Color(0xFFFFB74D)
-        : const Color(0xFFC07000);
+    Color statusFg = AppColors.warningText;
     String statusText = 'Pending';
     IconData statusIcon = Icons.hourglass_top_rounded;
 
@@ -678,16 +672,14 @@ class _FamilyMemberAdherenceScreenState
       statusBg = AppColors.tileMint.withValues(
         alpha: AppColors.isDark ? 0.22 : 0.18,
       );
-      statusFg = AppColors.isDark
-          ? const Color(0xFF64D2B4)
-          : AppColors.tileMoss;
+      statusFg = AppColors.successText;
       statusText = 'Taken';
       statusIcon = Icons.check_circle_rounded;
     } else if (dose.isMissed) {
       statusBg = AppColors.error.withValues(
         alpha: AppColors.isDark ? 0.22 : 0.14,
       );
-      statusFg = AppColors.isDark ? const Color(0xFFFF7D7D) : AppColors.error;
+      statusFg = AppColors.errorText;
       statusText = 'Missed';
       statusIcon = Icons.error_rounded;
     } else if (dose.isSkipped) {
@@ -743,7 +735,7 @@ class _FamilyMemberAdherenceScreenState
                   Text(
                     dose.medicineName,
                     style: AppTextStyles.cardTitleOnLight.copyWith(
-                      fontSize: 16.5,
+                      fontSize: AppSpacing.fontLg,
                     ),
                   ),
                   AppSpacing.gapXs,
@@ -763,7 +755,7 @@ class _FamilyMemberAdherenceScreenState
                   dose.time,
                   style: AppTextStyles.bodyOnLight.copyWith(
                     fontWeight: FontWeight.w700,
-                    fontSize: 14,
+                    fontSize: AppSpacing.fontMd,
                     color: AppColors.ink,
                   ),
                 ),
@@ -773,8 +765,8 @@ class _FamilyMemberAdherenceScreenState
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 9,
-                        vertical: 4,
+                        horizontal: AppSpacing.sm,
+                        vertical: AppSpacing.xs,
                       ),
                       decoration: BoxDecoration(
                         color: statusBg,
@@ -784,12 +776,12 @@ class _FamilyMemberAdherenceScreenState
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(statusIcon, size: 12, color: statusFg),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: AppSpacing.xs),
                           Text(
                             statusText,
                             style: TextStyle(
                               color: statusFg,
-                              fontSize: 11.5,
+                              fontSize: AppSpacing.fontXs,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -797,14 +789,14 @@ class _FamilyMemberAdherenceScreenState
                       ),
                     ),
                     if (dose.isPending || dose.isMissed) ...[
-                      const SizedBox(width: 6),
+                      const SizedBox(width: AppSpacing.sm),
                       InkWell(
                         onTap: isNudged ? null : () => _handleSendDoseNudge(dose, user),
                         borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3.5,
+                            horizontal: AppSpacing.sm,
+                            vertical: AppSpacing.xs,
                           ),
                           decoration: BoxDecoration(
                             color: isNudged
@@ -830,11 +822,11 @@ class _FamilyMemberAdherenceScreenState
                                     ? AppColors.tileMoss
                                     : AppColors.accent,
                               ),
-                              const SizedBox(width: 3),
+                              const SizedBox(width: AppSpacing.xs),
                               Text(
                                 isNudged ? 'Nudged' : 'Nudge',
                                 style: TextStyle(
-                                  fontSize: 11,
+                                  fontSize: AppSpacing.fontXs,
                                   fontWeight: FontWeight.w700,
                                   color: isNudged
                                       ? AppColors.tileMoss
@@ -869,7 +861,7 @@ class _FamilyMemberAdherenceScreenState
           Text(
             'No Shared Doses Found Today',
             style: AppTextStyles.cardTitleOnLight.copyWith(
-              fontSize: 16,
+              fontSize: AppSpacing.fontLg,
             ),
           ),
           AppSpacing.gapXs,

@@ -27,7 +27,7 @@ class SegmentedChoice<T> extends StatelessWidget {
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         color: AppColors.sand.withValues(alpha: 0.35),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(AppSpacing.md),
         border: Border.all(
           color: AppColors.divider.withValues(alpha: 0.1),
           width: 1,
@@ -74,7 +74,7 @@ class _Segment extends StatelessWidget {
         curve: Curves.easeOutCubic,
         decoration: BoxDecoration(
           color: selected ? AppColors.selected : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.sm),
           boxShadow: selected
               ? [
                   BoxShadow(
@@ -87,13 +87,13 @@ class _Segment extends StatelessWidget {
         ),
         child: Material(
           type: MaterialType.transparency,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.sm),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: onTap,
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Row(
@@ -101,14 +101,14 @@ class _Segment extends StatelessWidget {
                     children: [
                       if (icon != null) ...[
                         Icon(icon, size: 15, color: fg),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: AppSpacing.xs),
                       ],
                       Text(
                         label,
                         style: AppTextStyles.caption.copyWith(
                           color: fg,
                           fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                          fontSize: 12.5,
+                          fontSize: AppSpacing.fontSm,
                         ),
                       ),
                     ],

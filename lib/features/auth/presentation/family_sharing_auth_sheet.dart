@@ -608,9 +608,7 @@ class _FamilySharingAuthSheetState
                         child: Text(
                           _successMessage!,
                           style: AppTextStyles.caption.copyWith(
-                            color: AppColors.isDark
-                                ? const Color(0xFF64D2B4)
-                                : AppColors.tileMoss,
+                            color: AppColors.successText,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -649,7 +647,7 @@ class _FamilySharingAuthSheetState
         Container(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
-            vertical: 9,
+            vertical: AppSpacing.sm,
           ),
           decoration: BoxDecoration(
             color: AppColors.creamLight,
@@ -666,7 +664,7 @@ class _FamilySharingAuthSheetState
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: AppSpacing.fontMd,
                   ),
                 ),
               ),
@@ -685,14 +683,14 @@ class _FamilySharingAuthSheetState
                             overflow: TextOverflow.ellipsis,
                             style: AppTextStyles.bodyOnLight.copyWith(
                               fontWeight: FontWeight.w700,
-                              fontSize: 13.5,
+                              fontSize: AppSpacing.fontSm,
                             ),
                           ),
                         ),
-                        const SizedBox(width: 4),
+                        const SizedBox(width: AppSpacing.xs),
                         InkWell(
                           onTap: () => _handleEditProfileName(user),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(AppSpacing.md),
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: Icon(
@@ -711,7 +709,7 @@ class _FamilySharingAuthSheetState
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.inkMuted,
-                        fontSize: 11.5,
+                        fontSize: AppSpacing.fontXs,
                       ),
                     ),
                   ],
@@ -720,8 +718,8 @@ class _FamilySharingAuthSheetState
               AppSpacing.gapSm,
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 3.5,
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
                 ),
                 decoration: BoxDecoration(
                   color: AppColors.tileMint.withValues(
@@ -735,19 +733,15 @@ class _FamilySharingAuthSheetState
                     Icon(
                       Icons.cloud_done_rounded,
                       size: 11,
-                      color: AppColors.isDark
-                          ? const Color(0xFF64D2B4)
-                          : AppColors.tileMoss,
+                      color: AppColors.successText,
                     ),
-                    const SizedBox(width: 3),
+                    const SizedBox(width: AppSpacing.xs),
                     Text(
                       'Cloud Active',
                       style: TextStyle(
-                        fontSize: 10.5,
+                        fontSize: AppSpacing.fontXs,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.isDark
-                            ? const Color(0xFF64D2B4)
-                            : AppColors.tileMoss,
+                        color: AppColors.successText,
                       ),
                     ),
                   ],
@@ -811,13 +805,13 @@ class _FamilySharingAuthSheetState
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.inkMuted,
                   fontWeight: FontWeight.w600,
-                  fontSize: 12,
+                  fontSize: AppSpacing.fontSm,
                 ),
               ),
               onPressed: _isLoading ? null : _handleSignOut,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
               child: Text(
                 '•',
                 style: TextStyle(color: AppColors.inkMuted.withValues(alpha: 0.5)),
@@ -830,7 +824,7 @@ class _FamilySharingAuthSheetState
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.error,
                   fontWeight: FontWeight.w500,
-                  fontSize: 12,
+                  fontSize: AppSpacing.fontSm,
                 ),
               ),
             ),
@@ -852,7 +846,7 @@ class _FamilySharingAuthSheetState
         Container(
           width: 17,
           height: 17,
-          margin: const EdgeInsets.only(top: 1),
+          margin: const EdgeInsets.only(top: AppSpacing.xxs),
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
@@ -862,12 +856,12 @@ class _FamilySharingAuthSheetState
             stepNumber,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 10,
+              fontSize: AppSpacing.fontXs,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        const SizedBox(width: 7),
+        const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -877,14 +871,14 @@ class _FamilySharingAuthSheetState
                 title,
                 style: AppTextStyles.bodyOnLight.copyWith(
                   fontWeight: FontWeight.w600,
-                  fontSize: 12,
+                  fontSize: AppSpacing.fontSm,
                 ),
               ),
               Text(
                 subtitle,
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.inkMuted,
-                  fontSize: 10.5,
+                  fontSize: AppSpacing.fontXs,
                 ),
               ),
             ],
@@ -915,7 +909,7 @@ class _FamilySharingAuthSheetState
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
                   color: AppColors.accent.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.sm),
                 ),
                 child: const Icon(
                   Icons.qr_code_2_rounded,
@@ -932,14 +926,14 @@ class _FamilySharingAuthSheetState
                       'Share Your Doses & Reminders',
                       style: AppTextStyles.bodyOnLight.copyWith(
                         fontWeight: FontWeight.w700,
-                        fontSize: 13.5,
+                        fontSize: AppSpacing.fontSm,
                       ),
                     ),
                     Text(
                       'Let family members monitor your medication adherence',
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.inkMuted,
-                        fontSize: 11,
+                        fontSize: AppSpacing.fontXs,
                       ),
                     ),
                   ],
@@ -954,14 +948,14 @@ class _FamilySharingAuthSheetState
             subtitle: 'Your unique code connects caregiver devices.',
             color: AppColors.accent,
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: AppSpacing.xs),
           _buildStepRow(
             stepNumber: '2',
             title: 'Send it to your caregiver or family member',
             subtitle: 'They enter this code in their Dosey app.',
             color: AppColors.accent,
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: AppSpacing.xs),
           _buildStepRow(
             stepNumber: '3',
             title: 'Approve incoming link requests',
@@ -1117,7 +1111,7 @@ class _FamilySharingAuthSheetState
                                     ),
                                     shape: const StadiumBorder(),
                                     padding: const EdgeInsets.symmetric(
-                                      vertical: 8,
+                                      vertical: AppSpacing.sm,
                                     ),
                                   ),
                                   onPressed: _isLoading
@@ -1146,7 +1140,7 @@ class _FamilySharingAuthSheetState
                                     elevation: 0,
                                     shape: const StadiumBorder(),
                                     padding: const EdgeInsets.symmetric(
-                                      vertical: 8,
+                                      vertical: AppSpacing.sm,
                                     ),
                                   ),
                                   onPressed: _isLoading
@@ -1298,19 +1292,19 @@ class _FamilySharingAuthSheetState
             mainAxisAlignment: MainAxisAlignment.center,
             children: code.split('').map((char) {
               return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 3),
+                margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
                 width: 40,
                 height: 48,
                 decoration: BoxDecoration(
                   color: AppColors.creamLight,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.sm),
                   border: Border.all(color: AppColors.divider),
                 ),
                 alignment: Alignment.center,
                 child: Text(
                   char,
                   style: AppTextStyles.headline.copyWith(
-                    fontSize: 22,
+                    fontSize: AppSpacing.fontXl,
                     letterSpacing: 0,
                     color: AppColors.ink,
                     fontWeight: FontWeight.w800,
@@ -1341,7 +1335,7 @@ class _FamilySharingAuthSheetState
                         ? AppColors.creamLight
                         : Colors.white,
                     shape: const StadiumBorder(),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.md),
                   ),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: code));
@@ -1371,7 +1365,7 @@ class _FamilySharingAuthSheetState
                     backgroundColor: AppColors.accent,
                     elevation: 0,
                     shape: const StadiumBorder(),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.md),
                   ),
                   onPressed: () {
                     SharePlus.instance.share(
@@ -1417,7 +1411,7 @@ class _FamilySharingAuthSheetState
                       (index == text.length || (index == 5 && text.length == 6));
                   return Expanded(
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 2.5),
+                      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
                       height: 52,
                       decoration: BoxDecoration(
                         color: AppColors.isDark ? AppColors.cream : Colors.white,
@@ -1448,7 +1442,7 @@ class _FamilySharingAuthSheetState
                       child: Text(
                         char,
                         style: AppTextStyles.headline.copyWith(
-                          fontSize: 22,
+                          fontSize: AppSpacing.fontXl,
                           fontWeight: FontWeight.w800,
                           color: AppColors.ink,
                         ),
@@ -1560,7 +1554,7 @@ class _FamilySharingAuthSheetState
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
                   color: AppColors.tileMint.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSpacing.sm),
                 ),
                 child: const Icon(
                   Icons.group_add_rounded,
@@ -1577,14 +1571,14 @@ class _FamilySharingAuthSheetState
                       'Link to a Family Member',
                       style: AppTextStyles.bodyOnLight.copyWith(
                         fontWeight: FontWeight.w700,
-                        fontSize: 13.5,
+                        fontSize: AppSpacing.fontSm,
                       ),
                     ),
                     Text(
                       'Enter their 6-character code to link profiles',
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.inkMuted,
-                        fontSize: 11,
+                        fontSize: AppSpacing.fontXs,
                       ),
                     ),
                   ],
@@ -1599,14 +1593,14 @@ class _FamilySharingAuthSheetState
             subtitle: 'Found under "My Code" on their phone.',
             color: AppColors.tileMint,
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: AppSpacing.xs),
           _buildStepRow(
             stepNumber: '2',
             title: 'Enter or paste the code below',
             subtitle: 'Tap the boxes or use the Paste button.',
             color: AppColors.tileMint,
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: AppSpacing.xs),
           _buildStepRow(
             stepNumber: '3',
             title: 'Wait for their approval',
@@ -2251,7 +2245,7 @@ class _ModeTab extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: AppSpacing.animFast,
-        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm, horizontal: AppSpacing.sm),
         decoration: BoxDecoration(
           color: active
               ? (AppColors.isDark ? AppColors.sand : Colors.white)

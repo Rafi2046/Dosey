@@ -36,7 +36,7 @@ class SettingsTile extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
-            vertical: 13,
+            vertical: AppSpacing.md,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +49,7 @@ class SettingsTile extends StatelessWidget {
                     height: 38,
                     decoration: BoxDecoration(
                       color: color,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(AppSpacing.md),
                       boxShadow: [
                         BoxShadow(
                           color: color.withValues(alpha: 0.22),
@@ -64,7 +64,7 @@ class SettingsTile extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(width: 14),
+                  const SizedBox(width: AppSpacing.lg),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,17 +74,17 @@ class SettingsTile extends StatelessWidget {
                           title,
                           style: AppTextStyles.bodyOnLight.copyWith(
                             fontWeight: FontWeight.w600,
-                            fontSize: 15,
+                            fontSize: AppSpacing.fontMd,
                             color: AppColors.ink,
                           ),
                         ),
                         if (subtitle case final s?) ...[
-                          const SizedBox(height: 2),
+                          const SizedBox(height: AppSpacing.xxs),
                           Text(
                             s,
                             style: AppTextStyles.caption.copyWith(
                               color: AppColors.inkMuted,
-                              fontSize: 12.5,
+                              fontSize: AppSpacing.fontSm,
                               height: 1.25,
                             ),
                             maxLines: subtitleMaxLines,
@@ -95,7 +95,7 @@ class SettingsTile extends StatelessWidget {
                     ),
                   ),
                   if (trailing != null) ...[
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSpacing.sm),
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 130),
                       child: trailing!,
@@ -103,7 +103,7 @@ class SettingsTile extends StatelessWidget {
                   ],
                   if (onTap != null && trailing == null)
                     Padding(
-                      padding: const EdgeInsets.only(left: 6),
+                      padding: const EdgeInsets.only(left: AppSpacing.sm),
                       child: Icon(
                         Icons.chevron_right_rounded,
                         color: AppColors.inkMuted,
@@ -113,7 +113,7 @@ class SettingsTile extends StatelessWidget {
                 ],
               ),
               if (below != null) ...[
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 below!,
               ],
             ],

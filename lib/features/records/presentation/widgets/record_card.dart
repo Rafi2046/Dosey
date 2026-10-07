@@ -29,7 +29,7 @@ class RecordCard extends StatelessWidget {
     final caption = (light
             ? AppTextStyles.captionOnLight
             : AppTextStyles.caption)
-        .copyWith(color: muted, fontSize: 12);
+        .copyWith(color: muted, fontSize: AppSpacing.fontSm);
 
     return SurfaceCard(
       color: color,
@@ -60,8 +60,8 @@ class RecordCard extends StatelessWidget {
                 right: 8,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 7,
-                    vertical: 3,
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.65),
@@ -75,12 +75,12 @@ class RecordCard extends StatelessWidget {
                         size: 11,
                         color: Colors.white,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: AppSpacing.xs),
                       Text(
                         context.l10n.pagesCount(summary.pageCount),
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 10.5,
+                          fontSize: AppSpacing.fontXs,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -91,20 +91,20 @@ class RecordCard extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+            padding: const EdgeInsets.fromLTRB(14, AppSpacing.md, AppSpacing.lg, AppSpacing.lg),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     Icon(r.type.icon, size: 14, color: muted),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: AppSpacing.xs),
                     Expanded(
                       child: Text(
                         r.type.label(context.l10n),
                         style: AppTextStyles.overline.copyWith(
                           color: muted,
-                          fontSize: 10.5,
+                          fontSize: AppSpacing.fontXs,
                           letterSpacing: 0.5,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -112,7 +112,7 @@ class RecordCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.xs),
                 Text(
                   r.title,
                   maxLines: 2,
@@ -121,11 +121,11 @@ class RecordCard extends StatelessWidget {
                           ? AppTextStyles.cardTitleOnLight
                           : AppTextStyles.cardTitle)
                       .copyWith(
-                    fontSize: 15.5,
+                    fontSize: AppSpacing.fontMd,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: AppSpacing.sm),
                 Row(
                   children: [
                     Icon(
@@ -133,7 +133,7 @@ class RecordCard extends StatelessWidget {
                       size: 11.5,
                       color: muted,
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: AppSpacing.xs),
                     Flexible(
                       child: Text(
                         AppDateFormat.date(r.recordDate),

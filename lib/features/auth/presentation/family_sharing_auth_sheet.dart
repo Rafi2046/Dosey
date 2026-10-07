@@ -120,7 +120,7 @@ class _FamilySharingAuthSheetState
           SnackBar(
             content: Text(
               _isRegister
-                  ? 'Account created successfully!'
+                  ? 'Account created! Check your email to verify it.'
                   : 'Signed in successfully!',
             ),
           ),
@@ -460,6 +460,8 @@ class _FamilySharingAuthSheetState
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(currentUserProvider);
+    // Signed in, but the email isn't confirmed yet.
+    final unverified = user == null ? ref.watch(signedInUserProvider) : null;
     final isAppleSupported = !kIsWeb && (Platform.isIOS || Platform.isMacOS);
 
     return Container(
@@ -611,6 +613,8 @@ class _FamilySharingAuthSheetState
               if (user != null) ...[
                 // User signed in view
                 _buildSignedInContent(user),
+              ] else if (unverified != null) ...[
+                _buildVerifyEmailContent(unverified),
               ] else ...[
                 // Guest / Progressive onboarding view
                 _buildGuestContent(isAppleSupported),
@@ -1973,6 +1977,98 @@ class _FamilySharingAuthSheetState
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _runVerifyAction(Future<void> Function() action) async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+      _successMessage = null;
+    });
+    try {
+      await action();
+    } catch (e) {
+      if (mounted) {
+        setState(() => _errorMessage = AuthRepository.formatAuthError(e));
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  /// Email/password accounts confirm their address before family sharing
+  /// opens, so nobody can link to a family using someone else's email.
+  Widget _buildVerifyEmailContent(User user) {
+    final repo = ref.read(authRepositoryProvider);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const Icon(
+          Icons.mark_email_unread_rounded,
+          color: AppColors.accent,
+          size: 48,
+        ),
+        AppSpacing.gapMd,
+        Text(
+          'Verify your email',
+          textAlign: TextAlign.center,
+          style: AppTextStyles.headlineOnLight.copyWith(
+            fontSize: AppSpacing.fontLg,
+          ),
+        ),
+        AppSpacing.gapSm,
+        Text(
+          'We sent a link to ${user.email ?? 'your email'}. Open it to '
+          'confirm the address, then come back and tap "I\'ve verified".',
+          textAlign: TextAlign.center,
+          style: AppTextStyles.caption.copyWith(color: AppColors.inkMuted),
+        ),
+        AppSpacing.gapLg,
+        PillButton(
+          label: "I've verified",
+          loading: _isLoading,
+          onPressed: () => _runVerifyAction(() async {
+            final verified = await repo.reloadAndCheckVerified();
+            if (!verified && mounted) {
+              setState(
+                () => _errorMessage =
+                    'Not verified yet. Open the link in the email first '
+                    '(check spam too).',
+              );
+            }
+          }),
+        ),
+        AppSpacing.gapSm,
+        Center(
+          child: TextButton(
+            onPressed: _isLoading
+                ? null
+                : () => _runVerifyAction(() async {
+                    await repo.sendEmailVerification();
+                    if (mounted) {
+                      setState(
+                        () => _successMessage =
+                            'Verification email sent to ${user.email}.',
+                      );
+                    }
+                  }),
+            child: Text(
+              'Resend email',
+              style: AppTextStyles.caption.copyWith(color: AppColors.accent),
+            ),
+          ),
+        ),
+        Center(
+          child: TextButton(
+            onPressed: _isLoading ? null : () => _runVerifyAction(repo.signOut),
+            child: Text(
+              'Use another account',
+              style: AppTextStyles.caption.copyWith(color: AppColors.inkMuted),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

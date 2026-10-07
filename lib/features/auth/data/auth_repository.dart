@@ -29,11 +29,39 @@ class AuthRepository {
     }
   }
 
+  /// Sign-in, sign-out and profile changes (userChanges, not
+  /// authStateChanges, so a reload that verifies the email is seen).
   Stream<User?> authStateChanges() {
     if (!isAvailable) {
       return Stream.value(null);
     }
-    return _auth.authStateChanges();
+    return _auth.userChanges();
+  }
+
+  /// An email/password account whose address isn't confirmed yet. Google
+  /// and Apple accounts come verified.
+  static bool needsEmailVerification(User user) =>
+      !user.emailVerified &&
+      user.providerData.any((p) => p.providerId == 'password');
+
+  /// Emails the signed-in user a link that confirms their address.
+  Future<void> sendEmailVerification() async {
+    await _ensureAvailable();
+    await _auth.currentUser?.sendEmailVerification();
+  }
+
+  /// Refreshes the user from Firebase (after they tapped the link) and
+  /// returns whether the email is now verified.
+  Future<bool> reloadAndCheckVerified() async {
+    await _ensureAvailable();
+    final user = _auth.currentUser;
+    if (user == null) return false;
+    await user.reload();
+    final fresh = _auth.currentUser;
+    if (fresh == null || !fresh.emailVerified) return false;
+    // New ID token, so the cloud sees email_verified = true straight away.
+    await fresh.getIdToken(true);
+    return true;
   }
 
   /// Signs in using Google Sign-In and links to Firebase Auth.
@@ -121,6 +149,12 @@ class AuthRepository {
       } catch (e) {
         debugPrint('[AuthRepository] Failed to update display name: $e');
       }
+    }
+    // Family sharing stays locked until the address is confirmed.
+    try {
+      await credential.user?.sendEmailVerification();
+    } catch (e) {
+      debugPrint('[AuthRepository] Failed to send verification email: $e');
     }
     return credential;
   }

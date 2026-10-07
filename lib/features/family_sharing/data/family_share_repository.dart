@@ -112,74 +112,21 @@ class FamilyShareRepository {
     }
 
     try {
-      final record = await _supabase
-          .from('family_shares')
-          .select()
-          .eq('share_code', sanitizedCode)
-          .eq('is_active', true)
-          .maybeSingle();
-
-      if (record == null) {
-        throw const FamilyShareException(
-          'Invalid or expired share code. Please ask your family member for a new code.',
-        );
-      }
-
-      final share = FamilyShare.fromJson(record);
-
-      if (share.patientUid == caregiverUid) {
-        throw const FamilyShareException('You cannot link to your own profile.');
-      }
-
-      if (share.isClaimed && share.caregiverUid != caregiverUid) {
-        throw const FamilyShareException(
-          'This share code has already been requested by another caregiver.',
-        );
-      }
-
-      if (share.expiresAt != null && DateTime.now().toUtc().isAfter(share.expiresAt!)) {
-        throw const FamilyShareException('This share code has expired.');
-      }
-
-      // Update the record with caregiver info and set status to pending approval
-      final updatePayload = <String, dynamic>{
-        'caregiver_uid': caregiverUid,
-        'caregiver_name': caregiverName,
-        'status': 'pending',
-      };
-
-      Map<String, dynamic> updated;
-      try {
-        updated = await _supabase
-            .from('family_shares')
-            .update(updatePayload)
-            .eq('id', share.id)
-            .select()
-            .single();
-      } catch (updateError) {
-        if (updateError.toString().contains('status') ||
-            (updateError is PostgrestException &&
-                updateError.message.contains('status'))) {
-          // Graceful fallback if status column is not yet migrated in Supabase
-          updatePayload.remove('status');
-          updated = await _supabase
-              .from('family_shares')
-              .update(updatePayload)
-              .eq('id', share.id)
-              .select()
-              .single();
-        } else {
-          rethrow;
-        }
-      }
-
-      return FamilyShare.fromJson(updated);
-    } catch (e) {
-      if (e is FamilyShareException) rethrow;
-      debugPrint('[FamilyShareRepository] Error redeeming share code: $e');
-      throw FamilyShareException(
-        'Failed to link: ${e is PostgrestException ? e.message : e.toString()}',
+      // The server checks the code (it alone can see unclaimed shares) and
+      // links this caregiver, pending the patient's approval.
+      final data = await _supabase.rpc(
+        'redeem_share_code',
+        params: {'p_code': sanitizedCode, 'p_caregiver_name': caregiverName},
       );
+      return FamilyShare.fromJson(Map<String, dynamic>.from(data as Map));
+    } on PostgrestException catch (e) {
+      debugPrint('[FamilyShareRepository] Error redeeming share code: $e');
+      // The function's own messages ("This share code has expired.") are
+      // already written for the user.
+      throw FamilyShareException(e.message);
+    } catch (e) {
+      debugPrint('[FamilyShareRepository] Error redeeming share code: $e');
+      throw FamilyShareException('Failed to link: $e');
     }
   }
 

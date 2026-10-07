@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -45,6 +46,12 @@ abstract final class CloudInitializer {
         await Supabase.initialize(
           url: CloudConfig.supabaseUrl,
           publishableKey: CloudConfig.supabaseAnonKey,
+          // Every request carries the signed-in Firebase user's ID token:
+          // the database only lets a family's own members reach its rows
+          // (supabase/secure_family_sharing.sql). Signed out: no token.
+          accessToken: () async => _firebaseInitialized
+              ? await FirebaseAuth.instance.currentUser?.getIdToken()
+              : null,
         );
         _supabaseInitialized = true;
         debugPrint(

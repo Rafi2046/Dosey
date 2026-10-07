@@ -9,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/widgets/app_text_field.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../../family_sharing/domain/family_share.dart';
 import '../../family_sharing/presentation/family_member_adherence_screen.dart';
@@ -1211,10 +1212,19 @@ class _FamilySharingAuthSheetState
                         ),
                         tooltip: 'Unlink',
                         onPressed: () async {
-                          await ref
-                              .read(familyShareRepositoryProvider)
-                              .revokeShare(share.id);
-                          ref.invalidate(patientSharesProvider);
+                          final confirmed = await confirmDelete(
+                            context,
+                            title: 'Unlink Caregiver',
+                            body:
+                                'Are you sure you want to unlink ${share.caregiverName ?? "this caregiver"}? They will no longer be able to see your adherence schedule.',
+                            confirmLabel: 'Unlink',
+                          );
+                          if (confirmed) {
+                            await ref
+                                .read(familyShareRepositoryProvider)
+                                .revokeShare(share.id);
+                            ref.invalidate(patientSharesProvider);
+                          }
                         },
                       ),
                     ),
@@ -1740,10 +1750,19 @@ class _FamilySharingAuthSheetState
                               ),
                               tooltip: 'Unlink',
                               onPressed: () async {
-                                await ref
-                                    .read(familyShareRepositoryProvider)
-                                    .revokeShare(share.id);
-                                ref.invalidate(caregiverSharesProvider);
+                                final confirmed = await confirmDelete(
+                                  context,
+                                  title: 'Remove Family Member',
+                                  body:
+                                      'Are you sure you want to stop monitoring ${share.patientName ?? "this family member"}?',
+                                  confirmLabel: 'Remove',
+                                );
+                                if (confirmed) {
+                                  await ref
+                                      .read(familyShareRepositoryProvider)
+                                      .revokeShare(share.id);
+                                  ref.invalidate(caregiverSharesProvider);
+                                }
                               },
                             ),
                             Icon(

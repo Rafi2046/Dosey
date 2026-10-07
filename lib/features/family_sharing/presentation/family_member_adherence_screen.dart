@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/constants.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/initials_avatar.dart';
 import '../../../core/widgets/pill_button.dart';
@@ -90,6 +91,50 @@ class _FamilyMemberAdherenceScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to update name: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _handleRemoveMember(
+    FamilyShare currentShare,
+    String patientName,
+  ) async {
+    final confirmed = await confirmDelete(
+      context,
+      title: 'Remove Family Member',
+      body:
+          'Are you sure you want to stop monitoring $patientName? You will no longer receive their adherence updates.',
+      confirmLabel: 'Remove',
+    );
+
+    if (!confirmed || !mounted) return;
+
+    try {
+      final repo = ref.read(familyShareRepositoryProvider);
+      await repo.revokeShare(currentShare.id);
+      ref.invalidate(caregiverSharesProvider);
+      ref.invalidate(patientSharesProvider);
+      if (mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Removed $patientName from monitored family members.'),
+            backgroundColor: AppColors.tileMoss,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to remove member: $e'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -214,6 +259,12 @@ class _FamilyMemberAdherenceScreenState
           icon: const Icon(Icons.edit_outlined, size: 20),
           tooltip: 'Edit member name',
           onPressed: () => _handleEditPatientName(currentShare),
+        ),
+        IconButton(
+          icon: const Icon(Icons.person_remove_outlined, size: 20),
+          color: AppColors.error,
+          tooltip: 'Remove family member',
+          onPressed: () => _handleRemoveMember(currentShare, patientName),
         ),
       ],
       body: RefreshIndicator(
@@ -447,6 +498,26 @@ class _FamilyMemberAdherenceScreenState
                       ),
                     ],
                   ),
+                ),
+              ),
+              AppSpacing.gapXl,
+              Center(
+                child: TextButton.icon(
+                  icon: const Icon(
+                    Icons.link_off_rounded,
+                    size: 16,
+                    color: AppColors.error,
+                  ),
+                  label: Text(
+                    'Remove $patientName from Monitoring',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.error,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12.5,
+                    ),
+                  ),
+                  onPressed: () =>
+                      _handleRemoveMember(currentShare, patientName),
                 ),
               ),
             ],

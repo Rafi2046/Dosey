@@ -121,7 +121,7 @@ class _BloodPressureFormScreenState
       ],
       bottomBar: PillButton(
         label: l10n.save,
-        showCapsuleArrow: true,
+        showForwardArrow: true,
         loading: _saving,
         onPressed: _save,
       ),

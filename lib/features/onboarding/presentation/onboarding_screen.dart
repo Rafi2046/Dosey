@@ -167,7 +167,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           l10n.onboardingFinish,
                         _ => l10n.next,
                       },
-                      showCapsuleArrow: true,
+                      showForwardArrow: true,
                       onPressed: !isLast
                           ? () => _goTo(_page + 1)
                           : canFinish

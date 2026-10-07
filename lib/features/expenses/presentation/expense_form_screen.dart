@@ -104,7 +104,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
       ],
       bottomBar: PillButton(
         label: _e == null ? context.l10n.save : context.l10n.saveChanges,
-        showCapsuleArrow: true,
+        showForwardArrow: true,
         loading: _saving,
         onPressed: _save,
       ),

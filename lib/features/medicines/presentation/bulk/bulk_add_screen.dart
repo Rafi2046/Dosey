@@ -136,7 +136,7 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
       title: context.l10n.bulkTitle,
       bottomBar: PillButton(
         label: context.l10n.bulkSaveAll(_drafts.length),
-        showCapsuleArrow: true,
+        showForwardArrow: true,
         loading: _saving,
         onPressed: _drafts.isEmpty ? null : _save,
       ),

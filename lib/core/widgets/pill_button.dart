@@ -4,8 +4,8 @@ import '../constants/constants.dart';
 
 enum PillButtonTone { accent, moss, cream }
 
-/// Full-width stadium button. With [showCapsuleArrow] it renders Dosey's
-/// signature "label + two-tone capsule arrow" CTA.
+/// Full-width stadium button. With [showForwardArrow] the label is followed
+/// by a gently nudging arrow, used for "continue" style CTAs.
 class PillButton extends StatelessWidget {
   const PillButton({
     super.key,
@@ -13,7 +13,7 @@ class PillButton extends StatelessWidget {
     required this.onPressed,
     this.tone = PillButtonTone.accent,
     this.trailingIcon,
-    this.showCapsuleArrow = false,
+    this.showForwardArrow = false,
     this.loading = false,
     this.padding,
     this.scaleDownText = false,
@@ -23,7 +23,7 @@ class PillButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final PillButtonTone tone;
   final IconData? trailingIcon;
-  final bool showCapsuleArrow;
+  final bool showForwardArrow;
   final bool loading;
   final EdgeInsetsGeometry? padding;
   final bool scaleDownText;
@@ -51,10 +51,7 @@ class PillButton extends StatelessWidget {
           child: SizedBox(
             height: AppSpacing.buttonHeight,
             child: Padding(
-              padding: padding ??
-                  (showCapsuleArrow
-                      ? AppSpacing.ctaPadding
-                      : AppSpacing.screenPadding),
+              padding: padding ?? AppSpacing.screenPadding,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -92,9 +89,9 @@ class PillButton extends StatelessWidget {
                       size: AppSpacing.iconMd,
                     ),
                   ],
-                  if (showCapsuleArrow) ...[
-                    AppSpacing.gapLg,
-                    _CapsuleArrow(color: foreground, arrowColor: background),
+                  if (showForwardArrow && !loading) ...[
+                    AppSpacing.gapSm,
+                    _NudgeArrow(color: foreground),
                   ],
                 ],
               ),
@@ -106,39 +103,87 @@ class PillButton extends StatelessWidget {
   }
 }
 
-/// Dosey's signature CTA mark: a two-tone medicine capsule. The left half is
-/// a tinted shell, the right half is solid and carries the forward arrow.
-class _CapsuleArrow extends StatelessWidget {
-  const _CapsuleArrow({required this.color, required this.arrowColor});
+/// Inline forward arrow that drifts a few pixels ahead now and then, hinting
+/// "continue" without competing with the label. Stays still when the system
+/// asks for reduced motion.
+class _NudgeArrow extends StatefulWidget {
+  const _NudgeArrow({required this.color});
 
   final Color color;
-  final Color arrowColor;
+
+  @override
+  State<_NudgeArrow> createState() => _NudgeArrowState();
+}
+
+class _NudgeArrowState extends State<_NudgeArrow>
+    with SingleTickerProviderStateMixin {
+  static const double _travel = 4;
+
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: AppSpacing.nudgePeriod,
+  );
+
+  // Two quick nudges at the start of each period, then rest.
+  late final Animation<double> _offset = TweenSequence<double>([
+    TweenSequenceItem(
+      tween: Tween(
+        begin: 0.0,
+        end: _travel,
+      ).chain(CurveTween(curve: Curves.easeOut)),
+      weight: 6,
+    ),
+    TweenSequenceItem(
+      tween: Tween(
+        begin: _travel,
+        end: 0.0,
+      ).chain(CurveTween(curve: Curves.easeIn)),
+      weight: 6,
+    ),
+    TweenSequenceItem(
+      tween: Tween(
+        begin: 0.0,
+        end: _travel,
+      ).chain(CurveTween(curve: Curves.easeOut)),
+      weight: 6,
+    ),
+    TweenSequenceItem(
+      tween: Tween(
+        begin: _travel,
+        end: 0.0,
+      ).chain(CurveTween(curve: Curves.easeIn)),
+      weight: 6,
+    ),
+    TweenSequenceItem(tween: ConstantTween(0.0), weight: 76),
+  ]).animate(_controller);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.stop();
+      _controller.value = 0;
+    } else if (!_controller.isAnimating) {
+      _controller.repeat();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(AppSpacing.ctaCapsuleHeight / 2),
-      child: SizedBox(
-        width: AppSpacing.ctaCapsuleWidth,
-        height: AppSpacing.ctaCapsuleHeight,
-        child: Row(
-          children: [
-            Expanded(
-              child: ColoredBox(color: color.withValues(alpha: 0.28)),
-            ),
-            const SizedBox(width: AppSpacing.borderThick),
-            Expanded(
-              child: ColoredBox(
-                color: color,
-                child: Icon(
-                  Icons.arrow_forward_rounded,
-                  color: arrowColor,
-                  size: AppSpacing.iconSm + 2,
-                ),
-              ),
-            ),
-          ],
-        ),
+    return AnimatedBuilder(
+      animation: _offset,
+      builder: (context, child) =>
+          Transform.translate(offset: Offset(_offset.value, 0), child: child),
+      child: Icon(
+        Icons.arrow_forward_rounded,
+        color: widget.color,
+        size: AppSpacing.iconMd,
       ),
     );
   }

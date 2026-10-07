@@ -287,7 +287,7 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
       title: _isEdit ? context.l10n.editMedicine : context.l10n.addMedicine,
       bottomBar: PillButton(
         label: _isEdit ? context.l10n.saveChanges : context.l10n.save,
-        showCapsuleArrow: true,
+        showForwardArrow: true,
         loading: _saving,
         onPressed: _save,
       ),

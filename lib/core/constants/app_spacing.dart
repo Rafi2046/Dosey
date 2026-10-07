@@ -27,8 +27,6 @@ abstract final class AppSpacing {
   static const double buttonHeight = 58;
   static const double circleButton = 44;
   static const double backArrowWidth = 36;
-  static const double ctaCapsuleHeight = 32;
-  static const double ctaCapsuleWidth = 60;
   static const double chipHeight = 40;
   static const double heroIllustration = 240;
   static const double onboardingHero = 260;
@@ -133,6 +131,7 @@ abstract final class AppSpacing {
   static const Duration animMedium = Duration(milliseconds: 280);
   static const Duration shimmerPeriod = Duration(milliseconds: 1300);
   static const Duration animSlow = Duration(milliseconds: 450);
+  static const Duration nudgePeriod = Duration(milliseconds: 3200);
 
   /// Bottom nav returns this long after scrolling stops.
   static const Duration navShowDelay = Duration(milliseconds: 300);
@@ -149,12 +148,6 @@ abstract final class AppSpacing {
   static const EdgeInsets inputPadding = EdgeInsets.symmetric(
     horizontal: lg,
     vertical: md,
-  );
-  static const EdgeInsets ctaPadding = EdgeInsets.only(
-    left: xl,
-    right: sm,
-    top: sm,
-    bottom: sm,
   );
   static const EdgeInsets chipPadding = EdgeInsets.symmetric(
     horizontal: lg,

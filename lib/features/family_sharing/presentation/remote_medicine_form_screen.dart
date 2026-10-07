@@ -9,6 +9,7 @@ import '../../../core/utils/enum_labels.dart';
 import '../../../core/utils/pickers.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/choice_pills.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/cream_scaffold.dart';
 import '../../../core/widgets/labeled_field.dart';
 import '../../../core/widgets/picker_field.dart';
@@ -125,6 +126,7 @@ class _RemoteMedicineFormScreenState
       );
       return;
     }
+    if (!await ensureOnline(context) || !mounted) return;
 
     final user = ref.read(currentUserProvider);
     final caregiverName = user?.displayName ?? user?.email?.split('@').first;

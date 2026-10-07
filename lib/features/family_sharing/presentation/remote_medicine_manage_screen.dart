@@ -39,6 +39,7 @@ class _RemoteMedicineManageScreenState
   }
 
   Future<void> _handleDelete(RemotePrescription item, String patientName) async {
+    if (!await ensureOnline(context) || !mounted) return;
     final confirmed = await confirmDelete(
       context,
       body:

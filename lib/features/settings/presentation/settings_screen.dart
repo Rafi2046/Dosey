@@ -248,7 +248,11 @@ class SettingsScreen extends ConsumerWidget {
                           ),
                         )
                       : null,
-                  onTap: () => showFamilySharingAuthSheet(context),
+                  onTap: () async {
+                    if (await ensureOnline(context) && context.mounted) {
+                      await showFamilySharingAuthSheet(context);
+                    }
+                  },
                 ),
               ],
             ),

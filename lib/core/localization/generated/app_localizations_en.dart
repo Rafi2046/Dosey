@@ -2408,4 +2408,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String notifForProfile(String name, String title) {
     return '$name: $title';
   }
+
+  @override
+  String get offlineTitle => 'No internet connection';
+
+  @override
+  String get offlineBody =>
+      'Family Sharing needs the internet to sync with your family. Connect to Wi-Fi or mobile data and try again.\n\nYour medicines, reminders and everything else keep working offline.';
+
+  @override
+  String get offlineRetry => 'Try again';
+
+  @override
+  String get offlineDismiss => 'OK';
 }

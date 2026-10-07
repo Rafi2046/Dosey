@@ -2386,4 +2386,17 @@ class AppLocalizationsBn extends AppLocalizations {
   String notifForProfile(String name, String title) {
     return '$name: $title';
   }
+
+  @override
+  String get offlineTitle => 'ইন্টারনেট সংযোগ নেই';
+
+  @override
+  String get offlineBody =>
+      'পরিবারের সাথে তথ্য মেলাতে ফ্যামিলি শেয়ারিং-এর ইন্টারনেট লাগে। Wi-Fi বা মোবাইল ডেটা চালু করে আবার চেষ্টা করুন।\n\nআপনার ওষুধ, রিমাইন্ডার ও বাকি সব কিছু ইন্টারনেট ছাড়াই চলবে।';
+
+  @override
+  String get offlineRetry => 'আবার চেষ্টা করুন';
+
+  @override
+  String get offlineDismiss => 'ঠিক আছে';
 }

@@ -1183,5 +1183,9 @@
         "type": "String"
       }
     }
-  }
+  },
+  "offlineTitle": "No internet connection",
+  "offlineBody": "Family Sharing needs the internet to sync with your family. Connect to Wi-Fi or mobile data and try again.\n\nYour medicines, reminders and everything else keep working offline.",
+  "offlineRetry": "Try again",
+  "offlineDismiss": "OK"
 }

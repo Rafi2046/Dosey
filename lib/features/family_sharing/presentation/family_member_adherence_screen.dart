@@ -50,6 +50,7 @@ class _FamilyMemberAdherenceScreenState
   }
 
   Future<void> _handleEditPatientName(FamilyShare currentShare) async {
+    if (!await ensureOnline(context) || !mounted) return;
     final currentName = currentShare.patientName ?? '';
     final entered = await showNameSheet(
       context,
@@ -102,6 +103,7 @@ class _FamilyMemberAdherenceScreenState
     FamilyShare currentShare,
     String patientName,
   ) async {
+    if (!await ensureOnline(context) || !mounted) return;
     final confirmed = await confirmDelete(
       context,
       title: 'Remove Family Member',
@@ -146,6 +148,7 @@ class _FamilyMemberAdherenceScreenState
     if (user == null) return;
     final doseKey = '${dose.medicineName}_${dose.time}';
     if (_nudgedDoses.contains(doseKey)) return;
+    if (!await ensureOnline(context) || !mounted) return;
 
     try {
       final repo = ref.read(remotePrescriptionRepositoryProvider);
@@ -186,6 +189,7 @@ class _FamilyMemberAdherenceScreenState
 
   Future<void> _handleSendNudge(User? user, String patientName) async {
     if (user == null) return;
+    if (!await ensureOnline(context) || !mounted) return;
     setState(() => _isSendingNudge = true);
     try {
       final repo = ref.read(sharedAdherenceRepositoryProvider);

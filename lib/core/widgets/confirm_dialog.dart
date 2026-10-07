@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../cloud/connectivity.dart';
 import '../constants/constants.dart';
 import '../localization/l10n.dart';
 
@@ -80,6 +81,37 @@ Future<bool> confirmDiscard(BuildContext context) async {
     ),
   );
   return confirmed ?? false;
+}
+
+/// Gate for actions that need the cloud (Family Sharing). True when online;
+/// otherwise explains why the action can't run, and "Try again" carries on
+/// with the action as soon as the connection is back.
+Future<bool> ensureOnline(BuildContext context) async {
+  while (true) {
+    if (await hasInternet()) return true;
+    if (!context.mounted) return false;
+    final retry = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: Icon(Icons.wifi_off_rounded, color: AppColors.inkMuted),
+        title: Text(context.l10n.offlineTitle),
+        content: Text(context.l10n.offlineBody),
+        actions: [
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: AppColors.inkMuted),
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(context.l10n.offlineDismiss),
+          ),
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: AppColors.accent),
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(context.l10n.offlineRetry),
+          ),
+        ],
+      ),
+    );
+    if (retry != true) return false;
+  }
 }
 
 void showAppSnack(BuildContext context, String message) {

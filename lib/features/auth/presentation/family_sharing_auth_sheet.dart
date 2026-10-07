@@ -84,6 +84,7 @@ class _FamilySharingAuthSheetState
 
   Future<void> _handleEmailAuth() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
+    if (!await ensureOnline(context) || !mounted) return;
 
     setState(() {
       _isLoading = true;
@@ -138,6 +139,7 @@ class _FamilySharingAuthSheetState
   }
 
   Future<void> _handleGoogleAuth() async {
+    if (!await ensureOnline(context) || !mounted) return;
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -161,6 +163,7 @@ class _FamilySharingAuthSheetState
   }
 
   Future<void> _handleAppleAuth() async {
+    if (!await ensureOnline(context) || !mounted) return;
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -198,6 +201,7 @@ class _FamilySharingAuthSheetState
   }
 
   Future<void> _handleDeleteAccount() async {
+    if (!await ensureOnline(context) || !mounted) return;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -239,6 +243,7 @@ class _FamilySharingAuthSheetState
   }
 
   Future<void> _handleEditProfileName(User user) async {
+    if (!await ensureOnline(context) || !mounted) return;
     final localName = ref.read(userNameProvider).value;
     final currentName = user.displayName ?? localName ?? '';
     final entered = await showNameSheet(
@@ -288,6 +293,7 @@ class _FamilySharingAuthSheetState
   }
 
   Future<void> _handleGenerateShareCode(User user) async {
+    if (!await ensureOnline(context) || !mounted) return;
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -323,6 +329,7 @@ class _FamilySharingAuthSheetState
       });
       return;
     }
+    if (!await ensureOnline(context) || !mounted) return;
 
     setState(() {
       _isLoading = true;
@@ -361,6 +368,7 @@ class _FamilySharingAuthSheetState
   }
 
   Future<void> _handleAcceptShare(FamilyShare share) async {
+    if (!await ensureOnline(context) || !mounted) return;
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -389,6 +397,7 @@ class _FamilySharingAuthSheetState
   }
 
   Future<void> _handleDeclineShare(FamilyShare share) async {
+    if (!await ensureOnline(context) || !mounted) return;
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -413,6 +422,7 @@ class _FamilySharingAuthSheetState
   }
 
   Future<void> _handleManualSyncSchedule(User user) async {
+    if (!await ensureOnline(context) || !mounted) return;
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -1980,7 +1990,11 @@ class _FamilySharingAuthSheetState
     );
   }
 
-  Future<void> _runVerifyAction(Future<void> Function() action) async {
+  Future<void> _runVerifyAction(
+    Future<void> Function() action, {
+    bool needsInternet = true,
+  }) async {
+    if (needsInternet && (!await ensureOnline(context) || !mounted)) return;
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -2061,7 +2075,7 @@ class _FamilySharingAuthSheetState
         ),
         Center(
           child: TextButton(
-            onPressed: _isLoading ? null : () => _runVerifyAction(repo.signOut),
+            onPressed: _isLoading ? null : () => _runVerifyAction(repo.signOut, needsInternet: false),
             child: Text(
               'Use another account',
               style: AppTextStyles.caption.copyWith(color: AppColors.inkMuted),

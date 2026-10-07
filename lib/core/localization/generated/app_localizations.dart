@@ -3937,6 +3937,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name}: {title}'**
   String notifForProfile(String name, String title);
+
+  /// No description provided for @offlineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get offlineTitle;
+
+  /// No description provided for @offlineBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Family Sharing needs the internet to sync with your family. Connect to Wi-Fi or mobile data and try again.\n\nYour medicines, reminders and everything else keep working offline.'**
+  String get offlineBody;
+
+  /// No description provided for @offlineRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get offlineRetry;
+
+  /// No description provided for @offlineDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get offlineDismiss;
 }
 
 class _AppLocalizationsDelegate

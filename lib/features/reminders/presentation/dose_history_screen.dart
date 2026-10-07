@@ -63,7 +63,6 @@ class _DoseHistoryScreenState extends ConsumerState<DoseHistoryScreen> {
           ScreenHeader(
             title: l10n.historyTitle,
             subtitle: widget.medicineName,
-            showBack: false,
             trailing: CircleIconButton(
               icon: Icons.summarize_rounded,
               tooltip: l10n.reportShowDoctor,

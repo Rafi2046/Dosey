@@ -69,15 +69,11 @@ class _AddActionSheet extends StatelessWidget {
               crossAxisSpacing: AppSpacing.md,
               childAspectRatio: AppSpacing.addTileAspect,
               children: [
-                for (final (i, (icon, label, action)) in _actions(
-                  context.l10n,
-                ).indexed)
+                for (final (icon, label, action) in _actions(context.l10n))
                   _AddTile(
                     icon: icon,
                     label: label,
-                    color:
-                        AppColors.cardCycleOnLight[i %
-                            AppColors.cardCycleOnLight.length],
+                    color: AppColors.cardCycleOnLight.first,
                     onTap: () {
                       final navigator = Navigator.of(context);
                       final container = ProviderScope.containerOf(context);
@@ -118,7 +114,21 @@ class _AddTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(icon, color: fg),
+          // Same badge on every tile: the tiles are peers, so none should
+          // look selected.
+          Container(
+            width: AppSpacing.circleButton,
+            height: AppSpacing.circleButton,
+            decoration: const BoxDecoration(
+              color: AppColors.accent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: AppColors.textOnAccent,
+              size: AppSpacing.iconMd,
+            ),
+          ),
           Text(label, style: AppTextStyles.chip.copyWith(color: fg)),
         ],
       ),

@@ -1772,6 +1772,12 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsTitle;
 
+  /// No description provided for @settingsHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'App\nSettings'**
+  String get settingsHeader;
+
   /// No description provided for @settingsLanguage.
   ///
   /// In en, this message translates to:
@@ -2789,7 +2795,7 @@ abstract class AppLocalizations {
   /// No description provided for @moreSheetSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Doctors, records, expenses, health logs and settings'**
+  /// **'Doctors, records, health logs and more'**
   String get moreSheetSubtitle;
 
   /// No description provided for @unitTabletPlural.
@@ -3709,6 +3715,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show your doctor'**
   String get reportShowDoctor;
+
+  /// No description provided for @reportHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'For your\nDoctor'**
+  String get reportHeader;
 
   /// No description provided for @reportMoreHint.
   ///

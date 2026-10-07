@@ -33,14 +33,6 @@ class MedicineTypeGrid extends StatelessWidget {
     MedicineForm.other,
   ];
 
-  // Tile colors follow the reference: olive, mint, cream, moss.
-  static List<Color> get _colors => [
-    AppColors.olive,
-    AppColors.mint,
-    AppColors.cream,
-    AppColors.moss,
-  ];
-
   bool get _isOther => !_primary.contains(value);
 
   @override
@@ -58,18 +50,18 @@ class MedicineTypeGrid extends StatelessWidget {
           crossAxisSpacing: isTablet ? AppSpacing.md : AppSpacing.lg,
           childAspectRatio: isTablet ? 0.95 : AppSpacing.medTypeAspect,
           children: [
-            for (final (i, form) in _primary.indexed)
+            for (final form in _primary)
               MedicineTypeTile(
                 label: form.label(context.l10n),
                 image: form.image,
-                color: _colors[i],
+                color: AppColors.olive,
                 selected: value == form,
                 onTap: () => onChanged(form),
               ),
             MedicineTypeTile(
               label: MedicineForm.other.label(context.l10n),
               image: AppImages.medOther,
-              color: _colors.last,
+              color: AppColors.olive,
               selected: _isOther,
               onTap: () => onChanged(MedicineForm.other),
             ),

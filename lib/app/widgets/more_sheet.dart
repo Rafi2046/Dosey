@@ -105,7 +105,7 @@ Future<void> showMoreSheet(
               ),
               _MoreTile(
                 icon: Icons.bloodtype_rounded,
-                color: AppColors.error,
+                color: AppColors.accent,
                 title: l10n.sugarShortTitle,
                 subtitle: l10n.moreSugarHint,
                 selected: false,

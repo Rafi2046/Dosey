@@ -37,8 +37,11 @@ class RecordsScreen extends ConsumerWidget {
         ScreenHeader(
           title: context.l10n.recordsTitle,
           subtitle: switch (records.value) {
-            final list? => context.l10n.headerRecordsCount(list.length),
-            null => null,
+            // Empty: the empty state below already says so.
+            final list? when list.isNotEmpty => context.l10n.headerRecordsCount(
+              list.length,
+            ),
+            _ => null,
           },
         ),
         FilterPills<RecordType>(

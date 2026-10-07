@@ -14,7 +14,7 @@ import '../../../core/utils/date_format.dart';
 import '../../../core/utils/enum_labels.dart';
 import '../../../core/utils/numbers.dart';
 import '../../../core/utils/share_providers.dart';
-import '../../../core/widgets/cream_scaffold.dart';
+import '../../../core/widgets/screen_header.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../../blood_pressure/domain/bp_category.dart';
 import '../../blood_pressure/providers/blood_pressure_providers.dart';
@@ -74,17 +74,33 @@ class _DoctorReportScreenState extends ConsumerState<DoctorReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CreamScaffold(
-      title: context.l10n.reportShowDoctor,
-      bottomBar: PillButton(
-        label: context.l10n.reportShare,
-        trailingIcon: Icons.ios_share_rounded,
-        loading: _sharing,
-        onPressed: _share,
-      ),
-      body: ListView(
-        padding: AppSpacing.screenPadding.copyWith(bottom: AppSpacing.xl),
-        children: [RepaintBoundary(key: _paper, child: const _ReportPaper())],
+    return Scaffold(
+      backgroundColor: AppColors.sage,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                padding: AppSpacing.screenPadding.copyWith(
+                  bottom: AppSpacing.xl,
+                ),
+                children: [
+                  ScreenHeader(title: context.l10n.reportHeader),
+                  RepaintBoundary(key: _paper, child: const _ReportPaper()),
+                ],
+              ),
+            ),
+            Padding(
+              padding: AppSpacing.bottomBarPadding,
+              child: PillButton(
+                label: context.l10n.reportShare,
+                trailingIcon: Icons.ios_share_rounded,
+                loading: _sharing,
+                onPressed: _share,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

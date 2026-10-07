@@ -4,7 +4,8 @@ import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/surface_card.dart';
 
 /// One tile of the "Choose Medicine Type" grid: illustration over a serif
-/// label, raised when selected.
+/// label. Unselected tiles share [color]; the selected one switches to the
+/// app's selection fill, so only it ever stands out.
 class MedicineTypeTile extends StatelessWidget {
   const MedicineTypeTile({
     super.key,
@@ -23,6 +24,7 @@ class MedicineTypeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fill = selected ? AppColors.selected : color;
     final light = SurfaceCard.isLight(color);
     return Semantics(
       selected: selected,
@@ -31,7 +33,7 @@ class MedicineTypeTile extends StatelessWidget {
         duration: AppSpacing.animFast,
         scale: selected ? 1 : AppSpacing.unselectedTileScale,
         child: SurfaceCard(
-          color: color,
+          color: fill,
           elevated: selected,
           padding: AppSpacing.cardPadding,
           onTap: onTap,
@@ -50,7 +52,11 @@ class MedicineTypeTile extends StatelessWidget {
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: light
+                style: selected
+                    ? AppTextStyles.cardTitleOnLight.copyWith(
+                        color: AppColors.onSelected,
+                      )
+                    : light
                     ? AppTextStyles.cardTitleOnLight
                     : AppTextStyles.cardTitle,
               ),
@@ -63,7 +69,11 @@ class MedicineTypeTile extends StatelessWidget {
                   child: Icon(
                     Icons.check_circle_rounded,
                     size: AppSpacing.iconSm,
-                    color: light ? AppColors.ink : AppColors.textOnDark,
+                    color: selected
+                        ? AppColors.onSelected
+                        : light
+                        ? AppColors.ink
+                        : AppColors.textOnDark,
                   ),
                 ),
               ),

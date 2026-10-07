@@ -862,6 +862,9 @@ class AppLocalizationsBn extends AppLocalizations {
   String get settingsTitle => 'সেটিংস';
 
   @override
+  String get settingsHeader => 'অ্যাপ\nসেটিংস';
+
+  @override
   String get settingsLanguage => 'ভাষা';
 
   @override
@@ -1629,7 +1632,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get moreSheetHeader => 'মেনু\nআরও';
 
   @override
-  String get moreSheetSubtitle => 'ডাক্তার, রেকর্ড, খরচ, স্বাস্থ্য লগ ও সেটিংস';
+  String get moreSheetSubtitle => 'ডাক্তার, রেকর্ড, স্বাস্থ্য লগ ও আরও';
 
   @override
   String get unitTabletPlural => 'ট্যাবলেট';
@@ -2230,6 +2233,9 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get reportShowDoctor => 'ডাক্তারকে দেখান';
+
+  @override
+  String get reportHeader => 'ডাক্তারের\nজন্য';
 
   @override
   String get reportMoreHint =>

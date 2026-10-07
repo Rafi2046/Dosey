@@ -43,8 +43,10 @@ class MedicinesScreen extends ConsumerWidget {
           trailing: const ProfilePill(),
           title: context.l10n.medicinesTitle,
           subtitle: switch (medicines.value) {
-            final list? => context.l10n.headerMedicinesCount(list.length),
-            null => null,
+            // Empty: the empty state below already says so.
+            final list? when list.isNotEmpty =>
+              context.l10n.headerMedicinesCount(list.length),
+            _ => null,
           },
         ),
         ChoicePills<bool>(

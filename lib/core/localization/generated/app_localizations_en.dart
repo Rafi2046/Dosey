@@ -864,6 +864,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTitle => 'Settings';
 
   @override
+  String get settingsHeader => 'App\nSettings';
+
+  @override
   String get settingsLanguage => 'Language';
 
   @override
@@ -1645,8 +1648,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moreSheetHeader => 'Menu\nMore';
 
   @override
-  String get moreSheetSubtitle =>
-      'Doctors, records, expenses, health logs and settings';
+  String get moreSheetSubtitle => 'Doctors, records, health logs and more';
 
   @override
   String get unitTabletPlural => 'tablets';
@@ -2253,6 +2255,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reportShowDoctor => 'Show your doctor';
+
+  @override
+  String get reportHeader => 'For your\nDoctor';
 
   @override
   String get reportMoreHint => 'A one-page summary to share before a visit';

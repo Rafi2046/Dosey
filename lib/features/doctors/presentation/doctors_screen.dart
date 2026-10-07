@@ -29,8 +29,11 @@ class DoctorsScreen extends ConsumerWidget {
         ScreenHeader(
           title: context.l10n.doctorsTitle,
           subtitle: switch (doctors.value) {
-            final list? => context.l10n.headerDoctorsCount(list.length),
-            null => null,
+            // Empty: the empty state below already says so.
+            final list? when list.isNotEmpty => context.l10n.headerDoctorsCount(
+              list.length,
+            ),
+            _ => null,
           },
         ),
         AsyncValueView(

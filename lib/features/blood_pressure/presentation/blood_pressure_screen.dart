@@ -62,7 +62,6 @@ class BloodPressureScreen extends ConsumerWidget {
               children: [
                 ScreenHeader(
                   title: l10n.bpTitle,
-                  showBack: false,
                   // Empty: the empty state below already says so.
                   subtitle: list == null || list.isEmpty
                       ? null

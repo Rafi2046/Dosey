@@ -51,8 +51,10 @@ class RemindersScreen extends ConsumerWidget {
           trailing: const ProfilePill(),
           title: context.l10n.remindersTitle,
           subtitle: switch (reminders.value) {
-            final list? => context.l10n.headerRemindersCount(list.length),
-            null => null,
+            // Empty: the empty state below already says so.
+            final list? when list.isNotEmpty =>
+              context.l10n.headerRemindersCount(list.length),
+            _ => null,
           },
         ),
         FilterPills<ReminderType>(

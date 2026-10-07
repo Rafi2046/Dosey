@@ -74,7 +74,7 @@ class BloodPressureScreen extends ConsumerWidget {
                       ? EmptyState(
                           title: l10n.bpEmpty,
                           message: l10n.bpEmptyHint,
-                          image: null,
+                          image: AppImages.emptyBloodPressure,
                         )
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,

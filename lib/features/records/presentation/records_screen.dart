@@ -53,7 +53,7 @@ class RecordsScreen extends ConsumerWidget {
           data: (list) => list.isEmpty
               ? EmptyState(
                   title: context.l10n.noRecords,
-                  image: AppImages.samplePrescription,
+                  image: AppImages.emptyRecords,
                   actionLabel: context.l10n.addRecord,
                   onAction: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(

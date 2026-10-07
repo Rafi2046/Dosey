@@ -88,7 +88,7 @@ class _DoseHistoryScreenState extends ConsumerState<DoseHistoryScreen> {
                 ? EmptyState(
                     title: l10n.historyEmpty,
                     message: l10n.historyEmptyHint,
-                    image: null,
+                    image: AppImages.emptyHistory,
                   )
                 : _HistoryBody(history: h),
           ),

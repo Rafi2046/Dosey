@@ -72,7 +72,7 @@ class BloodSugarScreen extends ConsumerWidget {
                       ? EmptyState(
                           title: l10n.sugarEmpty,
                           message: l10n.sugarEmptyHint,
-                          image: null,
+                          image: AppImages.emptyBloodSugar,
                         )
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,

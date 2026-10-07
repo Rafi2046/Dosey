@@ -38,7 +38,7 @@ class DoctorsScreen extends ConsumerWidget {
           data: (list) => list.isEmpty
               ? EmptyState(
                   title: context.l10n.noDoctors,
-                  image: AppImages.medOther,
+                  image: AppImages.emptyDoctors,
                   actionLabel: context.l10n.addDoctor,
                   onAction: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(

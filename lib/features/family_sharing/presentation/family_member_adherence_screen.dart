@@ -860,11 +860,7 @@ class _FamilyMemberAdherenceScreenState
       padding: const EdgeInsets.all(AppSpacing.xl),
       child: Column(
         children: [
-          Icon(
-            Icons.medication_outlined,
-            size: 48,
-            color: AppColors.inkMuted,
-          ),
+          Image.asset(AppImages.emptyHistory, height: 96),
           AppSpacing.gapMd,
           Text(
             'No Shared Doses Found Today',

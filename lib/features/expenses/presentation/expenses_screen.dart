@@ -80,7 +80,7 @@ class ExpensesScreen extends ConsumerWidget {
               ? EmptyState(
                   title: context.l10n.noExpenses,
                   message: context.l10n.expensesEmptyBody,
-                  image: null,
+                  image: AppImages.emptyExpenses,
                   compact: true,
                   actionLabel: context.l10n.addExpense,
                   onAction: () => _openForm(context),

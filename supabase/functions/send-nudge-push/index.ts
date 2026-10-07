@@ -1,17 +1,20 @@
 // Sends a caregiver nudge to the patient's devices through FCM, so it
 // arrives while Dosey is in the background or closed.
 //
-// Called by the `family_nudges_push` trigger (see family_sharing_schema.sql)
-// with `{ "nudge_id": "<uuid>" }`. It loads the nudge itself with the service
-// role, so a forged call can at most re-send a real, still-unread nudge.
+// Called by the `family_nudges_push` trigger (see harden_family_sharing.sql)
+// with `{ "nudge_id": "<uuid>" }` and the `x-nudge-secret` header. Deployed
+// with --no-verify-jwt, since the trigger has no user token: the shared
+// secret is what keeps everyone else out.
 //
-// Secrets: FIREBASE_SERVICE_ACCOUNT (the Firebase service-account JSON).
+// Secrets: FIREBASE_SERVICE_ACCOUNT (the Firebase service-account JSON),
+// NUDGE_PUSH_SECRET (the same value as Vault's `nudge_push_secret`).
 // SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are provided by Supabase.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { importPKCS8, SignJWT } from "npm:jose@5";
 
 // Same key as AppConstants.channelGentle in the app.
+
 const ANDROID_CHANNEL = "dosey_gentle_v2";
 
 const supabase = createClient(
@@ -20,10 +23,11 @@ const supabase = createClient(
 );
 
 const serviceAccount = JSON.parse(Deno.env.get("FIREBASE_SERVICE_ACCOUNT")!);
+const pushSecret = Deno.env.get("NUDGE_PUSH_SECRET") ?? "";
 
 let cachedToken: { value: string; expiresAt: number } | null = null;
 
-/** OAuth access token for the FCM HTTP v1 API, cached until near expiry. */
+
 async function accessToken(): Promise<string> {
   const now = Math.floor(Date.now() / 1000);
   if (cachedToken && cachedToken.expiresAt - 60 > now) return cachedToken.value;
@@ -53,7 +57,6 @@ async function accessToken(): Promise<string> {
   return cachedToken.value;
 }
 
-/** Sends one push. Returns "ok", "stale" (token no longer valid) or "failed". */
 async function send(
   token: string,
   title: string,
@@ -92,13 +95,17 @@ async function send(
 }
 
 Deno.serve(async (req) => {
+
+  if (!pushSecret || req.headers.get("x-nudge-secret") !== pushSecret) {
+    return new Response("unauthorized", { status: 401 });
+  }
+
   const { nudge_id: nudgeId } = await req.json().catch(() => ({}));
   if (typeof nudgeId !== "string") {
     return new Response("nudge_id required", { status: 400 });
   }
 
-  // Claim the nudge so the app's in-app listener doesn't show it again.
-  // If the app already claimed it (it was open), there's nothing to do.
+
   const { data: nudge, error } = await supabase
     .from("family_nudges")
     .update({ is_read: true })
@@ -117,7 +124,7 @@ Deno.serve(async (req) => {
     .select("token")
     .eq("uid", nudge.patient_uid);
   if (!devices?.length) {
-    // No registered device: leave it for the app to deliver when opened.
+
     await release();
     return Response.json({ sent: 0, reason: "no devices" });
   }

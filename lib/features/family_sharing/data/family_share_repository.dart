@@ -113,12 +113,21 @@ class FamilyShareRepository {
 
     try {
       // The server checks the code (it alone can see unclaimed shares) and
-      // links this caregiver, pending the patient's approval.
+      // links this caregiver, pending the patient's approval. A wrong code
+      // comes back empty rather than as an error, so the attempt still counts
+      // towards the server's limit.
       final data = await _supabase.rpc(
         'redeem_share_code',
         params: {'p_code': sanitizedCode, 'p_caregiver_name': caregiverName},
       );
-      return FamilyShare.fromJson(Map<String, dynamic>.from(data as Map));
+      if (data is! Map || data['id'] == null) {
+        throw const FamilyShareException(
+          'Invalid or expired share code. Please ask your family member for a new code.',
+        );
+      }
+      return FamilyShare.fromJson(Map<String, dynamic>.from(data));
+    } on FamilyShareException {
+      rethrow;
     } on PostgrestException catch (e) {
       debugPrint('[FamilyShareRepository] Error redeeming share code: $e');
       // The function's own messages ("This share code has expired.") are

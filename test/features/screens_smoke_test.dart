@@ -287,7 +287,7 @@ void main() {
   ) async {
     await pumpApp(tester);
 
-    expect(find.text(en.dashboardTitle), findsOneWidget);
+    expect(findDashboardTitle(en.dashboardTitle), findsOneWidget);
     // 10:15 → 13:00 Vitamin D is next.
     expect(
       find.text(en.nextTypeIn(en.typeMedicine, '2 h 45 min')),
@@ -468,11 +468,9 @@ void main() {
           .insert(AppSettingsCompanion.insert(key: 'user_name', value: 'Rafi')),
     );
     await pumpApp(tester);
-    // 10:15 in the test clock.
-    expect(
-      find.text(en.greetingWithName(en.goodMorning, 'Rafi')),
-      findsOneWidget,
-    );
+    // 10:15 in the test clock: the greeting over the name.
+    expect(find.text(en.goodMorning), findsOneWidget);
+    expect(find.text('Rafi'), findsOneWidget);
     await unmount(tester);
   });
 
@@ -499,7 +497,7 @@ void main() {
     await openTab(tester, HomeTab.medicines);
     await tester.binding.handlePopRoute();
     await settle(tester);
-    expect(find.text(en.dashboardTitle), findsOneWidget);
+    expect(findDashboardTitle(en.dashboardTitle), findsOneWidget);
     expect(find.text(en.exitTitle), findsNothing);
 
     // Home: asks; "Stay" keeps the app open.
@@ -1209,7 +1207,7 @@ void main() {
       );
 
       await pumpApp(tester);
-      expect(find.text(en.dashboardTitle), findsOneWidget);
+      expect(findDashboardTitle(en.dashboardTitle), findsOneWidget);
 
       await tester.tap(find.byTooltip(en.settingsTitle));
       await settle(tester);
@@ -1223,7 +1221,7 @@ void main() {
       // English "Back" tooltip, so pop directly.)
       Navigator.of(tester.element(find.text(bn.settingsTitle))).pop();
       await settle(tester);
-      expect(find.text(bn.dashboardTitle), findsOneWidget);
+      expect(findDashboardTitle(bn.dashboardTitle), findsOneWidget);
       expect(find.byTooltip(HomeTab.reminders.label(bn)), findsWidgets);
 
       // "Phone default" forgets the choice; the test device is English.
@@ -1334,7 +1332,7 @@ void main() {
     await settle(tester);
 
     // Back on Home, told what happened.
-    expect(find.text(en.dashboardTitle), findsOneWidget);
+    expect(findDashboardTitle(en.dashboardTitle), findsOneWidget);
     expect(find.text(en.allDataDeleted), findsOneWidget);
     for (final table in <TableInfo>[
       db.medicines,

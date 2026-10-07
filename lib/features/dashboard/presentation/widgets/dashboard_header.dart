@@ -34,9 +34,15 @@ class DashboardHeader extends ConsumerWidget {
     final profiles = ref.watch(profilesProvider).value ?? const [];
     final activeProfile = ref.watch(activeProfileProvider);
     final hasMultipleProfiles = profiles.length > 1;
-    final displayName = activeProfile != null
-        ? profileName(context.l10n, activeProfile)
-        : (name ?? '');
+    // The user's own, unnamed profile shows their name ("Rafi", not "Me");
+    // "Me" only when there's no name and a family member to switch to.
+    final ownName = name ?? '';
+    final displayName = switch (activeProfile) {
+      final p? when p.name.isNotEmpty => p.name,
+      _ when ownName.isNotEmpty => ownName,
+      _ when hasMultipleProfiles => context.l10n.profileMe,
+      _ => '',
+    };
 
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.lg),

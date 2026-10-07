@@ -204,6 +204,8 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
       ),
       body: Form(
         key: _formKey,
+        // A fixed field clears its error as soon as it is valid again.
+        autovalidateMode: AutovalidateMode.onUserInteractionIfError,
         child: ListView(
           padding: AppSpacing.screenPadding,
           children: [

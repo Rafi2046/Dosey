@@ -129,7 +129,15 @@ class _AddTile extends StatelessWidget {
               size: AppSpacing.iconMd,
             ),
           ),
-          Text(label, style: AppTextStyles.chip.copyWith(color: fg)),
+          // Shrinks to fit long labels or big fonts instead of overflowing.
+          Flexible(
+            child: Text(
+              label,
+              style: AppTextStyles.chip.copyWith(color: fg),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );

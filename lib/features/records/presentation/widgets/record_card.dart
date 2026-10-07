@@ -134,9 +134,12 @@ class RecordCard extends StatelessWidget {
                       color: muted,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      AppDateFormat.date(r.recordDate),
-                      style: caption,
+                    Flexible(
+                      child: Text(
+                        AppDateFormat.date(r.recordDate),
+                        style: caption,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),

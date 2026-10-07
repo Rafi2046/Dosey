@@ -4,7 +4,6 @@ import 'package:dosey/core/notifications/permission_service.dart';
 import 'package:dosey/features/alarm/presentation/alarm_ring_screen.dart';
 import 'package:dosey/app/widgets/app_nav_bar.dart';
 import 'package:dosey/features/lock/providers/app_lock_providers.dart';
-import 'package:dosey/features/profiles/presentation/profile_widgets.dart';
 import 'package:dosey/features/reminders/data/reminders_repository.dart';
 import 'package:dosey/core/widgets/app_switch.dart';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
@@ -108,7 +107,7 @@ void main() {
     expect(find.text(en.onboardingEssentialHint), findsNothing);
     await tester.tap(find.text(en.onboardingFinish));
     await settle(tester);
-    expect(find.text(en.dashboardTitle), findsOneWidget);
+    expect(findDashboardTitle(en.dashboardTitle), findsOneWidget);
     expect(await setting(tester, 'onboarding_done'), '1');
     await unmount(tester);
   });
@@ -232,7 +231,7 @@ void main() {
     permissions.grantedSet.addAll(AppPermission.values);
     await tester.pumpWidget(app());
     await settle(tester);
-    expect(find.text(en.dashboardTitle), findsOneWidget);
+    expect(findDashboardTitle(en.dashboardTitle), findsOneWidget);
 
     final at = DateTime(2026, 10, 3, 9);
     await dbRun(tester, () async {
@@ -444,13 +443,16 @@ void main() {
       // Asked straight away; a failed attempt keeps it locked.
       expect(find.text(en.appLockLocked), findsOneWidget);
       expect(asked, [en.appLockReason]);
-      expect(find.text(en.dashboardTitle).hitTestable(), findsNothing);
+      expect(findDashboardTitle(en.dashboardTitle).hitTestable(), findsNothing);
 
       owner = true;
       await tester.tap(find.text(en.appLockUnlock));
       await settle(tester);
       expect(find.text(en.appLockLocked), findsNothing);
-      expect(find.text(en.dashboardTitle).hitTestable(), findsOneWidget);
+      expect(
+        findDashboardTitle(en.dashboardTitle).hitTestable(),
+        findsOneWidget,
+      );
 
       // A short trip away doesn't lock; a longer one does.
       void away(Duration d) {
@@ -577,7 +579,7 @@ void main() {
     await tester.pumpWidget(app());
     await settle(tester);
     // One profile: no switcher anywhere.
-    expect(find.byType(ProfilePill), findsOneWidget);
+    expect(find.byIcon(Icons.expand_more_rounded), findsNothing);
     expect(find.text(en.profileMe), findsNothing);
 
     // Settings › Family profiles › Add "Ammu".

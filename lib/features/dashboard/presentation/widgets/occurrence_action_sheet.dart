@@ -527,7 +527,8 @@ class _OccurrenceDetailPopupState
                                 ),
                               ),
                               SizedBox(width: isTablet ? 10 : 8),
-                              Text(
+                              Expanded(
+                                child: Text(
                                 courseProgress.isComplete
                                     ? l10n.courseComplete
                                     : courseProgress.notStarted
@@ -547,8 +548,9 @@ class _OccurrenceDetailPopupState
                                   fontWeight: FontWeight.w700,
                                   color: textColor,
                                 ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                              const Spacer(),
                               if (!courseProgress.isComplete &&
                                   !courseProgress.notStarted)
                                 Container(
@@ -865,7 +867,8 @@ class _OccurrenceDetailPopupState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      InkWell(
+                      Flexible(
+                        child: InkWell(
                         onTap: _edit,
                         borderRadius: BorderRadius.circular(8),
                         child: Padding(
@@ -882,7 +885,8 @@ class _OccurrenceDetailPopupState
                                 color: mutedColor,
                               ),
                               const SizedBox(width: 5),
-                              Text(
+                              Flexible(
+                                child: Text(
                                 l10n.editReminder,
                                 style: TextStyle(
                                   fontFamily: 'PlusJakartaSans',
@@ -891,12 +895,16 @@ class _OccurrenceDetailPopupState
                                   fontWeight: FontWeight.w600,
                                   color: mutedColor,
                                 ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      InkWell(
+                      ),
+                      Flexible(
+                        child: InkWell(
                         onTap: _delete,
                         borderRadius: BorderRadius.circular(8),
                         child: Padding(
@@ -915,7 +923,8 @@ class _OccurrenceDetailPopupState
                                     : const Color(0xFFFF7D7D),
                               ),
                               const SizedBox(width: 5),
-                              Text(
+                              Flexible(
+                                child: Text(
                                 l10n.deleteThisTime,
                                 style: TextStyle(
                                   fontFamily: 'PlusJakartaSans',
@@ -926,10 +935,13 @@ class _OccurrenceDetailPopupState
                                       ? AppColors.error
                                       : const Color(0xFFFF7D7D),
                                 ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),
                         ),
+                      ),
                       ),
                     ],
                   ),

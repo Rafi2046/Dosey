@@ -1803,6 +1803,8 @@ class _FamilySharingAuthSheetState
 
     return Form(
       key: _formKey,
+      // A fixed field clears its error as soon as it is valid again.
+      autovalidateMode: AutovalidateMode.onUserInteractionIfError,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -1977,6 +1979,8 @@ class _FamilySharingAuthSheetState
   Widget _buildResetPasswordContent() {
     return Form(
       key: _formKey,
+      // A fixed field clears its error as soon as it is valid again.
+      autovalidateMode: AutovalidateMode.onUserInteractionIfError,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

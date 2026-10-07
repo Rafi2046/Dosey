@@ -6,6 +6,7 @@ import 'package:dosey/core/notifications/notification_providers.dart';
 import 'package:dosey/core/notifications/reminder_alarm_engine.dart';
 import 'package:dosey/core/storage/storage_providers.dart';
 import 'package:dosey/core/utils/clock_providers.dart';
+import 'package:dosey/features/dashboard/presentation/widgets/animated_dashboard_title.dart';
 import 'package:dosey/features/onboarding/providers/permissions_provider.dart';
 import 'package:dosey/features/reminders/data/reminders_repository.dart';
 import 'package:flutter/material.dart';
@@ -81,3 +82,9 @@ Future<void> unmount(WidgetTester tester) async {
   await tester.pumpWidget(const SizedBox.shrink());
   await tester.pump(const Duration(seconds: 1));
 }
+
+/// The Home headline showing [title]. It types itself in, so its text is
+/// partial for a while; match the widget instead.
+Finder findDashboardTitle(String title) => find.byWidgetPredicate(
+  (w) => w is AnimatedDashboardTitle && w.title == title,
+);

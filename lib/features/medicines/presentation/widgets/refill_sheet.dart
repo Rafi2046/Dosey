@@ -86,6 +86,8 @@ class _RefillSheetState extends ConsumerState<_RefillSheet> {
       ),
       child: Form(
         key: _formKey,
+        // A fixed field clears its error as soon as it is valid again.
+        autovalidateMode: AutovalidateMode.onUserInteractionIfError,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

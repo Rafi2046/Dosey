@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/constants.dart';
 
 /// Animated typewriter / ticker headline for the dashboard title.
-/// Types in with Nothing OS dot-matrix styling and a blinking accent cursor,
-/// holds, and smoothly cycles.
+/// Types in with Nothing OS dot-matrix styling and a blinking accent cursor.
+/// A single title types in once and then stays put (no timers left running);
+/// with a [secondaryTitle] the two cycle.
 class AnimatedDashboardTitle extends StatefulWidget {
   const AnimatedDashboardTitle({
     super.key,
@@ -57,8 +58,7 @@ class _AnimatedDashboardTitleState extends State<AnimatedDashboardTitle>
       _phrases
         ..clear()
         ..add(widget.title);
-      if (widget.secondaryTitle != null &&
-          widget.secondaryTitle!.isNotEmpty) {
+      if (widget.secondaryTitle != null && widget.secondaryTitle!.isNotEmpty) {
         _phrases.add(widget.secondaryTitle!);
       }
       _charIndex = 0;
@@ -83,6 +83,9 @@ class _AnimatedDashboardTitleState extends State<AnimatedDashboardTitle>
         if (_charIndex < currentPhrase.length) {
           _charIndex++;
           _scheduleNextTick(const Duration(milliseconds: 65));
+        } else if (_phrases.length == 1) {
+          // Fully typed and nothing to cycle to: stop, cursor and all.
+          _stop();
         } else {
           // Finished typing phrase, hold before deleting/cycling
           _scheduleNextTick(const Duration(milliseconds: 3500));
@@ -103,6 +106,14 @@ class _AnimatedDashboardTitleState extends State<AnimatedDashboardTitle>
     });
   }
 
+  /// Shows the whole title and cancels both timers.
+  void _stop() {
+    _timer?.cancel();
+    _cursorTimer?.cancel();
+    _charIndex = _phrases[_currentPhraseIndex % _phrases.length].length;
+    _showCursor = false;
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
@@ -112,8 +123,15 @@ class _AnimatedDashboardTitleState extends State<AnimatedDashboardTitle>
 
   @override
   Widget build(BuildContext context) {
+    // "Remove animations" on the phone: just show the title.
+    if (MediaQuery.disableAnimationsOf(context) && _phrases.length == 1) {
+      _stop();
+    }
     final currentPhrase = _phrases[_currentPhraseIndex % _phrases.length];
-    final displayedText = currentPhrase.substring(0, _charIndex.clamp(0, currentPhrase.length));
+    final displayedText = currentPhrase.substring(
+      0,
+      _charIndex.clamp(0, currentPhrase.length),
+    );
 
     final hasBangla = RegExp(r'[\u0980-\u09FF]').hasMatch(currentPhrase);
     final titleStyle = hasBangla
@@ -130,35 +148,40 @@ class _AnimatedDashboardTitleState extends State<AnimatedDashboardTitle>
 
     // Measure or preserve stable container height to avoid layout shift
     return Padding(
-      padding: const EdgeInsets.only(
-        top: AppSpacing.md,
-        bottom: AppSpacing.md,
-      ),
+      padding: const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.md),
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 84),
-        child: RichText(
-          text: TextSpan(
-            style: titleStyle,
-            children: [
-              TextSpan(text: displayedText),
-              WidgetSpan(
-                alignment: PlaceholderAlignment.baseline,
-                baseline: TextBaseline.alphabetic,
-                child: AnimatedOpacity(
-                  opacity: _showCursor ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 120),
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 3),
-                    width: 7,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      color: AppColors.accent,
-                      borderRadius: BorderRadius.circular(1.5),
+        // Screen readers get the whole title, not the half-typed text.
+        child: Semantics(
+          header: true,
+          label: currentPhrase.replaceAll('\n', ' '),
+          child: ExcludeSemantics(
+            // Text.rich (not RichText) so it follows the phone's font size.
+            child: Text.rich(
+              TextSpan(
+                style: titleStyle,
+                children: [
+                  TextSpan(text: displayedText),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.baseline,
+                    baseline: TextBaseline.alphabetic,
+                    child: AnimatedOpacity(
+                      opacity: _showCursor ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 120),
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 3),
+                        width: 7,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: AppColors.accent,
+                          borderRadius: BorderRadius.circular(1.5),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

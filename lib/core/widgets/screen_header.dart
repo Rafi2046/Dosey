@@ -83,17 +83,28 @@ class ScreenHeader extends StatelessWidget {
                     ],
                   ),
                 ),
-              // One line, shrinking for long words or big fonts.
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  lines.last,
-                  style: onLight
-                      ? AppTextStyles.headlineOnLight
-                      : AppTextStyles.headline,
-                  maxLines: 1,
-                ),
+              // The arrow sits on the title's line, like an app bar.
+              Row(
+                children: [
+                  if (effectiveShowBack)
+                    BackArrowButton(
+                      color: onLight ? AppColors.ink : AppColors.textOnDark,
+                    ),
+                  // One line, shrinking for long words or big fonts.
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        lines.last,
+                        style: onLight
+                            ? AppTextStyles.headlineOnLight
+                            : AppTextStyles.headline,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               if (subtitle != null)
                 Text(
@@ -107,20 +118,6 @@ class ScreenHeader extends StatelessWidget {
         if (trailing != null) ...[AppSpacing.gapMd, trailing!],
       ],
     );
-    return Padding(
-      padding: padding,
-      child: effectiveShowBack
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                BackArrowButton(
-                  color: onLight ? AppColors.ink : AppColors.textOnDark,
-                ),
-                AppSpacing.gapSm,
-                header,
-              ],
-            )
-          : header,
-    );
+    return Padding(padding: padding, child: header);
   }
 }

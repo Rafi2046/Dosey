@@ -1,3 +1,4 @@
+import '../../../core/constants/constants.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/utils/enum_labels.dart';
@@ -103,7 +104,7 @@ abstract final class ReminderText {
     final slot = switch (hour) {
       >= 5 && < 12 => l.morning,
       >= 12 && < 17 => l.afternoon,
-      >= 17 && < 21 => l.evening,
+      >= 17 && < AppConstants.doseBedtimeHour => l.evening,
       _ => l.bedtime,
     };
     return '$slot ${r.type.label(l)}';

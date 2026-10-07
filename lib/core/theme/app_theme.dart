@@ -74,7 +74,9 @@ abstract final class AppTheme {
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.selected)
-            ? AppColors.creamLight
+            // White on the accent track in both modes (creamLight is
+            // near-black in dark mode).
+            ? AppColors.textOnAccent
             : AppColors.textOnDarkMuted,
       ),
       trackColor: WidgetStateProperty.resolveWith(

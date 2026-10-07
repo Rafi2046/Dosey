@@ -142,6 +142,8 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
       ),
       body: Form(
         key: _formKey,
+        // A fixed field clears its error as soon as it is valid again.
+        autovalidateMode: AutovalidateMode.onUserInteractionIfError,
         // Not a lazy ListView: every card must be built so the Form can
         // validate (and show errors on) all of them, even off-screen ones.
         child: SingleChildScrollView(

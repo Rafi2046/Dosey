@@ -1187,5 +1187,504 @@
   "offlineTitle": "No internet connection",
   "offlineBody": "Family Sharing needs the internet to sync with your family. Connect to Wi-Fi or mobile data and try again.\n\nYour medicines, reminders and everything else keep working offline.",
   "offlineRetry": "Try again",
-  "offlineDismiss": "OK"
+  "offlineDismiss": "OK",
+  "fsResetEmailSent": "Password reset email sent to {email}!",
+  "@fsResetEmailSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "fsAccountCreated": "Account created! Check your email to verify it.",
+  "fsSignedIn": "Signed in successfully!",
+  "fsSignedInGoogle": "Signed in with Google!",
+  "fsSignedInApple": "Signed in with Apple!",
+  "fsSignedOut": "Signed out successfully.",
+  "fsDeleteAccountTitle": "Delete Account?",
+  "fsDeleteAccountBody": "This will permanently delete your cloud account and unlink all family members. Your local medicine data on this device will remain intact.",
+  "fsDeleteAccount": "Delete Account",
+  "fsAccountDeleted": "Account deleted.",
+  "fsYourDisplayName": "Your Display Name",
+  "fsDisplayNameHint": "e.g. Rahat, Dad, Mom",
+  "fsNameUpdated": "Name updated to \"{name}\"",
+  "@fsNameUpdated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsNameUpdateFailed": "Failed to update name: {error}",
+  "@fsNameUpdateFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fsEnterSixCharCode": "Please enter a 6-character share code.",
+  "fsRequestSent": "Connection request sent! Waiting for your family member to accept.",
+  "fsLinkAccepted": "Link accepted! {name} is now linked.",
+  "@fsLinkAccepted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsCaregiver": "Caregiver",
+  "fsRequestDeclined": "Link request declined.",
+  "fsNothingToSync": "No medicines found in today's schedule to sync.",
+  "fsSynced": "{count, plural, =1{Synced 1 medicine to the cloud! ✅} other{Synced {count} medicines to the cloud! ✅}}",
+  "@fsSynced": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fsOverline": "FAMILY SHARING",
+  "fsTitle": "Caregiver & Family Mode",
+  "fsFamilyAccount": "Family Account",
+  "fsCloudActive": "Cloud Active",
+  "fsMyCode": "My Code",
+  "fsEnterCode": "Enter Code",
+  "fsSignOut": "Sign Out",
+  "fsShareTitle": "Share Your Doses & Reminders",
+  "fsShareSubtitle": "Let family members monitor your medication adherence",
+  "fsStepGenerateTitle": "Generate your 6-character code below",
+  "fsStepGenerateBody": "Your unique code connects caregiver devices.",
+  "fsStepSendTitle": "Send it to your caregiver or family member",
+  "fsStepSendBody": "They enter this code in their Dosey app.",
+  "fsStepApproveTitle": "Approve incoming link requests",
+  "fsStepApproveBody": "Review and accept requests from your family members.",
+  "fsGenerateCode": "Generate Share Code",
+  "fsIncomingRequests": "Incoming Link Requests ({count})",
+  "@fsIncomingRequests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fsFamilyCaregiver": "Family Caregiver",
+  "fsWantsToConnect": "Wants to connect using code {code}",
+  "@fsWantsToConnect": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "fsDecline": "Decline",
+  "fsAccept": "Accept",
+  "fsLinkedCaregivers": "Linked Caregivers ({count})",
+  "@fsLinkedCaregivers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fsActiveSyncCode": "Active sync • Code: {code}",
+  "@fsActiveSyncCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "fsUnlink": "Unlink",
+  "fsUnlinkCaregiverTitle": "Unlink Caregiver",
+  "fsUnlinkCaregiverBody": "Are you sure you want to unlink {name}? They will no longer be able to see your adherence schedule.",
+  "@fsUnlinkCaregiverBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsThisCaregiver": "this caregiver",
+  "fsSyncNow": "Sync Medicines to Caregivers Now",
+  "fsYourCodeLabel": "YOUR 6-CHARACTER SHARE CODE",
+  "fsCopyCode": "Copy Code",
+  "fsCodeCopied": "Code \"{code}\" copied to clipboard!",
+  "@fsCodeCopied": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "fsShareCode": "Share Code",
+  "fsShareMessage": "Here is my Dosey family share code: {code}\n\nEnter it in your Dosey app under Settings > Caregiver & Family Mode to link our accounts.",
+  "@fsShareMessage": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "fsCodeValidity": "Share this code with your family member. Valid for 7 days.",
+  "fsPasteCode": "Paste Code",
+  "fsLinkTitle": "Link to a Family Member",
+  "fsLinkSubtitle": "Enter their 6-character code to link profiles",
+  "fsStepAskTitle": "Ask family member for their code",
+  "fsStepAskBody": "Found under \"My Code\" on their phone.",
+  "fsStepEnterTitle": "Enter or paste the code below",
+  "fsStepEnterBody": "Tap the boxes or use the Paste button.",
+  "fsStepWaitTitle": "Wait for their approval",
+  "fsStepWaitBody": "They must accept your link request to sync.",
+  "fsSendRequest": "Send Link Request",
+  "fsPendingApproval": "Pending Approval ({count})",
+  "@fsPendingApproval": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fsFamilyMember": "Family Member",
+  "fsAwaitingApproval": "Awaiting approval • Code: {code}",
+  "@fsAwaitingApproval": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "fsConnectedMembers": "Connected Family Members ({count})",
+  "@fsConnectedMembers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fsActiveSyncTap": "Active sync • Tap to view schedule",
+  "fsRemoveMemberTitle": "Remove Family Member",
+  "fsStopMonitoring": "Are you sure you want to stop monitoring {name}?",
+  "@fsStopMonitoring": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsStopMonitoringLong": "Are you sure you want to stop monitoring {name}? You will no longer receive their adherence updates.",
+  "@fsStopMonitoringLong": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsThisMember": "this family member",
+  "fsRemove": "Remove",
+  "fsIntro": "Keep family members and caregivers in the loop. Link securely to monitor adherence and share dose reminders.",
+  "fsContinueGoogle": "Continue with Google",
+  "fsContinueApple": "Continue with Apple",
+  "fsOrEmail": "or with email",
+  "fsSignIn": "Sign In",
+  "fsCreateAccount": "Create Account",
+  "fsNameOptional": "Your Name (Optional)",
+  "fsFullNameHint": "e.g. Rahat Ahmed",
+  "fsEmailRequired": "Email is required",
+  "fsEmailInvalid": "Enter a valid email address",
+  "fsPassword": "Password",
+  "fsPasswordNewHint": "At least 6 characters",
+  "fsPasswordHint": "Enter your password",
+  "fsPasswordRequired": "Password is required",
+  "fsPasswordTooShort": "Password must be at least 6 characters",
+  "fsForgotPassword": "Forgot Password?",
+  "fsOfflineFirst": "Dosey remains 100% offline-first. Your local medicines and reminders stay safe on your device.",
+  "fsVerifyTitle": "Verify your email",
+  "fsVerifyBody": "We sent a link to {email}. Open it to confirm the address, then come back and tap \"I've verified\".",
+  "@fsVerifyBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "fsYourEmail": "your email",
+  "fsIveVerified": "I've verified",
+  "fsNotVerifiedYet": "Not verified yet. Open the link in the email first (check spam too).",
+  "fsVerificationSent": "Verification email sent to {email}.",
+  "@fsVerificationSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "fsResendEmail": "Resend email",
+  "fsUseAnotherAccount": "Use another account",
+  "fsResetTitle": "Reset Password",
+  "fsResetBody": "Enter your registered email address and we will send you a password reset link.",
+  "fsSendResetLink": "Send Reset Link",
+  "fsBackToSignIn": "Back to Sign In",
+  "fsEditMemberName": "Edit Family Member Name",
+  "fsMemberNameHint": "e.g. Dad, Mom, Rahat",
+  "fsMemberRemoved": "Removed {name} from monitored family members.",
+  "@fsMemberRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsRemoveFailed": "Failed to remove member: {error}",
+  "@fsRemoveFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fsDoseNudgeSent": "🔔 Sent reminder for {medicine} ({time})!",
+  "@fsDoseNudgeSent": {
+    "placeholders": {
+      "medicine": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "fsNudgeSent": "🔔 Gentle reminder sent to {name}'s phone!",
+  "@fsNudgeSent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsEditMemberNameTooltip": "Edit member name",
+  "fsRemoveMemberTooltip": "Remove family member",
+  "fsShareCodeLabel": "Share Code: {code}",
+  "@fsShareCodeLabel": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "fsLive": "Live",
+  "fsManageMedicinesFor": "Manage & Edit Medicines for {name}",
+  "@fsManageMedicinesFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsTodaysSchedule": "TODAY'S SCHEDULE",
+  "fsSendGentleReminder": "Send Gentle Reminder",
+  "fsScheduleLoadFailed": "Could not load shared schedule",
+  "fsPullToRetry": "Pull down to refresh and retry.",
+  "fsRemoveFromMonitoring": "Remove {name} from Monitoring",
+  "@fsRemoveFromMonitoring": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsTodaysAdherence": "Today's Adherence",
+  "fsDosesCompleted": "{taken} of {total} doses completed",
+  "@fsDosesCompleted": {
+    "placeholders": {
+      "taken": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "fsPending": "Pending",
+  "fsOneDose": "1 dose",
+  "fsNudge": "Nudge",
+  "fsNudged": "Nudged",
+  "fsNoDosesToday": "No Shared Doses Found Today",
+  "fsNoDosesBody": "When {name} opens Dosey or logs doses, their schedule will appear here automatically.",
+  "@fsNoDosesBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsAddDoseTime": "Please add at least one dose time.",
+  "fsSavedSynced": "⚡ Saved and synced to {name}'s phone!",
+  "@fsSavedSynced": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsError": "Error: {error}",
+  "@fsError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fsEditMedicineFor": "Edit Medicine for {name}",
+  "@fsEditMedicineFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsAddMedicineFor": "Add Medicine for {name}",
+  "@fsAddMedicineFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsSyncingTo": "Syncing to {name}'s phone...",
+  "@fsSyncingTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsUpdateSync": "Update & Sync",
+  "fsSaveSyncTo": "Save & Sync to {name}",
+  "@fsSaveSyncTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsMedicineName": "MEDICINE NAME",
+  "fsMedicineNameHint": "e.g. Napa Extra, Metformin, Insulin",
+  "fsNameRequired": "Name is required",
+  "fsMedicineForm": "MEDICINE FORM",
+  "fsWhenToTake": "WHEN TO TAKE",
+  "fsDosingTimes": "{count, plural, =1{DOSE TIME (ONCE A DAY)} other{DOSE TIMES ({count} TIMES A DAY)}}",
+  "@fsDosingTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fsDoseNumber": "Dose {number}",
+  "@fsDoseNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "fsAddIntakeTime": "Add Another Intake Time",
+  "fsDoseAmount": "DOSE AMOUNT",
+  "fsInitialStock": "INITIAL STOCK",
+  "fsStartDate": "START DATE",
+  "fsDoctorNotes": "DOCTOR NOTES / INSTRUCTIONS",
+  "fsDoctorNotesHint": "e.g. Take with a glass of water",
+  "fsRemoveMedicineConfirm": "Are you sure you want to remove \"{medicine}\" from {name}'s phone schedule?",
+  "@fsRemoveMedicineConfirm": {
+    "placeholders": {
+      "medicine": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsMedicineRemoved": "{medicine} removed and synced.",
+  "@fsMedicineRemoved": {
+    "placeholders": {
+      "medicine": {
+        "type": "String"
+      }
+    }
+  },
+  "fsManageMedicinesTitle": "Manage {name}'s Medicines",
+  "@fsManageMedicinesTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsLiveCaregiverSync": "Live Caregiver Sync",
+  "fsScheduledMedicines": "SCHEDULED MEDICINES ({count})",
+  "@fsScheduledMedicines": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fsPrescriptionsLoadFailed": "Could not load prescriptions",
+  "fsNoMedicinesYet": "No medicines configured yet",
+  "fsNoMedicinesBody": "Add prescriptions for {name}. Doses and timings will instantly sync to their phone alarms.",
+  "@fsNoMedicinesBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fsFeatureAlarmTitle": "Auto-Alarm Sync",
+  "fsFeatureAlarmBody": "Configures phone alarms on their device automatically",
+  "fsFeatureAdherenceTitle": "Live Adherence",
+  "fsFeatureAdherenceBody": "Monitor when doses are taken, skipped or missed",
+  "fsFeatureNudgeTitle": "1-Tap Dose Nudges",
+  "fsFeatureNudgeBody": "Send gentle reminders directly to their lock screen",
+  "fsDailyTimings": "Daily Timings: ",
+  "fsStockRemaining": "Stock remaining: {count} units",
+  "@fsStockRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "fsCaregiverMonitoring": "CAREGIVER MONITORING",
+  "fsTapToViewSchedule": "Tap to view today's schedule",
+  "fsConnected": "Family Sharing Connected",
+  "fsSettingsHint": "Link with family & caregivers",
+  "fsActive": "Active",
+  "authErrUserNotFound": "No account found with this email address.",
+  "authErrWrongPassword": "Incorrect password. Please try again.",
+  "authErrEmailInUse": "An account with this email already exists.",
+  "authErrInvalidEmail": "Please enter a valid email address.",
+  "authErrWeakPassword": "Password must be at least 6 characters.",
+  "authErrUserDisabled": "This account has been disabled.",
+  "authErrTooManyRequests": "Too many attempts. Please try again later.",
+  "authErrNotAllowed": "This sign-in method is not enabled.",
+  "authErrNetwork": "Network error. Please check your connection.",
+  "authErrInvalidCredential": "Invalid email or password. Please check and retry.",
+  "authErrRecentLogin": "Please sign out and sign in again before deleting your account.",
+  "authErrGeneric": "Authentication error occurred.",
+  "authErrEraseFailed": "Could not reach the server to erase your data. Please check your connection and try again.",
+  "authErrGoogle": "Google Sign-In failed ({code}: {message}). You can also create an account with Email & Password below.",
+  "@authErrGoogle": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "authErrConfig": "Configuration error",
+  "appTagline": "Offline-first • Privacy conscious"
 }

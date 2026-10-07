@@ -17,6 +17,8 @@ import '../domain/remote_prescription_sync_service.dart';
 import '../providers/family_share_providers.dart';
 import '../providers/shared_adherence_providers.dart';
 import 'remote_medicine_manage_screen.dart';
+import '../../../core/localization/l10n.dart';
+import '../../../core/utils/enum_labels.dart';
 
 class FamilyMemberAdherenceScreen extends ConsumerStatefulWidget {
   const FamilyMemberAdherenceScreen({
@@ -55,8 +57,8 @@ class _FamilyMemberAdherenceScreenState
     final entered = await showNameSheet(
       context,
       current: currentName,
-      label: 'Edit Family Member Name',
-      hint: 'e.g. Dad, Mom, Rahat',
+      label: context.l10n.fsEditMemberName,
+      hint: context.l10n.fsMemberNameHint,
     );
 
     if (entered == null) return;
@@ -78,7 +80,7 @@ class _FamilyMemberAdherenceScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Updated name to "$sanitized"'),
+            content: Text(context.l10n.fsNameUpdated(sanitized)),
             backgroundColor: AppColors.tileMoss,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -91,7 +93,7 @@ class _FamilyMemberAdherenceScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update name: $e'),
+            content: Text(context.l10n.fsNameUpdateFailed('$e')),
             backgroundColor: AppColors.error,
           ),
         );
@@ -106,10 +108,10 @@ class _FamilyMemberAdherenceScreenState
     if (!await ensureOnline(context) || !mounted) return;
     final confirmed = await confirmDelete(
       context,
-      title: 'Remove Family Member',
+      title: context.l10n.fsRemoveMemberTitle,
       body:
-          'Are you sure you want to stop monitoring $patientName? You will no longer receive their adherence updates.',
-      confirmLabel: 'Remove',
+          context.l10n.fsStopMonitoringLong(patientName),
+      confirmLabel: context.l10n.fsRemove,
     );
 
     if (!confirmed || !mounted) return;
@@ -123,7 +125,7 @@ class _FamilyMemberAdherenceScreenState
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Removed $patientName from monitored family members.'),
+            content: Text(context.l10n.fsMemberRemoved(patientName)),
             backgroundColor: AppColors.tileMoss,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -136,7 +138,7 @@ class _FamilyMemberAdherenceScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to remove member: $e'),
+            content: Text(context.l10n.fsRemoveFailed('$e')),
             backgroundColor: AppColors.error,
           ),
         );
@@ -168,7 +170,7 @@ class _FamilyMemberAdherenceScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              '🔔 Sent reminder for ${dose.medicineName} (${dose.time})!',
+              context.l10n.fsDoseNudgeSent(dose.medicineName, dose.time),
             ),
             backgroundColor: AppColors.moss,
             behavior: SnackBarBehavior.floating,
@@ -202,7 +204,7 @@ class _FamilyMemberAdherenceScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              '🔔 Gentle reminder sent to $patientName\'s phone!',
+              context.l10n.fsNudgeSent(patientName),
             ),
             backgroundColor: AppColors.tileMoss,
             behavior: SnackBarBehavior.floating,
@@ -251,7 +253,7 @@ class _FamilyMemberAdherenceScreenState
         widget.share;
     final patientName = currentShare.patientName?.trim().isNotEmpty == true
         ? currentShare.patientName!
-        : 'Family Member';
+        : context.l10n.fsFamilyMember;
     final user = ref.watch(currentUserProvider);
     final scheduleAsync =
         ref.watch(patientAdherenceScheduleProvider(widget.share.patientUid));
@@ -261,13 +263,13 @@ class _FamilyMemberAdherenceScreenState
       actions: [
         IconButton(
           icon: const Icon(Icons.edit_outlined, size: 20),
-          tooltip: 'Edit member name',
+          tooltip: context.l10n.fsEditMemberNameTooltip,
           onPressed: () => _handleEditPatientName(currentShare),
         ),
         IconButton(
           icon: const Icon(Icons.person_remove_outlined, size: 20),
           color: AppColors.error,
-          tooltip: 'Remove family member',
+          tooltip: context.l10n.fsRemoveMemberTooltip,
           onPressed: () => _handleRemoveMember(currentShare, patientName),
         ),
       ],
@@ -330,14 +332,14 @@ class _FamilyMemberAdherenceScreenState
                               ),
                               AppSpacing.gapXs,
                               Text(
-                                'Share Code: ${currentShare.shareCode}',
+                                context.l10n.fsShareCodeLabel(currentShare.shareCode),
                                 style: AppTextStyles.captionOnLight,
                               ),
                             ],
                           ),
                         ),
-                        const StatusChip(
-                          label: 'Live',
+                        StatusChip(
+                          label: context.l10n.fsLive,
                           icon: Icons.sync_rounded,
                           background: AppColors.tileMint,
                           foreground: Colors.white,
@@ -370,7 +372,7 @@ class _FamilyMemberAdherenceScreenState
                             const SizedBox(width: AppSpacing.sm),
                             Expanded(
                               child: Text(
-                                'Manage & Edit Medicines for $patientName',
+                                context.l10n.fsManageMedicinesFor(patientName),
                                 style: TextStyle(
                                   fontFamily: 'PlusJakartaSans',
                                   fontSize: AppSpacing.fontSm,
@@ -434,7 +436,7 @@ class _FamilyMemberAdherenceScreenState
                             ),
                             AppSpacing.gapSm,
                             Text(
-                              "TODAY'S SCHEDULE",
+                              context.l10n.fsTodaysSchedule,
                               style: AppTextStyles.overline.copyWith(
                                 fontWeight: FontWeight.w800,
                                 letterSpacing: 1.0,
@@ -458,7 +460,7 @@ class _FamilyMemberAdherenceScreenState
                       AppSpacing.gapLg,
                       // Nudge / Caregiver Action Button
                       PillButton(
-                        label: 'Send Gentle Reminder',
+                        label: context.l10n.fsSendGentleReminder,
                         trailingIcon: Icons.notifications_active_rounded,
                         tone: PillButtonTone.accent,
                         loading: _isSendingNudge,
@@ -489,13 +491,13 @@ class _FamilyMemberAdherenceScreenState
                       ),
                       AppSpacing.gapSm,
                       Text(
-                        'Could not load shared schedule',
+                        context.l10n.fsScheduleLoadFailed,
                         style: AppTextStyles.bodyOnLight.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       Text(
-                        'Pull down to refresh and retry.',
+                        context.l10n.fsPullToRetry,
                         style: AppTextStyles.caption.copyWith(
                           color: AppColors.inkMuted,
                         ),
@@ -513,7 +515,7 @@ class _FamilyMemberAdherenceScreenState
                     color: AppColors.error,
                   ),
                   label: Text(
-                    'Remove $patientName from Monitoring',
+                    context.l10n.fsRemoveFromMonitoring(patientName),
                     style: AppTextStyles.caption.copyWith(
                       color: AppColors.error,
                       fontWeight: FontWeight.w600,
@@ -553,14 +555,14 @@ class _FamilyMemberAdherenceScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Today's Adherence",
+                    context.l10n.fsTodaysAdherence,
                     style: AppTextStyles.cardTitleOnLight.copyWith(
                       fontSize: AppSpacing.fontLg,
                     ),
                   ),
                   AppSpacing.gapXs,
                   Text(
-                    '$taken of $total doses completed',
+                    context.l10n.fsDosesCompleted(taken, total),
                     style: AppTextStyles.captionOnLight,
                   ),
                 ],
@@ -604,19 +606,19 @@ class _FamilyMemberAdherenceScreenState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildCountPill(
-                'Taken',
+                context.l10n.markTaken,
                 taken,
                 AppColors.tileMint,
                 AppColors.successText,
               ),
               _buildCountPill(
-                'Pending',
+                context.l10n.fsPending,
                 pending,
                 AppColors.warning,
                 AppColors.warningText,
               ),
               _buildCountPill(
-                'Missed',
+                context.l10n.missed,
                 missed,
                 AppColors.error,
                 AppColors.errorText,
@@ -665,7 +667,7 @@ class _FamilyMemberAdherenceScreenState
       alpha: AppColors.isDark ? 0.22 : 0.14,
     );
     Color statusFg = AppColors.warningText;
-    String statusText = 'Pending';
+    String statusText = context.l10n.fsPending;
     IconData statusIcon = Icons.hourglass_top_rounded;
 
     if (dose.isTaken) {
@@ -673,29 +675,29 @@ class _FamilyMemberAdherenceScreenState
         alpha: AppColors.isDark ? 0.22 : 0.18,
       );
       statusFg = AppColors.successText;
-      statusText = 'Taken';
+      statusText = context.l10n.markTaken;
       statusIcon = Icons.check_circle_rounded;
     } else if (dose.isMissed) {
       statusBg = AppColors.error.withValues(
         alpha: AppColors.isDark ? 0.22 : 0.14,
       );
       statusFg = AppColors.errorText;
-      statusText = 'Missed';
+      statusText = context.l10n.missed;
       statusIcon = Icons.error_rounded;
     } else if (dose.isSkipped) {
       statusBg = AppColors.inkMuted.withValues(
         alpha: AppColors.isDark ? 0.22 : 0.14,
       );
       statusFg = AppColors.inkMuted;
-      statusText = 'Skipped';
+      statusText = context.l10n.skipped;
       statusIcon = Icons.remove_circle_outline_rounded;
     }
 
-    String subtitle = dose.dosage ?? '1 dose';
+    String subtitle = dose.dosage ?? context.l10n.fsOneDose;
     if (dose.mealRelation != null &&
         dose.mealRelation != 'anytime' &&
         dose.mealRelation!.isNotEmpty) {
-      subtitle += ' • ${dose.mealRelation}';
+      subtitle += ' • ${mealRelationLabelOf(dose.mealRelation!, context.l10n)}';
     }
 
     final doseKey = '${dose.medicineName}_${dose.time}';
@@ -824,7 +826,7 @@ class _FamilyMemberAdherenceScreenState
                               ),
                               const SizedBox(width: AppSpacing.xs),
                               Text(
-                                isNudged ? 'Nudged' : 'Nudge',
+                                isNudged ? context.l10n.fsNudged : context.l10n.fsNudge,
                                 style: TextStyle(
                                   fontSize: AppSpacing.fontXs,
                                   fontWeight: FontWeight.w700,
@@ -859,14 +861,14 @@ class _FamilyMemberAdherenceScreenState
           Image.asset(AppImages.emptyHistory, height: 96),
           AppSpacing.gapMd,
           Text(
-            'No Shared Doses Found Today',
+            context.l10n.fsNoDosesToday,
             style: AppTextStyles.cardTitleOnLight.copyWith(
               fontSize: AppSpacing.fontLg,
             ),
           ),
           AppSpacing.gapXs,
           Text(
-            'When $patientName opens Dosey or logs doses, their schedule will appear here automatically.',
+            context.l10n.fsNoDosesBody(patientName),
             textAlign: TextAlign.center,
             style: AppTextStyles.captionOnLight,
           ),

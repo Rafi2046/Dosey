@@ -20,6 +20,7 @@ import '../../settings/presentation/widgets/name_sheet.dart';
 import '../../settings/providers/settings_providers.dart';
 import '../data/auth_repository.dart';
 import '../providers/auth_providers.dart';
+import '../../../core/localization/l10n.dart';
 
 /// Opens the Progressive Onboarding / Lazy Login sheet for Family Sharing.
 Future<void> showFamilySharingAuthSheet(BuildContext context) =>
@@ -100,7 +101,7 @@ class _FamilySharingAuthSheetState
       if (_isResetMode) {
         await repo.sendPasswordResetEmail(email);
         setState(() {
-          _successMessage = 'Password reset email sent to $email!';
+          _successMessage = context.l10n.fsResetEmailSent(email);
           _isResetMode = false;
         });
         return;
@@ -121,15 +122,15 @@ class _FamilySharingAuthSheetState
           SnackBar(
             content: Text(
               _isRegister
-                  ? 'Account created! Check your email to verify it.'
-                  : 'Signed in successfully!',
+                  ? context.l10n.fsAccountCreated
+                  : context.l10n.fsSignedIn,
             ),
           ),
         );
       }
     } catch (e) {
       setState(() {
-        _errorMessage = AuthRepository.formatAuthError(e);
+        _errorMessage = AuthRepository.formatAuthError(e, l10n: context.l10n);
       });
     } finally {
       if (mounted) {
@@ -150,12 +151,12 @@ class _FamilySharingAuthSheetState
       final credential = await repo.signInWithGoogle();
       if (credential != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Signed in with Google!')),
+          SnackBar(content: Text(context.l10n.fsSignedInGoogle)),
         );
       }
     } catch (e) {
       setState(() {
-        _errorMessage = AuthRepository.formatAuthError(e);
+        _errorMessage = AuthRepository.formatAuthError(e, l10n: context.l10n);
       });
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -174,12 +175,12 @@ class _FamilySharingAuthSheetState
       final credential = await repo.signInWithApple();
       if (credential != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Signed in with Apple!')),
+          SnackBar(content: Text(context.l10n.fsSignedInApple)),
         );
       }
     } catch (e) {
       setState(() {
-        _errorMessage = AuthRepository.formatAuthError(e);
+        _errorMessage = AuthRepository.formatAuthError(e, l10n: context.l10n);
       });
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -192,7 +193,7 @@ class _FamilySharingAuthSheetState
       await ref.read(authRepositoryProvider).signOut();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Signed out successfully.')),
+          SnackBar(content: Text(context.l10n.fsSignedOut)),
         );
       }
     } finally {
@@ -205,19 +206,19 @@ class _FamilySharingAuthSheetState
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete Account?'),
-        content: const Text(
-          'This will permanently delete your cloud account and unlink all family members. Your local medicine data on this device will remain intact.',
+        title: Text(context.l10n.fsDeleteAccountTitle),
+        content: Text(
+          context.l10n.fsDeleteAccountBody,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           TextButton(
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete Account'),
+            child: Text(context.l10n.fsDeleteAccount),
           ),
         ],
       ),
@@ -230,12 +231,12 @@ class _FamilySharingAuthSheetState
       await ref.read(authRepositoryProvider).deleteAccount();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Account deleted.')),
+          SnackBar(content: Text(context.l10n.fsAccountDeleted)),
         );
       }
     } catch (e) {
       setState(() {
-        _errorMessage = AuthRepository.formatAuthError(e);
+        _errorMessage = AuthRepository.formatAuthError(e, l10n: context.l10n);
       });
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -249,8 +250,8 @@ class _FamilySharingAuthSheetState
     final entered = await showNameSheet(
       context,
       current: currentName,
-      label: 'Your Display Name',
-      hint: 'e.g. Rahat, Dad, Mom',
+      label: context.l10n.fsYourDisplayName,
+      hint: context.l10n.fsDisplayNameHint,
     );
 
     if (entered == null) return;
@@ -271,7 +272,7 @@ class _FamilySharingAuthSheetState
         setState(() {});
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Display name updated to "$sanitized"'),
+            content: Text(context.l10n.fsNameUpdated(sanitized)),
             backgroundColor: AppColors.tileMoss,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -284,7 +285,7 @@ class _FamilySharingAuthSheetState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update name: $e'),
+            content: Text(context.l10n.fsNameUpdateFailed('$e')),
             backgroundColor: AppColors.error,
           ),
         );
@@ -325,7 +326,7 @@ class _FamilySharingAuthSheetState
     final code = _shareCodeController.text.trim().toUpperCase();
     if (code.length != 6) {
       setState(() {
-        _errorMessage = 'Please enter a 6-character share code.';
+        _errorMessage = context.l10n.fsEnterSixCharCode;
       });
       return;
     }
@@ -351,9 +352,9 @@ class _FamilySharingAuthSheetState
       ref.invalidate(caregiverSharesProvider);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'Connection request sent! Waiting for your family member to accept.',
+              context.l10n.fsRequestSent,
             ),
           ),
         );
@@ -382,7 +383,7 @@ class _FamilySharingAuthSheetState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Link accepted! ${share.caregiverName ?? "Caregiver"} is now linked.',
+              context.l10n.fsLinkAccepted(share.caregiverName ?? context.l10n.fsCaregiver),
             ),
           ),
         );
@@ -409,7 +410,7 @@ class _FamilySharingAuthSheetState
       ref.invalidate(caregiverSharesProvider);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Link request declined.')),
+          SnackBar(content: Text(context.l10n.fsRequestDeclined)),
         );
       }
     } catch (e) {
@@ -432,8 +433,8 @@ class _FamilySharingAuthSheetState
       if (occurrences.isEmpty) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('No medicines found in today\'s schedule to sync.'),
+            SnackBar(
+              content: Text(context.l10n.fsNothingToSync),
             ),
           );
         }
@@ -453,7 +454,7 @@ class _FamilySharingAuthSheetState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Successfully synced ${occurrences.length} medicines to cloud! ✅',
+              context.l10n.fsSynced(occurrences.length),
             ),
           ),
         );
@@ -530,14 +531,14 @@ class _FamilySharingAuthSheetState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'FAMILY SHARING',
+                          context.l10n.fsOverline,
                           style: AppTextStyles.overline.copyWith(
                             color: AppColors.accent,
                             fontSize: AppSpacing.fontXs,
                           ),
                         ),
                         Text(
-                          'Caregiver & Family Mode',
+                          context.l10n.fsTitle,
                           style: AppTextStyles.headlineOnLight.copyWith(
                             fontSize: AppSpacing.fontLg,
                           ),
@@ -638,7 +639,7 @@ class _FamilySharingAuthSheetState
     final patientSharesAsync = ref.watch(patientSharesProvider);
     final caregiverSharesAsync = ref.watch(caregiverSharesProvider);
     final localName = ref.watch(userNameProvider).value;
-    final displayName = user.displayName ?? localName ?? 'Family Account';
+    final displayName = user.displayName ?? localName ?? context.l10n.fsFamilyAccount;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -737,7 +738,7 @@ class _FamilySharingAuthSheetState
                     ),
                     const SizedBox(width: AppSpacing.xs),
                     Text(
-                      'Cloud Active',
+                      context.l10n.fsCloudActive,
                       style: TextStyle(
                         fontSize: AppSpacing.fontXs,
                         fontWeight: FontWeight.w700,
@@ -763,7 +764,7 @@ class _FamilySharingAuthSheetState
             children: [
               Expanded(
                 child: _ModeTab(
-                  label: 'My Code',
+                  label: context.l10n.fsMyCode,
                   icon: Icons.qr_code_2_rounded,
                   active: _activeFamilyTab == 0,
                   onTap: () => setState(() => _activeFamilyTab = 0),
@@ -771,7 +772,7 @@ class _FamilySharingAuthSheetState
               ),
               Expanded(
                 child: _ModeTab(
-                  label: 'Enter Code',
+                  label: context.l10n.fsEnterCode,
                   icon: Icons.vpn_key_rounded,
                   active: _activeFamilyTab == 1,
                   onTap: () => setState(() => _activeFamilyTab = 1),
@@ -801,7 +802,7 @@ class _FamilySharingAuthSheetState
                 color: AppColors.inkMuted,
               ),
               label: Text(
-                'Sign Out',
+                context.l10n.fsSignOut,
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.inkMuted,
                   fontWeight: FontWeight.w600,
@@ -820,7 +821,7 @@ class _FamilySharingAuthSheetState
             TextButton(
               onPressed: _isLoading ? null : _handleDeleteAccount,
               child: Text(
-                'Delete Account',
+                context.l10n.fsDeleteAccount,
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.error,
                   fontWeight: FontWeight.w500,
@@ -923,14 +924,14 @@ class _FamilySharingAuthSheetState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Share Your Doses & Reminders',
+                      context.l10n.fsShareTitle,
                       style: AppTextStyles.bodyOnLight.copyWith(
                         fontWeight: FontWeight.w700,
                         fontSize: AppSpacing.fontSm,
                       ),
                     ),
                     Text(
-                      'Let family members monitor your medication adherence',
+                      context.l10n.fsShareSubtitle,
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.inkMuted,
                         fontSize: AppSpacing.fontXs,
@@ -944,22 +945,22 @@ class _FamilySharingAuthSheetState
           AppSpacing.gapSm,
           _buildStepRow(
             stepNumber: '1',
-            title: 'Generate your 6-character code below',
-            subtitle: 'Your unique code connects caregiver devices.',
+            title: context.l10n.fsStepGenerateTitle,
+            subtitle: context.l10n.fsStepGenerateBody,
             color: AppColors.accent,
           ),
           const SizedBox(height: AppSpacing.xs),
           _buildStepRow(
             stepNumber: '2',
-            title: 'Send it to your caregiver or family member',
-            subtitle: 'They enter this code in their Dosey app.',
+            title: context.l10n.fsStepSendTitle,
+            subtitle: context.l10n.fsStepSendBody,
             color: AppColors.accent,
           ),
           const SizedBox(height: AppSpacing.xs),
           _buildStepRow(
             stepNumber: '3',
-            title: 'Approve incoming link requests',
-            subtitle: 'Review and accept requests from your family members.',
+            title: context.l10n.fsStepApproveTitle,
+            subtitle: context.l10n.fsStepApproveBody,
             color: AppColors.accent,
           ),
           AppSpacing.gapSm,
@@ -974,7 +975,7 @@ class _FamilySharingAuthSheetState
                   return _buildShareCodeDisplay(unclaimed.first.shareCode);
                 }
                 return PillButton(
-                  label: 'Generate Share Code',
+                  label: context.l10n.fsGenerateCode,
                   trailingIcon: Icons.vpn_key_rounded,
                   tone: PillButtonTone.accent,
                   loading: _isLoading,
@@ -988,7 +989,7 @@ class _FamilySharingAuthSheetState
                 ),
               ),
               error: (e, st) => PillButton(
-                label: 'Generate Share Code',
+                label: context.l10n.fsGenerateCode,
                 trailingIcon: Icons.vpn_key_rounded,
                 tone: PillButtonTone.accent,
                 loading: _isLoading,
@@ -1024,7 +1025,7 @@ class _FamilySharingAuthSheetState
                       ),
                       AppSpacing.gapXs,
                       Text(
-                        'Incoming Link Requests (${pending.length})',
+                        context.l10n.fsIncomingRequests(pending.length),
                         style: AppTextStyles.caption.copyWith(
                           fontWeight: FontWeight.bold,
                           color: AppColors.ink,
@@ -1070,13 +1071,13 @@ class _FamilySharingAuthSheetState
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      share.caregiverName ?? 'Family Caregiver',
+                                      share.caregiverName ?? context.l10n.fsFamilyCaregiver,
                                       style: AppTextStyles.bodyOnLight.copyWith(
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                     Text(
-                                      'Wants to connect using code ${share.shareCode}',
+                                      context.l10n.fsWantsToConnect(share.shareCode),
                                       style: AppTextStyles.caption.copyWith(
                                         color: AppColors.inkMuted,
                                         fontSize: AppSpacing.fontXs,
@@ -1097,8 +1098,8 @@ class _FamilySharingAuthSheetState
                                     size: 16,
                                     color: AppColors.error,
                                   ),
-                                  label: const Text(
-                                    'Decline',
+                                  label: Text(
+                                    context.l10n.fsDecline,
                                     style: TextStyle(
                                       color: AppColors.error,
                                       fontSize: AppSpacing.fontSm,
@@ -1127,8 +1128,8 @@ class _FamilySharingAuthSheetState
                                     size: 16,
                                     color: Colors.white,
                                   ),
-                                  label: const Text(
-                                    'Accept',
+                                  label: Text(
+                                    context.l10n.fsAccept,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: AppSpacing.fontSm,
@@ -1181,7 +1182,7 @@ class _FamilySharingAuthSheetState
                       ),
                       AppSpacing.gapXs,
                       Text(
-                        'Linked Caregivers (${accepted.length})',
+                        context.l10n.fsLinkedCaregivers(accepted.length),
                         style: AppTextStyles.caption.copyWith(
                           fontWeight: FontWeight.bold,
                           color: AppColors.ink,
@@ -1200,13 +1201,13 @@ class _FamilySharingAuthSheetState
                         child: Icon(Icons.person, size: 16, color: Colors.white),
                       ),
                       title: Text(
-                        share.caregiverName ?? 'Caregiver',
+                        share.caregiverName ?? context.l10n.fsCaregiver,
                         style: AppTextStyles.bodyOnLight.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       subtitle: Text(
-                        'Active sync • Code: ${share.shareCode}',
+                        context.l10n.fsActiveSyncCode(share.shareCode),
                         style: AppTextStyles.caption.copyWith(
                           fontSize: AppSpacing.fontXs,
                           color: AppColors.inkMuted,
@@ -1218,14 +1219,14 @@ class _FamilySharingAuthSheetState
                           color: AppColors.error,
                           size: 20,
                         ),
-                        tooltip: 'Unlink',
+                        tooltip: context.l10n.fsUnlink,
                         onPressed: () async {
                           final confirmed = await confirmDelete(
                             context,
-                            title: 'Unlink Caregiver',
+                            title: context.l10n.fsUnlinkCaregiverTitle,
                             body:
-                                'Are you sure you want to unlink ${share.caregiverName ?? "this caregiver"}? They will no longer be able to see your adherence schedule.',
-                            confirmLabel: 'Unlink',
+                                context.l10n.fsUnlinkCaregiverBody(share.caregiverName ?? context.l10n.fsThisCaregiver),
+                            confirmLabel: context.l10n.fsUnlink,
                           );
                           if (confirmed) {
                             await ref
@@ -1239,7 +1240,7 @@ class _FamilySharingAuthSheetState
                   ),
                   AppSpacing.gapMd,
                   PillButton(
-                    label: 'Sync Medicines to Caregivers Now',
+                    label: context.l10n.fsSyncNow,
                     trailingIcon: Icons.cloud_upload_rounded,
                     tone: PillButtonTone.moss,
                     loading: _isLoading,
@@ -1280,7 +1281,7 @@ class _FamilySharingAuthSheetState
       child: Column(
         children: [
           Text(
-            'YOUR 6-CHARACTER SHARE CODE',
+            context.l10n.fsYourCodeLabel,
             style: AppTextStyles.overline.copyWith(
               color: AppColors.accent,
               letterSpacing: 1.5,
@@ -1320,7 +1321,7 @@ class _FamilySharingAuthSheetState
                 child: OutlinedButton.icon(
                   icon: Icon(Icons.copy_rounded, size: 15, color: AppColors.ink),
                   label: Text(
-                    'Copy Code',
+                    context.l10n.fsCopyCode,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -1341,7 +1342,7 @@ class _FamilySharingAuthSheetState
                     Clipboard.setData(ClipboardData(text: code));
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Code "$code" copied to clipboard!'),
+                        content: Text(context.l10n.fsCodeCopied(code)),
                       ),
                     );
                   },
@@ -1351,8 +1352,8 @@ class _FamilySharingAuthSheetState
               Expanded(
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.share_rounded, size: 15, color: Colors.white),
-                  label: const Text(
-                    'Share Code',
+                  label: Text(
+                    context.l10n.fsShareCode,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -1371,7 +1372,7 @@ class _FamilySharingAuthSheetState
                     SharePlus.instance.share(
                       ShareParams(
                         text:
-                            'Here is my Dosey family share code: $code\n\nEnter it in your Dosey app under Settings > Caregiver & Family Mode to link our accounts.',
+                            context.l10n.fsShareMessage(code),
                       ),
                     );
                   },
@@ -1381,7 +1382,7 @@ class _FamilySharingAuthSheetState
           ),
           AppSpacing.gapXs,
           Text(
-            'Share this code with your family member. Valid for 7 days.',
+            context.l10n.fsCodeValidity,
             style: AppTextStyles.caption.copyWith(
               fontSize: AppSpacing.fontXs,
               color: AppColors.inkMuted,
@@ -1487,7 +1488,7 @@ class _FamilySharingAuthSheetState
                 color: AppColors.tileMint,
               ),
               label: Text(
-                'Paste Code',
+                context.l10n.fsPasteCode,
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.tileMint,
                   fontWeight: FontWeight.w600,
@@ -1514,7 +1515,7 @@ class _FamilySharingAuthSheetState
                   color: AppColors.inkMuted,
                 ),
                 label: Text(
-                  'Clear',
+                  context.l10n.clear,
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.inkMuted,
                     fontWeight: FontWeight.w500,
@@ -1568,14 +1569,14 @@ class _FamilySharingAuthSheetState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Link to a Family Member',
+                      context.l10n.fsLinkTitle,
                       style: AppTextStyles.bodyOnLight.copyWith(
                         fontWeight: FontWeight.w700,
                         fontSize: AppSpacing.fontSm,
                       ),
                     ),
                     Text(
-                      'Enter their 6-character code to link profiles',
+                      context.l10n.fsLinkSubtitle,
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.inkMuted,
                         fontSize: AppSpacing.fontXs,
@@ -1589,29 +1590,29 @@ class _FamilySharingAuthSheetState
           AppSpacing.gapSm,
           _buildStepRow(
             stepNumber: '1',
-            title: 'Ask family member for their code',
-            subtitle: 'Found under "My Code" on their phone.',
+            title: context.l10n.fsStepAskTitle,
+            subtitle: context.l10n.fsStepAskBody,
             color: AppColors.tileMint,
           ),
           const SizedBox(height: AppSpacing.xs),
           _buildStepRow(
             stepNumber: '2',
-            title: 'Enter or paste the code below',
-            subtitle: 'Tap the boxes or use the Paste button.',
+            title: context.l10n.fsStepEnterTitle,
+            subtitle: context.l10n.fsStepEnterBody,
             color: AppColors.tileMint,
           ),
           const SizedBox(height: AppSpacing.xs),
           _buildStepRow(
             stepNumber: '3',
-            title: 'Wait for their approval',
-            subtitle: 'They must accept your link request to sync.',
+            title: context.l10n.fsStepWaitTitle,
+            subtitle: context.l10n.fsStepWaitBody,
             color: AppColors.tileMint,
           ),
           AppSpacing.gapSm,
           _buildCaregiverCodeInput(),
           AppSpacing.gapSm,
           PillButton(
-            label: 'Send Link Request',
+            label: context.l10n.fsSendRequest,
             trailingIcon: Icons.arrow_forward_rounded,
             tone: hasValidCode ? PillButtonTone.accent : PillButtonTone.moss,
             loading: _isLoading,
@@ -1643,7 +1644,7 @@ class _FamilySharingAuthSheetState
                         ),
                         AppSpacing.gapXs,
                         Text(
-                          'Pending Approval (${pending.length})',
+                          context.l10n.fsPendingApproval(pending.length),
                           style: AppTextStyles.caption.copyWith(
                             fontWeight: FontWeight.bold,
                             color: AppColors.ink,
@@ -1666,13 +1667,13 @@ class _FamilySharingAuthSheetState
                           ),
                         ),
                         title: Text(
-                          share.patientName ?? 'Family Member',
+                          share.patientName ?? context.l10n.fsFamilyMember,
                           style: AppTextStyles.bodyOnLight.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         subtitle: Text(
-                          'Awaiting approval • Code: ${share.shareCode}',
+                          context.l10n.fsAwaitingApproval(share.shareCode),
                           style: AppTextStyles.caption.copyWith(
                             fontSize: AppSpacing.fontXs,
                             color: AppColors.warning,
@@ -1687,7 +1688,7 @@ class _FamilySharingAuthSheetState
                             ref.invalidate(caregiverSharesProvider);
                           },
                           child: Text(
-                            'Cancel',
+                            context.l10n.cancel,
                             style: AppTextStyles.caption.copyWith(
                               color: AppColors.inkMuted,
                               fontWeight: FontWeight.w500,
@@ -1711,7 +1712,7 @@ class _FamilySharingAuthSheetState
                         ),
                         AppSpacing.gapXs,
                         Text(
-                          'Connected Family Members (${accepted.length})',
+                          context.l10n.fsConnectedMembers(accepted.length),
                           style: AppTextStyles.caption.copyWith(
                             fontWeight: FontWeight.bold,
                             color: AppColors.ink,
@@ -1734,13 +1735,13 @@ class _FamilySharingAuthSheetState
                           ),
                         ),
                         title: Text(
-                          share.patientName ?? 'Family Member',
+                          share.patientName ?? context.l10n.fsFamilyMember,
                           style: AppTextStyles.bodyOnLight.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         subtitle: Text(
-                          'Active sync • Tap to view schedule',
+                          context.l10n.fsActiveSyncTap,
                           style: AppTextStyles.caption.copyWith(
                             fontSize: AppSpacing.fontXs,
                             color: AppColors.tileMint,
@@ -1756,14 +1757,14 @@ class _FamilySharingAuthSheetState
                                 color: AppColors.error,
                                 size: 20,
                               ),
-                              tooltip: 'Unlink',
+                              tooltip: context.l10n.fsUnlink,
                               onPressed: () async {
                                 final confirmed = await confirmDelete(
                                   context,
-                                  title: 'Remove Family Member',
+                                  title: context.l10n.fsRemoveMemberTitle,
                                   body:
-                                      'Are you sure you want to stop monitoring ${share.patientName ?? "this family member"}?',
-                                  confirmLabel: 'Remove',
+                                      context.l10n.fsStopMonitoring(share.patientName ?? context.l10n.fsThisMember),
+                                  confirmLabel: context.l10n.fsRemove,
                                 );
                                 if (confirmed) {
                                   await ref
@@ -1817,7 +1818,7 @@ class _FamilySharingAuthSheetState
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Keep family members and caregivers in the loop. Link securely to monitor adherence and share dose reminders.',
+            context.l10n.fsIntro,
             style: AppTextStyles.caption.copyWith(color: AppColors.inkMuted),
           ),
           AppSpacing.gapLg,
@@ -1825,14 +1826,14 @@ class _FamilySharingAuthSheetState
           // Social Login Buttons
           _SocialAuthButton(
             icon: Icons.g_mobiledata_rounded,
-            label: 'Continue with Google',
+            label: context.l10n.fsContinueGoogle,
             onPressed: _isLoading ? null : _handleGoogleAuth,
           ),
           if (isAppleSupported) ...[
             AppSpacing.gapSm,
             _SocialAuthButton(
               icon: Icons.apple_rounded,
-              label: 'Continue with Apple',
+              label: context.l10n.fsContinueApple,
               isApple: true,
               onPressed: _isLoading ? null : _handleAppleAuth,
             ),
@@ -1846,7 +1847,7 @@ class _FamilySharingAuthSheetState
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
                 child: Text(
-                  'or with email',
+                  context.l10n.fsOrEmail,
                   style: AppTextStyles.overline.copyWith(
                     color: AppColors.inkMuted,
                     fontSize: AppSpacing.fontXs,
@@ -1869,14 +1870,14 @@ class _FamilySharingAuthSheetState
               children: [
                 Expanded(
                   child: _ModeTab(
-                    label: 'Sign In',
+                    label: context.l10n.fsSignIn,
                     active: !_isRegister,
                     onTap: () => setState(() => _isRegister = false),
                   ),
                 ),
                 Expanded(
                   child: _ModeTab(
-                    label: 'Create Account',
+                    label: context.l10n.fsCreateAccount,
                     active: _isRegister,
                     onTap: () => setState(() => _isRegister = true),
                   ),
@@ -1889,8 +1890,8 @@ class _FamilySharingAuthSheetState
           // Name field if registering
           if (_isRegister) ...[
             AppTextField(
-              label: 'Your Name (Optional)',
-              hint: 'John Doe',
+              label: context.l10n.fsNameOptional,
+              hint: context.l10n.fsFullNameHint,
               controller: _nameController,
               textCapitalization: TextCapitalization.words,
             ),
@@ -1898,19 +1899,19 @@ class _FamilySharingAuthSheetState
 
           // Email & Password Fields
           AppTextField(
-            label: 'Email',
+            label: context.l10n.email,
             hint: 'name@example.com',
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             validator: (v) {
-              if (v == null || v.trim().isEmpty) return 'Email is required';
-              if (!v.contains('@')) return 'Enter a valid email address';
+              if (v == null || v.trim().isEmpty) return context.l10n.fsEmailRequired;
+              if (!v.contains('@')) return context.l10n.fsEmailInvalid;
               return null;
             },
           ),
           AppTextField(
-            label: 'Password',
-            hint: _isRegister ? 'At least 6 characters' : 'Enter your password',
+            label: context.l10n.fsPassword,
+            hint: _isRegister ? context.l10n.fsPasswordNewHint : context.l10n.fsPasswordHint,
             controller: _passwordController,
             obscureText: _obscurePassword,
             suffixIcon: IconButton(
@@ -1925,9 +1926,9 @@ class _FamilySharingAuthSheetState
                   setState(() => _obscurePassword = !_obscurePassword),
             ),
             validator: (v) {
-              if (v == null || v.isEmpty) return 'Password is required';
+              if (v == null || v.isEmpty) return context.l10n.fsPasswordRequired;
               if (_isRegister && v.length < 6) {
-                return 'Password must be at least 6 characters';
+                return context.l10n.fsPasswordTooShort;
               }
               return null;
             },
@@ -1939,7 +1940,7 @@ class _FamilySharingAuthSheetState
               child: TextButton(
                 onPressed: () => setState(() => _isResetMode = true),
                 child: Text(
-                  'Forgot Password?',
+                  context.l10n.fsForgotPassword,
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.accent,
                     fontWeight: FontWeight.w600,
@@ -1952,7 +1953,7 @@ class _FamilySharingAuthSheetState
           AppSpacing.gapSm,
 
           PillButton(
-            label: _isRegister ? 'Create Account' : 'Sign In',
+            label: _isRegister ? context.l10n.fsCreateAccount : context.l10n.fsSignIn,
             loading: _isLoading,
             onPressed: _handleEmailAuth,
           ),
@@ -1970,7 +1971,7 @@ class _FamilySharingAuthSheetState
               AppSpacing.gapXs,
               Expanded(
                 child: Text(
-                  'Dosey remains 100% offline-first. Your local medicines and reminders stay safe on your device.',
+                  context.l10n.fsOfflineFirst,
                   style: AppTextStyles.caption.copyWith(
                     fontSize: AppSpacing.fontXs,
                     color: AppColors.inkMuted,
@@ -1998,7 +1999,7 @@ class _FamilySharingAuthSheetState
       await action();
     } catch (e) {
       if (mounted) {
-        setState(() => _errorMessage = AuthRepository.formatAuthError(e));
+        setState(() => _errorMessage = AuthRepository.formatAuthError(e, l10n: context.l10n));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -2019,7 +2020,7 @@ class _FamilySharingAuthSheetState
         ),
         AppSpacing.gapMd,
         Text(
-          'Verify your email',
+          context.l10n.fsVerifyTitle,
           textAlign: TextAlign.center,
           style: AppTextStyles.headlineOnLight.copyWith(
             fontSize: AppSpacing.fontLg,
@@ -2027,22 +2028,20 @@ class _FamilySharingAuthSheetState
         ),
         AppSpacing.gapSm,
         Text(
-          'We sent a link to ${user.email ?? 'your email'}. Open it to '
-          'confirm the address, then come back and tap "I\'ve verified".',
+          context.l10n.fsVerifyBody(user.email ?? context.l10n.fsYourEmail),
           textAlign: TextAlign.center,
           style: AppTextStyles.caption.copyWith(color: AppColors.inkMuted),
         ),
         AppSpacing.gapLg,
         PillButton(
-          label: "I've verified",
+          label: context.l10n.fsIveVerified,
           loading: _isLoading,
           onPressed: () => _runVerifyAction(() async {
             final verified = await repo.reloadAndCheckVerified();
             if (!verified && mounted) {
               setState(
                 () => _errorMessage =
-                    'Not verified yet. Open the link in the email first '
-                    '(check spam too).',
+                    context.l10n.fsNotVerifiedYet,
               );
             }
           }),
@@ -2057,12 +2056,12 @@ class _FamilySharingAuthSheetState
                     if (mounted) {
                       setState(
                         () => _successMessage =
-                            'Verification email sent to ${user.email}.',
+                            context.l10n.fsVerificationSent(user.email ?? ''),
                       );
                     }
                   }),
             child: Text(
-              'Resend email',
+              context.l10n.fsResendEmail,
               style: AppTextStyles.caption.copyWith(color: AppColors.accent),
             ),
           ),
@@ -2071,7 +2070,7 @@ class _FamilySharingAuthSheetState
           child: TextButton(
             onPressed: _isLoading ? null : () => _runVerifyAction(repo.signOut, needsInternet: false),
             child: Text(
-              'Use another account',
+              context.l10n.fsUseAnotherAccount,
               style: AppTextStyles.caption.copyWith(color: AppColors.inkMuted),
             ),
           ),
@@ -2096,7 +2095,7 @@ class _FamilySharingAuthSheetState
               ),
               AppSpacing.gapXs,
               Text(
-                'Reset Password',
+                context.l10n.fsResetTitle,
                 style: AppTextStyles.headlineOnLight.copyWith(
                   fontSize: AppSpacing.fontLg,
                 ),
@@ -2105,24 +2104,24 @@ class _FamilySharingAuthSheetState
           ),
           AppSpacing.gapSm,
           Text(
-            'Enter your registered email address and we will send you a password reset link.',
+            context.l10n.fsResetBody,
             style: AppTextStyles.caption.copyWith(color: AppColors.inkMuted),
           ),
           AppSpacing.gapLg,
           AppTextField(
-            label: 'Email',
+            label: context.l10n.email,
             hint: 'name@example.com',
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             validator: (v) {
-              if (v == null || v.trim().isEmpty) return 'Email is required';
-              if (!v.contains('@')) return 'Enter a valid email address';
+              if (v == null || v.trim().isEmpty) return context.l10n.fsEmailRequired;
+              if (!v.contains('@')) return context.l10n.fsEmailInvalid;
               return null;
             },
           ),
           AppSpacing.gapMd,
           PillButton(
-            label: 'Send Reset Link',
+            label: context.l10n.fsSendResetLink,
             loading: _isLoading,
             onPressed: _handleEmailAuth,
           ),
@@ -2131,7 +2130,7 @@ class _FamilySharingAuthSheetState
             child: TextButton(
               onPressed: () => setState(() => _isResetMode = false),
               child: Text(
-                'Back to Sign In',
+                context.l10n.fsBackToSignIn,
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.inkMuted,
                 ),

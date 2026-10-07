@@ -230,14 +230,14 @@ class SettingsScreen extends ConsumerWidget {
                 SettingsTile(
                   icon: Icons.diversity_1_rounded,
                   color: AppColors.accent,
-                  title: 'Caregiver & Family Mode',
+                  title: l10n.fsTitle,
                   subtitle: authUser != null
-                      ? (authUser.email ?? 'Family Sharing Connected')
-                      : 'Link with family & caregivers',
+                      ? (authUser.email ?? l10n.fsConnected)
+                      : l10n.fsSettingsHint,
                   subtitleMaxLines: 1,
                   trailing: authUser != null
                       ? StatusChip(
-                          label: 'Active',
+                          label: l10n.fsActive,
                           icon: Icons.cloud_done_rounded,
                           background: AppColors.tileMint,
                           foreground: Colors.white,
@@ -460,7 +460,7 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: AppSpacing.xxs),
                     Text(
-                      'Offline-first • Privacy conscious',
+                      l10n.appTagline,
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.textOnDarkMuted,
                         fontSize: AppSpacing.fontXs,

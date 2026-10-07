@@ -6,6 +6,7 @@ import '../../../../core/widgets/surface_card.dart';
 import '../../domain/family_share.dart';
 import '../../providers/family_share_providers.dart';
 import '../family_member_adherence_screen.dart';
+import '../../../../core/localization/l10n.dart';
 
 class CaregiverMonitoringCard extends ConsumerWidget {
   const CaregiverMonitoringCard({super.key});
@@ -47,7 +48,7 @@ class _PatientCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final patientName = share.patientName ?? 'Family Member';
+    final patientName = share.patientName ?? context.l10n.fsFamilyMember;
 
     return SurfaceCard(
       color: AppColors.creamLight,
@@ -76,7 +77,7 @@ class _PatientCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'CAREGIVER MONITORING',
+                      context.l10n.fsCaregiverMonitoring,
                       style: AppTextStyles.overline.copyWith(
                         color: AppColors.tileMint,
                         fontWeight: FontWeight.w800,
@@ -94,13 +95,13 @@ class _PatientCard extends StatelessWidget {
                         color: AppColors.tileMint,
                         borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.sync_rounded, size: 9, color: Colors.white),
-                          SizedBox(width: AppSpacing.xxs),
+                          const Icon(Icons.sync_rounded, size: 9, color: Colors.white),
+                          const SizedBox(width: AppSpacing.xxs),
                           Text(
-                            'Live',
+                            context.l10n.fsLive,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: AppSpacing.fontXs,
@@ -122,7 +123,7 @@ class _PatientCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  "Tap to view today's schedule",
+                  context.l10n.fsTapToViewSchedule,
                   style: AppTextStyles.captionOnLight.copyWith(
                     fontSize: AppSpacing.fontXs,
                   ),

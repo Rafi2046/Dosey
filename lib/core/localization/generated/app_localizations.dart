@@ -3961,6 +3961,1122 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get offlineDismiss;
+
+  /// No description provided for @fsResetEmailSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset email sent to {email}!'**
+  String fsResetEmailSent(String email);
+
+  /// No description provided for @fsAccountCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created! Check your email to verify it.'**
+  String get fsAccountCreated;
+
+  /// No description provided for @fsSignedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in successfully!'**
+  String get fsSignedIn;
+
+  /// No description provided for @fsSignedInGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in with Google!'**
+  String get fsSignedInGoogle;
+
+  /// No description provided for @fsSignedInApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in with Apple!'**
+  String get fsSignedInApple;
+
+  /// No description provided for @fsSignedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed out successfully.'**
+  String get fsSignedOut;
+
+  /// No description provided for @fsDeleteAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account?'**
+  String get fsDeleteAccountTitle;
+
+  /// No description provided for @fsDeleteAccountBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete your cloud account and unlink all family members. Your local medicine data on this device will remain intact.'**
+  String get fsDeleteAccountBody;
+
+  /// No description provided for @fsDeleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get fsDeleteAccount;
+
+  /// No description provided for @fsAccountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted.'**
+  String get fsAccountDeleted;
+
+  /// No description provided for @fsYourDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Display Name'**
+  String get fsYourDisplayName;
+
+  /// No description provided for @fsDisplayNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Rahat, Dad, Mom'**
+  String get fsDisplayNameHint;
+
+  /// No description provided for @fsNameUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Name updated to \"{name}\"'**
+  String fsNameUpdated(String name);
+
+  /// No description provided for @fsNameUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update name: {error}'**
+  String fsNameUpdateFailed(String error);
+
+  /// No description provided for @fsEnterSixCharCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a 6-character share code.'**
+  String get fsEnterSixCharCode;
+
+  /// No description provided for @fsRequestSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection request sent! Waiting for your family member to accept.'**
+  String get fsRequestSent;
+
+  /// No description provided for @fsLinkAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Link accepted! {name} is now linked.'**
+  String fsLinkAccepted(String name);
+
+  /// No description provided for @fsCaregiver.
+  ///
+  /// In en, this message translates to:
+  /// **'Caregiver'**
+  String get fsCaregiver;
+
+  /// No description provided for @fsRequestDeclined.
+  ///
+  /// In en, this message translates to:
+  /// **'Link request declined.'**
+  String get fsRequestDeclined;
+
+  /// No description provided for @fsNothingToSync.
+  ///
+  /// In en, this message translates to:
+  /// **'No medicines found in today\'s schedule to sync.'**
+  String get fsNothingToSync;
+
+  /// No description provided for @fsSynced.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Synced 1 medicine to the cloud! ✅} other{Synced {count} medicines to the cloud! ✅}}'**
+  String fsSynced(int count);
+
+  /// No description provided for @fsOverline.
+  ///
+  /// In en, this message translates to:
+  /// **'FAMILY SHARING'**
+  String get fsOverline;
+
+  /// No description provided for @fsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Caregiver & Family Mode'**
+  String get fsTitle;
+
+  /// No description provided for @fsFamilyAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Family Account'**
+  String get fsFamilyAccount;
+
+  /// No description provided for @fsCloudActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud Active'**
+  String get fsCloudActive;
+
+  /// No description provided for @fsMyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'My Code'**
+  String get fsMyCode;
+
+  /// No description provided for @fsEnterCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Code'**
+  String get fsEnterCode;
+
+  /// No description provided for @fsSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get fsSignOut;
+
+  /// No description provided for @fsShareTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Your Doses & Reminders'**
+  String get fsShareTitle;
+
+  /// No description provided for @fsShareSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let family members monitor your medication adherence'**
+  String get fsShareSubtitle;
+
+  /// No description provided for @fsStepGenerateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate your 6-character code below'**
+  String get fsStepGenerateTitle;
+
+  /// No description provided for @fsStepGenerateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your unique code connects caregiver devices.'**
+  String get fsStepGenerateBody;
+
+  /// No description provided for @fsStepSendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send it to your caregiver or family member'**
+  String get fsStepSendTitle;
+
+  /// No description provided for @fsStepSendBody.
+  ///
+  /// In en, this message translates to:
+  /// **'They enter this code in their Dosey app.'**
+  String get fsStepSendBody;
+
+  /// No description provided for @fsStepApproveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve incoming link requests'**
+  String get fsStepApproveTitle;
+
+  /// No description provided for @fsStepApproveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Review and accept requests from your family members.'**
+  String get fsStepApproveBody;
+
+  /// No description provided for @fsGenerateCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Share Code'**
+  String get fsGenerateCode;
+
+  /// No description provided for @fsIncomingRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Incoming Link Requests ({count})'**
+  String fsIncomingRequests(int count);
+
+  /// No description provided for @fsFamilyCaregiver.
+  ///
+  /// In en, this message translates to:
+  /// **'Family Caregiver'**
+  String get fsFamilyCaregiver;
+
+  /// No description provided for @fsWantsToConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Wants to connect using code {code}'**
+  String fsWantsToConnect(String code);
+
+  /// No description provided for @fsDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get fsDecline;
+
+  /// No description provided for @fsAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get fsAccept;
+
+  /// No description provided for @fsLinkedCaregivers.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked Caregivers ({count})'**
+  String fsLinkedCaregivers(int count);
+
+  /// No description provided for @fsActiveSyncCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Active sync • Code: {code}'**
+  String fsActiveSyncCode(String code);
+
+  /// No description provided for @fsUnlink.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlink'**
+  String get fsUnlink;
+
+  /// No description provided for @fsUnlinkCaregiverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlink Caregiver'**
+  String get fsUnlinkCaregiverTitle;
+
+  /// No description provided for @fsUnlinkCaregiverBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to unlink {name}? They will no longer be able to see your adherence schedule.'**
+  String fsUnlinkCaregiverBody(String name);
+
+  /// No description provided for @fsThisCaregiver.
+  ///
+  /// In en, this message translates to:
+  /// **'this caregiver'**
+  String get fsThisCaregiver;
+
+  /// No description provided for @fsSyncNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Medicines to Caregivers Now'**
+  String get fsSyncNow;
+
+  /// No description provided for @fsYourCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR 6-CHARACTER SHARE CODE'**
+  String get fsYourCodeLabel;
+
+  /// No description provided for @fsCopyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Code'**
+  String get fsCopyCode;
+
+  /// No description provided for @fsCodeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Code \"{code}\" copied to clipboard!'**
+  String fsCodeCopied(String code);
+
+  /// No description provided for @fsShareCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Code'**
+  String get fsShareCode;
+
+  /// No description provided for @fsShareMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Here is my Dosey family share code: {code}\n\nEnter it in your Dosey app under Settings > Caregiver & Family Mode to link our accounts.'**
+  String fsShareMessage(String code);
+
+  /// No description provided for @fsCodeValidity.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this code with your family member. Valid for 7 days.'**
+  String get fsCodeValidity;
+
+  /// No description provided for @fsPasteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste Code'**
+  String get fsPasteCode;
+
+  /// No description provided for @fsLinkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Link to a Family Member'**
+  String get fsLinkTitle;
+
+  /// No description provided for @fsLinkSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter their 6-character code to link profiles'**
+  String get fsLinkSubtitle;
+
+  /// No description provided for @fsStepAskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask family member for their code'**
+  String get fsStepAskTitle;
+
+  /// No description provided for @fsStepAskBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Found under \"My Code\" on their phone.'**
+  String get fsStepAskBody;
+
+  /// No description provided for @fsStepEnterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter or paste the code below'**
+  String get fsStepEnterTitle;
+
+  /// No description provided for @fsStepEnterBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the boxes or use the Paste button.'**
+  String get fsStepEnterBody;
+
+  /// No description provided for @fsStepWaitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait for their approval'**
+  String get fsStepWaitTitle;
+
+  /// No description provided for @fsStepWaitBody.
+  ///
+  /// In en, this message translates to:
+  /// **'They must accept your link request to sync.'**
+  String get fsStepWaitBody;
+
+  /// No description provided for @fsSendRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Link Request'**
+  String get fsSendRequest;
+
+  /// No description provided for @fsPendingApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Approval ({count})'**
+  String fsPendingApproval(int count);
+
+  /// No description provided for @fsFamilyMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Family Member'**
+  String get fsFamilyMember;
+
+  /// No description provided for @fsAwaitingApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting approval • Code: {code}'**
+  String fsAwaitingApproval(String code);
+
+  /// No description provided for @fsConnectedMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected Family Members ({count})'**
+  String fsConnectedMembers(int count);
+
+  /// No description provided for @fsActiveSyncTap.
+  ///
+  /// In en, this message translates to:
+  /// **'Active sync • Tap to view schedule'**
+  String get fsActiveSyncTap;
+
+  /// No description provided for @fsRemoveMemberTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Family Member'**
+  String get fsRemoveMemberTitle;
+
+  /// No description provided for @fsStopMonitoring.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to stop monitoring {name}?'**
+  String fsStopMonitoring(String name);
+
+  /// No description provided for @fsStopMonitoringLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to stop monitoring {name}? You will no longer receive their adherence updates.'**
+  String fsStopMonitoringLong(String name);
+
+  /// No description provided for @fsThisMember.
+  ///
+  /// In en, this message translates to:
+  /// **'this family member'**
+  String get fsThisMember;
+
+  /// No description provided for @fsRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get fsRemove;
+
+  /// No description provided for @fsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep family members and caregivers in the loop. Link securely to monitor adherence and share dose reminders.'**
+  String get fsIntro;
+
+  /// No description provided for @fsContinueGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get fsContinueGoogle;
+
+  /// No description provided for @fsContinueApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get fsContinueApple;
+
+  /// No description provided for @fsOrEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'or with email'**
+  String get fsOrEmail;
+
+  /// No description provided for @fsSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get fsSignIn;
+
+  /// No description provided for @fsCreateAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get fsCreateAccount;
+
+  /// No description provided for @fsNameOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Name (Optional)'**
+  String get fsNameOptional;
+
+  /// No description provided for @fsFullNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Rahat Ahmed'**
+  String get fsFullNameHint;
+
+  /// No description provided for @fsEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get fsEmailRequired;
+
+  /// No description provided for @fsEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address'**
+  String get fsEmailInvalid;
+
+  /// No description provided for @fsPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get fsPassword;
+
+  /// No description provided for @fsPasswordNewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 6 characters'**
+  String get fsPasswordNewHint;
+
+  /// No description provided for @fsPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get fsPasswordHint;
+
+  /// No description provided for @fsPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get fsPasswordRequired;
+
+  /// No description provided for @fsPasswordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get fsPasswordTooShort;
+
+  /// No description provided for @fsForgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get fsForgotPassword;
+
+  /// No description provided for @fsOfflineFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosey remains 100% offline-first. Your local medicines and reminders stay safe on your device.'**
+  String get fsOfflineFirst;
+
+  /// No description provided for @fsVerifyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your email'**
+  String get fsVerifyTitle;
+
+  /// No description provided for @fsVerifyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a link to {email}. Open it to confirm the address, then come back and tap \"I\'ve verified\".'**
+  String fsVerifyBody(String email);
+
+  /// No description provided for @fsYourEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'your email'**
+  String get fsYourEmail;
+
+  /// No description provided for @fsIveVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve verified'**
+  String get fsIveVerified;
+
+  /// No description provided for @fsNotVerifiedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not verified yet. Open the link in the email first (check spam too).'**
+  String get fsNotVerifiedYet;
+
+  /// No description provided for @fsVerificationSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification email sent to {email}.'**
+  String fsVerificationSent(String email);
+
+  /// No description provided for @fsResendEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend email'**
+  String get fsResendEmail;
+
+  /// No description provided for @fsUseAnotherAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Use another account'**
+  String get fsUseAnotherAccount;
+
+  /// No description provided for @fsResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get fsResetTitle;
+
+  /// No description provided for @fsResetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your registered email address and we will send you a password reset link.'**
+  String get fsResetBody;
+
+  /// No description provided for @fsSendResetLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Link'**
+  String get fsSendResetLink;
+
+  /// No description provided for @fsBackToSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Sign In'**
+  String get fsBackToSignIn;
+
+  /// No description provided for @fsEditMemberName.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Family Member Name'**
+  String get fsEditMemberName;
+
+  /// No description provided for @fsMemberNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Dad, Mom, Rahat'**
+  String get fsMemberNameHint;
+
+  /// No description provided for @fsMemberRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed {name} from monitored family members.'**
+  String fsMemberRemoved(String name);
+
+  /// No description provided for @fsRemoveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to remove member: {error}'**
+  String fsRemoveFailed(String error);
+
+  /// No description provided for @fsDoseNudgeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'🔔 Sent reminder for {medicine} ({time})!'**
+  String fsDoseNudgeSent(String medicine, String time);
+
+  /// No description provided for @fsNudgeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'🔔 Gentle reminder sent to {name}\'s phone!'**
+  String fsNudgeSent(String name);
+
+  /// No description provided for @fsEditMemberNameTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit member name'**
+  String get fsEditMemberNameTooltip;
+
+  /// No description provided for @fsRemoveMemberTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove family member'**
+  String get fsRemoveMemberTooltip;
+
+  /// No description provided for @fsShareCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Code: {code}'**
+  String fsShareCodeLabel(String code);
+
+  /// No description provided for @fsLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get fsLive;
+
+  /// No description provided for @fsManageMedicinesFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage & Edit Medicines for {name}'**
+  String fsManageMedicinesFor(String name);
+
+  /// No description provided for @fsTodaysSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'TODAY\'S SCHEDULE'**
+  String get fsTodaysSchedule;
+
+  /// No description provided for @fsSendGentleReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Gentle Reminder'**
+  String get fsSendGentleReminder;
+
+  /// No description provided for @fsScheduleLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load shared schedule'**
+  String get fsScheduleLoadFailed;
+
+  /// No description provided for @fsPullToRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down to refresh and retry.'**
+  String get fsPullToRetry;
+
+  /// No description provided for @fsRemoveFromMonitoring.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name} from Monitoring'**
+  String fsRemoveFromMonitoring(String name);
+
+  /// No description provided for @fsTodaysAdherence.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Adherence'**
+  String get fsTodaysAdherence;
+
+  /// No description provided for @fsDosesCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'{taken} of {total} doses completed'**
+  String fsDosesCompleted(int taken, int total);
+
+  /// No description provided for @fsPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get fsPending;
+
+  /// No description provided for @fsOneDose.
+  ///
+  /// In en, this message translates to:
+  /// **'1 dose'**
+  String get fsOneDose;
+
+  /// No description provided for @fsNudge.
+  ///
+  /// In en, this message translates to:
+  /// **'Nudge'**
+  String get fsNudge;
+
+  /// No description provided for @fsNudged.
+  ///
+  /// In en, this message translates to:
+  /// **'Nudged'**
+  String get fsNudged;
+
+  /// No description provided for @fsNoDosesToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No Shared Doses Found Today'**
+  String get fsNoDosesToday;
+
+  /// No description provided for @fsNoDosesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'When {name} opens Dosey or logs doses, their schedule will appear here automatically.'**
+  String fsNoDosesBody(String name);
+
+  /// No description provided for @fsAddDoseTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please add at least one dose time.'**
+  String get fsAddDoseTime;
+
+  /// No description provided for @fsSavedSynced.
+  ///
+  /// In en, this message translates to:
+  /// **'⚡ Saved and synced to {name}\'s phone!'**
+  String fsSavedSynced(String name);
+
+  /// No description provided for @fsError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String fsError(String error);
+
+  /// No description provided for @fsEditMedicineFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Medicine for {name}'**
+  String fsEditMedicineFor(String name);
+
+  /// No description provided for @fsAddMedicineFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Medicine for {name}'**
+  String fsAddMedicineFor(String name);
+
+  /// No description provided for @fsSyncingTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing to {name}\'s phone...'**
+  String fsSyncingTo(String name);
+
+  /// No description provided for @fsUpdateSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Update & Sync'**
+  String get fsUpdateSync;
+
+  /// No description provided for @fsSaveSyncTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Save & Sync to {name}'**
+  String fsSaveSyncTo(String name);
+
+  /// No description provided for @fsMedicineName.
+  ///
+  /// In en, this message translates to:
+  /// **'MEDICINE NAME'**
+  String get fsMedicineName;
+
+  /// No description provided for @fsMedicineNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Napa Extra, Metformin, Insulin'**
+  String get fsMedicineNameHint;
+
+  /// No description provided for @fsNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get fsNameRequired;
+
+  /// No description provided for @fsMedicineForm.
+  ///
+  /// In en, this message translates to:
+  /// **'MEDICINE FORM'**
+  String get fsMedicineForm;
+
+  /// No description provided for @fsWhenToTake.
+  ///
+  /// In en, this message translates to:
+  /// **'WHEN TO TAKE'**
+  String get fsWhenToTake;
+
+  /// No description provided for @fsDosingTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{DOSE TIME (ONCE A DAY)} other{DOSE TIMES ({count} TIMES A DAY)}}'**
+  String fsDosingTimes(int count);
+
+  /// No description provided for @fsDoseNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Dose {number}'**
+  String fsDoseNumber(int number);
+
+  /// No description provided for @fsAddIntakeTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Another Intake Time'**
+  String get fsAddIntakeTime;
+
+  /// No description provided for @fsDoseAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'DOSE AMOUNT'**
+  String get fsDoseAmount;
+
+  /// No description provided for @fsInitialStock.
+  ///
+  /// In en, this message translates to:
+  /// **'INITIAL STOCK'**
+  String get fsInitialStock;
+
+  /// No description provided for @fsStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'START DATE'**
+  String get fsStartDate;
+
+  /// No description provided for @fsDoctorNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'DOCTOR NOTES / INSTRUCTIONS'**
+  String get fsDoctorNotes;
+
+  /// No description provided for @fsDoctorNotesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Take with a glass of water'**
+  String get fsDoctorNotesHint;
+
+  /// No description provided for @fsRemoveMedicineConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove \"{medicine}\" from {name}\'s phone schedule?'**
+  String fsRemoveMedicineConfirm(String medicine, String name);
+
+  /// No description provided for @fsMedicineRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'{medicine} removed and synced.'**
+  String fsMedicineRemoved(String medicine);
+
+  /// No description provided for @fsManageMedicinesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage {name}\'s Medicines'**
+  String fsManageMedicinesTitle(String name);
+
+  /// No description provided for @fsLiveCaregiverSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Caregiver Sync'**
+  String get fsLiveCaregiverSync;
+
+  /// No description provided for @fsScheduledMedicines.
+  ///
+  /// In en, this message translates to:
+  /// **'SCHEDULED MEDICINES ({count})'**
+  String fsScheduledMedicines(int count);
+
+  /// No description provided for @fsPrescriptionsLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load prescriptions'**
+  String get fsPrescriptionsLoadFailed;
+
+  /// No description provided for @fsNoMedicinesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No medicines configured yet'**
+  String get fsNoMedicinesYet;
+
+  /// No description provided for @fsNoMedicinesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add prescriptions for {name}. Doses and timings will instantly sync to their phone alarms.'**
+  String fsNoMedicinesBody(String name);
+
+  /// No description provided for @fsFeatureAlarmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-Alarm Sync'**
+  String get fsFeatureAlarmTitle;
+
+  /// No description provided for @fsFeatureAlarmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Configures phone alarms on their device automatically'**
+  String get fsFeatureAlarmBody;
+
+  /// No description provided for @fsFeatureAdherenceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Adherence'**
+  String get fsFeatureAdherenceTitle;
+
+  /// No description provided for @fsFeatureAdherenceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor when doses are taken, skipped or missed'**
+  String get fsFeatureAdherenceBody;
+
+  /// No description provided for @fsFeatureNudgeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'1-Tap Dose Nudges'**
+  String get fsFeatureNudgeTitle;
+
+  /// No description provided for @fsFeatureNudgeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Send gentle reminders directly to their lock screen'**
+  String get fsFeatureNudgeBody;
+
+  /// No description provided for @fsDailyTimings.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Timings: '**
+  String get fsDailyTimings;
+
+  /// No description provided for @fsStockRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock remaining: {count} units'**
+  String fsStockRemaining(String count);
+
+  /// No description provided for @fsCaregiverMonitoring.
+  ///
+  /// In en, this message translates to:
+  /// **'CAREGIVER MONITORING'**
+  String get fsCaregiverMonitoring;
+
+  /// No description provided for @fsTapToViewSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to view today\'s schedule'**
+  String get fsTapToViewSchedule;
+
+  /// No description provided for @fsConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Family Sharing Connected'**
+  String get fsConnected;
+
+  /// No description provided for @fsSettingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Link with family & caregivers'**
+  String get fsSettingsHint;
+
+  /// No description provided for @fsActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get fsActive;
+
+  /// No description provided for @authErrUserNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No account found with this email address.'**
+  String get authErrUserNotFound;
+
+  /// No description provided for @authErrWrongPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect password. Please try again.'**
+  String get authErrWrongPassword;
+
+  /// No description provided for @authErrEmailInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'An account with this email already exists.'**
+  String get authErrEmailInUse;
+
+  /// No description provided for @authErrInvalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address.'**
+  String get authErrInvalidEmail;
+
+  /// No description provided for @authErrWeakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters.'**
+  String get authErrWeakPassword;
+
+  /// No description provided for @authErrUserDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'This account has been disabled.'**
+  String get authErrUserDisabled;
+
+  /// No description provided for @authErrTooManyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please try again later.'**
+  String get authErrTooManyRequests;
+
+  /// No description provided for @authErrNotAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'This sign-in method is not enabled.'**
+  String get authErrNotAllowed;
+
+  /// No description provided for @authErrNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Network error. Please check your connection.'**
+  String get authErrNetwork;
+
+  /// No description provided for @authErrInvalidCredential.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password. Please check and retry.'**
+  String get authErrInvalidCredential;
+
+  /// No description provided for @authErrRecentLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign out and sign in again before deleting your account.'**
+  String get authErrRecentLogin;
+
+  /// No description provided for @authErrGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication error occurred.'**
+  String get authErrGeneric;
+
+  /// No description provided for @authErrEraseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not reach the server to erase your data. Please check your connection and try again.'**
+  String get authErrEraseFailed;
+
+  /// No description provided for @authErrGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Sign-In failed ({code}: {message}). You can also create an account with Email & Password below.'**
+  String authErrGoogle(String code, String message);
+
+  /// No description provided for @authErrConfig.
+  ///
+  /// In en, this message translates to:
+  /// **'Configuration error'**
+  String get authErrConfig;
+
+  /// No description provided for @appTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline-first • Privacy conscious'**
+  String get appTagline;
 }
 
 class _AppLocalizationsDelegate

@@ -4,12 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show PostgrestException, Supabase;
 
 import '../../../core/cloud/cloud_initializer.dart';
 import '../../../core/cloud/push_messaging_service.dart';
+import '../../../core/localization/l10n.dart';
 
 /// Repository managing Firebase Authentication for Family Sharing & Caregiver Mode.
 class AuthRepository {
@@ -205,29 +207,31 @@ class AuthRepository {
     }
   }
 
-  /// Formats Firebase authentication errors into clear, actionable messages.
-  static String formatAuthError(dynamic error) {
+  /// Formats Firebase authentication errors into clear, actionable messages,
+  /// in [l10n]'s language (English when not given).
+  static String formatAuthError(dynamic error, {AppLocalizations? l10n}) {
+    final l = l10n ?? lookupAppLocalizations(const Locale('en'));
     if (error is FirebaseAuthException) {
       return switch (error.code) {
-        'user-not-found' => 'No account found with this email address.',
-        'wrong-password' => 'Incorrect password. Please try again.',
-        'email-already-in-use' => 'An account with this email already exists.',
-        'invalid-email' => 'Please enter a valid email address.',
-        'weak-password' => 'Password must be at least 6 characters.',
-        'user-disabled' => 'This account has been disabled.',
-        'too-many-requests' => 'Too many attempts. Please try again later.',
-        'operation-not-allowed' => 'This sign-in method is not enabled.',
-        'network-request-failed' => 'Network error. Please check your connection.',
-        'invalid-credential' => 'Invalid email or password. Please check and retry.',
-        'requires-recent-login' => 'Please sign out and sign in again before deleting your account.',
-        _ => error.message ?? 'Authentication error occurred.',
+        'user-not-found' => l.authErrUserNotFound,
+        'wrong-password' => l.authErrWrongPassword,
+        'email-already-in-use' => l.authErrEmailInUse,
+        'invalid-email' => l.authErrInvalidEmail,
+        'weak-password' => l.authErrWeakPassword,
+        'user-disabled' => l.authErrUserDisabled,
+        'too-many-requests' => l.authErrTooManyRequests,
+        'operation-not-allowed' => l.authErrNotAllowed,
+        'network-request-failed' => l.authErrNetwork,
+        'invalid-credential' => l.authErrInvalidCredential,
+        'requires-recent-login' => l.authErrRecentLogin,
+        _ => error.message ?? l.authErrGeneric,
       };
     }
     if (error is PostgrestException) {
-      return 'Could not reach the server to erase your data. Please check your connection and try again.';
+      return l.authErrEraseFailed;
     }
     if (error is PlatformException) {
-      return 'Google Sign-In failed (${error.code}: ${error.message ?? 'Configuration error'}). You can also create an account with Email & Password below.';
+      return l.authErrGoogle(error.code, error.message ?? l.authErrConfig);
     }
     return error.toString();
   }

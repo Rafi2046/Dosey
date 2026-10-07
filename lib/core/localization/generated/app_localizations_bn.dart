@@ -2399,4 +2399,676 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get offlineDismiss => 'ঠিক আছে';
+
+  @override
+  String fsResetEmailSent(String email) {
+    return '$email-এ পাসওয়ার্ড রিসেটের ইমেইল পাঠানো হয়েছে!';
+  }
+
+  @override
+  String get fsAccountCreated =>
+      'অ্যাকাউন্ট তৈরি হয়েছে! ইমেইল দেখে ঠিকানাটি যাচাই করুন।';
+
+  @override
+  String get fsSignedIn => 'সাইন ইন হয়েছে!';
+
+  @override
+  String get fsSignedInGoogle => 'Google দিয়ে সাইন ইন হয়েছে!';
+
+  @override
+  String get fsSignedInApple => 'Apple দিয়ে সাইন ইন হয়েছে!';
+
+  @override
+  String get fsSignedOut => 'সাইন আউট হয়েছে।';
+
+  @override
+  String get fsDeleteAccountTitle => 'অ্যাকাউন্ট মুছবেন?';
+
+  @override
+  String get fsDeleteAccountBody =>
+      'এতে আপনার ক্লাউড অ্যাকাউন্ট স্থায়ীভাবে মুছে যাবে এবং পরিবারের সবার সাথে সংযোগ বিচ্ছিন্ন হবে। এই ফোনে থাকা আপনার ওষুধের তথ্য যেমন আছে তেমনই থাকবে।';
+
+  @override
+  String get fsDeleteAccount => 'অ্যাকাউন্ট মুছুন';
+
+  @override
+  String get fsAccountDeleted => 'অ্যাকাউন্ট মুছে ফেলা হয়েছে।';
+
+  @override
+  String get fsYourDisplayName => 'আপনার নাম';
+
+  @override
+  String get fsDisplayNameHint => 'যেমন: রাহাত, আব্বু, আম্মু';
+
+  @override
+  String fsNameUpdated(String name) {
+    return 'নাম বদলে \"$name\" করা হয়েছে';
+  }
+
+  @override
+  String fsNameUpdateFailed(String error) {
+    return 'নাম বদলানো যায়নি: $error';
+  }
+
+  @override
+  String get fsEnterSixCharCode => '৬ অক্ষরের শেয়ার কোডটি লিখুন।';
+
+  @override
+  String get fsRequestSent =>
+      'সংযোগের অনুরোধ পাঠানো হয়েছে! পরিবারের সদস্যের অনুমতির অপেক্ষায়।';
+
+  @override
+  String fsLinkAccepted(String name) {
+    return 'অনুরোধ গ্রহণ করা হয়েছে! $name এখন যুক্ত।';
+  }
+
+  @override
+  String get fsCaregiver => 'কেয়ারগিভার';
+
+  @override
+  String get fsRequestDeclined => 'অনুরোধটি প্রত্যাখ্যান করা হয়েছে।';
+
+  @override
+  String get fsNothingToSync =>
+      'আজকের সময়সূচিতে সিঙ্ক করার মতো কোনো ওষুধ নেই।';
+
+  @override
+  String fsSynced(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি ওষুধ ক্লাউডে সিঙ্ক হয়েছে! ✅',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fsOverline => 'ফ্যামিলি শেয়ারিং';
+
+  @override
+  String get fsTitle => 'কেয়ারগিভার ও ফ্যামিলি মোড';
+
+  @override
+  String get fsFamilyAccount => 'ফ্যামিলি অ্যাকাউন্ট';
+
+  @override
+  String get fsCloudActive => 'ক্লাউড চালু';
+
+  @override
+  String get fsMyCode => 'আমার কোড';
+
+  @override
+  String get fsEnterCode => 'কোড দিন';
+
+  @override
+  String get fsSignOut => 'সাইন আউট';
+
+  @override
+  String get fsShareTitle => 'আপনার ডোজ ও রিমাইন্ডার শেয়ার করুন';
+
+  @override
+  String get fsShareSubtitle =>
+      'পরিবারের সদস্যরা দেখতে পারবেন আপনি ঠিকমতো ওষুধ খাচ্ছেন কিনা';
+
+  @override
+  String get fsStepGenerateTitle => 'নিচে আপনার ৬ অক্ষরের কোড তৈরি করুন';
+
+  @override
+  String get fsStepGenerateBody => 'এই কোড দিয়েই কেয়ারগিভারের ফোন যুক্ত হয়।';
+
+  @override
+  String get fsStepSendTitle =>
+      'কোডটি আপনার কেয়ারগিভার বা পরিবারের সদস্যকে পাঠান';
+
+  @override
+  String get fsStepSendBody => 'তিনি তার Dosey অ্যাপে কোডটি লিখবেন।';
+
+  @override
+  String get fsStepApproveTitle => 'আসা অনুরোধগুলো অনুমোদন করুন';
+
+  @override
+  String get fsStepApproveBody => 'পরিবারের সদস্যদের অনুরোধ দেখে গ্রহণ করুন।';
+
+  @override
+  String get fsGenerateCode => 'শেয়ার কোড তৈরি করুন';
+
+  @override
+  String fsIncomingRequests(int count) {
+    return 'সংযোগের অনুরোধ ($count)';
+  }
+
+  @override
+  String get fsFamilyCaregiver => 'পরিবারের কেয়ারগিভার';
+
+  @override
+  String fsWantsToConnect(String code) {
+    return '$code কোড দিয়ে যুক্ত হতে চান';
+  }
+
+  @override
+  String get fsDecline => 'প্রত্যাখ্যান';
+
+  @override
+  String get fsAccept => 'গ্রহণ করুন';
+
+  @override
+  String fsLinkedCaregivers(int count) {
+    return 'যুক্ত কেয়ারগিভার ($count)';
+  }
+
+  @override
+  String fsActiveSyncCode(String code) {
+    return 'সিঙ্ক চালু • কোড: $code';
+  }
+
+  @override
+  String get fsUnlink => 'বিচ্ছিন্ন করুন';
+
+  @override
+  String get fsUnlinkCaregiverTitle => 'কেয়ারগিভারকে বিচ্ছিন্ন করবেন?';
+
+  @override
+  String fsUnlinkCaregiverBody(String name) {
+    return '$name-এর সাথে সংযোগ বিচ্ছিন্ন করতে চান? তিনি আর আপনার ওষুধের সময়সূচি দেখতে পারবেন না।';
+  }
+
+  @override
+  String get fsThisCaregiver => 'এই কেয়ারগিভার';
+
+  @override
+  String get fsSyncNow => 'এখনই কেয়ারগিভারদের সাথে ওষুধ সিঙ্ক করুন';
+
+  @override
+  String get fsYourCodeLabel => 'আপনার ৬ অক্ষরের শেয়ার কোড';
+
+  @override
+  String get fsCopyCode => 'কোড কপি করুন';
+
+  @override
+  String fsCodeCopied(String code) {
+    return '\"$code\" কোডটি কপি হয়েছে!';
+  }
+
+  @override
+  String get fsShareCode => 'কোড শেয়ার করুন';
+
+  @override
+  String fsShareMessage(String code) {
+    return 'এটি আমার Dosey ফ্যামিলি শেয়ার কোড: $code\n\nআমাদের অ্যাকাউন্ট যুক্ত করতে আপনার Dosey অ্যাপে সেটিংস > কেয়ারগিভার ও ফ্যামিলি মোড-এ গিয়ে কোডটি লিখুন।';
+  }
+
+  @override
+  String get fsCodeValidity =>
+      'কোডটি পরিবারের সদস্যকে পাঠান। ৭ দিন পর্যন্ত কাজ করবে।';
+
+  @override
+  String get fsPasteCode => 'কোড পেস্ট করুন';
+
+  @override
+  String get fsLinkTitle => 'পরিবারের সদস্যের সাথে যুক্ত হোন';
+
+  @override
+  String get fsLinkSubtitle => 'যুক্ত হতে তার ৬ অক্ষরের কোডটি লিখুন';
+
+  @override
+  String get fsStepAskTitle => 'পরিবারের সদস্যের কাছে কোড চান';
+
+  @override
+  String get fsStepAskBody => 'তার ফোনে \"আমার কোড\"-এ পাওয়া যাবে।';
+
+  @override
+  String get fsStepEnterTitle => 'নিচে কোডটি লিখুন বা পেস্ট করুন';
+
+  @override
+  String get fsStepEnterBody =>
+      'ঘরগুলোতে ট্যাপ করুন বা পেস্ট বাটন ব্যবহার করুন।';
+
+  @override
+  String get fsStepWaitTitle => 'তার অনুমোদনের অপেক্ষা করুন';
+
+  @override
+  String get fsStepWaitBody =>
+      'সিঙ্ক শুরু হতে তাকে আপনার অনুরোধ গ্রহণ করতে হবে।';
+
+  @override
+  String get fsSendRequest => 'সংযোগের অনুরোধ পাঠান';
+
+  @override
+  String fsPendingApproval(int count) {
+    return 'অনুমোদনের অপেক্ষায় ($count)';
+  }
+
+  @override
+  String get fsFamilyMember => 'পরিবারের সদস্য';
+
+  @override
+  String fsAwaitingApproval(String code) {
+    return 'অনুমোদনের অপেক্ষায় • কোড: $code';
+  }
+
+  @override
+  String fsConnectedMembers(int count) {
+    return 'যুক্ত পরিবারের সদস্য ($count)';
+  }
+
+  @override
+  String get fsActiveSyncTap => 'সিঙ্ক চালু • সময়সূচি দেখতে ট্যাপ করুন';
+
+  @override
+  String get fsRemoveMemberTitle => 'পরিবারের সদস্যকে সরাবেন?';
+
+  @override
+  String fsStopMonitoring(String name) {
+    return '$name-এর ওষুধের খবর রাখা বন্ধ করতে চান?';
+  }
+
+  @override
+  String fsStopMonitoringLong(String name) {
+    return '$name-এর ওষুধের খবর রাখা বন্ধ করতে চান? এরপর আর তার ওষুধ খাওয়ার খবর পাবেন না।';
+  }
+
+  @override
+  String get fsThisMember => 'এই সদস্য';
+
+  @override
+  String get fsRemove => 'সরান';
+
+  @override
+  String get fsIntro =>
+      'পরিবারের সদস্য ও কেয়ারগিভারদের সাথে যুক্ত থাকুন। নিরাপদে যুক্ত হয়ে ওষুধ খাওয়ার খবর রাখুন ও রিমাইন্ডার পাঠান।';
+
+  @override
+  String get fsContinueGoogle => 'Google দিয়ে চালিয়ে যান';
+
+  @override
+  String get fsContinueApple => 'Apple দিয়ে চালিয়ে যান';
+
+  @override
+  String get fsOrEmail => 'অথবা ইমেইল দিয়ে';
+
+  @override
+  String get fsSignIn => 'সাইন ইন';
+
+  @override
+  String get fsCreateAccount => 'অ্যাকাউন্ট খুলুন';
+
+  @override
+  String get fsNameOptional => 'আপনার নাম (ঐচ্ছিক)';
+
+  @override
+  String get fsFullNameHint => 'যেমন: রাহাত আহমেদ';
+
+  @override
+  String get fsEmailRequired => 'ইমেইল দিন';
+
+  @override
+  String get fsEmailInvalid => 'সঠিক ইমেইল ঠিকানা দিন';
+
+  @override
+  String get fsPassword => 'পাসওয়ার্ড';
+
+  @override
+  String get fsPasswordNewHint => 'কমপক্ষে ৬ অক্ষর';
+
+  @override
+  String get fsPasswordHint => 'আপনার পাসওয়ার্ড দিন';
+
+  @override
+  String get fsPasswordRequired => 'পাসওয়ার্ড দিন';
+
+  @override
+  String get fsPasswordTooShort => 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে';
+
+  @override
+  String get fsForgotPassword => 'পাসওয়ার্ড ভুলে গেছেন?';
+
+  @override
+  String get fsOfflineFirst =>
+      'Dosey পুরোপুরি অফলাইনে চলে। আপনার ওষুধ ও রিমাইন্ডার নিরাপদে আপনার ফোনেই থাকে।';
+
+  @override
+  String get fsVerifyTitle => 'ইমেইল যাচাই করুন';
+
+  @override
+  String fsVerifyBody(String email) {
+    return '$email-এ একটি লিংক পাঠানো হয়েছে। লিংকটি খুলে ঠিকানা নিশ্চিত করুন, তারপর ফিরে এসে \"যাচাই করেছি\" চাপুন।';
+  }
+
+  @override
+  String get fsYourEmail => 'আপনার ইমেইল';
+
+  @override
+  String get fsIveVerified => 'যাচাই করেছি';
+
+  @override
+  String get fsNotVerifiedYet =>
+      'এখনো যাচাই হয়নি। আগে ইমেইলের লিংকটি খুলুন (স্প্যাম ফোল্ডারও দেখুন)।';
+
+  @override
+  String fsVerificationSent(String email) {
+    return '$email-এ যাচাইয়ের ইমেইল পাঠানো হয়েছে।';
+  }
+
+  @override
+  String get fsResendEmail => 'আবার ইমেইল পাঠান';
+
+  @override
+  String get fsUseAnotherAccount => 'অন্য অ্যাকাউন্ট ব্যবহার করুন';
+
+  @override
+  String get fsResetTitle => 'পাসওয়ার্ড রিসেট';
+
+  @override
+  String get fsResetBody =>
+      'আপনার অ্যাকাউন্টের ইমেইল দিন, আমরা পাসওয়ার্ড রিসেটের লিংক পাঠাব।';
+
+  @override
+  String get fsSendResetLink => 'রিসেট লিংক পাঠান';
+
+  @override
+  String get fsBackToSignIn => 'সাইন ইনে ফিরে যান';
+
+  @override
+  String get fsEditMemberName => 'পরিবারের সদস্যের নাম বদলান';
+
+  @override
+  String get fsMemberNameHint => 'যেমন: আব্বু, আম্মু, রাহাত';
+
+  @override
+  String fsMemberRemoved(String name) {
+    return '$name-কে তালিকা থেকে সরানো হয়েছে।';
+  }
+
+  @override
+  String fsRemoveFailed(String error) {
+    return 'সরানো যায়নি: $error';
+  }
+
+  @override
+  String fsDoseNudgeSent(String medicine, String time) {
+    return '🔔 $medicine ($time)-এর রিমাইন্ডার পাঠানো হয়েছে!';
+  }
+
+  @override
+  String fsNudgeSent(String name) {
+    return '🔔 $name-এর ফোনে রিমাইন্ডার পাঠানো হয়েছে!';
+  }
+
+  @override
+  String get fsEditMemberNameTooltip => 'নাম বদলান';
+
+  @override
+  String get fsRemoveMemberTooltip => 'সদস্যকে সরান';
+
+  @override
+  String fsShareCodeLabel(String code) {
+    return 'শেয়ার কোড: $code';
+  }
+
+  @override
+  String get fsLive => 'লাইভ';
+
+  @override
+  String fsManageMedicinesFor(String name) {
+    return '$name-এর ওষুধ দেখুন ও বদলান';
+  }
+
+  @override
+  String get fsTodaysSchedule => 'আজকের সময়সূচি';
+
+  @override
+  String get fsSendGentleReminder => 'রিমাইন্ডার পাঠান';
+
+  @override
+  String get fsScheduleLoadFailed => 'সময়সূচি লোড করা যায়নি';
+
+  @override
+  String get fsPullToRetry => 'আবার চেষ্টা করতে নিচে টানুন।';
+
+  @override
+  String fsRemoveFromMonitoring(String name) {
+    return '$name-কে তালিকা থেকে সরান';
+  }
+
+  @override
+  String get fsTodaysAdherence => 'আজকের ওষুধ খাওয়া';
+
+  @override
+  String fsDosesCompleted(int taken, int total) {
+    return '$totalটি ডোজের মধ্যে $takenটি খাওয়া হয়েছে';
+  }
+
+  @override
+  String get fsPending => 'বাকি';
+
+  @override
+  String get fsOneDose => '১ ডোজ';
+
+  @override
+  String get fsNudge => 'মনে করান';
+
+  @override
+  String get fsNudged => 'পাঠানো হয়েছে';
+
+  @override
+  String get fsNoDosesToday => 'আজ কোনো ডোজ শেয়ার করা হয়নি';
+
+  @override
+  String fsNoDosesBody(String name) {
+    return '$name Dosey খুললে বা ডোজ লগ করলে তার সময়সূচি এখানে নিজে থেকেই দেখা যাবে।';
+  }
+
+  @override
+  String get fsAddDoseTime => 'কমপক্ষে একটি ডোজের সময় যোগ করুন।';
+
+  @override
+  String fsSavedSynced(String name) {
+    return '⚡ সেভ হয়েছে এবং $name-এর ফোনে সিঙ্ক হয়েছে!';
+  }
+
+  @override
+  String fsError(String error) {
+    return 'সমস্যা হয়েছে: $error';
+  }
+
+  @override
+  String fsEditMedicineFor(String name) {
+    return '$name-এর ওষুধ বদলান';
+  }
+
+  @override
+  String fsAddMedicineFor(String name) {
+    return '$name-এর জন্য ওষুধ যোগ করুন';
+  }
+
+  @override
+  String fsSyncingTo(String name) {
+    return '$name-এর ফোনে সিঙ্ক হচ্ছে...';
+  }
+
+  @override
+  String get fsUpdateSync => 'আপডেট ও সিঙ্ক করুন';
+
+  @override
+  String fsSaveSyncTo(String name) {
+    return 'সেভ করে $name-এর ফোনে পাঠান';
+  }
+
+  @override
+  String get fsMedicineName => 'ওষুধের নাম';
+
+  @override
+  String get fsMedicineNameHint => 'যেমন: নাপা এক্সট্রা, মেটফরমিন, ইনসুলিন';
+
+  @override
+  String get fsNameRequired => 'নাম দিন';
+
+  @override
+  String get fsMedicineForm => 'ওষুধের ধরন';
+
+  @override
+  String get fsWhenToTake => 'কখন খাবেন';
+
+  @override
+  String fsDosingTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ডোজের সময় (দিনে $count বার)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fsDoseNumber(int number) {
+    return 'ডোজ $number';
+  }
+
+  @override
+  String get fsAddIntakeTime => 'আরেকটি সময় যোগ করুন';
+
+  @override
+  String get fsDoseAmount => 'ডোজের পরিমাণ';
+
+  @override
+  String get fsInitialStock => 'শুরুর স্টক';
+
+  @override
+  String get fsStartDate => 'শুরুর তারিখ';
+
+  @override
+  String get fsDoctorNotes => 'ডাক্তারের নির্দেশনা';
+
+  @override
+  String get fsDoctorNotesHint => 'যেমন: এক গ্লাস পানির সাথে খাবেন';
+
+  @override
+  String fsRemoveMedicineConfirm(String medicine, String name) {
+    return '$name-এর ফোনের সময়সূচি থেকে \"$medicine\" সরাতে চান?';
+  }
+
+  @override
+  String fsMedicineRemoved(String medicine) {
+    return '$medicine সরানো ও সিঙ্ক হয়েছে।';
+  }
+
+  @override
+  String fsManageMedicinesTitle(String name) {
+    return '$name-এর ওষুধ';
+  }
+
+  @override
+  String get fsLiveCaregiverSync => 'লাইভ কেয়ারগিভার সিঙ্ক';
+
+  @override
+  String fsScheduledMedicines(int count) {
+    return 'নির্ধারিত ওষুধ ($count)';
+  }
+
+  @override
+  String get fsPrescriptionsLoadFailed => 'ওষুধের তালিকা লোড করা যায়নি';
+
+  @override
+  String get fsNoMedicinesYet => 'এখনো কোনো ওষুধ যোগ করা হয়নি';
+
+  @override
+  String fsNoMedicinesBody(String name) {
+    return '$name-এর জন্য ওষুধ যোগ করুন। ডোজ ও সময় সাথে সাথে তার ফোনের অ্যালার্মে চলে যাবে।';
+  }
+
+  @override
+  String get fsFeatureAlarmTitle => 'অটো অ্যালার্ম সিঙ্ক';
+
+  @override
+  String get fsFeatureAlarmBody =>
+      'তার ফোনে নিজে থেকেই অ্যালার্ম সেট হয়ে যায়';
+
+  @override
+  String get fsFeatureAdherenceTitle => 'লাইভ ওষুধ খাওয়ার খবর';
+
+  @override
+  String get fsFeatureAdherenceBody => 'কখন ডোজ খাওয়া, বাদ বা মিস হলো দেখুন';
+
+  @override
+  String get fsFeatureNudgeTitle => 'এক ট্যাপে রিমাইন্ডার';
+
+  @override
+  String get fsFeatureNudgeBody => 'সরাসরি তার লক স্ক্রিনে রিমাইন্ডার পাঠান';
+
+  @override
+  String get fsDailyTimings => 'প্রতিদিনের সময়: ';
+
+  @override
+  String fsStockRemaining(String count) {
+    return 'স্টক বাকি: $countটি';
+  }
+
+  @override
+  String get fsCaregiverMonitoring => 'কেয়ারগিভার মনিটরিং';
+
+  @override
+  String get fsTapToViewSchedule => 'আজকের সময়সূচি দেখতে ট্যাপ করুন';
+
+  @override
+  String get fsConnected => 'ফ্যামিলি শেয়ারিং যুক্ত';
+
+  @override
+  String get fsSettingsHint => 'পরিবার ও কেয়ারগিভারের সাথে যুক্ত হোন';
+
+  @override
+  String get fsActive => 'চালু';
+
+  @override
+  String get authErrUserNotFound => 'এই ইমেইলে কোনো অ্যাকাউন্ট পাওয়া যায়নি।';
+
+  @override
+  String get authErrWrongPassword => 'পাসওয়ার্ড ভুল। আবার চেষ্টা করুন।';
+
+  @override
+  String get authErrEmailInUse => 'এই ইমেইলে আগেই একটি অ্যাকাউন্ট আছে।';
+
+  @override
+  String get authErrInvalidEmail => 'সঠিক ইমেইল ঠিকানা দিন।';
+
+  @override
+  String get authErrWeakPassword => 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।';
+
+  @override
+  String get authErrUserDisabled => 'এই অ্যাকাউন্টটি বন্ধ করা হয়েছে।';
+
+  @override
+  String get authErrTooManyRequests =>
+      'অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।';
+
+  @override
+  String get authErrNotAllowed => 'এই পদ্ধতিতে সাইন ইন চালু নেই।';
+
+  @override
+  String get authErrNetwork => 'নেটওয়ার্কে সমস্যা। ইন্টারনেট সংযোগ দেখুন।';
+
+  @override
+  String get authErrInvalidCredential =>
+      'ইমেইল বা পাসওয়ার্ড ভুল। দেখে আবার চেষ্টা করুন।';
+
+  @override
+  String get authErrRecentLogin =>
+      'অ্যাকাউন্ট মোছার আগে একবার সাইন আউট করে আবার সাইন ইন করুন।';
+
+  @override
+  String get authErrGeneric => 'সাইন ইনে সমস্যা হয়েছে।';
+
+  @override
+  String get authErrEraseFailed =>
+      'আপনার তথ্য মুছতে সার্ভারে পৌঁছানো যায়নি। ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।';
+
+  @override
+  String authErrGoogle(String code, String message) {
+    return 'Google সাইন ইন হয়নি ($code: $message)। নিচে ইমেইল ও পাসওয়ার্ড দিয়েও অ্যাকাউন্ট খুলতে পারেন।';
+  }
+
+  @override
+  String get authErrConfig => 'কনফিগারেশনে সমস্যা';
+
+  @override
+  String get appTagline => 'অফলাইনে চলে • আপনার তথ্য আপনার কাছে';
 }

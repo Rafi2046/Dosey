@@ -2421,4 +2421,679 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get offlineDismiss => 'OK';
+
+  @override
+  String fsResetEmailSent(String email) {
+    return 'Password reset email sent to $email!';
+  }
+
+  @override
+  String get fsAccountCreated =>
+      'Account created! Check your email to verify it.';
+
+  @override
+  String get fsSignedIn => 'Signed in successfully!';
+
+  @override
+  String get fsSignedInGoogle => 'Signed in with Google!';
+
+  @override
+  String get fsSignedInApple => 'Signed in with Apple!';
+
+  @override
+  String get fsSignedOut => 'Signed out successfully.';
+
+  @override
+  String get fsDeleteAccountTitle => 'Delete Account?';
+
+  @override
+  String get fsDeleteAccountBody =>
+      'This will permanently delete your cloud account and unlink all family members. Your local medicine data on this device will remain intact.';
+
+  @override
+  String get fsDeleteAccount => 'Delete Account';
+
+  @override
+  String get fsAccountDeleted => 'Account deleted.';
+
+  @override
+  String get fsYourDisplayName => 'Your Display Name';
+
+  @override
+  String get fsDisplayNameHint => 'e.g. Rahat, Dad, Mom';
+
+  @override
+  String fsNameUpdated(String name) {
+    return 'Name updated to \"$name\"';
+  }
+
+  @override
+  String fsNameUpdateFailed(String error) {
+    return 'Failed to update name: $error';
+  }
+
+  @override
+  String get fsEnterSixCharCode => 'Please enter a 6-character share code.';
+
+  @override
+  String get fsRequestSent =>
+      'Connection request sent! Waiting for your family member to accept.';
+
+  @override
+  String fsLinkAccepted(String name) {
+    return 'Link accepted! $name is now linked.';
+  }
+
+  @override
+  String get fsCaregiver => 'Caregiver';
+
+  @override
+  String get fsRequestDeclined => 'Link request declined.';
+
+  @override
+  String get fsNothingToSync =>
+      'No medicines found in today\'s schedule to sync.';
+
+  @override
+  String fsSynced(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Synced $count medicines to the cloud! ✅',
+      one: 'Synced 1 medicine to the cloud! ✅',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get fsOverline => 'FAMILY SHARING';
+
+  @override
+  String get fsTitle => 'Caregiver & Family Mode';
+
+  @override
+  String get fsFamilyAccount => 'Family Account';
+
+  @override
+  String get fsCloudActive => 'Cloud Active';
+
+  @override
+  String get fsMyCode => 'My Code';
+
+  @override
+  String get fsEnterCode => 'Enter Code';
+
+  @override
+  String get fsSignOut => 'Sign Out';
+
+  @override
+  String get fsShareTitle => 'Share Your Doses & Reminders';
+
+  @override
+  String get fsShareSubtitle =>
+      'Let family members monitor your medication adherence';
+
+  @override
+  String get fsStepGenerateTitle => 'Generate your 6-character code below';
+
+  @override
+  String get fsStepGenerateBody =>
+      'Your unique code connects caregiver devices.';
+
+  @override
+  String get fsStepSendTitle => 'Send it to your caregiver or family member';
+
+  @override
+  String get fsStepSendBody => 'They enter this code in their Dosey app.';
+
+  @override
+  String get fsStepApproveTitle => 'Approve incoming link requests';
+
+  @override
+  String get fsStepApproveBody =>
+      'Review and accept requests from your family members.';
+
+  @override
+  String get fsGenerateCode => 'Generate Share Code';
+
+  @override
+  String fsIncomingRequests(int count) {
+    return 'Incoming Link Requests ($count)';
+  }
+
+  @override
+  String get fsFamilyCaregiver => 'Family Caregiver';
+
+  @override
+  String fsWantsToConnect(String code) {
+    return 'Wants to connect using code $code';
+  }
+
+  @override
+  String get fsDecline => 'Decline';
+
+  @override
+  String get fsAccept => 'Accept';
+
+  @override
+  String fsLinkedCaregivers(int count) {
+    return 'Linked Caregivers ($count)';
+  }
+
+  @override
+  String fsActiveSyncCode(String code) {
+    return 'Active sync • Code: $code';
+  }
+
+  @override
+  String get fsUnlink => 'Unlink';
+
+  @override
+  String get fsUnlinkCaregiverTitle => 'Unlink Caregiver';
+
+  @override
+  String fsUnlinkCaregiverBody(String name) {
+    return 'Are you sure you want to unlink $name? They will no longer be able to see your adherence schedule.';
+  }
+
+  @override
+  String get fsThisCaregiver => 'this caregiver';
+
+  @override
+  String get fsSyncNow => 'Sync Medicines to Caregivers Now';
+
+  @override
+  String get fsYourCodeLabel => 'YOUR 6-CHARACTER SHARE CODE';
+
+  @override
+  String get fsCopyCode => 'Copy Code';
+
+  @override
+  String fsCodeCopied(String code) {
+    return 'Code \"$code\" copied to clipboard!';
+  }
+
+  @override
+  String get fsShareCode => 'Share Code';
+
+  @override
+  String fsShareMessage(String code) {
+    return 'Here is my Dosey family share code: $code\n\nEnter it in your Dosey app under Settings > Caregiver & Family Mode to link our accounts.';
+  }
+
+  @override
+  String get fsCodeValidity =>
+      'Share this code with your family member. Valid for 7 days.';
+
+  @override
+  String get fsPasteCode => 'Paste Code';
+
+  @override
+  String get fsLinkTitle => 'Link to a Family Member';
+
+  @override
+  String get fsLinkSubtitle => 'Enter their 6-character code to link profiles';
+
+  @override
+  String get fsStepAskTitle => 'Ask family member for their code';
+
+  @override
+  String get fsStepAskBody => 'Found under \"My Code\" on their phone.';
+
+  @override
+  String get fsStepEnterTitle => 'Enter or paste the code below';
+
+  @override
+  String get fsStepEnterBody => 'Tap the boxes or use the Paste button.';
+
+  @override
+  String get fsStepWaitTitle => 'Wait for their approval';
+
+  @override
+  String get fsStepWaitBody => 'They must accept your link request to sync.';
+
+  @override
+  String get fsSendRequest => 'Send Link Request';
+
+  @override
+  String fsPendingApproval(int count) {
+    return 'Pending Approval ($count)';
+  }
+
+  @override
+  String get fsFamilyMember => 'Family Member';
+
+  @override
+  String fsAwaitingApproval(String code) {
+    return 'Awaiting approval • Code: $code';
+  }
+
+  @override
+  String fsConnectedMembers(int count) {
+    return 'Connected Family Members ($count)';
+  }
+
+  @override
+  String get fsActiveSyncTap => 'Active sync • Tap to view schedule';
+
+  @override
+  String get fsRemoveMemberTitle => 'Remove Family Member';
+
+  @override
+  String fsStopMonitoring(String name) {
+    return 'Are you sure you want to stop monitoring $name?';
+  }
+
+  @override
+  String fsStopMonitoringLong(String name) {
+    return 'Are you sure you want to stop monitoring $name? You will no longer receive their adherence updates.';
+  }
+
+  @override
+  String get fsThisMember => 'this family member';
+
+  @override
+  String get fsRemove => 'Remove';
+
+  @override
+  String get fsIntro =>
+      'Keep family members and caregivers in the loop. Link securely to monitor adherence and share dose reminders.';
+
+  @override
+  String get fsContinueGoogle => 'Continue with Google';
+
+  @override
+  String get fsContinueApple => 'Continue with Apple';
+
+  @override
+  String get fsOrEmail => 'or with email';
+
+  @override
+  String get fsSignIn => 'Sign In';
+
+  @override
+  String get fsCreateAccount => 'Create Account';
+
+  @override
+  String get fsNameOptional => 'Your Name (Optional)';
+
+  @override
+  String get fsFullNameHint => 'e.g. Rahat Ahmed';
+
+  @override
+  String get fsEmailRequired => 'Email is required';
+
+  @override
+  String get fsEmailInvalid => 'Enter a valid email address';
+
+  @override
+  String get fsPassword => 'Password';
+
+  @override
+  String get fsPasswordNewHint => 'At least 6 characters';
+
+  @override
+  String get fsPasswordHint => 'Enter your password';
+
+  @override
+  String get fsPasswordRequired => 'Password is required';
+
+  @override
+  String get fsPasswordTooShort => 'Password must be at least 6 characters';
+
+  @override
+  String get fsForgotPassword => 'Forgot Password?';
+
+  @override
+  String get fsOfflineFirst =>
+      'Dosey remains 100% offline-first. Your local medicines and reminders stay safe on your device.';
+
+  @override
+  String get fsVerifyTitle => 'Verify your email';
+
+  @override
+  String fsVerifyBody(String email) {
+    return 'We sent a link to $email. Open it to confirm the address, then come back and tap \"I\'ve verified\".';
+  }
+
+  @override
+  String get fsYourEmail => 'your email';
+
+  @override
+  String get fsIveVerified => 'I\'ve verified';
+
+  @override
+  String get fsNotVerifiedYet =>
+      'Not verified yet. Open the link in the email first (check spam too).';
+
+  @override
+  String fsVerificationSent(String email) {
+    return 'Verification email sent to $email.';
+  }
+
+  @override
+  String get fsResendEmail => 'Resend email';
+
+  @override
+  String get fsUseAnotherAccount => 'Use another account';
+
+  @override
+  String get fsResetTitle => 'Reset Password';
+
+  @override
+  String get fsResetBody =>
+      'Enter your registered email address and we will send you a password reset link.';
+
+  @override
+  String get fsSendResetLink => 'Send Reset Link';
+
+  @override
+  String get fsBackToSignIn => 'Back to Sign In';
+
+  @override
+  String get fsEditMemberName => 'Edit Family Member Name';
+
+  @override
+  String get fsMemberNameHint => 'e.g. Dad, Mom, Rahat';
+
+  @override
+  String fsMemberRemoved(String name) {
+    return 'Removed $name from monitored family members.';
+  }
+
+  @override
+  String fsRemoveFailed(String error) {
+    return 'Failed to remove member: $error';
+  }
+
+  @override
+  String fsDoseNudgeSent(String medicine, String time) {
+    return '🔔 Sent reminder for $medicine ($time)!';
+  }
+
+  @override
+  String fsNudgeSent(String name) {
+    return '🔔 Gentle reminder sent to $name\'s phone!';
+  }
+
+  @override
+  String get fsEditMemberNameTooltip => 'Edit member name';
+
+  @override
+  String get fsRemoveMemberTooltip => 'Remove family member';
+
+  @override
+  String fsShareCodeLabel(String code) {
+    return 'Share Code: $code';
+  }
+
+  @override
+  String get fsLive => 'Live';
+
+  @override
+  String fsManageMedicinesFor(String name) {
+    return 'Manage & Edit Medicines for $name';
+  }
+
+  @override
+  String get fsTodaysSchedule => 'TODAY\'S SCHEDULE';
+
+  @override
+  String get fsSendGentleReminder => 'Send Gentle Reminder';
+
+  @override
+  String get fsScheduleLoadFailed => 'Could not load shared schedule';
+
+  @override
+  String get fsPullToRetry => 'Pull down to refresh and retry.';
+
+  @override
+  String fsRemoveFromMonitoring(String name) {
+    return 'Remove $name from Monitoring';
+  }
+
+  @override
+  String get fsTodaysAdherence => 'Today\'s Adherence';
+
+  @override
+  String fsDosesCompleted(int taken, int total) {
+    return '$taken of $total doses completed';
+  }
+
+  @override
+  String get fsPending => 'Pending';
+
+  @override
+  String get fsOneDose => '1 dose';
+
+  @override
+  String get fsNudge => 'Nudge';
+
+  @override
+  String get fsNudged => 'Nudged';
+
+  @override
+  String get fsNoDosesToday => 'No Shared Doses Found Today';
+
+  @override
+  String fsNoDosesBody(String name) {
+    return 'When $name opens Dosey or logs doses, their schedule will appear here automatically.';
+  }
+
+  @override
+  String get fsAddDoseTime => 'Please add at least one dose time.';
+
+  @override
+  String fsSavedSynced(String name) {
+    return '⚡ Saved and synced to $name\'s phone!';
+  }
+
+  @override
+  String fsError(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String fsEditMedicineFor(String name) {
+    return 'Edit Medicine for $name';
+  }
+
+  @override
+  String fsAddMedicineFor(String name) {
+    return 'Add Medicine for $name';
+  }
+
+  @override
+  String fsSyncingTo(String name) {
+    return 'Syncing to $name\'s phone...';
+  }
+
+  @override
+  String get fsUpdateSync => 'Update & Sync';
+
+  @override
+  String fsSaveSyncTo(String name) {
+    return 'Save & Sync to $name';
+  }
+
+  @override
+  String get fsMedicineName => 'MEDICINE NAME';
+
+  @override
+  String get fsMedicineNameHint => 'e.g. Napa Extra, Metformin, Insulin';
+
+  @override
+  String get fsNameRequired => 'Name is required';
+
+  @override
+  String get fsMedicineForm => 'MEDICINE FORM';
+
+  @override
+  String get fsWhenToTake => 'WHEN TO TAKE';
+
+  @override
+  String fsDosingTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'DOSE TIMES ($count TIMES A DAY)',
+      one: 'DOSE TIME (ONCE A DAY)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fsDoseNumber(int number) {
+    return 'Dose $number';
+  }
+
+  @override
+  String get fsAddIntakeTime => 'Add Another Intake Time';
+
+  @override
+  String get fsDoseAmount => 'DOSE AMOUNT';
+
+  @override
+  String get fsInitialStock => 'INITIAL STOCK';
+
+  @override
+  String get fsStartDate => 'START DATE';
+
+  @override
+  String get fsDoctorNotes => 'DOCTOR NOTES / INSTRUCTIONS';
+
+  @override
+  String get fsDoctorNotesHint => 'e.g. Take with a glass of water';
+
+  @override
+  String fsRemoveMedicineConfirm(String medicine, String name) {
+    return 'Are you sure you want to remove \"$medicine\" from $name\'s phone schedule?';
+  }
+
+  @override
+  String fsMedicineRemoved(String medicine) {
+    return '$medicine removed and synced.';
+  }
+
+  @override
+  String fsManageMedicinesTitle(String name) {
+    return 'Manage $name\'s Medicines';
+  }
+
+  @override
+  String get fsLiveCaregiverSync => 'Live Caregiver Sync';
+
+  @override
+  String fsScheduledMedicines(int count) {
+    return 'SCHEDULED MEDICINES ($count)';
+  }
+
+  @override
+  String get fsPrescriptionsLoadFailed => 'Could not load prescriptions';
+
+  @override
+  String get fsNoMedicinesYet => 'No medicines configured yet';
+
+  @override
+  String fsNoMedicinesBody(String name) {
+    return 'Add prescriptions for $name. Doses and timings will instantly sync to their phone alarms.';
+  }
+
+  @override
+  String get fsFeatureAlarmTitle => 'Auto-Alarm Sync';
+
+  @override
+  String get fsFeatureAlarmBody =>
+      'Configures phone alarms on their device automatically';
+
+  @override
+  String get fsFeatureAdherenceTitle => 'Live Adherence';
+
+  @override
+  String get fsFeatureAdherenceBody =>
+      'Monitor when doses are taken, skipped or missed';
+
+  @override
+  String get fsFeatureNudgeTitle => '1-Tap Dose Nudges';
+
+  @override
+  String get fsFeatureNudgeBody =>
+      'Send gentle reminders directly to their lock screen';
+
+  @override
+  String get fsDailyTimings => 'Daily Timings: ';
+
+  @override
+  String fsStockRemaining(String count) {
+    return 'Stock remaining: $count units';
+  }
+
+  @override
+  String get fsCaregiverMonitoring => 'CAREGIVER MONITORING';
+
+  @override
+  String get fsTapToViewSchedule => 'Tap to view today\'s schedule';
+
+  @override
+  String get fsConnected => 'Family Sharing Connected';
+
+  @override
+  String get fsSettingsHint => 'Link with family & caregivers';
+
+  @override
+  String get fsActive => 'Active';
+
+  @override
+  String get authErrUserNotFound => 'No account found with this email address.';
+
+  @override
+  String get authErrWrongPassword => 'Incorrect password. Please try again.';
+
+  @override
+  String get authErrEmailInUse => 'An account with this email already exists.';
+
+  @override
+  String get authErrInvalidEmail => 'Please enter a valid email address.';
+
+  @override
+  String get authErrWeakPassword => 'Password must be at least 6 characters.';
+
+  @override
+  String get authErrUserDisabled => 'This account has been disabled.';
+
+  @override
+  String get authErrTooManyRequests =>
+      'Too many attempts. Please try again later.';
+
+  @override
+  String get authErrNotAllowed => 'This sign-in method is not enabled.';
+
+  @override
+  String get authErrNetwork => 'Network error. Please check your connection.';
+
+  @override
+  String get authErrInvalidCredential =>
+      'Invalid email or password. Please check and retry.';
+
+  @override
+  String get authErrRecentLogin =>
+      'Please sign out and sign in again before deleting your account.';
+
+  @override
+  String get authErrGeneric => 'Authentication error occurred.';
+
+  @override
+  String get authErrEraseFailed =>
+      'Could not reach the server to erase your data. Please check your connection and try again.';
+
+  @override
+  String authErrGoogle(String code, String message) {
+    return 'Google Sign-In failed ($code: $message). You can also create an account with Email & Password below.';
+  }
+
+  @override
+  String get authErrConfig => 'Configuration error';
+
+  @override
+  String get appTagline => 'Offline-first • Privacy conscious';
 }

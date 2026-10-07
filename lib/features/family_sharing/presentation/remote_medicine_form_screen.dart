@@ -122,7 +122,7 @@ class _RemoteMedicineFormScreenState
     if (!_formKey.currentState!.validate()) return;
     if (_times.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please add at least one dose time.')),
+        SnackBar(content: Text(context.l10n.fsAddDoseTime)),
       );
       return;
     }
@@ -163,11 +163,11 @@ class _RemoteMedicineFormScreenState
       await repo.upsertRemotePrescription(prescription);
 
       if (mounted) {
-        final patientName = widget.share.patientName ?? 'Family Member';
+        final patientName = widget.share.patientName ?? context.l10n.fsFamilyMember;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              '⚡ Saved and synced to $patientName\'s phone!',
+              context.l10n.fsSavedSynced(patientName),
             ),
             backgroundColor: AppColors.moss,
             behavior: SnackBarBehavior.floating,
@@ -179,7 +179,7 @@ class _RemoteMedicineFormScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text(context.l10n.fsError('$e')),
             backgroundColor: AppColors.error,
           ),
         );
@@ -191,17 +191,17 @@ class _RemoteMedicineFormScreenState
 
   @override
   Widget build(BuildContext context) {
-    final patientName = widget.share.patientName ?? 'Family Member';
+    final patientName = widget.share.patientName ?? context.l10n.fsFamilyMember;
     final l10n = context.l10n;
 
     return CreamScaffold(
       title: _isEdit
-          ? 'Edit Medicine for $patientName'
-          : 'Add Medicine for $patientName',
+          ? context.l10n.fsEditMedicineFor(patientName)
+          : context.l10n.fsAddMedicineFor(patientName),
       bottomBar: PillButton(
         label: _isSaving
-            ? 'Syncing to $patientName\'s phone...'
-            : (_isEdit ? 'Update & Sync' : 'Save & Sync to $patientName'),
+            ? context.l10n.fsSyncingTo(patientName)
+            : (_isEdit ? context.l10n.fsUpdateSync : context.l10n.fsSaveSyncTo(patientName)),
         trailingIcon: Icons.cloud_sync_rounded,
         loading: _isSaving,
         onPressed: _handleSave,
@@ -216,17 +216,17 @@ class _RemoteMedicineFormScreenState
           children: [
             // Medicine Name
             AppTextField(
-              label: 'MEDICINE NAME',
+              label: context.l10n.fsMedicineName,
               controller: _nameController,
-              hint: 'e.g. Napa Extra, Metformin, Insulin',
+              hint: context.l10n.fsMedicineNameHint,
               validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Name is required' : null,
+                  (v == null || v.trim().isEmpty) ? context.l10n.fsNameRequired : null,
             ),
             AppSpacing.gapLg,
 
             // Medicine Form (Visual Selection Cards)
             LabeledField(
-              label: 'MEDICINE FORM',
+              label: context.l10n.fsMedicineForm,
               child: SizedBox(
                 height: 98,
                 child: ListView(
@@ -300,7 +300,7 @@ class _RemoteMedicineFormScreenState
 
             // Meal Relation (Symmetric 2x2 Grid)
             LabeledField(
-              label: 'TAKE RELATION',
+              label: context.l10n.fsWhenToTake,
               child: ChoicePills<MealRelation>(
                 columns: 2,
                 options: MealRelation.values,
@@ -317,7 +317,7 @@ class _RemoteMedicineFormScreenState
 
             // Dose Times Builder
             LabeledField(
-              label: 'SCHEDULED DOSING TIMES (${_times.length} TIMES/DAY)',
+              label: context.l10n.fsDosingTimes(_times.length),
               child: Column(
                 children: [
                   ..._times.asMap().entries.map((entry) {
@@ -357,7 +357,7 @@ class _RemoteMedicineFormScreenState
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Dose ${index + 1}',
+                                    context.l10n.fsDoseNumber(index + 1),
                                     style: AppTextStyles.captionOnLight.copyWith(
                                       color: AppColors.inkMuted,
                                     ),
@@ -429,7 +429,7 @@ class _RemoteMedicineFormScreenState
                             ),
                             const SizedBox(width: AppSpacing.sm),
                             Text(
-                              'Add Another Intake Time',
+                              context.l10n.fsAddIntakeTime,
                               style: TextStyle(
                                 fontFamily: 'PlusJakartaSans',
                                 fontSize: AppSpacing.fontSm,
@@ -454,7 +454,7 @@ class _RemoteMedicineFormScreenState
               children: [
                 Expanded(
                   child: AppTextField(
-                    label: 'DOSE AMOUNT',
+                    label: context.l10n.fsDoseAmount,
                     controller: _doseAmountController,
                     hint: '1',
                     keyboardType: TextInputType.number,
@@ -463,7 +463,7 @@ class _RemoteMedicineFormScreenState
                 AppSpacing.gapMd,
                 Expanded(
                   child: AppTextField(
-                    label: 'INITIAL STOCK',
+                    label: context.l10n.fsInitialStock,
                     controller: _stockController,
                     hint: 'e.g. 30',
                     keyboardType: TextInputType.number,
@@ -475,7 +475,7 @@ class _RemoteMedicineFormScreenState
 
             // Start Date Picker
             PickerField(
-              label: 'START DATE',
+              label: context.l10n.fsStartDate,
               value: AppDateFormat.date(_startDate),
               icon: Icons.calendar_today_rounded,
               onTap: () async {
@@ -492,9 +492,9 @@ class _RemoteMedicineFormScreenState
 
             // Notes
             AppTextField(
-              label: 'DOCTOR NOTES / INSTRUCTIONS',
+              label: context.l10n.fsDoctorNotes,
               controller: _notesController,
-              hint: 'e.g. Take with a glass of water',
+              hint: context.l10n.fsDoctorNotesHint,
               maxLines: 2,
             ),
           ],

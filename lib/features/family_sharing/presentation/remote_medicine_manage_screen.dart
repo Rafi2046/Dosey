@@ -15,6 +15,7 @@ import '../domain/remote_prescription.dart';
 import '../domain/remote_prescription_sync_service.dart';
 import '../providers/family_share_providers.dart';
 import 'remote_medicine_form_screen.dart';
+import '../../../core/localization/l10n.dart';
 
 class RemoteMedicineManageScreen extends ConsumerStatefulWidget {
   const RemoteMedicineManageScreen({
@@ -43,7 +44,7 @@ class _RemoteMedicineManageScreenState
     final confirmed = await confirmDelete(
       context,
       body:
-          'Are you sure you want to remove "${item.name}" from $patientName\'s phone schedule?',
+          context.l10n.fsRemoveMedicineConfirm(item.name, patientName),
     );
     if (!confirmed) return;
 
@@ -54,7 +55,7 @@ class _RemoteMedicineManageScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${item.name} removed and synced.'),
+            content: Text(context.l10n.fsMedicineRemoved(item.name)),
             backgroundColor: AppColors.tileMoss,
             behavior: SnackBarBehavior.floating,
           ),
@@ -64,7 +65,7 @@ class _RemoteMedicineManageScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text(context.l10n.fsError('$e')),
             backgroundColor: AppColors.error,
           ),
         );
@@ -109,14 +110,14 @@ class _RemoteMedicineManageScreenState
         widget.share;
     final patientName = currentShare.patientName?.trim().isNotEmpty == true
         ? currentShare.patientName!
-        : 'Family Member';
+        : context.l10n.fsFamilyMember;
     final prescriptionsAsync =
         ref.watch(patientRemotePrescriptionsProvider(widget.share.patientUid));
 
     return CreamScaffold(
-      title: 'Manage $patientName\'s Medicines',
+      title: context.l10n.fsManageMedicinesTitle(patientName),
       bottomBar: PillButton(
-        label: 'Add Medicine for $patientName',
+        label: context.l10n.fsAddMedicineFor(patientName),
         trailingIcon: Icons.add_circle_outline_rounded,
         onPressed: () => _openAdd(currentShare),
       ),
@@ -172,7 +173,7 @@ class _RemoteMedicineManageScreenState
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               Text(
-                                'Live Caregiver Sync',
+                                context.l10n.fsLiveCaregiverSync,
                                 style: AppTextStyles.captionOnLight.copyWith(
                                   color: AppColors.inkMuted,
                                   fontWeight: FontWeight.w600,
@@ -249,7 +250,7 @@ class _RemoteMedicineManageScreenState
                           ),
                           AppSpacing.gapSm,
                           Text(
-                            'SCHEDULED MEDICINES (${items.length})',
+                            context.l10n.fsScheduledMedicines(items.length),
                             style: AppTextStyles.overline.copyWith(
                               fontWeight: FontWeight.w800,
                               letterSpacing: 1.0,
@@ -262,7 +263,7 @@ class _RemoteMedicineManageScreenState
                         TextButton.icon(
                           onPressed: () => _openAdd(currentShare),
                           icon: const Icon(Icons.add, size: 16),
-                          label: const Text('Add'),
+                          label: Text(context.l10n.add),
                           style: TextButton.styleFrom(
                             foregroundColor: AppColors.isDark
                                 ? AppColors.selected
@@ -319,14 +320,14 @@ class _RemoteMedicineManageScreenState
                       ),
                       AppSpacing.gapSm,
                       Text(
-                        'Could not load prescriptions',
+                        context.l10n.fsPrescriptionsLoadFailed,
                         style: AppTextStyles.bodyOnLight.copyWith(
                           fontWeight: FontWeight.w600,
                           color: AppColors.ink,
                         ),
                       ),
                       Text(
-                        'Pull down to retry.',
+                        context.l10n.fsPullToRetry,
                         style: AppTextStyles.caption.copyWith(
                           color: AppColors.inkMuted,
                         ),
@@ -353,7 +354,7 @@ class _RemoteMedicineManageScreenState
           Image.asset(AppImages.emptyMedicines, height: 96),
           AppSpacing.gapLg,
           Text(
-            'No medicines configured yet',
+            context.l10n.fsNoMedicinesYet,
             style: AppTextStyles.cardTitleOnLight.copyWith(
               fontSize: AppSpacing.fontLg,
               fontWeight: FontWeight.w800,
@@ -364,7 +365,7 @@ class _RemoteMedicineManageScreenState
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
             child: Text(
-              'Add prescriptions for $patientName. Doses and timings will instantly sync to their phone alarms.',
+              context.l10n.fsNoMedicinesBody(patientName),
               textAlign: TextAlign.center,
               style: AppTextStyles.captionOnLight.copyWith(
                 color: AppColors.inkMuted,
@@ -378,22 +379,22 @@ class _RemoteMedicineManageScreenState
           _buildFeatureTip(
             icon: Icons.alarm_on_rounded,
             color: AppColors.tileMint,
-            title: 'Auto-Alarm Sync',
-            desc: 'Configures phone alarms on their device automatically',
+            title: context.l10n.fsFeatureAlarmTitle,
+            desc: context.l10n.fsFeatureAlarmBody,
           ),
           AppSpacing.gapMd,
           _buildFeatureTip(
             icon: Icons.checklist_rounded,
             color: AppColors.accent,
-            title: 'Live Adherence',
-            desc: 'Monitor when doses are taken, skipped or missed',
+            title: context.l10n.fsFeatureAdherenceTitle,
+            desc: context.l10n.fsFeatureAdherenceBody,
           ),
           AppSpacing.gapMd,
           _buildFeatureTip(
             icon: Icons.notifications_active_outlined,
             color: AppColors.tileOlive,
-            title: '1-Tap Dose Nudges',
-            desc: 'Send gentle reminders directly to their lock screen',
+            title: context.l10n.fsFeatureNudgeTitle,
+            desc: context.l10n.fsFeatureNudgeBody,
           ),
         ],
       ),
@@ -456,7 +457,7 @@ class _RemoteMedicineManageScreenState
     final form = _parseForm(item.form);
     final patientName = currentShare.patientName?.trim().isNotEmpty == true
         ? currentShare.patientName!
-        : 'Family Member';
+        : context.l10n.fsFamilyMember;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
@@ -498,7 +499,7 @@ class _RemoteMedicineManageScreenState
                       ),
                       const SizedBox(height: AppSpacing.xxs),
                       Text(
-                        '${item.doseAmount.toStringAsFixed(0)} ${item.form} • ${item.mealRelation}',
+                        '${item.doseAmount.toStringAsFixed(0)} ${medicineFormLabelOf(item.form, context.l10n)} • ${mealRelationLabelOf(item.mealRelation, context.l10n)}',
                         style: AppTextStyles.captionOnLight.copyWith(
                           fontWeight: FontWeight.w600,
                           color: AppColors.inkMuted,
@@ -510,13 +511,13 @@ class _RemoteMedicineManageScreenState
                 IconButton(
                   icon: const Icon(Icons.edit_outlined, size: 20),
                   color: AppColors.isDark ? AppColors.selected : AppColors.moss,
-                  tooltip: 'Edit',
+                  tooltip: context.l10n.edit,
                   onPressed: () => _openEdit(item, currentShare),
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete_outline_rounded, size: 20),
                   color: AppColors.error,
-                  tooltip: 'Delete',
+                  tooltip: context.l10n.delete,
                   onPressed: () => _handleDelete(item, patientName),
                 ),
               ],
@@ -535,7 +536,7 @@ class _RemoteMedicineManageScreenState
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Text(
-                  'Daily Timings: ',
+                  context.l10n.fsDailyTimings,
                   style: AppTextStyles.captionOnLight.copyWith(
                     fontWeight: FontWeight.w700,
                     color: AppColors.ink,
@@ -587,7 +588,7 @@ class _RemoteMedicineManageScreenState
                   ),
                   const SizedBox(width: AppSpacing.sm),
                   Text(
-                    'Stock remaining: ${item.stockQuantity!.toStringAsFixed(0)} units',
+                    context.l10n.fsStockRemaining(item.stockQuantity!.toStringAsFixed(0)),
                     style: AppTextStyles.captionOnLight,
                   ),
                 ],

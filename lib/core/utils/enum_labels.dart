@@ -146,3 +146,11 @@ extension ReminderLogStatusX on ReminderLogStatus {
     ReminderLogStatus.takenLate => l.takenLate,
   };
 }
+
+/// Labels for values stored by enum name, as Family Sharing rows keep them.
+/// A name the app doesn't know is shown as is.
+String medicineFormLabelOf(String name, AppLocalizations l) =>
+    MedicineForm.values.asNameMap()[name]?.label(l) ?? name;
+
+String mealRelationLabelOf(String name, AppLocalizations l) =>
+    MealRelation.values.asNameMap()[name]?.label(l) ?? name;

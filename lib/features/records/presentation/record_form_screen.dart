@@ -89,7 +89,7 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
       title: _isEdit ? context.l10n.edit : context.l10n.addRecord,
       bottomBar: PillButton(
         label: _isEdit ? context.l10n.saveChanges : context.l10n.save,
-        showForwardArrow: true,
+        trailingIcon: Icons.check_rounded,
         loading: _saving,
         onPressed: _save,
       ),

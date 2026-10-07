@@ -135,7 +135,7 @@ class _RefillSheetState extends ConsumerState<_RefillSheet> {
             ),
             PillButton(
               label: context.l10n.save,
-              showForwardArrow: true,
+              trailingIcon: Icons.check_rounded,
               loading: _saving,
               onPressed: _save,
             ),

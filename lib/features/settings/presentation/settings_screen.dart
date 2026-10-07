@@ -387,7 +387,7 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 SettingsTile(
                   icon: Icons.star_rounded,
-                  color: AppColors.warning,
+                  color: AppColors.accent,
                   title: l10n.rateApp,
                   subtitle: l10n.rateAppHint,
                   onTap: () =>
@@ -458,7 +458,7 @@ class SettingsScreen extends ConsumerWidget {
                     Text(
                       'Offline-first • Privacy conscious',
                       style: AppTextStyles.caption.copyWith(
-                        color: AppColors.textOnDarkMuted.withValues(alpha: 0.6),
+                        color: AppColors.textOnDarkMuted,
                         fontSize: 11,
                       ),
                     ),

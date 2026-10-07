@@ -29,6 +29,7 @@ class TodayReminderStack extends ConsumerWidget {
         if (items.isEmpty) {
           return EmptyState(
             title: context.l10n.nothingScheduled,
+            image: AppImages.emptyToday,
             actionLabel: context.l10n.addReminder,
             onAction: onAddReminder,
             compact: true,

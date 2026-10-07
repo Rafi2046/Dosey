@@ -349,20 +349,7 @@ class _RemoteMedicineManageScreenState
       padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
       child: Column(
         children: [
-          Container(
-            width: 72,
-            height: 72,
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: AppColors.sand,
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.divider),
-            ),
-            child: Image.asset(
-              AppImages.medTablet,
-              fit: BoxFit.contain,
-            ),
-          ),
+          Image.asset(AppImages.emptyMedicines, height: 96),
           AppSpacing.gapLg,
           Text(
             'No medicines configured yet',

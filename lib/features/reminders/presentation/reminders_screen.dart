@@ -67,6 +67,7 @@ class RemindersScreen extends ConsumerWidget {
           data: (list) => list.isEmpty
               ? EmptyState(
                   title: context.l10n.noReminders,
+                  image: AppImages.emptyReminders,
                   actionLabel: context.l10n.addReminder,
                   onAction: () => _openForm(context),
                 )

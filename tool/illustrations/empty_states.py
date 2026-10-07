@@ -199,6 +199,48 @@ ILL['empty_medicines'] = SHADOW.format(rx=125) + '''
 </g>
 ''' + sparkle(58,96,'#E8A88C') + sparkle(272,96,'#62A8A5',0.8)
 
+# Bell over stacked reminder cards (reminders)
+ILL['empty_reminders'] = SHADOW.format(rx=120) + '''
+<g filter="url(#lift)">
+ <rect x="74" y="200" width="196" height="64" rx="20" fill="url(#white)" opacity="0.75"/>
+ <rect x="56" y="176" width="208" height="76" rx="22" fill="url(#white)"/>
+ <circle cx="94" cy="214" r="18" fill="url(#mint)"/>
+ <path d="M94 204 v11 l7 5" stroke="#FFFFFF" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+ <rect x="124" y="200" width="84" height="10" rx="5" fill="#366270"/>
+ <rect x="124" y="218" width="112" height="7" rx="3.5" fill="#B9C7CB"/>
+</g>
+<g filter="url(#lift)">
+ <path d="M160 44 c-36 0 -58 28 -58 64 v34 l-16 22 h148 l-16 -22 v-34 c0 -36 -22 -64 -58 -64z" fill="url(#coral)"/>
+ <rect x="150" y="30" width="20" height="18" rx="9" fill="url(#teal)"/>
+ <path d="M140 164 a20 20 0 0 0 40 0z" fill="url(#teal)"/>
+ <path d="M122 104 c0 -20 10 -34 26 -40" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" fill="none" opacity="0.45"/>
+</g>
+<path d="M240 66 q16 18 0 40 M260 54 q26 30 0 64" stroke="#E8A88C" stroke-width="6" fill="none" stroke-linecap="round"/>
+<path d="M80 66 q-16 18 0 40 M60 54 q-26 30 0 64" stroke="#E8A88C" stroke-width="6" fill="none" stroke-linecap="round"/>
+'''
+
+# Tea cup under a sun (today: nothing scheduled, enjoy your day)
+ILL['empty_today'] = SHADOW.format(rx=110) + '''
+<g filter="url(#lift)">
+ <circle cx="236" cy="80" r="34" fill="url(#peach)"/>
+ <circle cx="226" cy="70" r="12" fill="#FFFFFF" opacity="0.3"/>
+</g>
+<g stroke="#E8A88C" stroke-width="6" stroke-linecap="round" opacity="0.8">
+ <path d="M236 30 v-10"/><path d="M286 80 h10"/><path d="M272 44 l7 -7"/><path d="M272 116 l7 7"/><path d="M186 80 h-10"/><path d="M200 44 l-7 -7"/>
+</g>
+<path d="M126 92 q-14 -16 0 -32 q14 -16 0 -32" stroke="#C6D3D6" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.8"/>
+<path d="M160 104 q-14 -16 0 -32 q14 -16 0 -32" stroke="#C6D3D6" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.8"/>
+<g filter="url(#lift)">
+ <ellipse cx="150" cy="266" rx="104" ry="16" fill="url(#white)"/>
+ <path d="M226 160 h14 a32 32 0 0 1 0 64 h-18" stroke="url(#teal)" stroke-width="14" fill="none"/>
+ <path d="M70 130 h160 v70 a62 62 0 0 1 -62 62 h-36 a62 62 0 0 1 -62 -62z" fill="url(#teal)"/>
+ <ellipse cx="150" cy="130" rx="80" ry="14" fill="#2C515D"/>
+ <ellipse cx="150" cy="133" rx="70" ry="9" fill="#C69277"/>
+ <path d="M150 230 c-12 -9 -22 -16 -22 -25 c0 -7 5 -12 12 -12 c4 0 8 2 10 6 c2 -4 6 -6 10 -6 c7 0 12 5 12 12 c0 9 -10 16 -22 25z" fill="url(#coral)"/>
+ <path d="M86 156 v40" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" opacity="0.3"/>
+</g>
+''' + sparkle(40,200,'#62A8A5') + sparkle(60,110,'#E8A88C',0.8)
+
 def svg(body, bg=None, size=320):
     b = f'<rect width="320" height="320" fill="{bg}"/>' if bg else ''
     return f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 320 320">{DEFS}{b}{body}</svg>'
@@ -210,6 +252,7 @@ for name, body in ILL.items():
 if '--preview' in sys.argv:
     names = list(ILL)
     cells = ''.join(f'<g transform="translate({(i%4)*320},{(i//4)*320})">{ILL[n]}</g>' for i,n in enumerate(names))
-    sheet = f'<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">{DEFS}<rect width="1280" height="640" fill="#141616"/>{cells}</svg>'
-    open('empty_states_preview.png','wb').write(bytes(resvg_py.svg_to_bytes(svg_string=sheet, width=1280, height=640)))
+    h = -(-len(names) // 4) * 320
+    sheet = f'<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="{h}" viewBox="0 0 1280 {h}">{DEFS}<rect width="1280" height="{h}" fill="#141616"/>{cells}</svg>'
+    open('empty_states_preview.png','wb').write(bytes(resvg_py.svg_to_bytes(svg_string=sheet, width=1280, height=h)))
 

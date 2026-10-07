@@ -66,7 +66,7 @@ class MedicinesScreen extends ConsumerWidget {
             if (list.isEmpty) {
               return EmptyState(
                 title: context.l10n.noMedicines,
-                image: AppImages.medCapsule,
+                image: AppImages.emptyMedicines,
                 actionLabel: showStopped ? null : context.l10n.addMedicine,
                 onAction: () => Navigator.of(context).push(
                   MaterialPageRoute<void>(

@@ -19,6 +19,7 @@ abstract final class AppImages {
   static const String emptyExpenses = '$_base/empty_expenses.png';
   static const String emptyDoctors = '$_base/empty_doctors.png';
   static const String emptyRecords = '$_base/empty_records.png';
+  static const String emptyMedicines = '$_base/empty_medicines.png';
   static const String samplePrescription = '$_base/sample_prescription.jpg';
   static const String sampleLabReport = '$_base/sample_lab_report.jpg';
 }

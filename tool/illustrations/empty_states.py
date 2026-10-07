@@ -175,6 +175,30 @@ ILL['empty_records'] = SHADOW.format(rx=125) + '''
 <rect x="128" y="196" width="64" height="12" rx="6" fill="#FFFFFF" opacity="0.4"/>
 ''' + sparkle(290,70,'#E8A88C') + sparkle(30,110,'#62A8A5',0.8)
 
+# Pill bottle with a capsule and tablets beside it (medicines)
+ILL['empty_medicines'] = SHADOW.format(rx=125) + '''
+<g filter="url(#lift)">
+ <rect x="96" y="62" width="112" height="40" rx="12" fill="url(#teal)"/>
+ <path d="M108 70 v24 M124 70 v24 M140 70 v24 M156 70 v24 M172 70 v24 M188 70 v24" stroke="#2C515D" stroke-width="3" opacity="0.45"/>
+ <rect x="90" y="98" width="124" height="176" rx="28" fill="url(#white)"/>
+ <rect x="90" y="140" width="124" height="88" fill="url(#coral)"/>
+ <rect x="138" y="160" width="28" height="48" rx="6" fill="#FFFFFF"/>
+ <rect x="128" y="170" width="48" height="28" rx="6" fill="#FFFFFF"/>
+ <rect x="104" y="112" width="14" height="150" rx="7" fill="#FFFFFF" opacity="0.55"/>
+</g>
+<g filter="url(#lift)" transform="rotate(-35 254 236)">
+ <path d="M254 214 h-22 a22 22 0 0 0 0 44 h22z" fill="url(#white)"/>
+ <path d="M254 214 h22 a22 22 0 0 1 0 44 h-22z" fill="url(#teal)"/>
+ <rect x="222" y="221" width="22" height="6" rx="3" fill="#FFFFFF" opacity="0.8"/>
+</g>
+<g filter="url(#lift)">
+ <circle cx="62" cy="252" r="22" fill="url(#mint)"/>
+ <path d="M48 252 h28" stroke="#3F7F7C" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+ <ellipse cx="244" cy="154" rx="17" ry="17" fill="url(#peach)"/>
+ <path d="M234 154 h20" stroke="#CF8C70" stroke-width="3" stroke-linecap="round"/>
+</g>
+''' + sparkle(58,96,'#E8A88C') + sparkle(272,96,'#62A8A5',0.8)
+
 def svg(body, bg=None, size=320):
     b = f'<rect width="320" height="320" fill="{bg}"/>' if bg else ''
     return f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 320 320">{DEFS}{b}{body}</svg>'
@@ -185,7 +209,7 @@ for name, body in ILL.items():
     open(os.path.join(OUT, name + '.png'), 'wb').write(bytes(png))
 if '--preview' in sys.argv:
     names = list(ILL)
-    cells = ''.join(f'<g transform="translate({(i%3)*320},{(i//3)*320})">{ILL[n]}</g>' for i,n in enumerate(names))
-    sheet = f'<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640">{DEFS}<rect width="960" height="640" fill="#141616"/>{cells}</svg>'
-    open('empty_states_preview.png','wb').write(bytes(resvg_py.svg_to_bytes(svg_string=sheet, width=960, height=640)))
+    cells = ''.join(f'<g transform="translate({(i%4)*320},{(i//4)*320})">{ILL[n]}</g>' for i,n in enumerate(names))
+    sheet = f'<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">{DEFS}<rect width="1280" height="640" fill="#141616"/>{cells}</svg>'
+    open('empty_states_preview.png','wb').write(bytes(resvg_py.svg_to_bytes(svg_string=sheet, width=1280, height=640)))
 

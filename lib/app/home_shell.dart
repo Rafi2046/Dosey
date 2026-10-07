@@ -20,7 +20,8 @@ import 'widgets/more_sheet.dart';
 
 /// Main app frame: tab content (state kept alive) under the nav bar.
 /// The nav bar slides away while scrolling down and comes back on scrolling
-/// up or once scrolling stops.
+/// up or once scrolling stops. Tapping the tab already open scrolls it back
+/// to the top.
 class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key});
 
@@ -32,10 +33,32 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   bool _navVisible = true;
   Timer? _showAgain;
 
+  /// Each tab's list, handed down as its primary scroll controller.
+  final _scrollers = {for (final t in HomeTab.values) t: ScrollController()};
+
   @override
   void dispose() {
     _showAgain?.cancel();
+    for (final c in _scrollers.values) {
+      c.dispose();
+    }
     super.dispose();
+  }
+
+  void _select(HomeTab tab) {
+    _setNav(true);
+    if (ref.read(homeTabProvider) != tab) {
+      ref.read(homeTabProvider.notifier).select(tab);
+      return;
+    }
+    final list = _scrollers[tab]!;
+    if (list.hasClients && list.offset > 0) {
+      list.animateTo(
+        0,
+        duration: AppSpacing.animMedium,
+        curve: Curves.easeOutCubic,
+      );
+    }
   }
 
   void _setNav(bool visible) {
@@ -86,15 +109,24 @@ class _HomeShellState extends ConsumerState<HomeShell> {
               child: IndexedStack(
                 index: tab.index,
                 children: [
-                  DashboardScreen(
-                    onOpenReminders: () => tabs.select(HomeTab.reminders),
-                    onOpenExpenses: () => tabs.select(HomeTab.expenses),
-                  ),
-                  const RemindersScreen(),
-                  const MedicinesScreen(),
-                  const DoctorsScreen(),
-                  const RecordsScreen(),
-                  const ExpensesScreen(),
+                  for (final t in HomeTab.values)
+                    PrimaryScrollController(
+                      controller: _scrollers[t]!,
+                      // Desktop too: by default only mobile lists pick it up.
+                      automaticallyInheritForPlatforms: TargetPlatform.values
+                          .toSet(),
+                      child: switch (t) {
+                        HomeTab.dashboard => DashboardScreen(
+                          onOpenReminders: () => tabs.select(HomeTab.reminders),
+                          onOpenExpenses: () => tabs.select(HomeTab.expenses),
+                        ),
+                        HomeTab.reminders => const RemindersScreen(),
+                        HomeTab.medicines => const MedicinesScreen(),
+                        HomeTab.doctors => const DoctorsScreen(),
+                        HomeTab.records => const RecordsScreen(),
+                        HomeTab.expenses => const ExpensesScreen(),
+                      },
+                    ),
                 ],
               ),
             ),
@@ -135,15 +167,12 @@ class _HomeShellState extends ConsumerState<HomeShell> {
                     top: false,
                     child: AppNavBar(
                       current: tab,
-                      onSelected: (t) {
-                        _setNav(true);
-                        tabs.select(t);
-                      },
+                      onSelected: _select,
                       onAdd: () => showAddActionSheet(context),
                       onMore: () => showMoreSheet(
                         context,
                         current: tab,
-                        onSelected: tabs.select,
+                        onSelected: _select,
                       ),
                     ),
                   ),

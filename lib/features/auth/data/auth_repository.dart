@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show PostgrestException, Supabase;
 
 import '../../../core/cloud/cloud_initializer.dart';
 import '../../../core/cloud/push_messaging_service.dart';
@@ -165,11 +166,15 @@ class AuthRepository {
     await _auth.sendPasswordResetEmail(email: email.trim());
   }
 
-  /// Deletes the currently signed-in user account.
+  /// Deletes the currently signed-in user account, and first their cloud
+  /// data: once the Firebase account is gone its token can't reach it.
   Future<void> deleteAccount() async {
     if (!isAvailable) return;
     final user = _auth.currentUser;
     if (user != null) {
+      if (CloudInitializer.isSupabaseInitialized) {
+        await Supabase.instance.client.rpc('delete_my_data');
+      }
       await user.delete();
       if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
         await GoogleSignIn(
@@ -217,6 +222,9 @@ class AuthRepository {
         'requires-recent-login' => 'Please sign out and sign in again before deleting your account.',
         _ => error.message ?? 'Authentication error occurred.',
       };
+    }
+    if (error is PostgrestException) {
+      return 'Could not reach the server to erase your data. Please check your connection and try again.';
     }
     if (error is PlatformException) {
       return 'Google Sign-In failed (${error.code}: ${error.message ?? 'Configuration error'}). You can also create an account with Email & Password below.';

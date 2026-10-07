@@ -20,11 +20,24 @@ class SharedAdherenceRepository {
 
   SupabaseClient get _supabase => Supabase.instance.client;
 
+  // Keys are shared between phones, so always English digits and AM/PM:
+  // the app's own language (Intl.defaultLocale) may be Bengali.
   static String formatDateKey(DateTime date) =>
-      DateFormat('yyyy-MM-dd').format(date);
+      DateFormat('yyyy-MM-dd', 'en').format(date);
 
   static String formatTimeKey(DateTime date) =>
-      DateFormat('hh:mm a').format(date);
+      DateFormat('hh:mm a', 'en').format(date);
+
+  /// Minutes since midnight of a [formatTimeKey] value, for sorting
+  /// ("01:00 PM" after "08:00 AM"); unparsable ones go last.
+  static int _minutesOf(String timeKey) {
+    try {
+      final t = DateFormat('hh:mm a', 'en').parseStrict(timeKey);
+      return t.hour * 60 + t.minute;
+    } catch (_) {
+      return 24 * 60;
+    }
+  }
 
   /// Patient syncs their today's schedule to Supabase for caregivers to monitor.
   Future<void> syncTodaySchedule({
@@ -122,7 +135,9 @@ class SharedAdherenceRepository {
             (json) =>
                 SharedAdherenceDose.fromJson(json as Map<String, dynamic>),
           )
-          .toList();
+          .toList()
+        // The column is text, so the database sorts "01:00 PM" first.
+        ..sort((a, b) => _minutesOf(a.time).compareTo(_minutesOf(b.time)));
     } catch (e) {
       debugPrint('[SharedAdherenceRepository] Error fetching schedule: $e');
       return [];

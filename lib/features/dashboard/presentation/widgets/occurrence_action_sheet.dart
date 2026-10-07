@@ -44,10 +44,7 @@ Future<void> showOccurrenceActions(
     );
     return ScaleTransition(
       scale: Tween<double>(begin: 0.88, end: 1.0).animate(curve),
-      child: FadeTransition(
-        opacity: anim1,
-        child: child,
-      ),
+      child: FadeTransition(opacity: anim1, child: child),
     );
   },
 );
@@ -80,7 +77,9 @@ class _OccurrenceDetailPopupState
         status == ReminderLogStatus.missed ||
         (!(status?.isTaken ?? false) &&
             now.difference(_currentTime) > AppConstants.missedThreshold);
-    await ref.read(alarmEngineProvider).handleAction(
+    await ref
+        .read(alarmEngineProvider)
+        .handleAction(
           reminderIds: [widget.occurrence.details.reminder.id],
           scheduledFor: _currentTime,
           action: action == AlarmAction.taken && late
@@ -132,10 +131,9 @@ class _OccurrenceDetailPopupState
         picked.minute,
       );
 
-      await ref.read(remindersRepositoryProvider).update(
-            r.id,
-            RemindersCompanion(startAt: drift.Value(newStartAt)),
-          );
+      await ref
+          .read(remindersRepositoryProvider)
+          .update(r.id, RemindersCompanion(startAt: drift.Value(newStartAt)));
 
       if (mounted) {
         setState(() {
@@ -173,8 +171,7 @@ class _OccurrenceDetailPopupState
     final cardColor = AppColors.cream;
     final isLight = SurfaceCard.isLight(cardColor);
     final textColor = isLight ? AppColors.ink : AppColors.textOnDark;
-    final mutedColor =
-        isLight ? AppColors.inkMuted : AppColors.textOnDarkMuted;
+    final mutedColor = isLight ? AppColors.inkMuted : AppColors.textOnDarkMuted;
 
     final screenSize = MediaQuery.sizeOf(context);
     final isTablet = screenSize.shortestSide >= 600 || screenSize.width >= 600;
@@ -281,17 +278,16 @@ class _OccurrenceDetailPopupState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              dosage.isNotEmpty
-                                  ? '$slot • $dosage'
-                                  : slot,
-                              style: (isLight
-                                      ? AppTextStyles.captionOnLight
-                                      : AppTextStyles.caption)
-                                  .copyWith(
-                                fontSize: isTablet ? 13 : 11.5,
-                                fontWeight: FontWeight.w600,
-                                color: mutedColor,
-                              ),
+                              dosage.isNotEmpty ? '$slot • $dosage' : slot,
+                              style:
+                                  (isLight
+                                          ? AppTextStyles.captionOnLight
+                                          : AppTextStyles.caption)
+                                      .copyWith(
+                                        fontSize: isTablet ? 13 : 11.5,
+                                        fontWeight: FontWeight.w600,
+                                        color: mutedColor,
+                                      ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -340,8 +336,8 @@ class _OccurrenceDetailPopupState
                     color: isLight
                         ? AppColors.sand
                         : (themeIsDark
-                            ? Colors.black.withValues(alpha: 0.28)
-                            : Colors.white.withValues(alpha: 0.10)),
+                              ? Colors.black.withValues(alpha: 0.28)
+                              : Colors.white.withValues(alpha: 0.10)),
                     borderRadius: BorderRadius.circular(
                       isTablet ? AppSpacing.radiusLg : 18,
                     ),
@@ -387,29 +383,43 @@ class _OccurrenceDetailPopupState
                                 children: [
                                   Text(
                                     l10n.scheduledTime,
-                                    style: (isLight
-                                            ? AppTextStyles.captionOnLight
-                                            : AppTextStyles.caption)
-                                        .copyWith(
-                                      fontSize: isTablet ? 12 : 11,
-                                      fontWeight: FontWeight.w600,
-                                      color: mutedColor,
-                                    ),
+                                    style:
+                                        (isLight
+                                                ? AppTextStyles.captionOnLight
+                                                : AppTextStyles.caption)
+                                            .copyWith(
+                                              fontSize: isTablet ? 12 : 11,
+                                              fontWeight: FontWeight.w600,
+                                              color: mutedColor,
+                                            ),
                                   ),
                                   const SizedBox(height: 1),
                                   Builder(
                                     builder: (context) {
-                                      final timeStr = AppDateFormat.time(_currentTime);
-                                      final isAsciiTime = RegExp(r'^[0-9:\s\w\.]+$').hasMatch(timeStr);
+                                      final timeStr = AppDateFormat.time(
+                                        _currentTime,
+                                      );
+                                      final isAsciiTime = RegExp(
+                                        r'^[0-9:\s\w\.]+$',
+                                      ).hasMatch(timeStr);
                                       return Text(
                                         timeStr,
                                         style: TextStyle(
-                                          fontFamily: isAsciiTime ? 'NDot' : 'NotoSansBengali',
-                                          fontFamilyFallback: AppTextStyles.fallback,
-                                          fontSize: isTablet ? 23 : (isAsciiTime ? 20 : 21),
-                                          fontWeight: isAsciiTime ? FontWeight.w400 : FontWeight.w700,
+                                          fontFamily: isAsciiTime
+                                              ? 'NDot'
+                                              : 'NotoSansBengali',
+                                          fontFamilyFallback:
+                                              AppTextStyles.fallback,
+                                          fontSize: isTablet
+                                              ? 23
+                                              : (isAsciiTime ? 20 : 21),
+                                          fontWeight: isAsciiTime
+                                              ? FontWeight.w400
+                                              : FontWeight.w700,
                                           color: textColor,
-                                          letterSpacing: isAsciiTime ? 0.9 : 0.0,
+                                          letterSpacing: isAsciiTime
+                                              ? 0.9
+                                              : 0.0,
                                         ),
                                       );
                                     },
@@ -426,8 +436,8 @@ class _OccurrenceDetailPopupState
                                 color: isLight
                                     ? AppColors.moss
                                     : (themeIsDark
-                                        ? AppColors.selected
-                                        : AppColors.moss),
+                                          ? AppColors.selected
+                                          : AppColors.moss),
                                 borderRadius: BorderRadius.circular(
                                   AppSpacing.radiusPill,
                                 ),
@@ -444,8 +454,8 @@ class _OccurrenceDetailPopupState
                                             color: isLight
                                                 ? Colors.white
                                                 : (themeIsDark
-                                                    ? AppColors.onSelected
-                                                    : Colors.white),
+                                                      ? AppColors.onSelected
+                                                      : Colors.white),
                                           ),
                                         )
                                       : Icon(
@@ -454,20 +464,21 @@ class _OccurrenceDetailPopupState
                                           color: isLight
                                               ? Colors.white
                                               : (themeIsDark
-                                                  ? AppColors.onSelected
-                                                  : Colors.white),
+                                                    ? AppColors.onSelected
+                                                    : Colors.white),
                                         ),
                                   SizedBox(width: isTablet ? 6 : 4),
                                   Text(
                                     l10n.changeTime,
                                     style: TextStyle(
                                       fontFamily: 'PlusJakartaSans',
-                                      fontFamilyFallback: AppTextStyles.fallback,
+                                      fontFamilyFallback:
+                                          AppTextStyles.fallback,
                                       color: isLight
                                           ? Colors.white
                                           : (themeIsDark
-                                              ? AppColors.onSelected
-                                              : Colors.white),
+                                                ? AppColors.onSelected
+                                                : Colors.white),
                                       fontSize: isTablet ? 13 : 11.5,
                                       fontWeight: FontWeight.w700,
                                     ),
@@ -493,8 +504,8 @@ class _OccurrenceDetailPopupState
                         color: isLight
                             ? AppColors.sand.withValues(alpha: 0.6)
                             : (themeIsDark
-                                ? Colors.black.withValues(alpha: 0.22)
-                                : Colors.white.withValues(alpha: 0.08)),
+                                  ? Colors.black.withValues(alpha: 0.22)
+                                  : Colors.white.withValues(alpha: 0.08)),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: isLight
@@ -516,38 +527,39 @@ class _OccurrenceDetailPopupState
                                   color: isLight
                                       ? AppColors.moss
                                       : (themeIsDark
-                                          ? AppColors.selected
-                                          : AppColors.tileMint),
-                                  backgroundColor: (isLight
-                                          ? AppColors.moss
-                                          : (themeIsDark
-                                              ? AppColors.selected
-                                              : AppColors.tileMint))
-                                      .withValues(alpha: 0.2),
+                                            ? AppColors.selected
+                                            : AppColors.tileMint),
+                                  backgroundColor:
+                                      (isLight
+                                              ? AppColors.moss
+                                              : (themeIsDark
+                                                    ? AppColors.selected
+                                                    : AppColors.tileMint))
+                                          .withValues(alpha: 0.2),
                                 ),
                               ),
                               SizedBox(width: isTablet ? 10 : 8),
                               Expanded(
                                 child: Text(
-                                courseProgress.isComplete
-                                    ? l10n.courseComplete
-                                    : courseProgress.notStarted
-                                        ? l10n.courseStarts(
-                                            AppDateFormat.shortDate(
-                                              med!.startDate,
-                                            ),
-                                          )
-                                        : l10n.courseDayOf(
-                                            courseProgress.day,
-                                            courseProgress.totalDays,
+                                  courseProgress.isComplete
+                                      ? l10n.courseComplete
+                                      : courseProgress.notStarted
+                                      ? l10n.courseStarts(
+                                          AppDateFormat.shortDate(
+                                            med!.startDate,
                                           ),
-                                style: TextStyle(
-                                  fontFamily: 'PlusJakartaSans',
-                                  fontFamilyFallback: AppTextStyles.fallback,
-                                  fontSize: isTablet ? 13.5 : 12,
-                                  fontWeight: FontWeight.w700,
-                                  color: textColor,
-                                ),
+                                        )
+                                      : l10n.courseDayOf(
+                                          courseProgress.day,
+                                          courseProgress.totalDays,
+                                        ),
+                                  style: TextStyle(
+                                    fontFamily: 'PlusJakartaSans',
+                                    fontFamilyFallback: AppTextStyles.fallback,
+                                    fontSize: isTablet ? 13.5 : 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: textColor,
+                                  ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -572,7 +584,8 @@ class _OccurrenceDetailPopupState
                                     ),
                                     style: TextStyle(
                                       fontFamily: 'PlusJakartaSans',
-                                      fontFamilyFallback: AppTextStyles.fallback,
+                                      fontFamilyFallback:
+                                          AppTextStyles.fallback,
                                       fontSize: isTablet ? 12 : 10.5,
                                       fontWeight: FontWeight.w600,
                                       color: isLight
@@ -592,8 +605,8 @@ class _OccurrenceDetailPopupState
                               color: isLight
                                   ? AppColors.moss
                                   : (themeIsDark
-                                      ? AppColors.selected
-                                      : AppColors.tileMint),
+                                        ? AppColors.selected
+                                        : AppColors.tileMint),
                               backgroundColor: isLight
                                   ? AppColors.divider.withValues(alpha: 0.35)
                                   : Colors.white.withValues(alpha: 0.12),
@@ -647,14 +660,15 @@ class _OccurrenceDetailPopupState
                                   l10n.unitsLeft(
                                     AppNumber.format(med.stockQuantity!),
                                   ),
-                                  style: (isLight
-                                          ? AppTextStyles.captionOnLight
-                                          : AppTextStyles.caption)
-                                      .copyWith(
-                                    fontSize: isTablet ? 12.5 : 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: textColor,
-                                  ),
+                                  style:
+                                      (isLight
+                                              ? AppTextStyles.captionOnLight
+                                              : AppTextStyles.caption)
+                                          .copyWith(
+                                            fontSize: isTablet ? 12.5 : 11,
+                                            fontWeight: FontWeight.w600,
+                                            color: textColor,
+                                          ),
                                 ),
                               ],
                             ),
@@ -688,20 +702,21 @@ class _OccurrenceDetailPopupState
                                   color: isLight
                                       ? AppColors.moss
                                       : (themeIsDark
-                                          ? AppColors.selected
-                                          : AppColors.mint),
+                                            ? AppColors.selected
+                                            : AppColors.mint),
                                 ),
                                 SizedBox(width: isTablet ? 4 : 3),
                                 Text(
                                   doc.name,
-                                  style: (isLight
-                                          ? AppTextStyles.captionOnLight
-                                          : AppTextStyles.caption)
-                                      .copyWith(
-                                    fontSize: isTablet ? 12.5 : 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: textColor,
-                                  ),
+                                  style:
+                                      (isLight
+                                              ? AppTextStyles.captionOnLight
+                                              : AppTextStyles.caption)
+                                          .copyWith(
+                                            fontSize: isTablet ? 12.5 : 11,
+                                            fontWeight: FontWeight.w600,
+                                            color: textColor,
+                                          ),
                                 ),
                               ],
                             ),
@@ -758,13 +773,13 @@ class _OccurrenceDetailPopupState
                           backgroundColor: isLight
                               ? AppColors.moss
                               : (themeIsDark
-                                  ? AppColors.selected
-                                  : AppColors.moss),
+                                    ? AppColors.selected
+                                    : AppColors.moss),
                           foregroundColor: isLight
                               ? Colors.white
                               : (themeIsDark
-                                  ? AppColors.onSelected
-                                  : AppColors.textOnDark),
+                                    ? AppColors.onSelected
+                                    : AppColors.textOnDark),
                           onPressed: () => _act(AlarmAction.taken),
                         ),
                       ),
@@ -779,8 +794,8 @@ class _OccurrenceDetailPopupState
                           backgroundColor: isLight
                               ? AppColors.sand
                               : (themeIsDark
-                                  ? Colors.black.withValues(alpha: 0.22)
-                                  : Colors.white.withValues(alpha: 0.10)),
+                                    ? Colors.black.withValues(alpha: 0.22)
+                                    : Colors.white.withValues(alpha: 0.10)),
                           foregroundColor: textColor,
                           borderColor: isLight
                               ? AppColors.divider.withValues(alpha: 0.7)
@@ -798,8 +813,8 @@ class _OccurrenceDetailPopupState
                       color: isLight
                           ? AppColors.creamLight
                           : (themeIsDark
-                              ? Colors.black.withValues(alpha: 0.22)
-                              : Colors.white.withValues(alpha: 0.08)),
+                                ? Colors.black.withValues(alpha: 0.22)
+                                : Colors.white.withValues(alpha: 0.08)),
                       borderRadius: BorderRadius.circular(14),
                       child: InkWell(
                         onTap: () async {
@@ -833,8 +848,8 @@ class _OccurrenceDetailPopupState
                                 color: isLight
                                     ? AppColors.moss
                                     : (themeIsDark
-                                        ? AppColors.selected
-                                        : AppColors.mint),
+                                          ? AppColors.selected
+                                          : AppColors.mint),
                               ),
                               SizedBox(width: isTablet ? 10 : 8),
                               Expanded(
@@ -869,79 +884,81 @@ class _OccurrenceDetailPopupState
                     children: [
                       Flexible(
                         child: InkWell(
-                        onTap: _edit,
-                        borderRadius: BorderRadius.circular(8),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.tune_rounded,
-                                size: isTablet ? 16 : 14,
-                                color: mutedColor,
-                              ),
-                              const SizedBox(width: 5),
-                              Flexible(
-                                child: Text(
-                                l10n.editReminder,
-                                style: TextStyle(
-                                  fontFamily: 'PlusJakartaSans',
-                                  fontFamilyFallback: AppTextStyles.fallback,
-                                  fontSize: isTablet ? 13 : 11.5,
-                                  fontWeight: FontWeight.w600,
+                          onTap: _edit,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.tune_rounded,
+                                  size: isTablet ? 16 : 14,
                                   color: mutedColor,
                                 ),
-                                  overflow: TextOverflow.ellipsis,
+                                const SizedBox(width: 5),
+                                Flexible(
+                                  child: Text(
+                                    l10n.editReminder,
+                                    style: TextStyle(
+                                      fontFamily: 'PlusJakartaSans',
+                                      fontFamilyFallback:
+                                          AppTextStyles.fallback,
+                                      fontSize: isTablet ? 13 : 11.5,
+                                      fontWeight: FontWeight.w600,
+                                      color: mutedColor,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                      ),
                       Flexible(
                         child: InkWell(
-                        onTap: _delete,
-                        borderRadius: BorderRadius.circular(8),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.delete_outline_rounded,
-                                size: isTablet ? 16 : 14,
-                                color: isLight
-                                    ? AppColors.error
-                                    : const Color(0xFFFF7D7D),
-                              ),
-                              const SizedBox(width: 5),
-                              Flexible(
-                                child: Text(
-                                l10n.deleteThisTime,
-                                style: TextStyle(
-                                  fontFamily: 'PlusJakartaSans',
-                                  fontFamilyFallback: AppTextStyles.fallback,
-                                  fontSize: isTablet ? 13 : 11.5,
-                                  fontWeight: FontWeight.w600,
+                          onTap: _delete,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.delete_outline_rounded,
+                                  size: isTablet ? 16 : 14,
                                   color: isLight
                                       ? AppColors.error
                                       : const Color(0xFFFF7D7D),
                                 ),
-                                  overflow: TextOverflow.ellipsis,
+                                const SizedBox(width: 5),
+                                Flexible(
+                                  child: Text(
+                                    l10n.deleteThisTime,
+                                    style: TextStyle(
+                                      fontFamily: 'PlusJakartaSans',
+                                      fontFamilyFallback:
+                                          AppTextStyles.fallback,
+                                      fontSize: isTablet ? 13 : 11.5,
+                                      fontWeight: FontWeight.w600,
+                                      color: isLight
+                                          ? AppColors.error
+                                          : const Color(0xFFFF7D7D),
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
                       ),
                     ],
                   ),
@@ -1014,11 +1031,7 @@ class _PopupActionButton extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 6),
-                Icon(
-                  icon,
-                  size: iconSize,
-                  color: foregroundColor,
-                ),
+                Icon(icon, size: iconSize, color: foregroundColor),
               ],
             ),
           ),
@@ -1027,4 +1040,3 @@ class _PopupActionButton extends StatelessWidget {
     );
   }
 }
-

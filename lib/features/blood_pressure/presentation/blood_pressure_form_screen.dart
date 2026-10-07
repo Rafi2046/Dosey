@@ -16,6 +16,7 @@ import '../../../core/widgets/picker_field.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../domain/bp_category.dart';
 import '../providers/blood_pressure_providers.dart';
+import '../../../core/widgets/guarded_form.dart';
 import 'widgets/bp_category_chip.dart';
 
 /// Add or edit one reading. Shows its category live as the numbers are
@@ -125,10 +126,8 @@ class _BloodPressureFormScreenState
         loading: _saving,
         onPressed: _save,
       ),
-      body: Form(
-        key: _formKey,
-        // A fixed field clears its error as soon as it is valid again.
-        autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+      body: GuardedForm(
+        formKey: _formKey,
         child: ListView(
           padding: AppSpacing.screenPadding,
           children: [

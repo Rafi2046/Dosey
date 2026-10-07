@@ -1715,6 +1715,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exitConfirm => 'Exit';
 
   @override
+  String get discardTitle => 'Discard changes?';
+
+  @override
+  String get discardBody => 'What you typed here will be lost.';
+
+  @override
+  String get discardKeep => 'Keep editing';
+
+  @override
+  String get discardConfirm => 'Discard';
+
+  @override
   String alarmGroupNotifTitle(int count) {
     final intl.NumberFormat countNumberFormat =
         intl.NumberFormat.decimalPattern(localeName);

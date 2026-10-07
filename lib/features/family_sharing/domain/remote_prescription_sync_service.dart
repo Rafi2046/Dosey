@@ -44,7 +44,11 @@ class RemotePrescriptionSyncService {
     if (!_repo.isAvailable) return;
 
     try {
-      final remoteList = await _repo.fetchPatientPrescriptions(patientUid);
+      // Inactive ones too: those are medicines the caregiver removed.
+      final remoteList = await _repo.fetchPatientPrescriptions(
+        patientUid,
+        includeInactive: true,
+      );
       if (remoteList.isEmpty) return;
 
       final localMedicines = await (_db.select(_db.medicines)
@@ -69,8 +73,9 @@ class RemotePrescriptionSyncService {
         final meal = _parseMeal(remote.mealRelation);
 
         if (!remote.isActive) {
-          // Deactivated in cloud: delete locally if exists
-          if (existing != null) {
+          // Deactivated in cloud: delete the local copy, but never the
+          // patient's own medicine that merely shares its name.
+          if (existing != null && existing.cloudId == remote.id) {
             await medRepo.delete(existing.id);
           }
           continue;
@@ -130,9 +135,20 @@ class RemotePrescriptionSyncService {
               ),
             );
 
-            // Re-sync reminder times if modified
+            // Re-sync reminders when the times or amounts changed, not only
+            // their number (8:00 → 9:00 must move the alarm too).
             final currentReminders = localReminders.where((r) => r.medicineId == existing.id).toList();
-            if (currentReminders.length != doseTimes.length) {
+            String key(int hour, int minute, double? amount) =>
+                '$hour:$minute@${amount ?? 1}';
+            final current = [
+              for (final r in currentReminders)
+                key(r.startAt.hour, r.startAt.minute, r.doseAmount),
+            ]..sort();
+            final wanted = [
+              for (final dt in doseTimes)
+                key(dt.time.hour, dt.time.minute, dt.amount),
+            ]..sort();
+            if (current.join(',') != wanted.join(',')) {
               // Delete old and recreate times
               for (final r in currentReminders) {
                 await remRepo.delete(r.id);

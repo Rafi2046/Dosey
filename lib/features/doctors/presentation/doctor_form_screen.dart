@@ -14,6 +14,7 @@ import '../../../core/localization/l10n.dart';
 import '../../../core/widgets/suggest_field.dart';
 import '../data/health_facilities.dart';
 import '../domain/specialty.dart';
+import '../../../core/widgets/guarded_form.dart';
 
 class DoctorFormScreen extends ConsumerStatefulWidget {
   const DoctorFormScreen({super.key, this.existing});
@@ -104,10 +105,8 @@ class _DoctorFormScreenState extends ConsumerState<DoctorFormScreen> {
         loading: _saving,
         onPressed: _save,
       ),
-      body: Form(
-        key: _formKey,
-        // A fixed field clears its error as soon as it is valid again.
-        autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+      body: GuardedForm(
+        formKey: _formKey,
         child: ListView(
           padding: AppSpacing.screenPadding,
           children: [

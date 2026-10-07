@@ -57,6 +57,31 @@ Future<bool> confirmExit(BuildContext context) async {
   return confirmed ?? false;
 }
 
+/// "Discard changes?" on leaving a form with unsaved edits. True only on
+/// "Discard".
+Future<bool> confirmDiscard(BuildContext context) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(context.l10n.discardTitle),
+      content: Text(context.l10n.discardBody),
+      actions: [
+        TextButton(
+          style: TextButton.styleFrom(foregroundColor: AppColors.inkMuted),
+          onPressed: () => Navigator.pop(context, false),
+          child: Text(context.l10n.discardKeep),
+        ),
+        TextButton(
+          style: TextButton.styleFrom(foregroundColor: AppColors.error),
+          onPressed: () => Navigator.pop(context, true),
+          child: Text(context.l10n.discardConfirm),
+        ),
+      ],
+    ),
+  );
+  return confirmed ?? false;
+}
+
 void showAppSnack(BuildContext context, String message) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()

@@ -17,6 +17,7 @@ import '../../../core/widgets/picker_field.dart';
 import '../../../core/widgets/pill_button.dart';
 import '../domain/sugar_category.dart';
 import '../providers/blood_sugar_providers.dart';
+import '../../../core/widgets/guarded_form.dart';
 import 'widgets/sugar_category_chip.dart';
 import 'widgets/sugar_value_text.dart';
 
@@ -114,10 +115,8 @@ class _BloodSugarFormScreenState extends ConsumerState<BloodSugarFormScreen> {
         loading: _saving,
         onPressed: _save,
       ),
-      body: Form(
-        key: _formKey,
-        // A fixed field clears its error as soon as it is valid again.
-        autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+      body: GuardedForm(
+        formKey: _formKey,
         child: ListView(
           padding: AppSpacing.screenPadding,
           children: [

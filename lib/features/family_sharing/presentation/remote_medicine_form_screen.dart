@@ -17,6 +17,7 @@ import '../../auth/providers/auth_providers.dart';
 import '../domain/family_share.dart';
 import '../domain/remote_prescription.dart';
 import '../domain/remote_prescription_sync_service.dart';
+import '../../../core/widgets/guarded_form.dart';
 
 class RemoteMedicineFormScreen extends ConsumerStatefulWidget {
   const RemoteMedicineFormScreen({
@@ -203,10 +204,8 @@ class _RemoteMedicineFormScreenState
         loading: _isSaving,
         onPressed: _handleSave,
       ),
-      body: Form(
-        key: _formKey,
-        // A fixed field clears its error as soon as it is valid again.
-        autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+      body: GuardedForm(
+        formKey: _formKey,
         child: ListView(
           padding: AppSpacing.screenPadding.copyWith(
             top: AppSpacing.xs,

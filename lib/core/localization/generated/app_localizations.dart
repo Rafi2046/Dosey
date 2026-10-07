@@ -2918,6 +2918,30 @@ abstract class AppLocalizations {
   /// **'Exit'**
   String get exitConfirm;
 
+  /// No description provided for @discardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes?'**
+  String get discardTitle;
+
+  /// No description provided for @discardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'What you typed here will be lost.'**
+  String get discardBody;
+
+  /// No description provided for @discardKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep editing'**
+  String get discardKeep;
+
+  /// No description provided for @discardConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discardConfirm;
+
   /// No description provided for @alarmGroupNotifTitle.
   ///
   /// In en, this message translates to:

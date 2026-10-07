@@ -18,6 +18,7 @@ import '../../domain/scanned_doctor.dart';
 import '../../domain/scanned_medicine.dart';
 import '../../providers/medicines_providers.dart';
 import '../scan_prescription_flow.dart';
+import '../../../../core/widgets/guarded_form.dart';
 import 'medicine_draft.dart';
 import 'medicine_draft_card.dart';
 import 'scanned_doctor_card.dart';
@@ -140,10 +141,8 @@ class _BulkAddScreenState extends ConsumerState<BulkAddScreen> {
         loading: _saving,
         onPressed: _drafts.isEmpty ? null : _save,
       ),
-      body: Form(
-        key: _formKey,
-        // A fixed field clears its error as soon as it is valid again.
-        autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+      body: GuardedForm(
+        formKey: _formKey,
         // Not a lazy ListView: every card must be built so the Form can
         // validate (and show errors on) all of them, even off-screen ones.
         child: SingleChildScrollView(

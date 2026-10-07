@@ -34,6 +34,7 @@ import 'widgets/reminder_times_editor.dart';
 import 'widgets/scan_prescription_card.dart';
 import 'widgets/stock_price_section.dart';
 import '../../../core/utils/dose_unit.dart';
+import '../../../core/widgets/guarded_form.dart';
 
 /// Step 2 of "Add Medicine", or editing an existing medicine. Reminder times
 /// are entered here on create; afterwards they're managed on the detail page.
@@ -291,10 +292,8 @@ class _MedicineFormScreenState extends ConsumerState<MedicineFormScreen> {
         loading: _saving,
         onPressed: _save,
       ),
-      body: Form(
-        key: _formKey,
-        // A fixed field clears its error as soon as it is valid again.
-        autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+      body: GuardedForm(
+        formKey: _formKey,
         child: ListView(
           padding: AppSpacing.screenPadding,
           children: [

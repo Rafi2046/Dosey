@@ -19,6 +19,7 @@ import '../providers/records_providers.dart';
 import 'widgets/image_source_sheet.dart';
 import 'widgets/picked_pages_strip.dart';
 import '../../../core/localization/l10n.dart';
+import '../../../core/widgets/guarded_form.dart';
 
 /// New record with photographed pages, or editing an existing record's
 /// details (pages of existing records are managed on the detail screen).
@@ -93,10 +94,8 @@ class _RecordFormScreenState extends ConsumerState<RecordFormScreen> {
         loading: _saving,
         onPressed: _save,
       ),
-      body: Form(
-        key: _formKey,
-        // A fixed field clears its error as soon as it is valid again.
-        autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+      body: GuardedForm(
+        formKey: _formKey,
         child: ListView(
           padding: AppSpacing.screenPadding,
           children: [

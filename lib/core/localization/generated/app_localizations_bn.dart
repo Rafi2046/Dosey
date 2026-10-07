@@ -1698,6 +1698,18 @@ class AppLocalizationsBn extends AppLocalizations {
   String get exitConfirm => 'বের হন';
 
   @override
+  String get discardTitle => 'পরিবর্তন বাদ দেবেন?';
+
+  @override
+  String get discardBody => 'এখানে যা লিখেছেন তা মুছে যাবে।';
+
+  @override
+  String get discardKeep => 'লিখতে থাকুন';
+
+  @override
+  String get discardConfirm => 'বাদ দিন';
+
+  @override
   String alarmGroupNotifTitle(int count) {
     final intl.NumberFormat countNumberFormat =
         intl.NumberFormat.decimalPattern(localeName);

@@ -1702,8 +1702,8 @@ void main() {
       }
       await tab(HomeTab.dashboard);
       await push(const BloodPressureScreen());
-      await push(const BloodSugarScreen(), expectBack: false);
-      await push(const DoseHistoryScreen(), expectBack: false);
+      await push(const BloodSugarScreen());
+      await push(const DoseHistoryScreen());
       await push(const SettingsScreen());
       await push(const MedicineDetailScreen(medicineId: 1));
       await push(const MedicineTypeScreen());

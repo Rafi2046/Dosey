@@ -24,6 +24,7 @@ import 'widgets/repeat_section.dart';
 import 'widgets/reminder_type_selector.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../core/utils/dose_unit.dart';
+import '../../../core/widgets/guarded_form.dart';
 
 /// Create or edit any reminder (medicine, appointment, vaccine, test).
 class ReminderFormScreen extends ConsumerStatefulWidget {
@@ -202,10 +203,8 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
         loading: _saving,
         onPressed: _save,
       ),
-      body: Form(
-        key: _formKey,
-        // A fixed field clears its error as soon as it is valid again.
-        autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+      body: GuardedForm(
+        formKey: _formKey,
         child: ListView(
           padding: AppSpacing.screenPadding,
           children: [

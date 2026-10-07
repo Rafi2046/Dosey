@@ -12,6 +12,7 @@ import 'dart:io';
 
 import 'package:dosey/app/app.dart';
 import 'package:dosey/app/widgets/app_nav_bar.dart';
+import 'package:dosey/core/constants/constants.dart';
 import 'package:dosey/core/database/app_database.dart';
 import 'package:dosey/core/localization/l10n.dart';
 import 'package:dosey/core/notifications/permission_service.dart';
@@ -146,11 +147,15 @@ void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
   var shot = 0;
+  // Screenshot name prefix: the theme being walked.
+  var theme = '';
 
   Future<void> snap(WidgetTester tester, String name) async {
     await settle(tester);
     shot++;
-    await binding.takeScreenshot('${shot.toString().padLeft(2, '0')}_$name');
+    await binding.takeScreenshot(
+      '$theme${shot.toString().padLeft(2, '0')}_$name',
+    );
   }
 
   Future<void> tapText(WidgetTester tester, String text) async {
@@ -173,7 +178,12 @@ void main() {
   }
 
   Future<void> back(WidgetTester tester) async {
-    await tester.pageBack();
+    // The arrow scrolls away with a long page (Settings); system back then.
+    if (find.byTooltip('Back').hitTestable().evaluate().isNotEmpty) {
+      await tester.pageBack();
+    } else {
+      await tester.binding.handlePopRoute();
+    }
     await settle(tester);
   }
 
@@ -201,152 +211,163 @@ void main() {
     WidgetTester tester,
     AppDatabase db, {
     bool granted = true,
+    ThemeMode mode = ThemeMode.light,
   }) async {
     final now = DateTime.now();
     await tester.pumpWidget(
       ProviderScope(
-        overrides: testOverrides(
-          db: db,
-          now: now,
-          // Onboarding only shows while permissions are missing.
-          permissions: FakePermissionService(
-            granted ? AppPermission.values.toSet() : {},
+        overrides: [
+          themeModeProvider.overrideWith(() => ThemeModeController(mode)),
+          ...testOverrides(
+            db: db,
+            now: now,
+            // Onboarding only shows while permissions are missing.
+            permissions: FakePermissionService(
+              granted ? AppPermission.values.toSet() : {},
+            ),
           ),
-        ),
+        ],
         child: const DoseyApp(),
       ),
     );
     await settle(tester);
   }
 
-  testWidgets('every screen renders', (tester) async {
-    final db = AppDatabase(NativeDatabase.memory());
-    addTearDown(db.close);
-    final now = DateTime.now();
-    await _seed(db, now);
-    await db
-        .into(db.appSettings)
-        .insert(
-          AppSettingsCompanion.insert(key: onboardingDoneKey, value: '1'),
-        );
-    await pumpDosey(tester, db);
-    if (Platform.isAndroid) await binding.convertFlutterSurfaceToImage();
+  // Every screen in both looks, so a color that only breaks in one shows.
+  for (final mode in [ThemeMode.light, ThemeMode.dark]) {
+    testWidgets('every screen renders (${mode.name})', (tester) async {
+      theme = '${mode.name}_';
+      shot = 0;
+      addTearDown(() => AppColors.apply(AppPalette.light));
+      final db = AppDatabase(NativeDatabase.memory());
+      addTearDown(db.close);
+      final now = DateTime.now();
+      await _seed(db, now);
+      await db
+          .into(db.appSettings)
+          .insert(
+            AppSettingsCompanion.insert(key: onboardingDoneKey, value: '1'),
+          );
+      await pumpDosey(tester, db, mode: mode);
+      if (Platform.isAndroid) await binding.convertFlutterSurfaceToImage();
 
-    await snap(tester, 'home');
-    await tester.drag(find.byType(Scrollable).first, const Offset(0, -900));
-    await snap(tester, 'home_lower');
+      await snap(tester, 'home');
+      await tester.drag(find.byType(Scrollable).first, const Offset(0, -900));
+      await snap(tester, 'home_lower');
 
-    await nav(tester, en.navReminders);
-    await snap(tester, 'reminders');
-    await tapText(tester, 'Diabetes follow-up');
-    await snap(tester, 'reminder_form');
-    await back(tester);
-
-    await nav(tester, en.navMedicines);
-    await snap(tester, 'medicines');
-    await tapText(tester, 'Metformin 500 mg');
-    await snap(tester, 'medicine_detail');
-    await back(tester);
-
-    await nav(tester, en.navMore);
-    await snap(tester, 'more_sheet');
-    await tapText(tester, en.navDoctors);
-    await snap(tester, 'doctors');
-    await tapText(tester, 'Dr. Farhana Rahman');
-    await snap(tester, 'doctor_detail');
-    await back(tester);
-
-    await nav(tester, en.navMore);
-    await tapText(tester, en.navRecords);
-    await snap(tester, 'records');
-    await tapText(tester, 'Endocrinology prescription');
-    await snap(tester, 'record_detail');
-    await back(tester);
-
-    await nav(tester, en.navMore);
-    await tapText(tester, en.navExpenses);
-    await snap(tester, 'expenses');
-
-    await nav(tester, en.navMore);
-    await tapText(tester, en.bpShortTitle);
-    await snap(tester, 'blood_pressure');
-    await tapText(tester, en.bpAdd);
-    await snap(tester, 'blood_pressure_form');
-    await back(tester);
-    await back(tester);
-
-    await nav(tester, en.navMore);
-    await tapText(tester, en.sugarShortTitle);
-    await snap(tester, 'blood_sugar');
-    await tapText(tester, en.sugarAdd);
-    await snap(tester, 'blood_sugar_form');
-    await back(tester);
-    await back(tester);
-
-    // The + sheet and every form it opens.
-    await tester.tap(find.byTooltip(en.add));
-    await settle(tester);
-    await snap(tester, 'add_sheet');
-    for (final (label, name) in [
-      (en.addReminder, 'form_reminder'),
-      (en.addDoctor, 'form_doctor'),
-      (en.addRecord, 'form_record'),
-      (en.addExpense, 'form_expense'),
-    ]) {
-      await tapText(tester, label);
-      await snap(tester, name);
+      await nav(tester, en.navReminders);
+      await snap(tester, 'reminders');
+      await tapText(tester, 'Diabetes follow-up');
+      await snap(tester, 'reminder_form');
       await back(tester);
+
+      await nav(tester, en.navMedicines);
+      await snap(tester, 'medicines');
+      await tapText(tester, 'Metformin 500 mg');
+      await snap(tester, 'medicine_detail');
+      await back(tester);
+
+      await nav(tester, en.navMore);
+      await snap(tester, 'more_sheet');
+      await tapText(tester, en.navDoctors);
+      await snap(tester, 'doctors');
+      await tapText(tester, 'Dr. Farhana Rahman');
+      await snap(tester, 'doctor_detail');
+      await back(tester);
+
+      await nav(tester, en.navMore);
+      await tapText(tester, en.navRecords);
+      await snap(tester, 'records');
+      await tapText(tester, 'Endocrinology prescription');
+      await snap(tester, 'record_detail');
+      await back(tester);
+
+      await nav(tester, en.navMore);
+      await tapText(tester, en.navExpenses);
+      await snap(tester, 'expenses');
+
+      await nav(tester, en.navMore);
+      await tapText(tester, en.bpShortTitle);
+      await snap(tester, 'blood_pressure');
+      await tapText(tester, en.bpAdd);
+      await snap(tester, 'blood_pressure_form');
+      await back(tester);
+      await back(tester);
+
+      await nav(tester, en.navMore);
+      await tapText(tester, en.sugarShortTitle);
+      await snap(tester, 'blood_sugar');
+      await tapText(tester, en.sugarAdd);
+      await snap(tester, 'blood_sugar_form');
+      await back(tester);
+      await back(tester);
+
+      // The + sheet and every form it opens.
       await tester.tap(find.byTooltip(en.add));
       await settle(tester);
-    }
-    await tapText(tester, en.addMedicine);
-    await snap(tester, 'medicine_type');
-    await tapText(tester, en.next);
-    await snap(tester, 'form_medicine');
-    await back(tester);
-    await back(tester);
-
-    // Settings and everything under it.
-    await nav(tester, en.navHome);
-    // Home is still scrolled down from the "home_lower" shot.
-    await tester.drag(find.byType(Scrollable).first, const Offset(0, 3000));
-    await settle(tester);
-    await tester.tap(find.byTooltip(en.settingsTitle));
-    await settle(tester);
-    await snap(tester, 'settings');
-    await tapText(tester, 'Rafi');
-    await snap(tester, 'settings_name_sheet');
-    await tester.tapAt(const Offset(20, 80)); // dismiss the sheet
-    await settle(tester);
-    await tapText(tester, en.settingsPermissions);
-    await snap(tester, 'permissions');
-    await back(tester);
-    for (final (title, name) in [
-      (en.privacyPolicy, 'privacy'),
-      (en.termsOfUse, 'terms'),
-      (en.medicalDisclaimer, 'disclaimer'),
-    ]) {
-      await tapText(tester, title);
-      await snap(tester, name);
-      await back(tester);
-    }
-    await back(tester);
-
-    // A grouped alarm ringing (two medicines due at 9 pm).
-    final repo = RemindersRepository(db);
-    final at = DateTime(now.year, now.month, now.day, 21);
-    for (final r in await repo.getAll()) {
-      if (r.type == ReminderType.medicine && r.startAt.hour == 21) {
-        await repo.setRinging(r.id, at);
+      await snap(tester, 'add_sheet');
+      for (final (label, name) in [
+        (en.addReminder, 'form_reminder'),
+        (en.addDoctor, 'form_doctor'),
+        (en.addRecord, 'form_record'),
+        (en.addExpense, 'form_expense'),
+      ]) {
+        await tapText(tester, label);
+        await snap(tester, name);
+        await back(tester);
+        await tester.tap(find.byTooltip(en.add));
+        await settle(tester);
       }
-    }
-    await settle(tester);
-    await snap(tester, 'alarm_grouped');
-    await tapText(tester, en.alarmMarkAllTaken);
-    await snap(tester, 'home_after_taken');
-  });
+      await tapText(tester, en.addMedicine);
+      await snap(tester, 'medicine_type');
+      await tapText(tester, en.next);
+      await snap(tester, 'form_medicine');
+      await back(tester);
+      await back(tester);
+
+      // Settings and everything under it.
+      await nav(tester, en.navHome);
+      // Home is still scrolled down from the "home_lower" shot.
+      await tester.drag(find.byType(Scrollable).first, const Offset(0, 3000));
+      await settle(tester);
+      await tester.tap(find.byTooltip(en.settingsTitle));
+      await settle(tester);
+      await snap(tester, 'settings');
+      await tapText(tester, 'Rafi');
+      await snap(tester, 'settings_name_sheet');
+      await tester.tapAt(const Offset(20, 80)); // dismiss the sheet
+      await settle(tester);
+      await tapText(tester, en.settingsPermissions);
+      await snap(tester, 'permissions');
+      await back(tester);
+      for (final (title, name) in [
+        (en.privacyPolicy, 'privacy'),
+        (en.termsOfUse, 'terms'),
+        (en.medicalDisclaimer, 'disclaimer'),
+      ]) {
+        await tapText(tester, title);
+        await snap(tester, name);
+        await back(tester);
+      }
+      await back(tester);
+
+      // A grouped alarm ringing (two medicines due at 9 pm).
+      final repo = RemindersRepository(db);
+      final at = DateTime(now.year, now.month, now.day, 21);
+      for (final r in await repo.getAll()) {
+        if (r.type == ReminderType.medicine && r.startAt.hour == 21) {
+          await repo.setRinging(r.id, at);
+        }
+      }
+      await settle(tester);
+      await snap(tester, 'alarm_grouped');
+      await tapText(tester, en.alarmMarkAllTaken);
+      await snap(tester, 'home_after_taken');
+    });
+  }
 
   testWidgets('onboarding renders', (tester) async {
+    theme = '';
     final db = AppDatabase(NativeDatabase.memory());
     addTearDown(db.close);
     await pumpDosey(tester, db, granted: false);

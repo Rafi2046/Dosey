@@ -20,6 +20,7 @@ import '../../medicines/presentation/widgets/medicine_picker_field.dart';
 import '../../reminders/domain/reminder_text.dart';
 import '../providers/expenses_providers.dart';
 import '../../../core/localization/l10n.dart';
+import '../../../core/widgets/guarded_form.dart';
 
 class ExpenseFormScreen extends ConsumerStatefulWidget {
   const ExpenseFormScreen({super.key, this.existing});
@@ -108,10 +109,8 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
         loading: _saving,
         onPressed: _save,
       ),
-      body: Form(
-        key: _formKey,
-        // A fixed field clears its error as soon as it is valid again.
-        autovalidateMode: AutovalidateMode.onUserInteractionIfError,
+      body: GuardedForm(
+        formKey: _formKey,
         child: ListView(
           padding: AppSpacing.screenPadding,
           children: [

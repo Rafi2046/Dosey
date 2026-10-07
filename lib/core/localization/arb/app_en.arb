@@ -749,6 +749,10 @@
   "exitBody": "Your reminders will still ring on time, even with the app closed.",
   "exitStay": "Stay",
   "exitConfirm": "Exit",
+  "discardTitle": "Discard changes?",
+  "discardBody": "What you typed here will be lost.",
+  "discardKeep": "Keep editing",
+  "discardConfirm": "Discard",
   "@greetingWithName": {
     "description": "Home greeting with the user's name, e.g. \"Good evening, Rafi\"",
     "placeholders": {

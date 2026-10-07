@@ -31,13 +31,16 @@ class FamilyShareRepository {
     }
 
     try {
-      // Check for existing unclaimed active share
+      // Check for existing unclaimed active share that hasn't expired (an
+      // expired one would only be refused when the caregiver enters it).
+      final nowIso = DateTime.now().toUtc().toIso8601String();
       final existing = await _supabase
           .from('family_shares')
           .select()
           .eq('patient_uid', patientUid)
           .eq('is_active', true)
           .isFilter('caregiver_uid', null)
+          .or('expires_at.is.null,expires_at.gt.$nowIso')
           .order('created_at', ascending: false)
           .limit(1)
           .maybeSingle();

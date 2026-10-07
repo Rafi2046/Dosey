@@ -12,19 +12,21 @@ class RemotePrescriptionRepository {
 
   SupabaseClient get _supabase => Supabase.instance.client;
 
-  /// Fetches all active remote prescriptions for a given patient.
+  /// Fetches all active remote prescriptions for a given patient; with
+  /// [includeInactive] also the removed ones (so a sync can delete them).
   Future<List<RemotePrescription>> fetchPatientPrescriptions(
-    String patientUid,
-  ) async {
+    String patientUid, {
+    bool includeInactive = false,
+  }) async {
     if (!isAvailable) return [];
 
     try {
-      final response = await _supabase
+      var query = _supabase
           .from('patient_prescriptions')
           .select()
-          .eq('patient_uid', patientUid)
-          .eq('is_active', true)
-          .order('created_at', ascending: false);
+          .eq('patient_uid', patientUid);
+      if (!includeInactive) query = query.eq('is_active', true);
+      final response = await query.order('created_at', ascending: false);
 
       return (response as List<dynamic>)
           .map(
@@ -114,9 +116,9 @@ class RemotePrescriptionRepository {
         'patient_uid': patientUid,
         'caregiver_uid': caregiverUid,
         'caregiver_name': senderName,
+        // The medicine and time are in the message: family_nudges has no
+        // columns for them, and sending any made every insert fail.
         'message': message,
-        'medicine_name': medicineName,
-        'scheduled_time': scheduledTime,
         'created_at': DateTime.now().toUtc().toIso8601String(),
         'is_read': false,
       });

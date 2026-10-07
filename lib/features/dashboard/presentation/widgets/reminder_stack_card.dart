@@ -36,7 +36,7 @@ class ReminderStackCard extends StatelessWidget {
       occurrence.status == null && occurrence.at.isBefore(now);
 
   /// Pill colors follow the design: moss by default, cream for the next
-  /// dose, orange for an overdue one. Moss/cream contrast with every card
+  /// dose, coral accent for an overdue one. Moss/cream contrast with every card
   /// color in the cycle (a mint "taken" pill vanished on mint cards).
   (Color, Color, IconData?) _pillStyle() => switch (occurrence.status) {
     ReminderLogStatus.taken => (

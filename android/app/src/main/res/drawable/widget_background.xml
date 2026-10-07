@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Dosey widget card: sage → moss, like the app's tabs, soft rounded. -->
+<!-- Dosey widget card: lagoon blue → deep slate, like the app's tabs, soft rounded. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
     <gradient
         android:angle="315"
-        android:endColor="#FF4B5449"
-        android:startColor="#FF737D6D"
+        android:endColor="#FF3F535A"
+        android:startColor="#FF66808A"
         android:type="linear" />
     <corners android:radius="26dp" />
 </shape>

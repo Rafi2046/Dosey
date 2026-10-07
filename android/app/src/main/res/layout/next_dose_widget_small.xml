@@ -31,7 +31,7 @@
             android:ellipsize="end"
             android:gravity="end"
             android:maxLines="1"
-            android:textColor="#FFC6C9BC"
+            android:textColor="#FFC0C9CC"
             android:textSize="11sp" />
     </LinearLayout>
 
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="#FFC6C9BC"
+        android:textColor="#FFC0C9CC"
         android:textSize="11sp" />
 
     <TextView
@@ -66,7 +66,7 @@
         android:ellipsize="end"
         android:fontFamily="serif"
         android:maxLines="1"
-        android:textColor="#FFEEEBDD"
+        android:textColor="#FFE3EDEF"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -76,7 +76,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="#FFC6C9BC"
+        android:textColor="#FFC0C9CC"
         android:textSize="12sp" />
 
     <!-- The card shows the one-line summary; full lines are for the bar. -->

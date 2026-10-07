@@ -8,11 +8,11 @@ flutter_launcher_icons:
   android: "ic_launcher"
   min_sdk_android: 24
   # Android 8+ adaptive icon: capsule foreground on AppColors.sage.
-  adaptive_icon_background: "#687163"
+  adaptive_icon_background: "#5B727A"
   adaptive_icon_foreground: "assets/branding/app_icon_foreground.png"
   # Android 13+ themed (monochrome) icon.
   adaptive_icon_monochrome: "assets/branding/app_icon_foreground.png"
 
   ios: true
   remove_alpha_ios: true
-  background_color_ios: "#687163"
+  background_color_ios: "#5B727A"

@@ -45,7 +45,7 @@ abstract final class AppColors {
   static List<Color> get cardCycleOnLight => [olive, mint, stone, moss];
 
   // ── Accent ────────────────────────────────────────────────────────────────
-  static const Color accent = Color(0xFFFD572F);
+  static const Color accent = Color(0xFFDA6B71);
 
   // ── Text ──────────────────────────────────────────────────────────────────
   /// On sage / dark cards.
@@ -84,8 +84,8 @@ abstract final class AppColors {
   // ── Icon tiles ────────────────────────────────────────────────────────────
   /// Mid-tone fills for small icon tiles: the light-mode card colors, which
   /// read well on both light and dark surfaces.
-  static const Color tileMint = Color(0xFF64AA93);
-  static const Color tileOlive = Color(0xFF728268);
-  static const Color tileStone = Color(0xFF7E7D74);
-  static const Color tileMoss = Color(0xFF50594E);
+  static const Color tileMint = Color(0xFF62A8A5);
+  static const Color tileOlive = Color(0xFF60828E);
+  static const Color tileStone = Color(0xFF767E84);
+  static const Color tileMoss = Color(0xFF445A62);
 }

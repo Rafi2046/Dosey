@@ -12,16 +12,16 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 OUT = 'assets/images'
 SS = 2  # supersampling factor
 
-ORANGE = (253, 87, 47)
-ORANGE_LIGHT = (255, 150, 110)
-MOSS = (60, 109, 82)
-MOSS_LIGHT = (98, 150, 118)
-MINT_FACE = (190, 242, 214)
-MINT = (100, 170, 147)
-CREAM = (246, 243, 230)
+ORANGE = (218, 107, 113)  # AppColors.accent (soft coral-rose)
+ORANGE_LIGHT = (240, 165, 168)
+MOSS = (54, 98, 112)
+MOSS_LIGHT = (92, 142, 156)
+MINT_FACE = (198, 236, 240)
+MINT = (98, 168, 165)
+CREAM = (236, 244, 246)
 WHITE = (255, 255, 255)
 PEACH = (232, 168, 140)
-INK = (40, 44, 38)
+INK = (25, 29, 31)
 STEEL = (200, 205, 210)
 RED = (225, 60, 55)
 
@@ -96,7 +96,7 @@ def save(img, name, size):
 
 
 # ── Alarm clock hero ──────────────────────────────────────────────────────────
-ORANGE_DARK = (176, 52, 22)
+ORANGE_DARK = (150, 60, 68)
 STEEL_LIGHT = (240, 242, 244)
 STEEL_DARK = (140, 146, 152)
 
@@ -146,7 +146,7 @@ def alarm_clock(size=720):
         fr_ = R * 0.08
         d.ellipse([x_bot - fr_, y_bot - fr_, x_bot + fr_, y_bot + fr_], fill=CREAM)
         d.line([x_top + sx * R * 0.02, y_top, x_bot + sx * R * 0.02, y_bot],
-               fill=(215, 212, 200), width=int(R * 0.04))
+               fill=(205, 214, 218), width=int(R * 0.04))
 
     # Silver arch handle joining the bells (behind them).
     arch = [cx - R * 0.66, cy - R * 1.42, cx + R * 0.66, cy - R * 0.70]
@@ -171,7 +171,7 @@ def alarm_clock(size=720):
     img.alpha_composite(ring.filter(ImageFilter.GaussianBlur(3 * SS)))
 
     # Face.
-    face = radial((int(2 * fr), int(2 * fr)), (fr * 0.65, fr * 0.55), fr * 1.4, (232, 255, 242), MINT_FACE)
+    face = radial((int(2 * fr), int(2 * fr)), (fr * 0.65, fr * 0.55), fr * 1.4, (236, 250, 252), MINT_FACE)
     mask = Image.new('L', face.size, 0)
     ImageDraw.Draw(mask).ellipse([0, 0, face.width - 1, face.height - 1], fill=255)
     img.paste(face, (int(cx - fr), int(cy - fr)), mask)
@@ -187,7 +187,7 @@ def alarm_clock(size=720):
         r0 = fr * (0.86 if major else 0.90)
         r1 = fr * 0.95
         d.line([cx + math.cos(a) * r0, cy + math.sin(a) * r0, cx + math.cos(a) * r1, cy + math.sin(a) * r1],
-               fill=(40, 70, 55) if major else (95, 130, 110), width=int(R * (0.022 if major else 0.01)))
+               fill=(35, 60, 72) if major else (90, 120, 132), width=int(R * (0.022 if major else 0.01)))
 
     # Numbers.
     font = ImageFont.truetype('assets/fonts/DMSans-700.ttf', int(R * 0.21))
@@ -198,7 +198,7 @@ def alarm_clock(size=720):
 
     # Maker's mark.
     mark = ImageFont.truetype('assets/fonts/DMSans-600.ttf', int(R * 0.075))
-    d.text((cx, cy + fr * 0.36), 'DOSEY', font=mark, fill=(55, 95, 72), anchor='mm')
+    d.text((cx, cy + fr * 0.36), 'DOSEY', font=mark, fill=(50, 88, 104), anchor='mm')
 
     # Hands at 10:10, with a soft drop shadow.
     hands = Image.new('RGBA', img.size, (0, 0, 0, 0))
@@ -289,13 +289,13 @@ def first_aid(size=320):
 def logo(size=512):
     img = canvas(size)
     S = size * SS
-    shaded_rounded(img, (S * 0.06, S * 0.06, S * 0.94, S * 0.94), S * 0.24, (104, 113, 99), (130, 140, 124))
+    shaded_rounded(img, (S * 0.06, S * 0.06, S * 0.94, S * 0.94), S * 0.24, (91, 114, 122), (118, 140, 148))
     capsule(img, S // 2, S // 2, int(S * 0.66), int(S * 0.25), 35, CREAM, ORANGE, WHITE, ORANGE_LIGHT)
     save(img, 'logo.png', size)
 
 
 # ── Launcher icon & splash sources (assets/branding, not bundled) ────────────
-SAGE = (104, 113, 99)
+SAGE = (91, 114, 122)
 BRANDING = 'assets/branding'
 
 

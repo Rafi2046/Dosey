@@ -44,7 +44,7 @@ class PreviousMissedChip extends ConsumerWidget {
 
     return StatusChip(
       label: context.l10n.alarmPreviousMissed,
-      // A soft orange tint rather than a solid fill: a hint, not an alarm.
+      // A soft accent tint rather than a solid fill: a hint, not an alarm.
       background: AppColors.accent.withValues(alpha: AppSpacing.badgeOpacity),
       foreground: AppColors.ink,
       leading: const Icon(

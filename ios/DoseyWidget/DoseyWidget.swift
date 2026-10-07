@@ -71,18 +71,18 @@ struct DoseProvider: TimelineProvider {
 }
 
 private extension Color {
-  static let sageLight = Color(red: 0x73 / 255, green: 0x7D / 255, blue: 0x6D / 255)
-  static let sageDark = Color(red: 0x4B / 255, green: 0x54 / 255, blue: 0x49 / 255)
-  static let accent = Color(red: 0xFD / 255, green: 0x57 / 255, blue: 0x2F / 255)
-  static let cream = Color(red: 0xE6 / 255, green: 0xE3 / 255, blue: 0xD3 / 255)
-  static let textOnDark = Color(red: 0xEE / 255, green: 0xEB / 255, blue: 0xDD / 255)
-  static let textMuted = Color(red: 0xC6 / 255, green: 0xC9 / 255, blue: 0xBC / 255)
+  static let sageLight = Color(red: 0x66 / 255, green: 0x80 / 255, blue: 0x8A / 255)
+  static let sageDark = Color(red: 0x3F / 255, green: 0x53 / 255, blue: 0x5A / 255)
+  static let accent = Color(red: 0xDA / 255, green: 0x6B / 255, blue: 0x71 / 255)
+  static let cream = Color(red: 0xDB / 255, green: 0xE5 / 255, blue: 0xE7 / 255)
+  static let textOnDark = Color(red: 0xE3 / 255, green: 0xED / 255, blue: 0xEF / 255)
+  static let textMuted = Color(red: 0xC0 / 255, green: 0xC9 / 255, blue: 0xCC / 255)
 }
 
 private let cardGradient = LinearGradient(
   colors: [.sageLight, .sageDark], startPoint: .topLeading, endPoint: .bottomTrailing)
 
-/// Cream circle with the orange medicine icon (as on Android).
+/// Mist circle with the coral medicine icon (as on Android).
 private struct PillBadge: View {
   let size: CGFloat
   var body: some View {

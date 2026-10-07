@@ -5,12 +5,12 @@
 flutter_native_splash:
   # AppColors.sage — the same background the first Flutter frame paints, so
   # there's no flash between the native splash and the app.
-  color: "#687163"
+  color: "#5B727A"
   image: "assets/branding/splash_logo.png"
 
   # Android 12+ uses its own splash API: a centred icon, masked to a circle.
   android_12:
-    color: "#687163"
+    color: "#5B727A"
     image: "assets/branding/splash_logo.png"
 
   android: true

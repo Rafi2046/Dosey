@@ -42,7 +42,7 @@
             android:ellipsize="end"
             android:fontFamily="serif"
             android:maxLines="1"
-            android:textColor="#FFEEEBDD"
+            android:textColor="#FFE3EDEF"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#FFC6C9BC"
+            android:textColor="#FFC0C9CC"
             android:textSize="11sp" />
     </LinearLayout>
 

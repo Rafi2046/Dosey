@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 
-/// Bottom-sheet heading with the orange accent line, matching the page
+/// Bottom-sheet heading with the coral accent line, matching the page
 /// headers ("| খাওয়ার সময়").
 class SheetTitle extends StatelessWidget {
   const SheetTitle(this.title, {super.key});

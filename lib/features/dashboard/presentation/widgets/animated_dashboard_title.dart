@@ -115,6 +115,19 @@ class _AnimatedDashboardTitleState extends State<AnimatedDashboardTitle>
     final currentPhrase = _phrases[_currentPhraseIndex % _phrases.length];
     final displayedText = currentPhrase.substring(0, _charIndex.clamp(0, currentPhrase.length));
 
+    final hasBangla = RegExp(r'[\u0980-\u09FF]').hasMatch(currentPhrase);
+    final titleStyle = hasBangla
+        ? TextStyle(
+            fontFamily: 'NotoSansBengali',
+            fontFamilyFallback: AppTextStyles.fallback,
+            fontSize: AppSpacing.fontDisplay - 4,
+            fontWeight: FontWeight.w800,
+            color: AppColors.textOnDark,
+            height: AppSpacing.lineHeightTight,
+            letterSpacing: -0.2,
+          )
+        : AppTextStyles.display;
+
     // Measure or preserve stable container height to avoid layout shift
     return Padding(
       padding: const EdgeInsets.only(
@@ -125,7 +138,7 @@ class _AnimatedDashboardTitleState extends State<AnimatedDashboardTitle>
         constraints: const BoxConstraints(minHeight: 84),
         child: RichText(
           text: TextSpan(
-            style: AppTextStyles.display,
+            style: titleStyle,
             children: [
               TextSpan(text: displayedText),
               WidgetSpan(

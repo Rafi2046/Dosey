@@ -11,6 +11,7 @@ abstract final class AppTheme {
     brightness: Brightness.dark,
     colorScheme: _colorScheme,
     fontFamily: AppTextStyles.body.fontFamily,
+    fontFamilyFallback: AppTextStyles.fallback,
     scaffoldBackgroundColor: AppColors.sage,
     canvasColor: AppColors.sage,
     textTheme: _textTheme,

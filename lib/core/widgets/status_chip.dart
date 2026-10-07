@@ -33,16 +33,27 @@ class StatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final background = this.background ?? AppColors.moss;
     final foreground = this.foreground ?? AppColors.textOnDark;
-    final isTime = RegExp(r'\d{1,2}:\d{2}').hasMatch(label);
-    final textStyle = isTime
+    final isAsciiTime = RegExp(r'^\d{1,2}:\d{2}\s*(am|pm|AM|PM)?$').hasMatch(label);
+    final isBengaliTime = RegExp(r'^[০-৯]{1,2}:[০-৯]{2}').hasMatch(label);
+    final textStyle = isAsciiTime
         ? TextStyle(
             fontFamily: 'NDot',
+            fontFamilyFallback: AppTextStyles.fallback,
             fontSize: AppSpacing.fontSm + 1.5,
             color: foreground,
             letterSpacing: 0.8,
             fontWeight: FontWeight.w400,
           )
-        : AppTextStyles.chip.copyWith(color: foreground);
+        : isBengaliTime
+            ? TextStyle(
+                fontFamily: 'NotoSansBengali',
+                fontFamilyFallback: AppTextStyles.fallback,
+                fontSize: AppSpacing.fontSm + 1.5,
+                color: foreground,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.0,
+              )
+            : AppTextStyles.chip.copyWith(color: foreground);
 
     return Material(
       color: background,

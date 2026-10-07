@@ -4,16 +4,21 @@ import 'app_colors.dart';
 import 'app_spacing.dart';
 
 /// Typography: Modern Nothing OS inspired medical typography.
-/// Plus Jakarta Sans for titles/UI/body text, NDot for digital times/metrics.
+/// Plus Jakarta Sans for English titles/UI/body, NDot for digital times/metrics,
+/// Hind Siliguri for beautiful, crisp Bangla typography.
 abstract final class AppTextStyles {
   static const String _display = 'NDot';
   static const String _body = 'PlusJakartaSans';
   static const String _digital = 'NDot';
   static const String _tech = 'SpaceGrotesk';
+  static const String _bangla = 'NotoSansBengali';
+
+  static const List<String> fallback = [_bangla, 'HindSiliguri'];
 
   // ── Display (NDot - Nothing Dot Matrix) ────────────────────────────────────
   static TextStyle get display => TextStyle(
     fontFamily: _display,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontDisplay,
     fontWeight: FontWeight.w400,
     color: AppColors.textOnDark,
@@ -23,6 +28,7 @@ abstract final class AppTextStyles {
 
   static TextStyle get headline => TextStyle(
     fontFamily: _display,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontXxl,
     fontWeight: FontWeight.w400,
     color: AppColors.textOnDark,
@@ -32,6 +38,7 @@ abstract final class AppTextStyles {
 
   static TextStyle get title => TextStyle(
     fontFamily: _body,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontXl,
     fontWeight: FontWeight.w700,
     color: AppColors.textOnDark,
@@ -40,15 +47,17 @@ abstract final class AppTextStyles {
 
   static TextStyle get cardTitle => TextStyle(
     fontFamily: _body,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontLg,
     fontWeight: FontWeight.w700,
     color: AppColors.textOnDark,
     letterSpacing: -0.2,
   );
 
-  // ── Body (Plus Jakarta Sans) ──────────────────────────────────────────────
+  // ── Body (Plus Jakarta Sans + Hind Siliguri Fallback) ─────────────────────
   static TextStyle get subtitle => TextStyle(
     fontFamily: _body,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontLg,
     fontWeight: FontWeight.w600,
     color: AppColors.textOnDark,
@@ -56,6 +65,7 @@ abstract final class AppTextStyles {
 
   static TextStyle get body => TextStyle(
     fontFamily: _body,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontMd,
     fontWeight: FontWeight.w400,
     color: AppColors.textOnDark,
@@ -64,6 +74,7 @@ abstract final class AppTextStyles {
 
   static TextStyle get bodyMuted => TextStyle(
     fontFamily: _body,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontMd,
     fontWeight: FontWeight.w400,
     color: AppColors.textOnDarkMuted,
@@ -72,6 +83,7 @@ abstract final class AppTextStyles {
 
   static TextStyle get caption => TextStyle(
     fontFamily: _body,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontSm,
     fontWeight: FontWeight.w500,
     color: AppColors.textOnDarkMuted,
@@ -79,6 +91,7 @@ abstract final class AppTextStyles {
 
   static TextStyle get overline => TextStyle(
     fontFamily: _body,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontXs,
     fontWeight: FontWeight.w700,
     color: AppColors.textOnDarkMuted,
@@ -87,12 +100,14 @@ abstract final class AppTextStyles {
 
   static const TextStyle button = TextStyle(
     fontFamily: _body,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontLg,
     fontWeight: FontWeight.w700,
   );
 
   static const TextStyle chip = TextStyle(
     fontFamily: _body,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontSm,
     fontWeight: FontWeight.w600,
   );
@@ -100,6 +115,7 @@ abstract final class AppTextStyles {
   /// Bottom-navigation labels.
   static TextStyle get navLabel => TextStyle(
     fontFamily: _body,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontXs,
     fontWeight: FontWeight.w600,
     color: AppColors.textOnDarkMuted,
@@ -108,6 +124,7 @@ abstract final class AppTextStyles {
   // ── Digital / Nothing Dot Matrix Accents (NDot) ───────────────────────────
   static TextStyle get digitalDisplay => TextStyle(
     fontFamily: _digital,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontDisplay,
     fontWeight: FontWeight.w400,
     color: AppColors.textOnDark,
@@ -116,6 +133,7 @@ abstract final class AppTextStyles {
 
   static TextStyle get digitalTime => TextStyle(
     fontFamily: _digital,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontXxl,
     fontWeight: FontWeight.w400,
     color: AppColors.textOnDark,
@@ -124,6 +142,7 @@ abstract final class AppTextStyles {
 
   static TextStyle get digitalBadge => TextStyle(
     fontFamily: _digital,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontSm,
     fontWeight: FontWeight.w400,
     color: AppColors.textOnDark,
@@ -132,6 +151,7 @@ abstract final class AppTextStyles {
 
   static TextStyle get tech => TextStyle(
     fontFamily: _tech,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.fontMd,
     fontWeight: FontWeight.w600,
     color: AppColors.textOnDark,
@@ -158,6 +178,7 @@ abstract final class AppTextStyles {
   /// Big money figure (expense totals).
   static TextStyle get amount => TextStyle(
     fontFamily: _display,
+    fontFamilyFallback: fallback,
     fontSize: AppSpacing.amountFont,
     fontWeight: FontWeight.w800,
     color: AppColors.textOnDark,

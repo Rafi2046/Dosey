@@ -374,7 +374,7 @@ def logo(size=512):
     img = canvas(size)
     S = size * SS
     shaded_rounded(img, (S * 0.06, S * 0.06, S * 0.94, S * 0.94), S * 0.24, (91, 114, 122), (118, 140, 148))
-    capsule(img, S // 2, S // 2, int(S * 0.66), int(S * 0.25), 35, CREAM, ORANGE, WHITE, ORANGE_LIGHT)
+    img.alpha_composite(_dose_mark(size, 0.62))
     save(img, 'logo.png', size)
 
 
@@ -392,17 +392,44 @@ def _capsule_mark(size, scale):
     return img
 
 
+def _clock_badge(img, cx, cy, r):
+    """Coral-rimmed clock face: the "on time" half of the mark."""
+    shadow = Image.new('RGBA', img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(shadow).ellipse((cx - r, cy - r * 0.88, cx + r, cy + r * 1.12), fill=(20, 30, 35, 90))
+    img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(r * 0.18)))
+    d = ImageDraw.Draw(img)
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=ORANGE + (255,))
+    face = r * 0.78
+    d.ellipse((cx - face, cy - face, cx + face, cy + face), fill=WHITE + (255,))
+    hand = max(4, int(r * 0.13))
+    d.line([(cx, cy), (cx, cy - face * 0.62)], fill=MOSS + (255,), width=hand)
+    d.line([(cx, cy), (cx + face * 0.45, cy + face * 0.18)], fill=MOSS + (255,), width=hand)
+    d.ellipse((cx - hand * 0.8, cy - hand * 0.8, cx + hand * 0.8, cy + hand * 0.8), fill=ORANGE + (255,))
+
+
+def _dose_mark(size, scale):
+    """The logo: capsule nudged up-left, clock badge at its lower right.
+    Everything stays within [scale] of the width around the centre."""
+    S = size * SS
+    img = _capsule_mark(size, scale)
+    shift = S * scale * 0.065
+    img = img.transform(img.size, Image.AFFINE, (1, 0, shift, 0, 1, shift), resample=Image.BICUBIC)
+    at = int(S * (0.5 + 0.28 * scale))
+    _clock_badge(img, at, at, int(S * scale * 0.22))
+    return img
+
+
 def branding():
     os.makedirs(BRANDING, exist_ok=True)
     # Full-bleed icon (iOS forbids transparency; launchers apply the mask).
     icon = Image.new('RGBA', (1024 * SS, 1024 * SS), SAGE + (255,))
-    icon.alpha_composite(_capsule_mark(1024, 0.62))
+    icon.alpha_composite(_dose_mark(1024, 0.62))
     icon.resize((1024, 1024), Image.LANCZOS).convert('RGB').save(f'{BRANDING}/app_icon.png')
     # Adaptive foreground: keep within the 66% safe zone.
-    _capsule_mark(1024, 0.48).resize((1024, 1024), Image.LANCZOS).save(
+    _dose_mark(1024, 0.44).resize((1024, 1024), Image.LANCZOS).save(
         f'{BRANDING}/app_icon_foreground.png')
     # Splash: Android 12 shows a 1152px image masked to a 768px circle.
-    _capsule_mark(1152, 0.42).resize((1152, 1152), Image.LANCZOS).save(
+    _dose_mark(1152, 0.42).resize((1152, 1152), Image.LANCZOS).save(
         f'{BRANDING}/splash_logo.png')
     print('wrote branding assets')
 

@@ -150,6 +150,15 @@ class AppLocalizationsBn extends AppLocalizations {
   String get skipDose => 'বাদ দিন';
 
   @override
+  String get scheduledTime => 'নির্ধারিত সময়';
+
+  @override
+  String get changeTime => 'পরিবর্তন';
+
+  @override
+  String get viewMedicineDetails => 'ওষুধের সম্পূর্ণ বিবরণ দেখুন';
+
+  @override
   String get morning => 'সকালের';
 
   @override

@@ -150,6 +150,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get skipDose => 'Skip';
 
   @override
+  String get scheduledTime => 'Scheduled time';
+
+  @override
+  String get changeTime => 'Change';
+
+  @override
+  String get viewMedicineDetails => 'View full medicine details';
+
+  @override
   String get morning => 'Morning';
 
   @override

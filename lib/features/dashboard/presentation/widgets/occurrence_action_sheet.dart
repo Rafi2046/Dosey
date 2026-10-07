@@ -14,8 +14,8 @@ import '../../../../core/utils/numbers.dart';
 import '../../../../core/utils/pickers.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/surface_card.dart';
+import '../../../medicines/domain/course_progress.dart';
 import '../../../medicines/presentation/medicine_detail_screen.dart';
-import '../../../medicines/presentation/widgets/course_progress_pill.dart';
 import '../../../reminders/domain/reminder_text.dart';
 import '../../../reminders/domain/scheduled_occurrence.dart';
 import '../../../reminders/presentation/reminder_form_screen.dart';
@@ -91,10 +91,8 @@ class _OccurrenceDetailPopupState
     if (mounted) Navigator.pop(context);
   }
 
-  void _edit() {
-    final navigator = Navigator.of(context);
-    navigator.pop();
-    navigator.push(
+  Future<void> _edit() async {
+    await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) =>
             ReminderFormScreen(existing: widget.occurrence.details.reminder),
@@ -182,9 +180,11 @@ class _OccurrenceDetailPopupState
     final isTablet = screenSize.shortestSide >= 600 || screenSize.width >= 600;
 
     final dialogWidth = isTablet
-        ? (screenSize.width * 0.62).clamp(480.0, 560.0)
-        : screenSize.width * 0.90;
-    final maxDialogHeight = isTablet ? 740.0 : 620.0;
+        ? (screenSize.width * 0.60).clamp(480.0, 560.0)
+        : (screenSize.width - 32).clamp(330.0, 420.0);
+    final maxDialogHeight = isTablet ? 780.0 : 680.0;
+
+    final courseProgress = med != null ? CourseProgress.of(med, now) : null;
 
     return Center(
       child: Material(
@@ -192,24 +192,24 @@ class _OccurrenceDetailPopupState
         child: Container(
           width: dialogWidth,
           constraints: BoxConstraints(
-            maxWidth: isTablet ? 560 : 380,
+            maxWidth: isTablet ? 560 : 420,
             maxHeight: maxDialogHeight,
           ),
           decoration: BoxDecoration(
             color: cardColor,
             borderRadius: BorderRadius.circular(
-              isTablet ? AppSpacing.radiusXl + 4 : AppSpacing.radiusXl,
+              isTablet ? AppSpacing.radiusXl + 6 : 26,
             ),
             border: Border.all(
               color: isLight
-                  ? AppColors.divider
-                  : Colors.white.withValues(alpha: 0.15),
-              width: 1,
+                  ? AppColors.divider.withValues(alpha: 0.6)
+                  : Colors.white.withValues(alpha: 0.14),
+              width: 1.2,
             ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(
-                  alpha: AppColors.isDark ? 0.55 : 0.35,
+                  alpha: AppColors.isDark ? 0.55 : 0.28,
                 ),
                 blurRadius: isTablet ? 36 : 28,
                 offset: const Offset(0, 10),
@@ -218,12 +218,12 @@ class _OccurrenceDetailPopupState
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(
-              isTablet ? AppSpacing.radiusXl + 4 : AppSpacing.radiusXl,
+              isTablet ? AppSpacing.radiusXl + 6 : 26,
             ),
             child: SingleChildScrollView(
               padding: isTablet
-                  ? const EdgeInsets.fromLTRB(26, 22, 26, 22)
-                  : const EdgeInsets.fromLTRB(18, 16, 18, 16),
+                  ? const EdgeInsets.fromLTRB(26, 24, 26, 22)
+                  : const EdgeInsets.fromLTRB(20, 20, 20, 18),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -234,18 +234,18 @@ class _OccurrenceDetailPopupState
                     children: [
                       if (med != null)
                         Container(
-                          width: isTablet ? 52 : 42,
-                          height: isTablet ? 52 : 42,
-                          padding: EdgeInsets.all(isTablet ? 7 : 5),
+                          width: isTablet ? 52 : 46,
+                          height: isTablet ? 52 : 46,
+                          padding: EdgeInsets.all(isTablet ? 7 : 6),
                           decoration: BoxDecoration(
                             color: isLight
                                 ? AppColors.creamLight
-                                : Colors.white.withValues(alpha: 0.15),
+                                : Colors.white.withValues(alpha: 0.14),
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: isLight
                                   ? AppColors.divider
-                                  : Colors.white.withValues(alpha: 0.2),
+                                  : Colors.white.withValues(alpha: 0.20),
                               width: 1,
                             ),
                           ),
@@ -253,12 +253,12 @@ class _OccurrenceDetailPopupState
                         )
                       else
                         Container(
-                          width: isTablet ? 48 : 40,
-                          height: isTablet ? 48 : 40,
+                          width: isTablet ? 48 : 44,
+                          height: isTablet ? 48 : 44,
                           decoration: BoxDecoration(
                             color: isLight
                                 ? AppColors.tileMint.withValues(alpha: 0.15)
-                                : Colors.white.withValues(alpha: 0.15),
+                                : Colors.white.withValues(alpha: 0.14),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -269,7 +269,7 @@ class _OccurrenceDetailPopupState
                             size: isTablet ? 24 : 20,
                           ),
                         ),
-                      SizedBox(width: isTablet ? 14 : 10),
+                      SizedBox(width: isTablet ? 14 : 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,23 +282,22 @@ class _OccurrenceDetailPopupState
                                       ? AppTextStyles.captionOnLight
                                       : AppTextStyles.caption)
                                   .copyWith(
-                                fontSize: isTablet ? 13 : 11,
+                                fontSize: isTablet ? 13 : 11.5,
                                 fontWeight: FontWeight.w600,
                                 color: mutedColor,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 1),
+                            const SizedBox(height: 2),
                             Text(
                               r.title,
-                              style: (isLight
-                                      ? AppTextStyles.headlineOnLight
-                                      : AppTextStyles.headline)
-                                  .copyWith(
-                                fontSize: isTablet ? 22 : 18.5,
+                              style: TextStyle(
+                                fontFamily: 'PlusJakartaSans',
+                                fontSize: isTablet ? 22 : 20,
                                 fontWeight: FontWeight.w800,
                                 color: textColor,
+                                letterSpacing: -0.3,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -315,7 +314,7 @@ class _OccurrenceDetailPopupState
                           customBorder: const CircleBorder(),
                           onTap: () => Navigator.pop(context),
                           child: Padding(
-                            padding: EdgeInsets.all(isTablet ? 8 : 6),
+                            padding: EdgeInsets.all(isTablet ? 8 : 7),
                             child: Icon(
                               Icons.close_rounded,
                               size: isTablet ? 22 : 18,
@@ -327,43 +326,43 @@ class _OccurrenceDetailPopupState
                     ],
                   ),
 
-                  SizedBox(height: isTablet ? 16 : 12),
+                  SizedBox(height: isTablet ? 18 : 15),
 
                   // Hero Interactive Time Card (1-Tap Change Time)
                   Material(
                     color: isLight
                         ? AppColors.sand
                         : (AppColors.isDark
-                            ? AppColors.creamLight.withValues(alpha: 0.5)
-                            : Colors.black.withValues(alpha: 0.22)),
+                            ? Colors.black.withValues(alpha: 0.22)
+                            : Colors.white.withValues(alpha: 0.10)),
                     borderRadius: BorderRadius.circular(
-                      isTablet ? AppSpacing.radiusLg : AppSpacing.radiusMd,
+                      isTablet ? AppSpacing.radiusLg : 18,
                     ),
                     child: InkWell(
                       onTap: _savingTime ? null : _changeTime,
                       borderRadius: BorderRadius.circular(
-                        isTablet ? AppSpacing.radiusLg : AppSpacing.radiusMd,
+                        isTablet ? AppSpacing.radiusLg : 18,
                       ),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(
-                            isTablet ? AppSpacing.radiusLg : AppSpacing.radiusMd,
+                            isTablet ? AppSpacing.radiusLg : 18,
                           ),
                           border: Border.all(
                             color: isLight
-                                ? AppColors.divider.withValues(alpha: 0.3)
+                                ? AppColors.divider.withValues(alpha: 0.4)
                                 : Colors.white.withValues(alpha: 0.12),
-                            width: 0.8,
+                            width: 1,
                           ),
                         ),
                         padding: EdgeInsets.symmetric(
-                          horizontal: isTablet ? 16 : 12,
-                          vertical: isTablet ? 14 : 10,
+                          horizontal: isTablet ? 16 : 14,
+                          vertical: isTablet ? 14 : 12,
                         ),
                         child: Row(
                           children: [
                             Container(
-                              padding: EdgeInsets.all(isTablet ? 9 : 7),
+                              padding: EdgeInsets.all(isTablet ? 9 : 8),
                               decoration: BoxDecoration(
                                 color: AppColors.accent.withValues(alpha: 0.18),
                                 shape: BoxShape.circle,
@@ -374,30 +373,31 @@ class _OccurrenceDetailPopupState
                                 size: isTablet ? 22 : 18,
                               ),
                             ),
-                            SizedBox(width: isTablet ? 14 : 10),
+                            SizedBox(width: isTablet ? 14 : 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'নির্ধারিত সময়',
+                                    l10n.scheduledTime,
                                     style: (isLight
                                             ? AppTextStyles.captionOnLight
                                             : AppTextStyles.caption)
                                         .copyWith(
-                                      fontSize: isTablet ? 12 : 10.5,
+                                      fontSize: isTablet ? 12 : 11,
+                                      fontWeight: FontWeight.w600,
                                       color: mutedColor,
                                     ),
                                   ),
+                                  const SizedBox(height: 1),
                                   Text(
                                     AppDateFormat.time(_currentTime),
-                                    style: (isLight
-                                            ? AppTextStyles.cardTitleOnLight
-                                            : AppTextStyles.cardTitle)
-                                        .copyWith(
-                                      fontSize: isTablet ? 19 : 16.5,
-                                      fontWeight: FontWeight.w800,
+                                    style: TextStyle(
+                                      fontFamily: 'NDot',
+                                      fontSize: isTablet ? 23 : 20,
+                                      fontWeight: FontWeight.w400,
                                       color: textColor,
+                                      letterSpacing: 0.9,
                                     ),
                                   ),
                                 ],
@@ -405,8 +405,8 @@ class _OccurrenceDetailPopupState
                             ),
                             Container(
                               padding: EdgeInsets.symmetric(
-                                horizontal: isTablet ? 13 : 9,
-                                vertical: isTablet ? 7 : 5,
+                                horizontal: isTablet ? 14 : 11,
+                                vertical: isTablet ? 8 : 6.5,
                               ),
                               decoration: BoxDecoration(
                                 color: isLight
@@ -436,7 +436,7 @@ class _OccurrenceDetailPopupState
                                         )
                                       : Icon(
                                           Icons.edit_rounded,
-                                          size: isTablet ? 15 : 12,
+                                          size: isTablet ? 15 : 13,
                                           color: isLight
                                               ? Colors.white
                                               : (AppColors.isDark
@@ -445,15 +445,16 @@ class _OccurrenceDetailPopupState
                                         ),
                                   SizedBox(width: isTablet ? 6 : 4),
                                   Text(
-                                    'পরিবর্তন',
+                                    l10n.changeTime,
                                     style: TextStyle(
+                                      fontFamily: 'PlusJakartaSans',
                                       color: isLight
                                           ? Colors.white
                                           : (AppColors.isDark
                                               ? AppColors.onSelected
                                               : Colors.white),
-                                      fontSize: isTablet ? 13 : 11,
-                                      fontWeight: FontWeight.bold,
+                                      fontSize: isTablet ? 13 : 11.5,
+                                      fontWeight: FontWeight.w700,
                                     ),
                                   ),
                                 ],
@@ -465,37 +466,144 @@ class _OccurrenceDetailPopupState
                     ),
                   ),
 
-                  // Metadata Badges (Course / Stock / Doctor / Status)
-                  if (med != null || doc != null || status != null) ...[
-                    SizedBox(height: isTablet ? 14 : 10),
+                  // Full-Width Course Progress Bar (When Course Exists)
+                  if (courseProgress != null) ...[
+                    SizedBox(height: isTablet ? 14 : 11),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isTablet ? 16 : 14,
+                        vertical: isTablet ? 12 : 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isLight
+                            ? AppColors.sand.withValues(alpha: 0.6)
+                            : Colors.white.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: isLight
+                              ? AppColors.divider.withValues(alpha: 0.4)
+                              : Colors.white.withValues(alpha: 0.10),
+                          width: 0.8,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox.square(
+                                dimension: isTablet ? 17 : 15,
+                                child: CircularProgressIndicator(
+                                  value: courseProgress.fraction,
+                                  strokeWidth: 2.5,
+                                  color: isLight
+                                      ? AppColors.moss
+                                      : AppColors.tileMint,
+                                  backgroundColor: (isLight
+                                          ? AppColors.moss
+                                          : AppColors.tileMint)
+                                      .withValues(alpha: 0.2),
+                                ),
+                              ),
+                              SizedBox(width: isTablet ? 10 : 8),
+                              Text(
+                                courseProgress.isComplete
+                                    ? l10n.courseComplete
+                                    : courseProgress.notStarted
+                                        ? l10n.courseStarts(
+                                            AppDateFormat.shortDate(
+                                              med!.startDate,
+                                            ),
+                                          )
+                                        : l10n.courseDayOf(
+                                            courseProgress.day,
+                                            courseProgress.totalDays,
+                                          ),
+                                style: TextStyle(
+                                  fontFamily: 'PlusJakartaSans',
+                                  fontSize: isTablet ? 13.5 : 12,
+                                  fontWeight: FontWeight.w700,
+                                  color: textColor,
+                                ),
+                              ),
+                              const Spacer(),
+                              if (!courseProgress.isComplete &&
+                                  !courseProgress.notStarted)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isLight
+                                        ? AppColors.creamLight
+                                        : Colors.white.withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusPill,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    l10n.courseDaysLeft(
+                                      courseProgress.daysLeft,
+                                    ),
+                                    style: TextStyle(
+                                      fontFamily: 'PlusJakartaSans',
+                                      fontSize: isTablet ? 12 : 10.5,
+                                      fontWeight: FontWeight.w600,
+                                      color: isLight
+                                          ? AppColors.inkMuted
+                                          : AppColors.textOnDarkMuted,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(3),
+                            child: LinearProgressIndicator(
+                              value: courseProgress.fraction,
+                              minHeight: 4.5,
+                              color: isLight
+                                  ? AppColors.moss
+                                  : AppColors.tileMint,
+                              backgroundColor: isLight
+                                  ? AppColors.divider.withValues(alpha: 0.5)
+                                  : Colors.white.withValues(alpha: 0.12),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+
+                  // Secondary Metadata Badges (Stock / Doctor / Status)
+                  if ((med != null && med.stockQuantity != null) ||
+                      doc != null ||
+                      status != null) ...[
+                    SizedBox(height: isTablet ? 12 : 10),
                     Wrap(
                       spacing: isTablet ? 8 : 6,
                       runSpacing: isTablet ? 8 : 6,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        if (med != null && med.endDate != null)
-                          CourseProgressPill(
-                            medicine: med,
-                            today: DateUtils.dateOnly(now),
-                            onLight: isLight,
-                            compact: true,
-                          ),
                         if (med != null && med.stockQuantity != null)
                           Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: isTablet ? 11 : 8,
-                              vertical: isTablet ? 6 : 4,
+                              horizontal: isTablet ? 11 : 9,
+                              vertical: isTablet ? 6 : 4.5,
                             ),
                             decoration: BoxDecoration(
                               color: isLight
-                                  ? AppColors.creamLight
-                                  : Colors.white.withValues(alpha: 0.12),
+                                  ? AppColors.sand.withValues(alpha: 0.7)
+                                  : Colors.white.withValues(alpha: 0.09),
                               borderRadius: BorderRadius.circular(
                                 AppSpacing.radiusPill,
                               ),
                               border: Border.all(
                                 color: isLight
-                                    ? AppColors.divider
-                                    : Colors.white.withValues(alpha: 0.15),
+                                    ? AppColors.divider.withValues(alpha: 0.4)
+                                    : Colors.white.withValues(alpha: 0.10),
                                 width: 0.8,
                               ),
                             ),
@@ -527,20 +635,20 @@ class _OccurrenceDetailPopupState
                         if (doc != null)
                           Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: isTablet ? 11 : 8,
-                              vertical: isTablet ? 6 : 4,
+                              horizontal: isTablet ? 11 : 9,
+                              vertical: isTablet ? 6 : 4.5,
                             ),
                             decoration: BoxDecoration(
                               color: isLight
-                                  ? AppColors.creamLight
-                                  : Colors.white.withValues(alpha: 0.12),
+                                  ? AppColors.sand.withValues(alpha: 0.7)
+                                  : Colors.white.withValues(alpha: 0.09),
                               borderRadius: BorderRadius.circular(
                                 AppSpacing.radiusPill,
                               ),
                               border: Border.all(
                                 color: isLight
-                                    ? AppColors.divider
-                                    : Colors.white.withValues(alpha: 0.15),
+                                    ? AppColors.divider.withValues(alpha: 0.4)
+                                    : Colors.white.withValues(alpha: 0.10),
                                 width: 0.8,
                               ),
                             ),
@@ -572,13 +680,13 @@ class _OccurrenceDetailPopupState
                         if (status != null)
                           Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: isTablet ? 11 : 8,
-                              vertical: isTablet ? 6 : 4,
+                              horizontal: isTablet ? 11 : 9,
+                              vertical: isTablet ? 6 : 4.5,
                             ),
                             decoration: BoxDecoration(
                               color: isLight
                                   ? AppColors.sand
-                                  : Colors.white.withValues(alpha: 0.15),
+                                  : Colors.white.withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(
                                 AppSpacing.radiusPill,
                               ),
@@ -603,15 +711,14 @@ class _OccurrenceDetailPopupState
                   Row(
                     children: [
                       Expanded(
-                        flex: 11,
                         child: _PopupActionButton(
                           label: isMedicine
                               ? l10n.alarmMarkTaken
                               : l10n.alarmDone,
                           icon: Icons.check_rounded,
-                          height: isTablet ? 52 : 42,
-                          fontSize: isTablet ? 15.5 : 13.5,
-                          iconSize: isTablet ? 19 : 16,
+                          height: isTablet ? 54 : 48,
+                          fontSize: isTablet ? 15 : 13.5,
+                          iconSize: isTablet ? 20 : 17,
                           backgroundColor: isLight
                               ? AppColors.moss
                               : (AppColors.isDark
@@ -625,43 +732,54 @@ class _OccurrenceDetailPopupState
                           onPressed: () => _act(AlarmAction.taken),
                         ),
                       ),
-                      SizedBox(width: isTablet ? 12 : 8),
+                      SizedBox(width: isTablet ? 12 : 9),
                       Expanded(
-                        flex: 9,
                         child: _PopupActionButton(
                           label: l10n.skipDose,
                           icon: Icons.redo_rounded,
-                          height: isTablet ? 52 : 42,
-                          fontSize: isTablet ? 15.5 : 13.5,
-                          iconSize: isTablet ? 19 : 16,
+                          height: isTablet ? 54 : 48,
+                          fontSize: isTablet ? 15 : 13.5,
+                          iconSize: isTablet ? 20 : 17,
                           backgroundColor: isLight
-                              ? AppColors.creamLight
-                              : Colors.white.withValues(alpha: 0.12),
+                              ? AppColors.sand
+                              : Colors.white.withValues(alpha: 0.10),
                           foregroundColor: textColor,
                           borderColor: isLight
                               ? AppColors.divider
-                              : Colors.white.withValues(alpha: 0.2),
+                              : Colors.white.withValues(alpha: 0.18),
                           onPressed: () => _act(AlarmAction.skip),
                         ),
                       ),
                     ],
                   ),
 
+                  SizedBox(height: isTablet ? 14 : 10),
+
+                  // Divider Line for Utilities
+                  Divider(
+                    color: isLight
+                        ? AppColors.divider.withValues(alpha: 0.5)
+                        : Colors.white.withValues(alpha: 0.12),
+                    height: 1,
+                    thickness: 1,
+                  ),
+
                   SizedBox(height: isTablet ? 10 : 6),
 
-                  // Bottom Utilities: Full Edit, Delete & Medicine details link
+                  // Bottom Utilities: Full Edit & Delete
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton.icon(
                         icon: Icon(
                           Icons.tune_rounded,
-                          size: isTablet ? 16 : 14,
+                          size: isTablet ? 17 : 15,
                         ),
                         label: Text(
                           l10n.editReminder,
                           style: TextStyle(
-                            fontSize: isTablet ? 13 : 11.5,
+                            fontFamily: 'PlusJakartaSans',
+                            fontSize: isTablet ? 13.5 : 12,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -669,7 +787,7 @@ class _OccurrenceDetailPopupState
                           foregroundColor: mutedColor,
                           padding: EdgeInsets.symmetric(
                             horizontal: isTablet ? 10 : 6,
-                            vertical: isTablet ? 4 : 2,
+                            vertical: isTablet ? 6 : 4,
                           ),
                           visualDensity: VisualDensity.compact,
                           minimumSize: Size.zero,
@@ -680,12 +798,13 @@ class _OccurrenceDetailPopupState
                       TextButton.icon(
                         icon: Icon(
                           Icons.delete_outline_rounded,
-                          size: isTablet ? 16 : 14,
+                          size: isTablet ? 17 : 15,
                         ),
                         label: Text(
                           l10n.deleteThisTime,
                           style: TextStyle(
-                            fontSize: isTablet ? 13 : 11.5,
+                            fontFamily: 'PlusJakartaSans',
+                            fontSize: isTablet ? 13.5 : 12,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -693,7 +812,7 @@ class _OccurrenceDetailPopupState
                           foregroundColor: AppColors.error,
                           padding: EdgeInsets.symmetric(
                             horizontal: isTablet ? 10 : 6,
-                            vertical: isTablet ? 4 : 2,
+                            vertical: isTablet ? 6 : 4,
                           ),
                           visualDensity: VisualDensity.compact,
                           minimumSize: Size.zero,
@@ -704,47 +823,69 @@ class _OccurrenceDetailPopupState
                     ],
                   ),
 
+                  // Medicine Details Full-Width Action Card
                   if (med != null) ...[
-                    SizedBox(height: isTablet ? 4 : 2),
-                    Center(
-                      child: TextButton.icon(
-                        icon: Icon(
-                          Icons.arrow_forward_rounded,
-                          size: isTablet ? 16 : 14,
-                          color: isLight
-                              ? AppColors.tileMint
-                              : (AppColors.isDark
-                                  ? AppColors.selected
-                                  : AppColors.textOnDark),
-                        ),
-                        label: Text(
-                          'ওষুধের সম্পূর্ণ বিবরণ দেখুন',
-                          style: TextStyle(
-                            color: isLight
-                                ? AppColors.tileMint
-                                : (AppColors.isDark
-                                    ? AppColors.selected
-                                    : AppColors.textOnDark),
-                            fontWeight: FontWeight.bold,
-                            fontSize: isTablet ? 14 : 12,
-                          ),
-                        ),
-                        style: TextButton.styleFrom(
-                          visualDensity: VisualDensity.compact,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isTablet ? 12 : 8,
-                            vertical: isTablet ? 4 : 2,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.of(context).push(
+                    SizedBox(height: isTablet ? 10 : 8),
+                    Material(
+                      color: isLight
+                          ? AppColors.creamLight
+                          : Colors.white.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(14),
+                      child: InkWell(
+                        onTap: () async {
+                          await Navigator.of(context).push(
                             MaterialPageRoute<void>(
                               builder: (_) =>
                                   MedicineDetailScreen(medicineId: med.id),
                             ),
                           );
                         },
+                        borderRadius: BorderRadius.circular(14),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: isLight
+                                  ? AppColors.divider.withValues(alpha: 0.6)
+                                  : Colors.white.withValues(alpha: 0.12),
+                              width: 1,
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isTablet ? 14 : 12,
+                            vertical: isTablet ? 10 : 8.5,
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.medication_outlined,
+                                size: isTablet ? 18 : 16,
+                                color: isLight
+                                    ? AppColors.tileMint
+                                    : (AppColors.isDark
+                                        ? AppColors.selected
+                                        : AppColors.mint),
+                              ),
+                              SizedBox(width: isTablet ? 10 : 8),
+                              Expanded(
+                                child: Text(
+                                  l10n.viewMedicineDetails,
+                                  style: TextStyle(
+                                    fontFamily: 'PlusJakartaSans',
+                                    color: textColor,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: isTablet ? 13 : 12,
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: isTablet ? 13 : 11,
+                                color: mutedColor,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -766,9 +907,9 @@ class _PopupActionButton extends StatelessWidget {
     required this.foregroundColor,
     required this.onPressed,
     this.borderColor,
-    this.height = 42,
+    this.height = 48,
     this.fontSize = 13.5,
-    this.iconSize = 16,
+    this.iconSize = 17,
   });
 
   final String label;
@@ -796,7 +937,7 @@ class _PopupActionButton extends StatelessWidget {
         child: SizedBox(
           height: height,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
@@ -815,7 +956,7 @@ class _PopupActionButton extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 5),
+                const SizedBox(width: 6),
                 Icon(
                   icon,
                   size: iconSize,

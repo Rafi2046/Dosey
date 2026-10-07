@@ -380,6 +380,24 @@ abstract class AppLocalizations {
   /// **'Skip'**
   String get skipDose;
 
+  /// No description provided for @scheduledTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled time'**
+  String get scheduledTime;
+
+  /// No description provided for @changeTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get changeTime;
+
+  /// No description provided for @viewMedicineDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View full medicine details'**
+  String get viewMedicineDetails;
+
   /// No description provided for @morning.
   ///
   /// In en, this message translates to:

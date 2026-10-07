@@ -198,7 +198,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
       ],
       bottomBar: PillButton(
         label: _isEdit ? context.l10n.saveChanges : context.l10n.save,
-        showRingChevron: true,
+        showCapsuleArrow: true,
         loading: _saving,
         onPressed: _save,
       ),

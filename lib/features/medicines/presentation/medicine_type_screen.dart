@@ -97,7 +97,7 @@ class _MedicineTypeScreenState extends State<MedicineTypeScreen> {
                     constraints: const BoxConstraints(maxWidth: 540),
                     child: PillButton(
                       label: context.l10n.next,
-                      showRingChevron: true,
+                      showCapsuleArrow: true,
                       onPressed: _openForm,
                     ),
                   ),

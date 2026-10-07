@@ -110,7 +110,7 @@ class BloodPressureScreen extends ConsumerWidget {
               padding: AppSpacing.bottomBarPadding,
               child: PillButton(
                 label: l10n.bpAdd,
-                showRingChevron: true,
+                showCapsuleArrow: true,
                 onPressed: () => _openForm(context),
               ),
             ),

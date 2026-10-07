@@ -4,8 +4,8 @@ import '../constants/constants.dart';
 
 enum PillButtonTone { accent, moss, cream }
 
-/// Full-width stadium button. With [showRingChevron] it renders the design's
-/// signature "label + outlined ring with chevron" CTA.
+/// Full-width stadium button. With [showCapsuleArrow] it renders Dosey's
+/// signature "label + two-tone capsule arrow" CTA.
 class PillButton extends StatelessWidget {
   const PillButton({
     super.key,
@@ -13,7 +13,7 @@ class PillButton extends StatelessWidget {
     required this.onPressed,
     this.tone = PillButtonTone.accent,
     this.trailingIcon,
-    this.showRingChevron = false,
+    this.showCapsuleArrow = false,
     this.loading = false,
     this.padding,
     this.scaleDownText = false,
@@ -23,7 +23,7 @@ class PillButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final PillButtonTone tone;
   final IconData? trailingIcon;
-  final bool showRingChevron;
+  final bool showCapsuleArrow;
   final bool loading;
   final EdgeInsetsGeometry? padding;
   final bool scaleDownText;
@@ -52,7 +52,7 @@ class PillButton extends StatelessWidget {
             height: AppSpacing.buttonHeight,
             child: Padding(
               padding: padding ??
-                  (showRingChevron
+                  (showCapsuleArrow
                       ? AppSpacing.ctaPadding
                       : AppSpacing.screenPadding),
               child: Row(
@@ -92,9 +92,9 @@ class PillButton extends StatelessWidget {
                       size: AppSpacing.iconMd,
                     ),
                   ],
-                  if (showRingChevron) ...[
+                  if (showCapsuleArrow) ...[
                     AppSpacing.gapLg,
-                    _RingChevron(color: foreground),
+                    _CapsuleArrow(color: foreground, arrowColor: background),
                   ],
                 ],
               ),
@@ -106,22 +106,40 @@ class PillButton extends StatelessWidget {
   }
 }
 
-class _RingChevron extends StatelessWidget {
-  const _RingChevron({required this.color});
+/// Dosey's signature CTA mark: a two-tone medicine capsule. The left half is
+/// a tinted shell, the right half is solid and carries the forward arrow.
+class _CapsuleArrow extends StatelessWidget {
+  const _CapsuleArrow({required this.color, required this.arrowColor});
 
   final Color color;
+  final Color arrowColor;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: AppSpacing.ctaIconRingWidth,
-      height: AppSpacing.ctaIconRing,
-      decoration: ShapeDecoration(
-        shape: StadiumBorder(
-          side: BorderSide(color: color, width: AppSpacing.borderThick),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppSpacing.ctaCapsuleHeight / 2),
+      child: SizedBox(
+        width: AppSpacing.ctaCapsuleWidth,
+        height: AppSpacing.ctaCapsuleHeight,
+        child: Row(
+          children: [
+            Expanded(
+              child: ColoredBox(color: color.withValues(alpha: 0.28)),
+            ),
+            const SizedBox(width: AppSpacing.borderThick),
+            Expanded(
+              child: ColoredBox(
+                color: color,
+                child: Icon(
+                  Icons.arrow_forward_rounded,
+                  color: arrowColor,
+                  size: AppSpacing.iconSm + 2,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-      child: Icon(Icons.chevron_right_rounded, color: color),
     );
   }
 }

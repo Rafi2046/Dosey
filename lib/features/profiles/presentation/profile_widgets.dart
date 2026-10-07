@@ -521,7 +521,7 @@ class ProfilesScreen extends ConsumerWidget {
       title: l10n.profilesTitle,
       bottomBar: PillButton(
         label: l10n.profileAdd,
-        showRingChevron: true,
+        showCapsuleArrow: true,
         onPressed: () => addFamilyMember(context, ref),
       ),
       body: ListView(

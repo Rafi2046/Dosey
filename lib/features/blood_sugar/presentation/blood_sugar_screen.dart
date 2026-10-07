@@ -108,7 +108,7 @@ class BloodSugarScreen extends ConsumerWidget {
               padding: AppSpacing.bottomBarPadding,
               child: PillButton(
                 label: l10n.sugarAdd,
-                showRingChevron: true,
+                showCapsuleArrow: true,
                 onPressed: () => _openForm(context),
               ),
             ),

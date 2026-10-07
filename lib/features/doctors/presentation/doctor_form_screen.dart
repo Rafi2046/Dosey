@@ -100,7 +100,7 @@ class _DoctorFormScreenState extends ConsumerState<DoctorFormScreen> {
       title: _d == null ? context.l10n.addDoctor : context.l10n.editDoctor,
       bottomBar: PillButton(
         label: _d == null ? context.l10n.save : context.l10n.saveChanges,
-        showRingChevron: true,
+        showCapsuleArrow: true,
         loading: _saving,
         onPressed: _save,
       ),

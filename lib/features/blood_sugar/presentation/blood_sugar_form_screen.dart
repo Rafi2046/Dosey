@@ -110,7 +110,7 @@ class _BloodSugarFormScreenState extends ConsumerState<BloodSugarFormScreen> {
       ],
       bottomBar: PillButton(
         label: l10n.save,
-        showRingChevron: true,
+        showCapsuleArrow: true,
         loading: _saving,
         onPressed: _save,
       ),

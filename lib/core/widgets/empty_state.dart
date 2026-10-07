@@ -60,7 +60,7 @@ class EmptyState extends StatelessWidget {
             compact ? AppSpacing.gapLg : AppSpacing.gapXl,
             PillButton(
               label: actionLabel!,
-              showRingChevron: true,
+              showCapsuleArrow: true,
               onPressed: onAction,
             ),
           ],

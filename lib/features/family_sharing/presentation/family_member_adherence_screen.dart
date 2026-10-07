@@ -9,9 +9,13 @@ import '../../../core/widgets/pill_button.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../../core/widgets/surface_card.dart';
 import '../../auth/providers/auth_providers.dart';
+import '../../settings/presentation/widgets/name_sheet.dart';
 import '../domain/family_share.dart';
 import '../domain/shared_adherence_dose.dart';
+import '../domain/remote_prescription_sync_service.dart';
+import '../providers/family_share_providers.dart';
 import '../providers/shared_adherence_providers.dart';
+import 'remote_medicine_manage_screen.dart';
 
 class FamilyMemberAdherenceScreen extends ConsumerStatefulWidget {
   const FamilyMemberAdherenceScreen({
@@ -29,6 +33,8 @@ class FamilyMemberAdherenceScreen extends ConsumerStatefulWidget {
 class _FamilyMemberAdherenceScreenState
     extends ConsumerState<FamilyMemberAdherenceScreen> {
   bool _isSendingNudge = false;
+  final Set<String> _nudgedDoses = {};
+  FamilyShare? _localShare;
 
   String _imageForForm(String? form) {
     switch (form?.toLowerCase()) {
@@ -37,13 +43,103 @@ class _FamilyMemberAdherenceScreenState
       case 'capsule':
         return AppImages.medCapsule;
       case 'tablet':
-        return AppImages.medTablet;
       default:
-        return AppImages.medOther;
+        return AppImages.medTablet;
     }
   }
 
-  Future<void> _handleSendNudge(User? user) async {
+  Future<void> _handleEditPatientName(FamilyShare currentShare) async {
+    final currentName = currentShare.patientName ?? '';
+    final entered = await showNameSheet(
+      context,
+      current: currentName,
+      label: 'Edit Family Member Name',
+      hint: 'e.g. Dad, Mom, Rahat',
+    );
+
+    if (entered == null) return;
+    final sanitized = entered.trim();
+    if (sanitized.isEmpty || sanitized == currentName) return;
+
+    setState(() {
+      _localShare = currentShare.copyWith(patientName: sanitized);
+    });
+
+    try {
+      final repo = ref.read(familyShareRepositoryProvider);
+      await repo.updatePatientName(
+        patientUid: currentShare.patientUid,
+        newName: sanitized,
+      );
+      ref.invalidate(caregiverSharesProvider);
+      ref.invalidate(patientSharesProvider);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Updated name to "$sanitized"'),
+            backgroundColor: AppColors.tileMoss,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update name: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _handleSendDoseNudge(SharedAdherenceDose dose, User? user) async {
+    if (user == null) return;
+    final doseKey = '${dose.medicineName}_${dose.time}';
+    if (_nudgedDoses.contains(doseKey)) return;
+
+    try {
+      final repo = ref.read(remotePrescriptionRepositoryProvider);
+      await repo.sendTargetedDoseNudge(
+        patientUid: widget.share.patientUid,
+        caregiverUid: user.uid,
+        caregiverName: user.displayName ?? user.email?.split('@').first,
+        medicineName: dose.medicineName,
+        scheduledTime: dose.time,
+      );
+
+      setState(() {
+        _nudgedDoses.add(doseKey);
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '🔔 Sent reminder for ${dose.medicineName} (${dose.time})!',
+            ),
+            backgroundColor: AppColors.moss,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('$e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _handleSendNudge(User? user, String patientName) async {
     if (user == null) return;
     setState(() => _isSendingNudge = true);
     try {
@@ -57,7 +153,7 @@ class _FamilyMemberAdherenceScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              '🔔 Gentle reminder sent to ${widget.share.patientName ?? "Family Member"}\'s phone!',
+              '🔔 Gentle reminder sent to $patientName\'s phone!',
             ),
             backgroundColor: AppColors.tileMoss,
             behavior: SnackBarBehavior.floating,
@@ -85,15 +181,41 @@ class _FamilyMemberAdherenceScreenState
     }
   }
 
+  void _openManageMedicines(FamilyShare currentShare) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => RemoteMedicineManageScreen(share: currentShare),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final patientName = widget.share.patientName ?? 'Family Member';
+    final caregiverShares = ref.watch(caregiverSharesProvider).value;
+    final currentShare = caregiverShares?.firstWhere(
+          (s) =>
+              s.patientUid == widget.share.patientUid ||
+              s.id == widget.share.id,
+          orElse: () => _localShare ?? widget.share,
+        ) ??
+        _localShare ??
+        widget.share;
+    final patientName = currentShare.patientName?.trim().isNotEmpty == true
+        ? currentShare.patientName!
+        : 'Family Member';
     final user = ref.watch(currentUserProvider);
     final scheduleAsync =
         ref.watch(patientAdherenceScheduleProvider(widget.share.patientUid));
 
     return CreamScaffold(
       title: patientName,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.edit_outlined, size: 20),
+          tooltip: 'Edit member name',
+          onPressed: () => _handleEditPatientName(currentShare),
+        ),
+      ],
       body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(
@@ -108,39 +230,108 @@ class _FamilyMemberAdherenceScreenState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Patient Profile Compact Banner
+              // Patient Profile Compact Banner with Manage Button
               SurfaceCard(
                 color: AppColors.creamLight,
                 elevated: true,
                 radius: AppSpacing.radiusLg,
                 padding: AppSpacing.cardPadding,
-                child: Row(
+                child: Column(
                   children: [
-                    InitialsAvatar(name: patientName, size: AppSpacing.avatarMd),
-                    AppSpacing.gapMd,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            patientName,
-                            style: AppTextStyles.cardTitleOnLight.copyWith(
-                              fontSize: 17,
-                            ),
+                    Row(
+                      children: [
+                        InitialsAvatar(name: patientName, size: AppSpacing.avatarMd),
+                        AppSpacing.gapMd,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      patientName,
+                                      style: AppTextStyles.cardTitleOnLight.copyWith(
+                                        fontSize: 17,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  InkWell(
+                                    onTap: () => _handleEditPatientName(currentShare),
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(3.0),
+                                      child: Icon(
+                                        Icons.edit_outlined,
+                                        size: 15,
+                                        color: AppColors.inkMuted,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              AppSpacing.gapXs,
+                              Text(
+                                'Share Code: ${currentShare.shareCode}',
+                                style: AppTextStyles.captionOnLight,
+                              ),
+                            ],
                           ),
-                          AppSpacing.gapXs,
-                          Text(
-                            'Share Code: ${widget.share.shareCode}',
-                            style: AppTextStyles.captionOnLight,
-                          ),
-                        ],
-                      ),
+                        ),
+                        const StatusChip(
+                          label: 'Live',
+                          icon: Icons.sync_rounded,
+                          background: AppColors.tileMint,
+                          foreground: Colors.white,
+                        ),
+                      ],
                     ),
-                    const StatusChip(
-                      label: 'Live',
-                      icon: Icons.sync_rounded,
-                      background: AppColors.tileMint,
-                      foreground: Colors.white,
+                    const SizedBox(height: 12),
+                    const Divider(height: 1),
+                    const SizedBox(height: 10),
+                    InkWell(
+                      onTap: () => _openManageMedicines(currentShare),
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 9,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.sand,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppColors.divider),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.medication_liquid_rounded,
+                              size: 19,
+                              color: AppColors.moss,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Manage & Edit Medicines for $patientName',
+                                style: TextStyle(
+                                  fontFamily: 'PlusJakartaSans',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.ink,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 13,
+                              color: AppColors.inkMuted,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -151,7 +342,7 @@ class _FamilyMemberAdherenceScreenState
               scheduleAsync.when(
                 data: (doses) {
                   if (doses.isEmpty) {
-                    return _buildEmptyState(context);
+                    return _buildEmptyState(context, patientName);
                   }
 
                   final takenCount = doses.where((d) => d.isTaken).length;
@@ -216,7 +407,7 @@ class _FamilyMemberAdherenceScreenState
                         trailingIcon: Icons.notifications_active_rounded,
                         tone: PillButtonTone.accent,
                         loading: _isSendingNudge,
-                        onPressed: () => _handleSendNudge(user),
+                        onPressed: () => _handleSendNudge(user, patientName),
                       ),
                     ],
                   );
@@ -440,6 +631,10 @@ class _FamilyMemberAdherenceScreenState
       subtitle += ' • ${dose.mealRelation}';
     }
 
+    final doseKey = '${dose.medicineName}_${dose.time}';
+    final isNudged = _nudgedDoses.contains(doseKey);
+    final user = ref.watch(currentUserProvider);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: SurfaceCard(
@@ -498,30 +693,85 @@ class _FamilyMemberAdherenceScreenState
                   ),
                 ),
                 AppSpacing.gapXs,
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 9,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: statusBg,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(statusIcon, size: 12, color: statusFg),
-                      const SizedBox(width: 4),
-                      Text(
-                        statusText,
-                        style: TextStyle(
-                          color: statusFg,
-                          fontSize: 11.5,
-                          fontWeight: FontWeight.w700,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 9,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: statusBg,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(statusIcon, size: 12, color: statusFg),
+                          const SizedBox(width: 4),
+                          Text(
+                            statusText,
+                            style: TextStyle(
+                              color: statusFg,
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (dose.isPending || dose.isMissed) ...[
+                      const SizedBox(width: 6),
+                      InkWell(
+                        onTap: isNudged ? null : () => _handleSendDoseNudge(dose, user),
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3.5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isNudged
+                                ? AppColors.tileMint.withValues(alpha: 0.18)
+                                : AppColors.accent.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+                            border: Border.all(
+                              color: isNudged
+                                  ? AppColors.tileMint
+                                  : AppColors.accent,
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                isNudged
+                                    ? Icons.check_rounded
+                                    : Icons.notifications_active_rounded,
+                                size: 12,
+                                color: isNudged
+                                    ? AppColors.tileMoss
+                                    : AppColors.accent,
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                isNudged ? 'Nudged' : 'Nudge',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: isNudged
+                                      ? AppColors.tileMoss
+                                      : AppColors.accent,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
-                  ),
+                  ],
                 ),
               ],
             ),
@@ -531,7 +781,7 @@ class _FamilyMemberAdherenceScreenState
     );
   }
 
-  Widget _buildEmptyState(BuildContext context) {
+  Widget _buildEmptyState(BuildContext context, String patientName) {
     return SurfaceCard(
       color: AppColors.creamLight,
       elevated: true,
@@ -553,7 +803,7 @@ class _FamilyMemberAdherenceScreenState
           ),
           AppSpacing.gapXs,
           Text(
-            'When ${widget.share.patientName ?? "your family member"} opens Dosey or logs doses, their schedule will appear here automatically.',
+            'When $patientName opens Dosey or logs doses, their schedule will appear here automatically.',
             textAlign: TextAlign.center,
             style: AppTextStyles.captionOnLight,
           ),

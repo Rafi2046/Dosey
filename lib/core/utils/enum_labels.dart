@@ -76,7 +76,11 @@ extension MedicineFormX on MedicineForm {
     MedicineForm.tablet => AppImages.medTablet,
     MedicineForm.capsule => AppImages.medCapsule,
     MedicineForm.injection => AppImages.medInjection,
-    _ => AppImages.medOther,
+    MedicineForm.drops => AppImages.medDrops,
+    MedicineForm.inhaler => AppImages.medInhaler,
+    MedicineForm.cream => AppImages.medCream,
+    MedicineForm.syrup => AppImages.medSyrup,
+    MedicineForm.other => AppImages.medOther,
   };
 }
 

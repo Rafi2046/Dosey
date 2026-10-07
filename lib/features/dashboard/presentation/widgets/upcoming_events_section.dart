@@ -22,13 +22,10 @@ class UpcomingEventsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final events = ref.watch(
-      upcomingRemindersProvider.select(
-        (r) => (r.value ?? const [])
-            .where((d) => d.reminder.type != ReminderType.medicine)
-            .toList(),
-      ),
-    );
+    final reminders = ref.watch(upcomingRemindersProvider).value ?? const [];
+    final events = reminders
+        .where((d) => d.reminder.type != ReminderType.medicine)
+        .toList();
     if (events.isEmpty) return const SizedBox.shrink();
 
     final displayEvents = events.take(_maxItems).toList();

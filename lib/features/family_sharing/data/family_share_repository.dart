@@ -318,6 +318,35 @@ class FamilyShareRepository {
       throw FamilyShareException('Failed to revoke share link.');
     }
   }
+
+  /// Updates the patient display name across family share records and adherence records.
+  Future<void> updatePatientName({
+    required String patientUid,
+    required String newName,
+  }) async {
+    if (!isAvailable) return;
+    try {
+      final sanitized = newName.trim();
+      await _supabase
+          .from('family_shares')
+          .update({'patient_name': sanitized})
+          .eq('patient_uid', patientUid);
+
+      try {
+        await _supabase
+            .from('patient_shared_adherence')
+            .update({'patient_name': sanitized})
+            .eq('patient_uid', patientUid);
+      } catch (_) {
+        // Optional best effort
+      }
+    } catch (e) {
+      debugPrint('[FamilyShareRepository] Error updating patient name: $e');
+      throw FamilyShareException(
+        'Failed to update name: ${e is PostgrestException ? e.message : e.toString()}',
+      );
+    }
+  }
 }
 
 class FamilyShareException implements Exception {

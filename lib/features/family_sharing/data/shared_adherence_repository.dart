@@ -38,7 +38,9 @@ class SharedAdherenceRepository {
       final now = DateTime.now().toUtc();
       final dateKey = formatDateKey(DateTime.now());
 
-      final rows = occurrences.map((occ) {
+      final Map<String, Map<String, dynamic>> dedupedMap = {};
+
+      for (final occ in occurrences) {
         final med = occ.details.medicine;
         final reminder = occ.details.reminder;
         final timeKey = formatTimeKey(occ.at);
@@ -60,7 +62,8 @@ class SharedAdherenceRepository {
         final formStr = med?.form.name ?? 'tablet';
         final mealRelationStr = med?.mealRelation.name ?? 'anytime';
 
-        return {
+        final uniqueKey = '$patientUid|$dateKey|$medicineName|$timeKey';
+        dedupedMap[uniqueKey] = {
           'patient_uid': patientUid,
           'patient_name': ?patientName,
           'date': dateKey,
@@ -72,7 +75,10 @@ class SharedAdherenceRepository {
           'status': statusStr,
           'updated_at': now.toIso8601String(),
         };
-      }).toList();
+      }
+
+      final rows = dedupedMap.values.toList();
+      if (rows.isEmpty) return;
 
       await _supabase
           .from('patient_shared_adherence')

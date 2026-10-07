@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/constants.dart';
+import '../../core/localization/l10n.dart';
 import '../../core/widgets/screen_header.dart';
 import '../../core/widgets/surface_card.dart';
 import '../../features/doctors/presentation/doctor_form_screen.dart';
@@ -11,9 +11,6 @@ import '../../features/medicines/presentation/medicine_type_screen.dart';
 import '../../features/medicines/presentation/scan_prescription_flow.dart';
 import '../../features/records/presentation/record_form_screen.dart';
 import '../../features/reminders/presentation/reminder_form_screen.dart';
-import '../debug/debug_demo_data_button.dart';
-import '../debug/debug_test_alarm_button.dart';
-import '../../core/localization/l10n.dart';
 
 /// "+" menu: create anything from anywhere.
 Future<void> showAddActionSheet(BuildContext context) =>
@@ -90,12 +87,6 @@ class _AddActionSheet extends StatelessWidget {
                   ),
               ],
             ),
-            if (kDebugMode) ...[
-              AppSpacing.gapLg,
-              const DebugTestAlarmButton(),
-              AppSpacing.gapSm,
-              const DebugDemoDataButton(),
-            ],
           ],
         ),
       ),

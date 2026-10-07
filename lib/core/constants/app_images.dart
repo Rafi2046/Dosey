@@ -7,6 +7,10 @@ abstract final class AppImages {
   static const String medTablet = '$_base/med_tablet.png';
   static const String medCapsule = '$_base/med_capsule.png';
   static const String medInjection = '$_base/med_injection.png';
+  static const String medDrops = '$_base/med_drops.png';
+  static const String medInhaler = '$_base/med_inhaler.png';
+  static const String medCream = '$_base/med_cream.png';
+  static const String medSyrup = '$_base/med_syrup.png';
   static const String medOther = '$_base/med_other.png';
   static const String samplePrescription = '$_base/sample_prescription.jpg';
   static const String sampleLabReport = '$_base/sample_lab_report.jpg';

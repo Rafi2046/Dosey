@@ -191,3 +191,46 @@ DROP TRIGGER IF EXISTS family_nudges_push ON public.family_nudges;
 CREATE TRIGGER family_nudges_push
     AFTER INSERT ON public.family_nudges
     FOR EACH ROW EXECUTE FUNCTION public.push_family_nudge();
+
+-- 10. Create patient_prescriptions table for remote caregiver medicine management
+CREATE TABLE IF NOT EXISTS public.patient_prescriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    patient_uid TEXT NOT NULL,
+    name TEXT NOT NULL,
+    form TEXT NOT NULL DEFAULT 'tablet',
+    meal_relation TEXT NOT NULL DEFAULT 'afterMeal',
+    dose_amount NUMERIC NOT NULL DEFAULT 1,
+    dose_unit TEXT NOT NULL DEFAULT 'tablet',
+    times JSONB NOT NULL DEFAULT '["09:00"]'::jsonb,
+    start_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    end_date DATE,
+    stock_quantity NUMERIC,
+    notes TEXT,
+    updated_by TEXT,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    is_active BOOLEAN NOT NULL DEFAULT true
+);
+
+CREATE INDEX IF NOT EXISTS idx_patient_prescriptions_uid ON public.patient_prescriptions(patient_uid, is_active);
+ALTER TABLE public.patient_prescriptions ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow anon read patient_prescriptions" ON public.patient_prescriptions;
+CREATE POLICY "Allow anon read patient_prescriptions" ON public.patient_prescriptions
+    FOR SELECT
+    TO anon, authenticated
+    USING (true);
+
+DROP POLICY IF EXISTS "Allow anon upsert patient_prescriptions" ON public.patient_prescriptions;
+CREATE POLICY "Allow anon upsert patient_prescriptions" ON public.patient_prescriptions
+    FOR ALL
+    TO anon, authenticated
+    USING (true)
+    WITH CHECK (true);
+
+DO $$
+BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.patient_prescriptions;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+

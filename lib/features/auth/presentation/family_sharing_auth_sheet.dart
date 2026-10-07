@@ -15,6 +15,8 @@ import '../../family_sharing/presentation/family_member_adherence_screen.dart';
 import '../../family_sharing/providers/family_share_providers.dart';
 import '../../family_sharing/providers/shared_adherence_providers.dart';
 import '../../reminders/providers/reminders_providers.dart';
+import '../../settings/presentation/widgets/name_sheet.dart';
+import '../../settings/providers/settings_providers.dart';
 import '../data/auth_repository.dart';
 import '../providers/auth_providers.dart';
 
@@ -235,16 +237,69 @@ class _FamilySharingAuthSheetState
     }
   }
 
+  Future<void> _handleEditProfileName(User user) async {
+    final localName = ref.read(userNameProvider).value;
+    final currentName = user.displayName ?? localName ?? '';
+    final entered = await showNameSheet(
+      context,
+      current: currentName,
+      label: 'Your Display Name',
+      hint: 'e.g. Rahat, Dad, Mom',
+    );
+
+    if (entered == null) return;
+    final sanitized = entered.trim();
+    if (sanitized.isEmpty || sanitized == currentName) return;
+
+    try {
+      await user.updateDisplayName(sanitized);
+      await ref.read(userNameProvider.notifier).set(sanitized);
+      final repo = ref.read(familyShareRepositoryProvider);
+      await repo.updatePatientName(
+        patientUid: user.uid,
+        newName: sanitized,
+      );
+      ref.invalidate(patientSharesProvider);
+      ref.invalidate(caregiverSharesProvider);
+      if (mounted) {
+        setState(() {});
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Display name updated to "$sanitized"'),
+            backgroundColor: AppColors.tileMoss,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update name: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _handleGenerateShareCode(User user) async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
     try {
+      final localName = ref.read(userNameProvider).value;
+      final effectiveName = (localName != null && localName.trim().isNotEmpty)
+          ? localName.trim()
+          : (user.displayName ?? user.email?.split('@').first);
       final repo = ref.read(familyShareRepositoryProvider);
       final share = await repo.createOrGetShareCode(
         patientUid: user.uid,
-        patientName: user.displayName ?? user.email?.split('@').first,
+        patientName: effectiveName,
       );
       setState(() {
         _activeShare = share;
@@ -274,11 +329,15 @@ class _FamilySharingAuthSheetState
     });
 
     try {
+      final localName = ref.read(userNameProvider).value;
+      final effectiveName = (localName != null && localName.trim().isNotEmpty)
+          ? localName.trim()
+          : (user.displayName ?? user.email?.split('@').first);
       final repo = ref.read(familyShareRepositoryProvider);
       await repo.redeemShareCode(
         shareCode: code,
         caregiverUid: user.uid,
-        caregiverName: user.displayName ?? user.email?.split('@').first,
+        caregiverName: effectiveName,
       );
       _shareCodeController.clear();
       ref.invalidate(caregiverSharesProvider);
@@ -369,10 +428,14 @@ class _FamilySharingAuthSheetState
         }
         return;
       }
+      final localName = ref.read(userNameProvider).value;
+      final effectiveName = (localName != null && localName.trim().isNotEmpty)
+          ? localName.trim()
+          : (user.displayName ?? user.email?.split('@').first);
       final repo = ref.read(sharedAdherenceRepositoryProvider);
       await repo.syncTodaySchedule(
         patientUid: user.uid,
-        patientName: user.displayName ?? user.email?.split('@').first,
+        patientName: effectiveName,
         occurrences: occurrences,
       );
       if (mounted) {
@@ -561,6 +624,8 @@ class _FamilySharingAuthSheetState
   Widget _buildSignedInContent(User user) {
     final patientSharesAsync = ref.watch(patientSharesProvider);
     final caregiverSharesAsync = ref.watch(caregiverSharesProvider);
+    final localName = ref.watch(userNameProvider).value;
+    final displayName = user.displayName ?? localName ?? 'Family Account';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -582,12 +647,7 @@ class _FamilySharingAuthSheetState
                 radius: 18,
                 backgroundColor: AppColors.tileMint,
                 child: Text(
-                  (user.displayName?.isNotEmpty == true
-                          ? user.displayName![0]
-                          : user.email?.isNotEmpty == true
-                              ? user.email![0]
-                              : 'U')
-                      .toUpperCase(),
+                  (displayName.isNotEmpty ? displayName[0] : 'U').toUpperCase(),
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -601,14 +661,33 @@ class _FamilySharingAuthSheetState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      user.displayName ?? 'Family Account',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.bodyOnLight.copyWith(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13.5,
-                      ),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            displayName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.bodyOnLight.copyWith(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 13.5,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        InkWell(
+                          onTap: () => _handleEditProfileName(user),
+                          borderRadius: BorderRadius.circular(10),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Icon(
+                              Icons.edit_outlined,
+                              size: 14,
+                              color: AppColors.inkMuted,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 1),
                     Text(

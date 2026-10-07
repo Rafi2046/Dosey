@@ -271,6 +271,90 @@ def injection(size=320):
     save(img, 'med_injection.png', size)
 
 
+def drops_art(size=320):
+    img = canvas(size)
+    S = size * SS
+    soft_shadow(img, (S * 0.22, S * 0.72, S * 0.78, S * 0.86), blur=14)
+    # Dropper bottle body
+    shaded_rounded(img, (S * 0.28, S * 0.36, S * 0.72, S * 0.78), S * 0.08, (54, 98, 112), (92, 142, 156))
+    # Cap / Collar
+    shaded_rounded(img, (S * 0.36, S * 0.26, S * 0.64, S * 0.36), S * 0.03, STEEL, WHITE)
+    # Rubber Squeeze Bulb (Coral/Orange accent)
+    shaded_rounded(img, (S * 0.40, S * 0.12, S * 0.60, S * 0.26), S * 0.06, ORANGE, ORANGE_LIGHT)
+    # Label on bottle
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle([S * 0.33, S * 0.44, S * 0.67, S * 0.66], radius=S * 0.02, fill=(245, 245, 240))
+    d.line([S * 0.38, S * 0.52, S * 0.62, S * 0.52], fill=MOSS, width=int(S * 0.015))
+    d.line([S * 0.38, S * 0.59, S * 0.56, S * 0.59], fill=STEEL, width=int(S * 0.012))
+    # Falling droplet at bottom
+    shaded_ellipse(img, (S * 0.74, S * 0.68, S * 0.86, S * 0.84), (70, 170, 220), (170, 235, 255))
+    save(img, 'med_drops.png', size)
+
+
+def inhaler_art(size=320):
+    img = canvas(size)
+    S = size * SS
+    soft_shadow(img, (S * 0.18, S * 0.74, S * 0.82, S * 0.88), blur=14)
+    # L-body of inhaler
+    # Vertical body
+    shaded_rounded(img, (S * 0.22, S * 0.26, S * 0.56, S * 0.76), S * 0.06, MINT, MINT_FACE)
+    # Horizontal mouthpiece
+    shaded_rounded(img, (S * 0.35, S * 0.54, S * 0.78, S * 0.76), S * 0.05, MINT, MINT_FACE)
+    # Mouthpiece cap / opening
+    shaded_rounded(img, (S * 0.68, S * 0.52, S * 0.82, S * 0.78), S * 0.04, (54, 98, 112), (92, 142, 156))
+    # Metal canister at top
+    shaded_rounded(img, (S * 0.28, S * 0.12, S * 0.50, S * 0.28), S * 0.04, STEEL, WHITE)
+    # Top canister cap (Coral)
+    shaded_rounded(img, (S * 0.26, S * 0.09, S * 0.52, S * 0.15), S * 0.02, ORANGE, ORANGE_LIGHT)
+    # Glint / aerosol
+    gloss(img, (S * 0.26, S * 0.30, S * 0.38, S * 0.60), opacity=45)
+    save(img, 'med_inhaler.png', size)
+
+
+def cream_art(size=320):
+    img = canvas(size)
+    S = size * SS
+    soft_shadow(img, (S * 0.16, S * 0.70, S * 0.84, S * 0.85), blur=14)
+    layer = canvas(size)
+    d = ImageDraw.Draw(layer)
+    # Main tube body
+    shaded_rounded(layer, (S * 0.20, S * 0.38, S * 0.68, S * 0.62), S * 0.04, (230, 235, 238), WHITE)
+    # Coral band on tube
+    shaded_rounded(layer, (S * 0.32, S * 0.39, S * 0.52, S * 0.61), S * 0.02, ORANGE, ORANGE_LIGHT)
+    # Crimp tail
+    d.rounded_rectangle([S * 0.16, S * 0.36, S * 0.22, S * 0.64], radius=S * 0.015, fill=STEEL)
+    # Dispenser nozzle & screw cap
+    d.rectangle([S * 0.68, S * 0.44, S * 0.73, S * 0.56], fill=STEEL)
+    shaded_rounded(layer, (S * 0.73, S * 0.41, S * 0.84, S * 0.59), S * 0.02, MOSS, MOSS_LIGHT)
+    layer = layer.rotate(-20, resample=Image.BICUBIC)
+    img.alpha_composite(layer)
+    # Drop of cream
+    shaded_ellipse(img, (S * 0.72, S * 0.58, S * 0.86, S * 0.72), (235, 240, 242), WHITE)
+    save(img, 'med_cream.png', size)
+
+
+def syrup_art(size=320):
+    img = canvas(size)
+    S = size * SS
+    soft_shadow(img, (S * 0.20, S * 0.72, S * 0.80, S * 0.86), blur=14)
+    # Amber/Syrup bottle body
+    shaded_rounded(img, (S * 0.26, S * 0.32, S * 0.66, S * 0.78), S * 0.07, (180, 100, 45), (230, 150, 85))
+    # Liquid level inside
+    shaded_rounded(img, (S * 0.28, S * 0.44, S * 0.64, S * 0.76), S * 0.05, (150, 70, 25), (205, 110, 50))
+    # Neck & Cap
+    d = ImageDraw.Draw(img)
+    d.rectangle([S * 0.40, S * 0.22, S * 0.52, S * 0.32], fill=STEEL)
+    shaded_rounded(img, (S * 0.36, S * 0.12, S * 0.56, S * 0.23), S * 0.03, (240, 245, 248), WHITE)
+    # Label
+    d.rounded_rectangle([S * 0.32, S * 0.48, S * 0.60, S * 0.66], radius=S * 0.02, fill=(245, 245, 240))
+    d.line([S * 0.36, S * 0.54, S * 0.56, S * 0.54], fill=RED, width=int(S * 0.015))
+    d.line([S * 0.36, S * 0.60, S * 0.50, S * 0.60], fill=STEEL, width=int(S * 0.012))
+    # Measuring spoon on right
+    shaded_ellipse(img, (S * 0.68, S * 0.62, S * 0.86, S * 0.76), STEEL, WHITE)
+    d.line([S * 0.76, S * 0.69, S * 0.94, S * 0.78], fill=STEEL, width=int(S * 0.025))
+    save(img, 'med_syrup.png', size)
+
+
 def first_aid(size=320):
     img = canvas(size)
     S = size * SS
@@ -330,4 +414,8 @@ if __name__ == '__main__':
     capsule_art()
     injection()
     first_aid()
+    drops_art()
+    inhaler_art()
+    cream_art()
+    syrup_art()
     logo()

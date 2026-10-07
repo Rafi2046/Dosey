@@ -753,79 +753,9 @@ class _OccurrenceDetailPopupState
                     ],
                   ),
 
-                  SizedBox(height: isTablet ? 14 : 10),
-
-                  // Divider Line for Utilities
-                  Divider(
-                    color: isLight
-                        ? AppColors.divider.withValues(alpha: 0.5)
-                        : Colors.white.withValues(alpha: 0.12),
-                    height: 1,
-                    thickness: 1,
-                  ),
-
-                  SizedBox(height: isTablet ? 10 : 6),
-
-                  // Bottom Utilities: Full Edit & Delete
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton.icon(
-                        icon: Icon(
-                          Icons.tune_rounded,
-                          size: isTablet ? 17 : 15,
-                        ),
-                        label: Text(
-                          l10n.editReminder,
-                          style: TextStyle(
-                            fontFamily: 'PlusJakartaSans',
-                            fontSize: isTablet ? 13.5 : 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        style: TextButton.styleFrom(
-                          foregroundColor: mutedColor,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isTablet ? 10 : 6,
-                            vertical: isTablet ? 6 : 4,
-                          ),
-                          visualDensity: VisualDensity.compact,
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        onPressed: _edit,
-                      ),
-                      TextButton.icon(
-                        icon: Icon(
-                          Icons.delete_outline_rounded,
-                          size: isTablet ? 17 : 15,
-                        ),
-                        label: Text(
-                          l10n.deleteThisTime,
-                          style: TextStyle(
-                            fontFamily: 'PlusJakartaSans',
-                            fontSize: isTablet ? 13.5 : 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        style: TextButton.styleFrom(
-                          foregroundColor: AppColors.error,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isTablet ? 10 : 6,
-                            vertical: isTablet ? 6 : 4,
-                          ),
-                          visualDensity: VisualDensity.compact,
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        onPressed: _delete,
-                      ),
-                    ],
-                  ),
-
-                  // Medicine Details Full-Width Action Card
+                  // Medicine Details Full-Width Action Card (Secondary Action)
                   if (med != null) ...[
-                    SizedBox(height: isTablet ? 10 : 8),
+                    SizedBox(height: isTablet ? 16 : 13),
                     Material(
                       color: isLight
                           ? AppColors.creamLight
@@ -852,14 +782,14 @@ class _OccurrenceDetailPopupState
                             ),
                           ),
                           padding: EdgeInsets.symmetric(
-                            horizontal: isTablet ? 14 : 12,
-                            vertical: isTablet ? 10 : 8.5,
+                            horizontal: isTablet ? 16 : 14,
+                            vertical: isTablet ? 12 : 10,
                           ),
                           child: Row(
                             children: [
                               Icon(
                                 Icons.medication_outlined,
-                                size: isTablet ? 18 : 16,
+                                size: isTablet ? 19 : 17,
                                 color: isLight
                                     ? AppColors.tileMint
                                     : (AppColors.isDark
@@ -874,7 +804,7 @@ class _OccurrenceDetailPopupState
                                     fontFamily: 'PlusJakartaSans',
                                     color: textColor,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: isTablet ? 13 : 12,
+                                    fontSize: isTablet ? 13.5 : 12,
                                   ),
                                 ),
                               ),
@@ -889,6 +819,75 @@ class _OccurrenceDetailPopupState
                       ),
                     ),
                   ],
+
+                  SizedBox(height: isTablet ? 14 : 11),
+
+                  // Bottom Tertiary Utilities: Full Edit & Delete
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: _edit,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.tune_rounded,
+                                size: isTablet ? 16 : 14,
+                                color: mutedColor,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                l10n.editReminder,
+                                style: TextStyle(
+                                  fontFamily: 'PlusJakartaSans',
+                                  fontSize: isTablet ? 13 : 11.5,
+                                  fontWeight: FontWeight.w600,
+                                  color: mutedColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: _delete,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.delete_outline_rounded,
+                                size: isTablet ? 16 : 14,
+                                color: AppColors.error,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                l10n.deleteThisTime,
+                                style: TextStyle(
+                                  fontFamily: 'PlusJakartaSans',
+                                  fontSize: isTablet ? 13 : 11.5,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.error,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

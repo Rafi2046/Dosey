@@ -48,7 +48,7 @@ abstract final class CloudInitializer {
           publishableKey: CloudConfig.supabaseAnonKey,
           // Every request carries the signed-in Firebase user's ID token:
           // the database only lets a family's own members reach its rows
-          // (supabase/secure_family_sharing.sql). Signed out: no token.
+          // (supabase/migrations/*_secure_family_sharing.sql). Signed out: no token.
           accessToken: () async => _firebaseInitialized
               ? await FirebaseAuth.instance.currentUser?.getIdToken()
               : null,

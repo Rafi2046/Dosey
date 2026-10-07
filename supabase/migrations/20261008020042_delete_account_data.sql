@@ -1,8 +1,6 @@
 -- ==============================================================================
 -- Dosey: erase a user's cloud data when they delete their account
 --
--- Run AFTER secure_family_sharing.sql (it uses public.fb_uid()).
---
 -- The app calls delete_my_data() just before deleting the Firebase account,
 -- while its ID token still works. Without it, deleting the account left the
 -- user's medicines, doses, nudges and family links behind in Supabase.

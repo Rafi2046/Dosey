@@ -1,8 +1,8 @@
 -- ==============================================================================
 -- Dosey Family Sharing: lock the tables to signed-in, verified users
 --
--- Run AFTER family_sharing_schema.sql, and only once Firebase is added under
--- Supabase Dashboard -> Authentication -> Third-party Auth (project dosey-502ae).
+-- Apply only once Firebase is added under Supabase Dashboard ->
+-- Authentication -> Third-party Auth (project dosey-502ae).
 --
 -- Before this, every policy was `USING (true)`: anyone holding the app's
 -- public key could read and change every family's medicines and doses.

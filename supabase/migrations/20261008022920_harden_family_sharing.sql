@@ -1,8 +1,8 @@
 -- ==============================================================================
 -- Dosey Family Sharing: abuse limits and a private nudge-push endpoint
 --
--- Run AFTER secure_family_sharing.sql. Before running, store the push
--- secret in Vault (the same value goes to the edge function, see below):
+-- Before applying, store the push secret in Vault (the same value goes to
+-- the edge function as NUDGE_PUSH_SECRET):
 --
 --   SELECT vault.create_secret('<random hex>', 'nudge_push_secret');
 --
@@ -142,7 +142,7 @@ CREATE INDEX IF NOT EXISTS idx_share_code_attempts_uid
     ON public.share_code_attempts(uid, attempted_at);
 ALTER TABLE public.share_code_attempts ENABLE ROW LEVEL SECURITY;
 
--- Same as in secure_family_sharing.sql, plus the attempt limit. A wrong
+-- Same as in the secure_family_sharing migration, plus the attempt limit. A wrong
 -- code returns NULL instead of raising: an exception would roll back the
 -- attempt it just recorded, and guessing would cost nothing.
 CREATE OR REPLACE FUNCTION public.redeem_share_code(p_code TEXT, p_caregiver_name TEXT)
@@ -200,7 +200,7 @@ $$;
 GRANT EXECUTE ON FUNCTION public.redeem_share_code(TEXT, TEXT) TO anon, authenticated;
 
 -- 6. Account deletion also clears the user's attempt log (replaces the
---    version in delete_account_data.sql).
+--    version in the delete_account_data migration).
 CREATE OR REPLACE FUNCTION public.delete_my_data()
 RETURNS VOID
 LANGUAGE plpgsql

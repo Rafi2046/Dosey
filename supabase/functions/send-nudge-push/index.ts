@@ -1,7 +1,7 @@
 // Sends a caregiver nudge to the patient's devices through FCM, so it
 // arrives while Dosey is in the background or closed.
 //
-// Called by the `family_nudges_push` trigger (see harden_family_sharing.sql)
+// Called by the `family_nudges_push` trigger (see supabase/migrations/*_harden_family_sharing.sql)
 // with `{ "nudge_id": "<uuid>" }` and the `x-nudge-secret` header. Deployed
 // with --no-verify-jwt, since the trigger has no user token: the shared
 // secret is what keeps everyone else out.

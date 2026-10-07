@@ -1,8 +1,7 @@
 -- ==============================================================================
 -- Dosey Family Sharing & Caregiver Mode Schema
--- Run this in your Supabase SQL Editor: Dashboard -> SQL Editor -> New Query
--- Then run secure_family_sharing.sql: the policies below are open to anyone
--- holding the public key until it replaces them.
+-- The policies below are open to anyone holding the public key; the
+-- secure_family_sharing migration that follows replaces them.
 -- ==============================================================================
 
 -- 1. Create family_shares table

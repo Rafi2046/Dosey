@@ -532,7 +532,9 @@ class _FamilySharingAuthSheetState
                         child: Text(
                           _successMessage!,
                           style: AppTextStyles.caption.copyWith(
-                            color: AppColors.tileMoss,
+                            color: AppColors.isDark
+                                ? const Color(0xFF64D2B4)
+                                : AppColors.tileMoss,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -628,24 +630,30 @@ class _FamilySharingAuthSheetState
                   vertical: 3.5,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.tileMint.withValues(alpha: 0.15),
+                  color: AppColors.tileMint.withValues(
+                    alpha: AppColors.isDark ? 0.22 : 0.15,
+                  ),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
                       Icons.cloud_done_rounded,
                       size: 11,
-                      color: AppColors.tileMoss,
+                      color: AppColors.isDark
+                          ? const Color(0xFF64D2B4)
+                          : AppColors.tileMoss,
                     ),
-                    SizedBox(width: 3),
+                    const SizedBox(width: 3),
                     Text(
                       'Cloud Active',
                       style: TextStyle(
                         fontSize: 10.5,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.tileMoss,
+                        color: AppColors.isDark
+                            ? const Color(0xFF64D2B4)
+                            : AppColors.tileMoss,
                       ),
                     ),
                   ],

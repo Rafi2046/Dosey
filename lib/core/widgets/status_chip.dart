@@ -33,6 +33,17 @@ class StatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final background = this.background ?? AppColors.moss;
     final foreground = this.foreground ?? AppColors.textOnDark;
+    final isTime = RegExp(r'\d{1,2}:\d{2}').hasMatch(label);
+    final textStyle = isTime
+        ? TextStyle(
+            fontFamily: 'NDot',
+            fontSize: AppSpacing.fontSm + 1.5,
+            color: foreground,
+            letterSpacing: 0.8,
+            fontWeight: FontWeight.w400,
+          )
+        : AppTextStyles.chip.copyWith(color: foreground);
+
     return Material(
       color: background,
       shape: borderRadius != null
@@ -56,7 +67,7 @@ class StatusChip extends StatelessWidget {
               Flexible(
                 child: Text(
                   label,
-                  style: AppTextStyles.chip.copyWith(color: foreground),
+                  style: textStyle,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),

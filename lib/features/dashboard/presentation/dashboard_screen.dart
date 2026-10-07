@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/constants/constants.dart';
 import '../../../core/utils/clock_providers.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../../core/widgets/tab_scroll_view.dart';
@@ -16,6 +15,7 @@ import '../../blood_sugar/providers/blood_sugar_providers.dart';
 import '../../family_sharing/presentation/widgets/caregiver_monitoring_card.dart';
 import '../../family_sharing/providers/family_share_providers.dart';
 import '../../family_sharing/providers/shared_adherence_providers.dart';
+import 'widgets/animated_dashboard_title.dart';
 import 'widgets/blood_pressure_section.dart';
 import 'widgets/blood_sugar_section.dart';
 import 'widgets/dashboard_header.dart';
@@ -67,15 +67,8 @@ class DashboardScreen extends ConsumerWidget {
           name: ref.watch(userNameProvider).value,
           onBellTap: onOpenReminders,
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: AppSpacing.md,
-            bottom: AppSpacing.md,
-          ),
-          child: Text(
-            context.l10n.dashboardTitle,
-            style: AppTextStyles.display,
-          ),
+        AnimatedDashboardTitle(
+          title: context.l10n.dashboardTitle,
         ),
         const MissedDosesCard(),
         // Caregiver active monitoring card (if monitoring a linked family member)

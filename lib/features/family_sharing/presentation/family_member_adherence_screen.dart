@@ -305,15 +305,21 @@ class _FamilyMemberAdherenceScreenState
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.tileMint.withValues(alpha: 0.18),
+                  color: AppColors.tileMint.withValues(
+                    alpha: AppColors.isDark ? 0.22 : 0.18,
+                  ),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
                 ),
                 child: Text(
                   '$adherenceRate%',
-                  style: const TextStyle(
-                    color: AppColors.tileMoss,
-                    fontWeight: FontWeight.w800,
+                  style: TextStyle(
+                    fontFamily: 'NDot',
+                    color: AppColors.isDark
+                        ? const Color(0xFF64D2B4)
+                        : AppColors.tileMoss,
+                    fontWeight: FontWeight.w700,
                     fontSize: 14,
+                    letterSpacing: 0.8,
                   ),
                 ),
               ),
@@ -333,9 +339,26 @@ class _FamilyMemberAdherenceScreenState
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildCountPill('Taken', taken, AppColors.tileMint, AppColors.tileMoss),
-              _buildCountPill('Pending', pending, AppColors.warning, const Color(0xFFC07000)),
-              _buildCountPill('Missed', missed, AppColors.error, AppColors.error),
+              _buildCountPill(
+                'Taken',
+                taken,
+                AppColors.tileMint,
+                AppColors.isDark ? const Color(0xFF64D2B4) : AppColors.tileMoss,
+              ),
+              _buildCountPill(
+                'Pending',
+                pending,
+                AppColors.warning,
+                AppColors.isDark
+                    ? const Color(0xFFFFB74D)
+                    : const Color(0xFFC07000),
+              ),
+              _buildCountPill(
+                'Missed',
+                missed,
+                AppColors.error,
+                AppColors.isDark ? const Color(0xFFFF7D7D) : AppColors.error,
+              ),
             ],
           ),
         ],
@@ -350,7 +373,7 @@ class _FamilyMemberAdherenceScreenState
         vertical: 6,
       ),
       decoration: BoxDecoration(
-        color: bgTint.withValues(alpha: 0.12),
+        color: bgTint.withValues(alpha: AppColors.isDark ? 0.22 : 0.12),
         borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
       ),
       child: Row(
@@ -376,23 +399,35 @@ class _FamilyMemberAdherenceScreenState
   }
 
   Widget _buildDoseItem(SharedAdherenceDose dose, Color accentColor) {
-    Color statusBg = AppColors.warning.withValues(alpha: 0.14);
-    Color statusFg = const Color(0xFFC07000);
+    Color statusBg = AppColors.warning.withValues(
+      alpha: AppColors.isDark ? 0.22 : 0.14,
+    );
+    Color statusFg = AppColors.isDark
+        ? const Color(0xFFFFB74D)
+        : const Color(0xFFC07000);
     String statusText = 'Pending';
     IconData statusIcon = Icons.hourglass_top_rounded;
 
     if (dose.isTaken) {
-      statusBg = AppColors.tileMint.withValues(alpha: 0.18);
-      statusFg = AppColors.tileMoss;
+      statusBg = AppColors.tileMint.withValues(
+        alpha: AppColors.isDark ? 0.22 : 0.18,
+      );
+      statusFg = AppColors.isDark
+          ? const Color(0xFF64D2B4)
+          : AppColors.tileMoss;
       statusText = 'Taken';
       statusIcon = Icons.check_circle_rounded;
     } else if (dose.isMissed) {
-      statusBg = AppColors.error.withValues(alpha: 0.14);
-      statusFg = AppColors.error;
+      statusBg = AppColors.error.withValues(
+        alpha: AppColors.isDark ? 0.22 : 0.14,
+      );
+      statusFg = AppColors.isDark ? const Color(0xFFFF7D7D) : AppColors.error;
       statusText = 'Missed';
       statusIcon = Icons.error_rounded;
     } else if (dose.isSkipped) {
-      statusBg = AppColors.inkMuted.withValues(alpha: 0.14);
+      statusBg = AppColors.inkMuted.withValues(
+        alpha: AppColors.isDark ? 0.22 : 0.14,
+      );
       statusFg = AppColors.inkMuted;
       statusText = 'Skipped';
       statusIcon = Icons.remove_circle_outline_rounded;

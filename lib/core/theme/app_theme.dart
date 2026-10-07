@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 
-/// Calm teal-blue theme with misty light panels and a soft coral accent,
+/// Calming herbal sage and porcelain cream theme with a warm terracotta accent,
 /// in light or dark depending on the active [AppPalette].
 abstract final class AppTheme {
   /// Built from the active palette (light or dark), see [AppColors.apply].

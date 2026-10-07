@@ -50,7 +50,7 @@ class _Placeholder extends StatelessWidget {
         Text(
           'Document',
           style: TextStyle(
-            fontFamily: 'DMSans',
+            fontFamily: 'PlusJakartaSans',
             fontSize: 10,
             fontWeight: FontWeight.w600,
             color: AppColors.inkMuted.withValues(alpha: 0.7),

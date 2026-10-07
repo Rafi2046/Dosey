@@ -586,7 +586,7 @@ class _OccurrenceDetailPopupState
                             child: Text(
                               status.label(l10n),
                               style: TextStyle(
-                                fontFamily: 'DMSans',
+                                fontFamily: 'PlusJakartaSans',
                                 fontSize: isTablet ? 12.5 : 11,
                                 fontWeight: FontWeight.w600,
                                 color: textColor,
@@ -805,7 +805,7 @@ class _PopupActionButton extends StatelessWidget {
                   child: Text(
                     label,
                     style: TextStyle(
-                      fontFamily: 'DMSans',
+                      fontFamily: 'PlusJakartaSans',
                       color: foregroundColor,
                       fontSize: fontSize,
                       fontWeight: FontWeight.w700,

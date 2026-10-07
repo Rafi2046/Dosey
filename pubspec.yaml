@@ -100,6 +100,24 @@ flutter:
   # https://flutter.dev/to/asset-from-package
 
   fonts:
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-400.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-500.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-600.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-700.ttf
+          weight: 700
+        - asset: assets/fonts/PlusJakartaSans-800.ttf
+          weight: 800
+    - family: NDot
+      fonts:
+        - asset: assets/fonts/Ndot57-Regular.otf
+    - family: SpaceGrotesk
+      fonts:
+        - asset: assets/fonts/SpaceGrotesk-Regular.otf
     - family: Bitter
       fonts:
         - asset: assets/fonts/Bitter-600.ttf

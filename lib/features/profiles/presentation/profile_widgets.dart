@@ -221,7 +221,7 @@ class _ProfileBarItem extends StatelessWidget {
                 Text(
                   name,
                   style: TextStyle(
-                    fontFamily: 'DMSans',
+                    fontFamily: 'PlusJakartaSans',
                     fontSize: 13,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     color:
@@ -244,7 +244,7 @@ class _ProfileBarItem extends StatelessWidget {
                     child: Text(
                       context.l10n.profileYou,
                       style: TextStyle(
-                        fontFamily: 'DMSans',
+                        fontFamily: 'PlusJakartaSans',
                         fontSize: 9.5,
                         fontWeight: FontWeight.bold,
                         color: isSelected
@@ -302,7 +302,7 @@ class _AddProfileBarButton extends StatelessWidget {
               Text(
                 context.l10n.profileAdd,
                 style: TextStyle(
-                  fontFamily: 'DMSans',
+                  fontFamily: 'PlusJakartaSans',
                   fontSize: 12.5,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textOnDark,

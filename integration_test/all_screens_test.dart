@@ -212,12 +212,14 @@ void main() {
     AppDatabase db, {
     bool granted = true,
     ThemeMode mode = ThemeMode.light,
+    String language = 'en',
   }) async {
     final now = DateTime.now();
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
           themeModeProvider.overrideWith(() => ThemeModeController(mode)),
+          languageProvider.overrideWith(() => LanguageController(language)),
           ...testOverrides(
             db: db,
             now: now,
@@ -233,10 +235,17 @@ void main() {
     await settle(tester);
   }
 
-  // Every screen in both looks, so a color that only breaks in one shows.
-  for (final mode in [ThemeMode.light, ThemeMode.dark]) {
-    testWidgets('every screen renders (${mode.name})', (tester) async {
-      theme = '${mode.name}_';
+  // Every screen in both looks and both languages, so a color that only
+  // breaks in one, or Bangla text too long for its place, shows.
+  for (final (mode, code) in [
+    (ThemeMode.light, 'en'),
+    (ThemeMode.dark, 'en'),
+    (ThemeMode.light, 'bn'),
+    (ThemeMode.dark, 'bn'),
+  ]) {
+    testWidgets('every screen renders (${mode.name}, $code)', (tester) async {
+      final l = lookupAppLocalizations(Locale(code));
+      theme = '${code}_${mode.name}_';
       shot = 0;
       addTearDown(() => AppColors.apply(AppPalette.light));
       final db = AppDatabase(NativeDatabase.memory());
@@ -248,102 +257,106 @@ void main() {
           .insert(
             AppSettingsCompanion.insert(key: onboardingDoneKey, value: '1'),
           );
-      await pumpDosey(tester, db, mode: mode);
+      await pumpDosey(tester, db, mode: mode, language: code);
       if (Platform.isAndroid) await binding.convertFlutterSurfaceToImage();
 
       await snap(tester, 'home');
       await tester.drag(find.byType(Scrollable).first, const Offset(0, -900));
       await snap(tester, 'home_lower');
 
-      await nav(tester, en.navReminders);
+      await nav(tester, l.navReminders);
       await snap(tester, 'reminders');
       await tapText(tester, 'Diabetes follow-up');
       await snap(tester, 'reminder_form');
       await back(tester);
 
-      await nav(tester, en.navMedicines);
+      await nav(tester, l.navMedicines);
       await snap(tester, 'medicines');
       await tapText(tester, 'Metformin 500 mg');
       await snap(tester, 'medicine_detail');
       await back(tester);
 
-      await nav(tester, en.navMore);
+      await nav(tester, l.navMore);
       await snap(tester, 'more_sheet');
-      await tapText(tester, en.navDoctors);
+      await tapText(tester, l.navDoctors);
       await snap(tester, 'doctors');
       await tapText(tester, 'Dr. Farhana Rahman');
       await snap(tester, 'doctor_detail');
       await back(tester);
 
-      await nav(tester, en.navMore);
-      await tapText(tester, en.navRecords);
+      await nav(tester, l.navMore);
+      await tapText(tester, l.navRecords);
       await snap(tester, 'records');
       await tapText(tester, 'Endocrinology prescription');
       await snap(tester, 'record_detail');
       await back(tester);
 
-      await nav(tester, en.navMore);
-      await tapText(tester, en.navExpenses);
+      await nav(tester, l.navMore);
+      await tapText(tester, l.navExpenses);
       await snap(tester, 'expenses');
 
-      await nav(tester, en.navMore);
-      await tapText(tester, en.bpShortTitle);
+      await nav(tester, l.navMore);
+      await tapText(tester, l.bpShortTitle);
       await snap(tester, 'blood_pressure');
-      await tapText(tester, en.bpAdd);
+      await tapText(tester, l.bpAdd);
       await snap(tester, 'blood_pressure_form');
       await back(tester);
       await back(tester);
 
-      await nav(tester, en.navMore);
-      await tapText(tester, en.sugarShortTitle);
+      await nav(tester, l.navMore);
+      await tapText(tester, l.sugarShortTitle);
       await snap(tester, 'blood_sugar');
-      await tapText(tester, en.sugarAdd);
+      await tapText(tester, l.sugarAdd);
       await snap(tester, 'blood_sugar_form');
       await back(tester);
       await back(tester);
 
       // The + sheet and every form it opens.
-      await tester.tap(find.byTooltip(en.add));
+      await tester.tap(find.byTooltip(l.add));
       await settle(tester);
       await snap(tester, 'add_sheet');
       for (final (label, name) in [
-        (en.addReminder, 'form_reminder'),
-        (en.addDoctor, 'form_doctor'),
-        (en.addRecord, 'form_record'),
-        (en.addExpense, 'form_expense'),
+        (l.addReminder, 'form_reminder'),
+        (l.addDoctor, 'form_doctor'),
+        (l.addRecord, 'form_record'),
+        (l.addExpense, 'form_expense'),
       ]) {
         await tapText(tester, label);
         await snap(tester, name);
         await back(tester);
-        await tester.tap(find.byTooltip(en.add));
+        await tester.tap(find.byTooltip(l.add));
         await settle(tester);
       }
-      await tapText(tester, en.addMedicine);
+      await tapText(tester, l.addMedicine);
       await snap(tester, 'medicine_type');
-      await tapText(tester, en.next);
+      await tapText(tester, l.next);
       await snap(tester, 'form_medicine');
       await back(tester);
       await back(tester);
 
       // Settings and everything under it.
-      await nav(tester, en.navHome);
+      await nav(tester, l.navHome);
       // Home is still scrolled down from the "home_lower" shot.
       await tester.drag(find.byType(Scrollable).first, const Offset(0, 3000));
       await settle(tester);
-      await tester.tap(find.byTooltip(en.settingsTitle));
+      await tester.tap(find.byTooltip(l.settingsTitle));
       await settle(tester);
       await snap(tester, 'settings');
       await tapText(tester, 'Rafi');
       await snap(tester, 'settings_name_sheet');
       await tester.tapAt(const Offset(20, 80)); // dismiss the sheet
       await settle(tester);
-      await tapText(tester, en.settingsPermissions);
+      await tapText(tester, l.fsTitle);
+      await snap(tester, 'family_sharing');
+      await tester.tapAt(const Offset(20, 80)); // dismiss the sheet
+      await settle(tester);
+      await tapText(tester, l.settingsPermissions);
       await snap(tester, 'permissions');
       await back(tester);
       for (final (title, name) in [
-        (en.privacyPolicy, 'privacy'),
-        (en.termsOfUse, 'terms'),
-        (en.medicalDisclaimer, 'disclaimer'),
+        (l.privacyPolicy, 'privacy'),
+        (l.termsOfUse, 'terms'),
+        (l.medicalDisclaimer, 'disclaimer'),
       ]) {
         await tapText(tester, title);
         await snap(tester, name);
@@ -361,7 +374,7 @@ void main() {
       }
       await settle(tester);
       await snap(tester, 'alarm_grouped');
-      await tapText(tester, en.alarmMarkAllTaken);
+      await tapText(tester, l.alarmMarkAllTaken);
       await snap(tester, 'home_after_taken');
     });
   }

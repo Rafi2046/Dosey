@@ -1152,7 +1152,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get settingsPermissions => 'অ্যালার্মের অনুমতি';
 
   @override
-  String get permissionsAllAllowed => 'সব অনুমতি আছে';
+  String get permissionsAllAllowed => 'সব চালু';
 
   @override
   String get settingsSupport => 'সাহায্য ও সাপোর্ট';

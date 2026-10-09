@@ -35,7 +35,6 @@ Future<void> main() async {
     ),
   );
   final documentsDirectory = await getApplicationDocumentsDirectory();
-
   // One DB connection shared by Riverpod and notification-action handlers.
   final db = AppDatabase();
   AlarmRuntime.adopt(db);

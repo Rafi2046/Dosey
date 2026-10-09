@@ -83,9 +83,6 @@ class _AnimatedDashboardTitleState extends State<AnimatedDashboardTitle>
         if (_charIndex < currentPhrase.length) {
           _charIndex++;
           _scheduleNextTick(const Duration(milliseconds: 65));
-        } else if (_phrases.length == 1) {
-          // Fully typed and nothing to cycle to: stop, cursor and all.
-          _stop();
         } else {
           // Finished typing phrase, hold before deleting/cycling
           _scheduleNextTick(const Duration(milliseconds: 3500));

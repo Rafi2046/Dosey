@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../core/widgets/pill_button.dart';
-import '../../reminders/providers/reminders_providers.dart';
 import '../providers/app_lock_providers.dart';
 
 /// With App lock on, covers the app until the phone confirms its owner: on
@@ -59,8 +58,7 @@ class _LockGateState extends ConsumerState<LockGate>
   Widget build(BuildContext context) {
     final enabled = ref.watch(appLockEnabledProvider).value ?? false;
     final locked = ref.watch(appLockedProvider);
-    final ringing = ref.watch(ringingRemindersProvider).value ?? const [];
-    final show = enabled && locked && ringing.isEmpty;
+    final show = enabled && locked;
     return Stack(
       children: [
         // Kept underneath (and its state with it), but out of reach.

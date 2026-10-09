@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,9 +14,8 @@ import '../features/reminders/providers/reminders_providers.dart';
 /// or was already in the foreground. Removes it when the occurrence is handled
 /// anywhere, then hands the lock screen back to the keyguard.
 class AlarmHost extends ConsumerStatefulWidget {
-  const AlarmHost({super.key, required this.navigatorKey, required this.child});
+  const AlarmHost({super.key, required this.child});
 
-  final GlobalKey<NavigatorState> navigatorKey;
   final Widget child;
 
   @override
@@ -26,9 +24,6 @@ class AlarmHost extends ConsumerStatefulWidget {
 
 class _AlarmHostState extends ConsumerState<AlarmHost>
     with WidgetsBindingObserver {
-  Route<void>? _route;
-  (List<int>, DateTime)? _showing;
-
   /// The oldest ringing occurrence: every medicine ringing for that same
   /// time together, or a single other reminder.
   static List<ReminderWithDetails> _firstGroup(
@@ -45,54 +40,15 @@ class _AlarmHostState extends ConsumerState<AlarmHost>
     ];
   }
 
-  void _onRinging(List<ReminderWithDetails> ringing) {
-    final group = _firstGroup(ringing);
-    final key = group.isEmpty
-        ? null
-        : (
-            [for (final d in group) d.reminder.id],
-            group.first.reminder.ringingFor!,
-          );
-    if (_sameKey(key, _showing)) return;
-
-    _removeRoute();
-    if (key == null) {
-      NativeBridge.setShowOverLockScreen(false);
-      return;
-    }
-    final navigator = widget.navigatorKey.currentState;
-    if (navigator == null) return;
-    _showing = key;
-    _route = MaterialPageRoute<void>(
-      fullscreenDialog: true,
-      builder: (_) => AlarmRingScreen(group: group, scheduledFor: key.$2),
-    );
-    navigator.push(_route!);
-  }
-
-  static bool _sameKey((List<int>, DateTime)? a, (List<int>, DateTime)? b) =>
-      a == null || b == null ? a == b : a.$2 == b.$2 && listEquals(a.$1, b.$1);
-
-  void _removeRoute() {
-    final route = _route;
-    if (route != null && route.isActive) {
-      widget.navigatorKey.currentState?.removeRoute(route);
-    }
-    _route = null;
-    _showing = null;
-  }
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    // Watch for reminders that have been marked as ringing
+    // Watch for reminders that have been marked as ringing to toggle native lock screen
     ref.listenManual(ringingRemindersProvider, (_, next) {
-      final ringing = next.value;
-      if (ringing == null) return;
-      // The navigator may not exist yet on the very first frame.
-      WidgetsBinding.instance.addPostFrameCallback((_) => _onRinging(ringing));
+      final ringing = next.value ?? const [];
+      NativeBridge.setShowOverLockScreen(ringing.isNotEmpty);
     }, fireImmediately: true);
 
     // While in foreground, actively check for due occurrences on minute ticks
@@ -123,5 +79,36 @@ class _AlarmHostState extends ConsumerState<AlarmHost>
   }
 
   @override
-  Widget build(BuildContext context) => widget.child;
+  Widget build(BuildContext context) {
+    final ringing = ref.watch(ringingRemindersProvider).value ?? const [];
+    final group = _firstGroup(ringing);
+    final isRinging = group.isNotEmpty && group.first.reminder.ringingFor != null;
+    final groupKey = isRinging
+        ? '${group.first.reminder.ringingFor!.millisecondsSinceEpoch}_${group.map((d) => d.reminder.id).join(',')}'
+        : null;
+
+    return Stack(
+      children: [
+        Offstage(
+          offstage: isRinging,
+          child: widget.child,
+        ),
+        if (isRinging)
+          Positioned.fill(
+            key: ValueKey(groupKey),
+            child: HeroControllerScope.none(
+              child: Navigator(
+                onGenerateRoute: (_) => MaterialPageRoute<void>(
+                  fullscreenDialog: true,
+                  builder: (_) => AlarmRingScreen(
+                    group: group,
+                    scheduledFor: group.first.reminder.ringingFor!,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
 }

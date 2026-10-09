@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../app/debug/demo_data_seeder.dart';
 import '../../../app/home_tab.dart';
 import '../../../core/constants/constants.dart';
+import '../../../core/database/database_provider.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../core/notifications/notification_providers.dart';
 import '../../../core/notifications/permission_service.dart';
@@ -18,11 +20,18 @@ import '../../../core/widgets/segmented_choice.dart';
 import '../../../core/widgets/status_chip.dart';
 import '../../auth/presentation/family_sharing_auth_sheet.dart';
 import '../../auth/providers/auth_providers.dart';
+import '../../blood_pressure/providers/blood_pressure_providers.dart';
+import '../../blood_sugar/providers/blood_sugar_providers.dart';
+import '../../doctors/providers/doctors_providers.dart';
+import '../../expenses/providers/expenses_providers.dart';
 import '../../lock/providers/app_lock_providers.dart';
+import '../../medicines/providers/medicines_providers.dart';
 import '../../onboarding/providers/permissions_provider.dart';
 import '../../profiles/data/profiles_repository.dart';
 import '../../profiles/presentation/profile_widgets.dart';
 import '../../profiles/providers/profiles_providers.dart';
+import '../../records/providers/records_providers.dart';
+import '../../reminders/providers/reminders_providers.dart';
 import '../data/backup_service.dart';
 import '../domain/legal_document.dart';
 import '../providers/settings_providers.dart';
@@ -177,6 +186,55 @@ class SettingsScreen extends ConsumerWidget {
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).popUntil((route) => route.isFirst);
     messenger.showSnackBar(SnackBar(content: Text(l10n.allDataDeleted)));
+  }
+
+  /// Wipes previous data and fills every screen with realistic sample data.
+  static Future<void> _loadDemoData(BuildContext context, WidgetRef ref) async {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Text('Loading full screenshot demo data across all screens...'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+
+    await DemoDataSeeder.seed(
+      ref.read(appDatabaseProvider),
+      ref.read(remindersRepositoryProvider),
+      ref.read(recordsRepositoryProvider),
+    );
+
+    ref.invalidate(todayScheduleProvider);
+    ref.invalidate(remindersProvider);
+    ref.invalidate(enabledRemindersProvider);
+    ref.invalidate(upcomingRemindersProvider);
+    ref.invalidate(missedDosesProvider);
+    ref.invalidate(medicinesProvider);
+    ref.invalidate(activeMedicinesProvider);
+    ref.invalidate(doctorsWithStatsProvider);
+    ref.invalidate(recordSummariesProvider);
+    ref.invalidate(bloodPressureReadingsProvider);
+    ref.invalidate(bloodSugarReadingsProvider);
+    ref.invalidate(monthExpensesProvider);
+    ref.invalidate(monthExpenseTotalProvider);
+    ref.invalidate(monthCategoryTotalsProvider);
+    ref.invalidate(expenseTrendProvider);
+    ref.invalidate(medicineCostProjectionProvider);
+    ref.invalidate(currentMonthExpenseTotalProvider);
+    ref.invalidate(profilesProvider);
+    ref.invalidate(userNameProvider);
+
+    await ref
+        .read(activeProfileIdProvider.notifier)
+        .select(ProfilesRepository.mainProfileId);
+    ref.read(homeTabProvider.notifier).select(HomeTab.dashboard);
+
+    messenger.showSnackBar(
+      SnackBar(
+        content: const Text('✅ Complete demo data loaded for all screens!'),
+        backgroundColor: AppColors.moss,
+      ),
+    );
   }
 
   @override
@@ -343,6 +401,13 @@ class SettingsScreen extends ConsumerWidget {
               title: l10n.settingsYourData,
               children: [
                 SettingsTile(
+                  icon: Icons.auto_awesome_rounded,
+                  color: AppColors.accent,
+                  title: 'Load Screenshot Demo Data',
+                  subtitle: 'Fill all screens with complete realistic data for graphics and screenshots',
+                  onTap: () => _loadDemoData(context, ref),
+                ),
+                SettingsTile(
                   icon: Icons.cloud_upload_rounded,
                   color: AppColors.tileMint,
                   title: l10n.backupTitle,
@@ -373,6 +438,7 @@ class SettingsScreen extends ConsumerWidget {
             SettingsSection(
               title: l10n.settingsSupport,
               children: [
+
                 SettingsTile(
                   icon: Icons.mail_rounded,
                   color: AppColors.tileOlive,

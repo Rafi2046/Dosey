@@ -43,7 +43,9 @@ class _DoseyAppState extends ConsumerState<DoseyApp> {
     // Colors are read from AppColors, not inherited, so a theme change has
     // to redraw everything below (in place: routes and state are kept).
     if (AppColors.apply(dark ? AppPalette.dark : AppPalette.light)) {
-      _rebuildAll(context);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) _rebuildAll(context);
+      });
     }
 
     return MaterialApp(
@@ -65,7 +67,6 @@ class _DoseyAppState extends ConsumerState<DoseyApp> {
         // with the language actually on screen.
         AppLocale.apply(Localizations.localeOf(context));
         return AlarmHost(
-          navigatorKey: _navigatorKey,
           child: LockGate(child: child ?? const SizedBox.shrink()),
         );
       },

@@ -30,7 +30,7 @@ class HomeShell extends ConsumerStatefulWidget {
 }
 
 class _HomeShellState extends ConsumerState<HomeShell> {
-  bool _navVisible = true;
+  final _navVisible = ValueNotifier<bool>(true);
   Timer? _showAgain;
 
   /// Each tab's list, handed down as its primary scroll controller.
@@ -39,6 +39,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   @override
   void dispose() {
     _showAgain?.cancel();
+    _navVisible.dispose();
     for (final c in _scrollers.values) {
       c.dispose();
     }
@@ -62,21 +63,31 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   }
 
   void _setNav(bool visible) {
-    if (_navVisible != visible) setState(() => _navVisible = visible);
+    if (_navVisible.value != visible) {
+      _navVisible.value = visible;
+    }
   }
 
   bool _onScroll(ScrollNotification n) {
     // Only the tab's own vertical list, not nested carousels / pills.
     if (n.depth != 0 || n.metrics.axis != Axis.vertical) return false;
+
     if (n is UserScrollNotification) {
       switch (n.direction) {
         case ScrollDirection.reverse:
           _showAgain?.cancel();
           _setNav(false);
         case ScrollDirection.forward:
+          _showAgain?.cancel();
           _setNav(true);
         case ScrollDirection.idle:
           break;
+      }
+    } else if (n is ScrollUpdateNotification) {
+      // If we scrolled back to the top, show the nav bar immediately.
+      if (n.metrics.pixels <= 0) {
+        _showAgain?.cancel();
+        _setNav(true);
       }
     } else if (n is ScrollEndNotification) {
       _showAgain?.cancel();
@@ -104,78 +115,98 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       child: Scaffold(
         body: Stack(
           children: [
-            NotificationListener<ScrollNotification>(
-              onNotification: _onScroll,
-              child: IndexedStack(
-                index: tab.index,
-                children: [
-                  for (final t in HomeTab.values)
-                    PrimaryScrollController(
-                      controller: _scrollers[t]!,
-                      // Desktop too: by default only mobile lists pick it up.
-                      automaticallyInheritForPlatforms: TargetPlatform.values
-                          .toSet(),
-                      child: switch (t) {
-                        HomeTab.dashboard => DashboardScreen(
-                          onOpenReminders: () => tabs.select(HomeTab.reminders),
-                          onOpenExpenses: () => tabs.select(HomeTab.expenses),
-                        ),
-                        HomeTab.reminders => const RemindersScreen(),
-                        HomeTab.medicines => const MedicinesScreen(),
-                        HomeTab.doctors => const DoctorsScreen(),
-                        HomeTab.records => const RecordsScreen(),
-                        HomeTab.expenses => const ExpensesScreen(),
-                      },
-                    ),
-                ],
+            RepaintBoundary(
+              child: NotificationListener<ScrollNotification>(
+                onNotification: _onScroll,
+                child: IndexedStack(
+                  index: tab.index,
+                  children: [
+                    for (final t in HomeTab.values)
+                      PrimaryScrollController(
+                        controller: _scrollers[t]!,
+                        // Desktop too: by default only mobile lists pick it up.
+                        automaticallyInheritForPlatforms: TargetPlatform.values
+                            .toSet(),
+                        child: switch (t) {
+                          HomeTab.dashboard => DashboardScreen(
+                            onOpenReminders: () => tabs.select(HomeTab.reminders),
+                            onOpenExpenses: () => tabs.select(HomeTab.expenses),
+                          ),
+                          HomeTab.reminders => const RemindersScreen(),
+                          HomeTab.medicines => const MedicinesScreen(),
+                          HomeTab.doctors => const DoctorsScreen(),
+                          HomeTab.records => const RecordsScreen(),
+                          HomeTab.expenses => const ExpensesScreen(),
+                        },
+                      ),
+                  ],
+                ),
               ),
             ),
             // Content scrolling under the nav bar fades out instead of
             // peeking around it.
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: IgnorePointer(
-                child: AnimatedOpacity(
-                  opacity: _navVisible ? 1 : 0,
-                  duration: AppSpacing.animMedium,
-                  child: SizedBox(
-                    height: AppSpacing.navFadeHeight,
-                    width: double.infinity,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [AppColors.sageTransparent, AppColors.sage],
-                          stops: [0, 0.55],
+            ValueListenableBuilder<bool>(
+              valueListenable: _navVisible,
+              builder: (context, visible, _) {
+                return RepaintBoundary(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: IgnorePointer(
+                      child: AnimatedOpacity(
+                        opacity: visible ? 1 : 0,
+                        duration: AppSpacing.animMedium,
+                        child: SizedBox(
+                          height: AppSpacing.navFadeHeight,
+                          width: double.infinity,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  AppColors.sageTransparent,
+                                  AppColors.sage,
+                                ],
+                                stops: const [0, 0.55],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: IgnorePointer(
-                ignoring: !_navVisible,
-                child: AnimatedSlide(
-                  offset: _navVisible ? Offset.zero : const Offset(0, 1.5),
-                  duration: AppSpacing.animMedium,
-                  curve: Curves.easeOutCubic,
-                  child: SafeArea(
-                    top: false,
-                    child: AppNavBar(
-                      current: tab,
-                      onSelected: _select,
-                      onAdd: () => showAddActionSheet(context),
-                      onMore: () => showMoreSheet(
-                        context,
-                        current: tab,
-                        onSelected: _select,
+            ValueListenableBuilder<bool>(
+              valueListenable: _navVisible,
+              builder: (context, visible, child) {
+                return RepaintBoundary(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: IgnorePointer(
+                      ignoring: !visible,
+                      child: AnimatedSlide(
+                        offset: visible ? Offset.zero : const Offset(0, 1.5),
+                        duration: AppSpacing.animMedium,
+                        curve: Curves.easeOutCubic,
+                        child: SafeArea(
+                          top: false,
+                          child: child!,
+                        ),
                       ),
                     ),
                   ),
+                );
+              },
+              child: AppNavBar(
+                current: tab,
+                onSelected: _select,
+                onAdd: () => showAddActionSheet(context),
+                onMore: () => showMoreSheet(
+                  context,
+                  current: tab,
+                  onSelected: _select,
                 ),
               ),
             ),

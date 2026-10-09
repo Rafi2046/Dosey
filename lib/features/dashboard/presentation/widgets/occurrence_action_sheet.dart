@@ -35,7 +35,7 @@ Future<void> showOccurrenceActions(
   barrierColor: Colors.black.withValues(alpha: 0.65),
   transitionDuration: const Duration(milliseconds: 280),
   pageBuilder: (context, anim1, anim2) =>
-      _OccurrenceDetailPopup(occurrence: occurrence),
+      _OccurrenceDetailPopup(occurrence: occurrence, color: color),
   transitionBuilder: (context, anim1, anim2, child) {
     final curve = CurvedAnimation(
       parent: anim1,
@@ -50,9 +50,13 @@ Future<void> showOccurrenceActions(
 );
 
 class _OccurrenceDetailPopup extends ConsumerStatefulWidget {
-  const _OccurrenceDetailPopup({required this.occurrence});
+  const _OccurrenceDetailPopup({
+    required this.occurrence,
+    this.color,
+  });
 
   final ScheduledOccurrence occurrence;
+  final Color? color;
 
   @override
   ConsumerState<_OccurrenceDetailPopup> createState() =>
@@ -168,7 +172,10 @@ class _OccurrenceDetailPopupState
 
     final themeIsDark =
         Theme.of(context).brightness == Brightness.dark || AppColors.isDark;
-    final cardColor = AppColors.cream;
+    final cardColor = widget.color ??
+        AppColors.cardCycle[
+            widget.occurrence.details.reminder.id.hashCode.abs() %
+                AppColors.cardCycle.length];
     final isLight = SurfaceCard.isLight(cardColor);
     final textColor = isLight ? AppColors.ink : AppColors.textOnDark;
     final mutedColor = isLight ? AppColors.inkMuted : AppColors.textOnDarkMuted;
@@ -441,6 +448,14 @@ class _OccurrenceDetailPopupState
                                 borderRadius: BorderRadius.circular(
                                   AppSpacing.radiusPill,
                                 ),
+                                border: isLight
+                                    ? null
+                                    : Border.all(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.20,
+                                        ),
+                                        width: 1,
+                                      ),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -528,13 +543,13 @@ class _OccurrenceDetailPopupState
                                       ? AppColors.moss
                                       : (themeIsDark
                                             ? AppColors.selected
-                                            : AppColors.tileMint),
+                                            : AppColors.textOnDark),
                                   backgroundColor:
                                       (isLight
                                               ? AppColors.moss
                                               : (themeIsDark
                                                     ? AppColors.selected
-                                                    : AppColors.tileMint))
+                                                    : AppColors.textOnDark))
                                           .withValues(alpha: 0.2),
                                 ),
                               ),
@@ -606,10 +621,10 @@ class _OccurrenceDetailPopupState
                                   ? AppColors.moss
                                   : (themeIsDark
                                         ? AppColors.selected
-                                        : AppColors.tileMint),
+                                        : AppColors.textOnDark),
                               backgroundColor: isLight
                                   ? AppColors.divider.withValues(alpha: 0.35)
-                                  : Colors.white.withValues(alpha: 0.12),
+                                  : Colors.white.withValues(alpha: 0.15),
                             ),
                           ),
                         ],
@@ -703,7 +718,7 @@ class _OccurrenceDetailPopupState
                                       ? AppColors.moss
                                       : (themeIsDark
                                             ? AppColors.selected
-                                            : AppColors.mint),
+                                            : AppColors.textOnDark),
                                 ),
                                 SizedBox(width: isTablet ? 4 : 3),
                                 Text(
@@ -780,6 +795,9 @@ class _OccurrenceDetailPopupState
                               : (themeIsDark
                                     ? AppColors.onSelected
                                     : AppColors.textOnDark),
+                          borderColor: isLight
+                              ? null
+                              : Colors.white.withValues(alpha: 0.20),
                           onPressed: () => _act(AlarmAction.taken),
                         ),
                       ),
@@ -799,7 +817,7 @@ class _OccurrenceDetailPopupState
                           foregroundColor: textColor,
                           borderColor: isLight
                               ? AppColors.divider.withValues(alpha: 0.7)
-                              : Colors.white.withValues(alpha: 0.18),
+                              : Colors.white.withValues(alpha: 0.20),
                           onPressed: () => _act(AlarmAction.skip),
                         ),
                       ),
@@ -849,7 +867,7 @@ class _OccurrenceDetailPopupState
                                     ? AppColors.moss
                                     : (themeIsDark
                                           ? AppColors.selected
-                                          : AppColors.mint),
+                                          : AppColors.textOnDark),
                               ),
                               SizedBox(width: isTablet ? 10 : 8),
                               Expanded(
